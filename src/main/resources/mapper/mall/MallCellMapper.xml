@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.mall.mapper.CellMapper">
+    <sql id="tableName">
+        cell
+    </sql>
+
+    <sql id="baseColumn">
+        id,title,cover,intro_cover,content,brand_id,mark,create_at,modified_at
+    </sql>
+
+    <select id="selectCellPage" resultType="com.norm.timemall.app.mall.domain.ro.CellRO">
+        select b.brand_name brand,b.avator,c.title,p.price,c.id,p.sbu
+        from cell c
+        left join brand b on c.brand_id = b.id
+        left join pricing p on c.id = p.cell_id
+        <where>
+            1=1
+            <if test="dto.q != null and dto.q != ''">
+                AND b.brand_name = #{dto.q}
+            </if>
+            <if test="dto.budget > 0">
+                AND p.price  &gt;= #{dto.budget} AND p.price &lt;= #{dto.budget} + 50
+            </if>
+            <if test="dto.sbu != null and dto.sbu != ''">
+                AND p.sbu = #{dto.sbu}
+            </if>
+        </where>
+    </select>
+    <resultMap id="cellIntroResultMap" type="com.norm.timemall.app.mall.domain.ro.CellIntroRO">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="introCover" column="intro_cover"/>
+        <result property="brand" column="brand"/>
+        <result property="avator" column="avator"/>
+        <result property="content" column="content"/>
+        <association property="brandContact" javaType="com.norm.timemall.app.mall.domain.pojo.BrandContact" >
+            <result property="wechat" column="wechat"/>
+            <result property="phone" column="phone"/>
+            <result property="email" column="email"/>
+        </association>
+        <collection property="fee" ofType="com.norm.timemall.app.mall.domain.pojo.Fee" javaType="ArrayList">
+            <result property="price" column="price"/>
+            <result property="sbu" column="sbu"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectCellIntro" resultMap="cellIntroResultMap">
+        select c.title, c.id, c.intro_cover,b.brand_name brand,b.avator,b.wechat,b.phone,b.email,c.content,p.price,p.sbu
+        from cell c
+        inner join brand b on c.brand_id = b.id
+        inner join pricing p on c.id = p.cell_id
+        where c.id = #{id}
+    </select>
+
+</mapper>

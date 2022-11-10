@@ -1,0 +1,96 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: timemall
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  mail:
+    protocol: smtps
+    host: smtp.163.com
+    username: ${email}
+    password: ${email_token}
+    default-encoding: UTF-8
+  datasource:
+    hikari:
+      maximum-pool-size: 60
+      connection-timeout: 70000
+      validation-timeout: 3000
+      max-lifetime: 600000
+      login-timeout: 5
+      minimum-idle: 10
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${mysql_url}
+    username: ${mysql_username}
+    password: ${mysql_password}
+    type: com.zaxxer.hikari.HikariDataSource
+
+
+
+logging:
+  level:
+    com:
+      egzosn: debug
+  file: examples.log
+
+mybatis-mate:
+  cert:
+    grant: ${mate_grant}
+    license: ${mate_license}
+  encryptor:
+    # 对称算法密钥，随机字符串作为密钥即可（有些算法长度有要求，注意）
+    password: ${mate_encryptor_password}
+    # 非对称加密 RSA 公钥私钥
+    publicKey: ${mate_publicKey}
+    privateKey: ${mate_privateKey}
+
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml , classpath:mapper/**/*.xml
+  global-config:
+    db-config:
+      id-type: AUTO
+      field-strategy: NOT_EMPTY
+      db-type: MYSQL
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+    call-setters-on-nulls: true
+
+restTemplate:
+  threadSize: 20
+  waitingTime: 500
+  connectTimeOut: 10000
+  readTimeOut: 10000
+
+pod-constants:
+  upload-file-dir: ${file_dir}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

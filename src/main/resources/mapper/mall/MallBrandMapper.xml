@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.mall.mapper.BrandMapper">
+    <sql id="tableName">
+        brand
+    </sql>
+
+    <sql id="baseColumn">
+        id,brand_name,title,cover,avator,customer_id,wechat,phone,email,cardholder,cardno,alipay,wechatpay,experience,skills,location
+    </sql>
+
+    <select id="selectProileByBrandId" resultType="com.norm.timemall.app.mall.domain.ro.BrandProfileRO">
+        select b.brand_name brand,b.avator,b.experience,b.title,b.location,b.skills
+        from brand b
+        where b.id = #{brandId}
+    </select>
+
+</mapper>

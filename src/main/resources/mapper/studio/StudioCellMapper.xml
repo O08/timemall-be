@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.studio.mapper.StudioCellMapper">
+    <sql id="tableName">
+        cell
+    </sql>
+
+    <sql id="baseColumn">
+        id,title,cover,intro_cover,content,brand_id,mark,create_at,modified_at
+    </sql>
+
+    <select id="selectCellPage" resultType="com.norm.timemall.app.studio.domain.ro.StudioCellRO">
+        select b.brand_name brand,b.avator,c.title,p.price,c.id,c.mark, p.sbu
+        from cell c
+        inner join brand b on c.brand_id = b.id
+        inner join pricing p on c.id = p.cell_id
+        where c.brand_id = #{brand_id}
+        and p.sbu = 'day'
+    </select>
+    <update id="updatTitleById">
+        update cell c set c.title = #{title} where c.id = #{id}
+        and  exists(
+            select 1
+            from brand d
+            where d.customer_id = #{user_id} and c.brand_id = d.id
+        )
+    </update>
+
+
+</mapper>

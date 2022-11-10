@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.mall.mapper.CellListMapper">
+    <sql id="tableName">
+        cell_list
+    </sql>
+
+    <sql id="baseColumn">
+        id,brand_id,title,create_at,modified_at
+    </sql>
+    <resultMap id="cellsResultMap" type="com.norm.timemall.app.mall.domain.ro.CellRO">
+        <id property="id" column="id"></id>
+        <result property="brand" column="brand"></result>
+        <result property="avator" column="avator"></result>
+        <result property="title" column="title"></result>
+        <result property="price" column="price"></result>
+        <result property="sbu" column="sbu"></result>
+
+    </resultMap>
+
+    <!--    嵌套查询-->
+    <resultMap id="cellListResultMap" type="com.norm.timemall.app.mall.domain.ro.CellListRO">
+        <id property="celllistID" column="celllistID"/>
+        <result property="title" column="celllistTitle"/>
+        <collection property="cells" ofType="com.norm.timemall.app.mall.domain.ro.CellRO" javaType="ArrayList" resultMap="cellsResultMap"/>
+    </resultMap>
+    <select id="selectCellListByBrandId" resultMap="cellListResultMap">
+        select l.id celllistID,l.title celllistTitle,b.brand_name brand,b.avator,c.title,p.price,c.id,p.sbu
+        from cell_list l
+        inner join cell c on c.brand_id = l.brand_id
+        inner join brand b on c.brand_id = b.id
+        inner join pricing p on c.id = p.cell_id
+        where l.brand_id = #{brandId}
+    </select>
+
+
+</mapper>
