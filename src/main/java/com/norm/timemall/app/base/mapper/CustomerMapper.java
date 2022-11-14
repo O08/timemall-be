@@ -3,6 +3,8 @@ package com.norm.timemall.app.base.mapper;
 import com.norm.timemall.app.base.entity.Customer;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 
 /**
  * (customer)数据Mapper
@@ -13,5 +15,6 @@ import org.apache.ibatis.annotations.Mapper;
 */
 @Mapper
 public interface CustomerMapper extends BaseMapper<Customer> {
-
+@Update("update customer set password=#{password} where login_name=#{username}")
+    void updatePasswordByUserName(@Param("password") String encryptedPassword,@Param("username") String username);
 }

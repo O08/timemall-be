@@ -71,4 +71,11 @@ public class AccountServiceImpl implements AccountService {
         SecurityUserHelper.logout();
     }
 
+    @Override
+    public void modifiedPasswordByUserName(String encryptedPassword, String username) {
+
+        customerMapper.updatePasswordByUserName(encryptedPassword,username);
+
+    }
+
 }

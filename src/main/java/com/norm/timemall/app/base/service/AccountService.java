@@ -9,4 +9,6 @@ public interface AccountService {
     boolean doSignUpWithEmail(String username, String password);
 
     void deleteAccount(CustomizeUser userDetails);
+
+    void modifiedPasswordByUserName(String encryptedPassword, String username);
 }

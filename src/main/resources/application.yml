@@ -72,6 +72,14 @@ restTemplate:
 pod-constants:
   upload-file-dir: ${file_dir}
 
+rsa:
+  publicKey: ${mate_publicKey}
+  privateKey: ${mate_privateKey}
+
+env:
+  website: ${website}
+
+
 
 
 

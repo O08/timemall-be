@@ -51,7 +51,10 @@ public class WebSecurityConfig {
         http.csrf().disable().cors().disable().authorizeHttpRequests()
 //                .anyRequest().permitAll();
 //
-                .antMatchers("/api/v1/web_mall/email_join", "/api/v1/account/auth").permitAll()
+                .antMatchers("/api/v1/web_mall/email_join","/api/v1/web_mall/send_email_code",
+                        "/api/v1/web_mall/do_send_password_reset_email",
+                        "/api/v1/web_mall/do_password_reset")
+                .permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin().loginProcessingUrl("/api/v1/web_mall/email_sign_in")
                     .permitAll().//允许所有用户

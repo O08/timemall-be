@@ -14,12 +14,14 @@ public enum CodeEnum implements Code{
      * Token验证不通过
      */
     INVALID_TOKEN(502, "没有权限！"),
+
     /**
      * 处理失败
      */
     FAILED(503, "处理失败！"),
     REQUEST_REJECTED(504,"request rejected,please check url or parameter"),
     REQUEST_MESSAGE_NOT_READABLE(505,"Http request parameter conversion exception"),
+    INVALID_LINK(506, "无效链接或者链接失效"),
     /**
      * 响应成功
      */
@@ -48,7 +50,10 @@ public enum CodeEnum implements Code{
     FILE_STORE_FAIL(3002,"存储文件失败"),
 
     // business 4....
-    BILL_NOT_EXIST(40001,"账单不存在" );
+    BILL_NOT_EXIST(40001,"账单不存在" ),
+    EMAIL_TEMPLATE_NOT_CONFIG(40002,"邮箱模板未配置" ),
+    EMAIL_LIMIT(40003, "邮件发送已达最大次数"),
+    INVALID_QRCODE(40004,"验证码无效" );
 
     private int code;
     private String desc;
