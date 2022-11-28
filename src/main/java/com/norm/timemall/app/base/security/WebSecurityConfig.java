@@ -61,6 +61,7 @@ public class WebSecurityConfig {
                     successHandler(authenticationSuccessHandler).
                     failureHandler(authenticationFailureHandler)
                 .and().logout()
+                .logoutUrl("/api/v1/web_mall/logout")
                     .permitAll()
                     .logoutSuccessHandler(logoutSuccessHandler) //登出成功处理逻辑
                     .deleteCookies("JSESSIONID") //登出之后删除cookie
