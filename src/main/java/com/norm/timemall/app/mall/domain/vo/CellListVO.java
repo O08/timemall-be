@@ -1,6 +1,7 @@
 package com.norm.timemall.app.mall.domain.vo;
 
 import com.norm.timemall.app.base.enums.Code;
+import com.norm.timemall.app.mall.domain.pojo.CellListInfo;
 import com.norm.timemall.app.mall.domain.ro.CellListRO;
 import lombok.Data;
 
@@ -19,7 +20,7 @@ public class CellListVO {
     /**
      * 响应数据
      */
-    private CellListRO[] celllist;
+    private CellListInfo cellListInfo;
 
     public CellListVO setResponseCode(Code code){
         this.code = code.getCode();
@@ -27,8 +28,8 @@ public class CellListVO {
         return this;
     }
 
-    public CellListVO setLists(CellListRO[] celllist){
-        this.celllist = celllist;
+    public CellListVO setLists(CellListInfo cellListInfo){
+        this.cellListInfo = cellListInfo;
         return this;
     }
 

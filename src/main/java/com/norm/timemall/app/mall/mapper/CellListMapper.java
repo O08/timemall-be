@@ -2,7 +2,7 @@ package com.norm.timemall.app.mall.mapper;
 
 import com.norm.timemall.app.base.mo.CellList;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.norm.timemall.app.mall.domain.ro.CellListRO;
+import com.norm.timemall.app.mall.domain.pojo.CellListInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,6 +16,6 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface CellListMapper extends BaseMapper<CellList> {
 
-    CellListRO[] selectCellListByBrandId(@Param("brandId") String brandId);
+    CellListInfo selectCellListByBrandId(@Param("brandId") String brandId);
 
 }

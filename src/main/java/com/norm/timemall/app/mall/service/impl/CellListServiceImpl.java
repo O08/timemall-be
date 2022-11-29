@@ -1,6 +1,7 @@
 package com.norm.timemall.app.mall.service.impl;
 
 import com.norm.timemall.app.base.enums.CodeEnum;
+import com.norm.timemall.app.mall.domain.pojo.CellListInfo;
 import com.norm.timemall.app.mall.domain.ro.CellListRO;
 import com.norm.timemall.app.mall.domain.vo.CellIntroVO;
 import com.norm.timemall.app.mall.domain.vo.CellListVO;
@@ -16,9 +17,9 @@ public class CellListServiceImpl implements CellListService {
     private CellListMapper cellListMapper;
     @Override
     public CellListVO findCellList(String brandId) {
-        CellListRO[] celllist = cellListMapper.selectCellListByBrandId(brandId);
+        CellListInfo cellListInfo = cellListMapper.selectCellListByBrandId(brandId);
         CellListVO result = new CellListVO().setResponseCode(CodeEnum.SUCCESS)
-                .setLists(celllist);
+                .setLists(cellListInfo);
         return result;
     }
 
