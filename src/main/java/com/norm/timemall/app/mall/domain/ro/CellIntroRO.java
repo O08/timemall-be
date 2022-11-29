@@ -16,6 +16,8 @@ public class CellIntroRO {
 
     // The cover url for cell
     private String introCover;
+    //The brand Id of providing cell
+    private String brandId;
 
     //The brand of providing cell
     private String brand;
