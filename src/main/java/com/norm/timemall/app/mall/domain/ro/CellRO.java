@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 public class CellRO {
     private String brand;
     private String avator;
+    private String preview;
     private String title;
     private BigDecimal price;
     private String id;
