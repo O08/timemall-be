@@ -17,7 +17,7 @@
         <where>
             1=1
             <if test="dto.q != null and dto.q != ''">
-                AND b.brand_name = #{dto.q}
+                AND b.brand_name regexp #{dto.q} or c.title regexp #{dto.q}
             </if>
             <if test="dto.budgetMin > 0">
                 AND p.price  &gt;= #{dto.budgetMin}
