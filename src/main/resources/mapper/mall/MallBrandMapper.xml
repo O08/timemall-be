@@ -9,8 +9,22 @@
         id,brand_name,title,cover,avator,customer_id,wechat,phone,email,cardholder,cardno,alipay,wechatpay,experience,skills,location
     </sql>
 
-    <select id="selectProileByBrandId" resultType="com.norm.timemall.app.mall.domain.ro.BrandProfileRO">
-        select b.brand_name brand,b.avator,b.experience,b.title,b.location,b.skills
+    <resultMap id="brandProfileResultMap" type="com.norm.timemall.app.mall.domain.ro.BrandProfileRO">
+        <result property="brand" column="brand"/>
+        <result property="avator" column="avator"/>
+        <result property="cover" column="cover"/>
+        <result property="experience"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
+                column="experience"/>
+        <result property="title" column="title"/>
+        <result property="location" column="location"/>
+        <result property="skills"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
+                column="skills"/>
+    </resultMap>
+
+    <select id="selectProileByBrandId" resultMap="brandProfileResultMap">
+        select b.brand_name brand,b.avator,b.cover,b.experience,b.title,b.location,b.skills
         from brand b
         where b.id = #{brandId}
     </select>
