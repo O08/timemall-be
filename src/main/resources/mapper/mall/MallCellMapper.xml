@@ -12,20 +12,36 @@
     <select id="selectCellPage" resultType="com.norm.timemall.app.mall.domain.ro.CellRO">
         select b.brand_name brand,b.avator,c.title,p.price,c.id,p.sbu
         from cell c
-        left join brand b on c.brand_id = b.id
-        left join pricing p on c.id = p.cell_id
+        inner join brand b on c.brand_id = b.id
+        inner join pricing p on c.id = p.cell_id
         <where>
             1=1
             <if test="dto.q != null and dto.q != ''">
                 AND b.brand_name = #{dto.q}
             </if>
-            <if test="dto.budget > 0">
-                AND p.price  &gt;= #{dto.budget} AND p.price &lt;= #{dto.budget} + 50
+            <if test="dto.budgetMin > 0">
+                AND p.price  &gt;= #{dto.budgetMin}
+            </if>
+            <if test="dto.budgetMax > 0">
+                AND p.price  &lt;= #{dto.budgetMax}
             </if>
             <if test="dto.sbu != null and dto.sbu != ''">
                 AND p.sbu = #{dto.sbu}
             </if>
         </where>
+        <if test="dto.sort != null and dto.sort != ''">
+            <choose>
+                <when test='dto.sort == "1"'>
+                    Order by c.create_At
+                </when>
+                <when test='dto.sort == "2"'>
+                    Order by p.price desc
+                </when>
+                <when test='dto.sort == "3"'>
+                    Order by p.price asc
+                </when>
+            </choose>
+        </if>
     </select>
     <resultMap id="cellIntroResultMap" type="com.norm.timemall.app.mall.domain.ro.CellIntroRO">
         <id property="id" column="id"/>

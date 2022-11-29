@@ -25,8 +25,10 @@ public class CellPageDTO {
     @Positive(message = "size value should be positive.")
     private Long size;
     // 预算
-    @Positive(message = "budget value should be positive.")
-    private BigDecimal budget;
+    @Positive(message = "budget max value should be positive.")
+    private BigDecimal budgetMin;
+    @Positive(message = "budget max value should be positive.")
+    private BigDecimal budgetMax;
 
     // 排序方式
     private String sort;
