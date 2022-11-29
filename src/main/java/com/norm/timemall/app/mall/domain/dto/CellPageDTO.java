@@ -33,7 +33,7 @@ public class CellPageDTO {
 
     // Standard Billing Unit SBU , option: year quarter month day hour minute second
     @NotBlank(message = "sbu is required,option: year quarter month day hour minute second")
-    @EnumCheck(enumClass = SbuEnum.class,message = "field: sbu, incorrect paramter value ,option: year quarter month day hour minute second")
+    @EnumCheck(enumClass = SbuEnum.class,message = "field: sbu, incorrect paramter value ,option: year quarter month week day hour minute second")
     private String sbu;
 
 
