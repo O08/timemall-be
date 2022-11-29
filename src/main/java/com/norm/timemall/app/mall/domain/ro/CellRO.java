@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 
 @Data
 public class CellRO {
+    private String brandId;
     private String brand;
     private String avator;
     private String preview;
