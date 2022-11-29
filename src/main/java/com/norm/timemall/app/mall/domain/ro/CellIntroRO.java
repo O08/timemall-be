@@ -2,6 +2,7 @@ package com.norm.timemall.app.mall.domain.ro;
 
 import com.norm.timemall.app.mall.domain.pojo.BrandContact;
 import com.norm.timemall.app.mall.domain.pojo.Fee;
+import com.norm.timemall.app.mall.domain.pojo.MallCellIntroContent;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class CellIntroRO {
     private BrandContact brandContact;
 
     // The Intro for cell
-    private String content;
+    private MallCellIntroContent content;
 
     // The pricing for cell
     private ArrayList<Fee> fee;
