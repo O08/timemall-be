@@ -21,16 +21,15 @@ public class StudioTransController {
     /**
      *
      * 商家交易
-     * @param brandId
      * @return
      */
     @ResponseBody
-    @GetMapping(value = "/api/v1/web_estudio/brand/{brand_id}/transaction")
-    public StudioTransPageVO retrievTrans(@PathVariable("brand_id") String brandId,
+    @GetMapping(value = "/api/v1/web_estudio/brand/transaction")
+    public StudioTransPageVO retrievTrans(
                                           @AuthenticationPrincipal CustomizeUser user,
                                           @Validated @RequestBody PageDTO dto)
     {
-        IPage<StudioTransRO> trans = studioOrderDetailsService.findTrans(brandId,user.getUserId(),dto);
+        IPage<StudioTransRO> trans = studioOrderDetailsService.findTrans(user.getUserId(),dto);
         StudioTransPageVO vo = new StudioTransPageVO();
         vo.setResponseCode(CodeEnum.SUCCESS);
         vo.setTransactions(trans);

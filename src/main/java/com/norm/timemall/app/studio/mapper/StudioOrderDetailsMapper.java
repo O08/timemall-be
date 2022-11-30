@@ -19,9 +19,8 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface StudioOrderDetailsMapper extends BaseMapper<OrderDetails> {
 
-   @Select("select cell_title service, customer_name customer,total fee,create_at added,id from order_details where brand_id = #{brand_id} and customer_id = #{user_id}")
+   @Select("select o.cell_title service, o.customer_name customer,o.total fee,o.create_at added,o.id from order_details o,brand b where o.brand_id = b.id and b.customer_id = #{user_id}")
     IPage<StudioTransRO> selectTransPageByBrandId(IPage<StudioTransRO> page,
-                                                  @Param("brand_id") String brandId,
                                                   @Param("user_id") String userId
    );
 }

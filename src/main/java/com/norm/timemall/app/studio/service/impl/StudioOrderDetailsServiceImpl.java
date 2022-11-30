@@ -15,11 +15,11 @@ public class StudioOrderDetailsServiceImpl implements StudioOrderDetailsService 
     private StudioOrderDetailsMapper studioOrderDetailsMapper;
 
     @Override
-    public IPage<StudioTransRO> findTrans(String brandId, String userId,PageDTO dto) {
+    public IPage<StudioTransRO> findTrans( String userId,PageDTO dto) {
         IPage<StudioTransRO> page = new Page<>();
         page.setSize(dto.getSize());
         page.setCurrent(dto.getCurrent());
-        IPage<StudioTransRO> ro = studioOrderDetailsMapper.selectTransPageByBrandId(page, brandId,userId);
+        IPage<StudioTransRO> ro = studioOrderDetailsMapper.selectTransPageByBrandId(page,userId);
         return ro;
     }
 }

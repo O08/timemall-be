@@ -7,5 +7,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface StudioOrderDetailsService {
-    IPage<StudioTransRO> findTrans(String brandId, String userId,PageDTO dto);
+    IPage<StudioTransRO> findTrans( String userId,PageDTO dto);
 }
