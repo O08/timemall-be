@@ -2,6 +2,7 @@ package com.norm.timemall.app.mall.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.enums.CodeEnum;
+import com.norm.timemall.app.mall.domain.dto.BrandCellsPageDTO;
 import com.norm.timemall.app.mall.domain.dto.CellPageDTO;
 import com.norm.timemall.app.mall.domain.ro.CellRO;
 import com.norm.timemall.app.mall.domain.vo.CellIntroVO;
@@ -56,5 +57,18 @@ public class CellController {
     {
         CellIntroVO result = cellServic.fidCellIntro(cellId);
         return result;
+    }
+    /*
+     * 分页查询商家的多个服务
+     */
+    @ResponseBody
+    @GetMapping(value = "/api/v1/web_mall/brandCells")
+    public CellPageVO retrieveBrandCells(@Validated BrandCellsPageDTO dto)
+    {
+        IPage<CellRO> cells = cellServic.findBrandCells(dto);
+        CellPageVO cellPageVO = new CellPageVO()
+                .setResponseCode(CodeEnum.SUCCESS)
+                .setCells(cells);
+        return cellPageVO;
     }
 }

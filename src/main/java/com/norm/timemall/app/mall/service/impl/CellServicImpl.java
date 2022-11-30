@@ -3,6 +3,7 @@ package com.norm.timemall.app.mall.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.norm.timemall.app.base.enums.CodeEnum;
+import com.norm.timemall.app.mall.domain.dto.BrandCellsPageDTO;
 import com.norm.timemall.app.mall.domain.dto.CellPageDTO;
 import com.norm.timemall.app.mall.domain.ro.CellIntroRO;
 import com.norm.timemall.app.mall.domain.vo.CellIntroVO;
@@ -30,5 +31,13 @@ public class CellServicImpl implements CellServic {
         CellIntroVO result = new CellIntroVO().setResponseCode(CodeEnum.SUCCESS)
                 .setProfile(intro);
         return result;
+    }
+
+    @Override
+    public IPage<CellRO> findBrandCells(BrandCellsPageDTO dto) {
+        Page<CellRO> page = new Page<>();
+        page.setSize(dto.getSize());
+        page.setCurrent(dto.getCurrent());
+        return cellMapper.selectBrandCellPage(page, dto);
     }
 }
