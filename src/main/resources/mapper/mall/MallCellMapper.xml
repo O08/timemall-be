@@ -79,6 +79,7 @@
         inner join brand b on c.brand_id = b.id
         inner join pricing p on c.id = p.cell_id
         where b.id = #{dto.brandId}
+        and p.sbu = #{dto.sbu}
     </select>
 
 </mapper>
