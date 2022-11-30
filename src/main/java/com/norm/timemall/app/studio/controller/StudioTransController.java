@@ -27,7 +27,7 @@ public class StudioTransController {
     @GetMapping(value = "/api/v1/web_estudio/brand/transaction")
     public StudioTransPageVO retrievTrans(
                                           @AuthenticationPrincipal CustomizeUser user,
-                                          @Validated @RequestBody PageDTO dto)
+                                          @Validated PageDTO dto)
     {
         IPage<StudioTransRO> trans = studioOrderDetailsService.findTrans(user.getUserId(),dto);
         StudioTransPageVO vo = new StudioTransPageVO();
