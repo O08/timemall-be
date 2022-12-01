@@ -23,4 +23,6 @@ public interface StudioOrderDetailsMapper extends BaseMapper<OrderDetails> {
     IPage<StudioTransRO> selectTransPageByBrandId(IPage<StudioTransRO> page,
                                                   @Param("user_id") String userId
    );
+    @Select("select o.cell_title service, o.customer_name customer,o.total fee,o.create_at added,o.id from order_details o,brand b,millstone m where o.brand_id = b.id and o.id = m.order_id and b.customer_id = #{user_id} and m.mark= #{code}")
+    IPage<StudioTransRO> selectWorkflowPageByBrandId(IPage<StudioTransRO> page,  @Param("user_id") String userId,@Param("code") String code);
 }
