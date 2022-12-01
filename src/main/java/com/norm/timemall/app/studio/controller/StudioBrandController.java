@@ -4,6 +4,8 @@ import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.studio.domain.dto.StudioBrandProfileDTO;
+import com.norm.timemall.app.studio.domain.pojo.StudioBrandContact;
+import com.norm.timemall.app.studio.domain.vo.StudioBrandContactVO;
 import com.norm.timemall.app.studio.service.StudioBrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -35,6 +37,16 @@ public class StudioBrandController {
     {
         studioBrandService.modifyBrandProfile(brandId,user.getUserId(),dto);
         return new SuccessVO(CodeEnum.SUCCESS);
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/api/v1/web_estudio/brand/contact")
+    public StudioBrandContactVO getBrandContact(@AuthenticationPrincipal CustomizeUser user){
+        StudioBrandContact contact = studioBrandService.findContactByUserId(user.getUserId());
+        StudioBrandContactVO vo =new StudioBrandContactVO();
+        vo.setContact(contact);
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        return vo;
     }
 
 

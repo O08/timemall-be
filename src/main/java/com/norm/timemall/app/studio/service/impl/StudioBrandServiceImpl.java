@@ -12,6 +12,7 @@ import com.norm.timemall.app.studio.domain.dto.StudioBrandBankDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioBrandProfileDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioContactDTO;
 import com.norm.timemall.app.studio.domain.pojo.StudioBank;
+import com.norm.timemall.app.studio.domain.pojo.StudioBrandContact;
 import com.norm.timemall.app.studio.mapper.StudioBrandMapper;
 import com.norm.timemall.app.studio.service.StudioBrandService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,5 +80,18 @@ public class StudioBrandServiceImpl implements StudioBrandService {
     @Override
     public void modifyBrandAvatar(String brandId, String uri) {
         studioBrandMapper.updateBrandAvatar(brandId,uri);
+    }
+
+    @Override
+    public StudioBrandContact findContactByUserId(String userId) {
+        LambdaQueryWrapper<Brand> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Brand::getCustomerId,userId);
+        Brand brand = studioBrandMapper.selectOne(wrapper);
+        StudioBrandContact contact = new StudioBrandContact();
+        contact.setEmail(brand.getEmail())
+                .setPhone(brand.getPhone())
+                .setWechat(brand.getWechat());
+        return  contact;
+
     }
 }
