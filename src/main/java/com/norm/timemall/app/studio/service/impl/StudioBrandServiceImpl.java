@@ -50,7 +50,7 @@ public class StudioBrandServiceImpl implements StudioBrandService {
     @Override
     public void modifyBrandContact(String brandId, StudioContactDTO contact) {
         CustomizeUser user = SecurityUserHelper.getCurrentPrincipal();
-        studioBrandMapper.updateBrandContactById(brandId, user.getUserId(), contact.getEmail(),contact.getPhone(),contact.getWechat());
+        studioBrandMapper.updateBrandContactById(brandId, user.getUserId(), contact.getEmail(),contact.getPhone());
     }
 
     @Override

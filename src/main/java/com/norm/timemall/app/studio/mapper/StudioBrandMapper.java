@@ -20,10 +20,10 @@ public interface StudioBrandMapper extends BaseMapper<Brand> {
                              @Param("cardholder") String cardholder,
                              @Param("cardno") String cardNo);
 
-    @Update(value = "update brand set email = #{email}, phone = #{phone}, wechat = #{wechat} where id = #{id} and customer_id = #{user_id}")
+    @Update(value = "update brand set email = #{email}, phone = #{phone} where id = #{id} and customer_id = #{user_id}")
     void updateBrandContactById(@Param("id") String brandId, @Param("user_id") String userId,
                                 @Param("email") String email,
-                                @Param("phone") String phone, @Param("wechat") String wechat);
+                                @Param("phone") String phone);
     @Update(value="update brand set alipay = #{uri} where id = #{id}")
     void updateAliPayById(@Param("id") String brandId,@Param("uri") String uri);
     @Update(value="update brand set wechatpay = #{uri} where id = #{id}")

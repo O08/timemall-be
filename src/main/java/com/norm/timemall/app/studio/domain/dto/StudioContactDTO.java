@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class StudioContactDTO {
-    private String wechat;
     private String phone;
     private String email;
 }
