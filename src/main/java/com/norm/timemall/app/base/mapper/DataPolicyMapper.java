@@ -22,11 +22,12 @@ public interface DataPolicyMapper extends BaseMapper<Customer> {
 @Select("select count(1) cnt from brand d where id = #{id} and d.customer_id=#{user_id}")
     Integer selectCountBrandByIdAndCustomerId(@Param("id") String brandId, @Param("user_id") String userId);
 
-@Select("select count(1) cnt from order_details o where o.id = #{id} and o.customer_id = #{user_id}")
+@Select("select count(1) cnt from order_details o where o.id = #{id} and o.consumer_id = #{user_id}")
     Integer selectCountWorkflowByIdAndCustomerId(@Param("id")  String workflwoId, @Param("user_id") String userId);
-@Select("select count(1) cnt from bill b , order_details o where b.id = #{id} and b.order_id = o.id and o.customer_id = #{user_id}")
+@Select("select count(1) cnt from bill b , order_details o where b.id = #{id} and b.order_id = o.id and o.consumer_id = #{user_id}")
     Integer selectCountBillIdByIdAndCustomerId(@Param("id")  String billId,@Param("user_id")  String userId);
-@Select("select count(1) cnt from order_details where brand_id = #{brand_id} and customer_id = #{user_id}")
+@Select("select count(1) cnt from order_details where brand_id = #{brand_id} and consumer_id = #{user_id}")
     Integer selectCountOrderDetails(@Param("brand_id") String brandId, @Param("user_id") String userId);
-
+    @Select("select count(1) cnt from order_details o, brand b where o.id= #{id} and o.brand_id = b.id and b.customer_id = #{user_id}")
+    Integer selectCountWorkflowForBrandByIdAndCustomerId(@Param("id") String workflwoId, @Param("user_id") String userId);
 }
