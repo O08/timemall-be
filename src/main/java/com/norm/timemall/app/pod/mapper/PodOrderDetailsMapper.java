@@ -19,6 +19,6 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface PodOrderDetailsMapper extends BaseMapper<OrderDetails> {
 
-   @Select("select cell_title service, brand_name supplier,total fee,create_at added,brand_id from order_details where customer_id = #{user_id}")
+   @Select("select cell_title service, brand_name supplier,total fee,create_at added,brand_id from order_details where consumer_id = #{user_id}")
     IPage<PodTransRO> selectTransPageByUserId(IPage<PodTransRO> page, @Param("user_id") String username);
 }
