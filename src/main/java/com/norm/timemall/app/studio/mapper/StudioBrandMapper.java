@@ -33,4 +33,7 @@ public interface StudioBrandMapper extends BaseMapper<Brand> {
     void updateBrandCoverById(@Param("id") String brandId, @Param("uri") String uri);
     @Update(value="update brand set avator = #{uri} where id = #{id}")
     void updateBrandAvatar(@Param("id") String brandId, @Param("uri") String uri);
+    @Update(value="update brand set wechat = #{uri} where id = #{id}")
+    void updateBrandWechatQr(@Param("id") String brandId, @Param("uri") String uri);
+
 }

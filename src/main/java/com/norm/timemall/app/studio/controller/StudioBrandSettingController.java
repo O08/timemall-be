@@ -88,7 +88,7 @@ public class StudioBrandSettingController {
 
     /**
      *
-     *支付宝支付设置
+     *微信支付设置
      * @param brandId
      * @return
      */
@@ -164,5 +164,31 @@ public class StudioBrandSettingController {
         // 删除不再使用文件数据
         fileStoreService.deleteFile(brand.getAvator());
         return new SuccessVO(CodeEnum.SUCCESS);
+    }
+    /**
+     *
+     *头像设置
+     * @param brandId
+     * @return
+     */
+    @ResponseBody
+    @PutMapping(value = "/api/v1/web_estudio/brand/{brand_id}/wechat_qrcode")
+    public SuccessVO settingWechatQrCode(@PathVariable("brand_id") String brandId,
+                                         @AuthenticationPrincipal CustomizeUser user,
+                                         @RequestParam("file") MultipartFile file){
+        // 查询
+        Brand brand = brandService.findbyId(brandId);
+        // 检查数据是否准许入库: 用户数据与商家数据不一致 拦截
+        if (brand == null || (!user.getUserId().equals(brand.getCustomerId()))){
+            throw new ErrorCodeException(CodeEnum.INVALID_TOKEN);
+        }
+        // 存储图片
+        String uri = fileStoreService.storeWithSpecifiedDir(file, FileStoreDir.WECHAT_QR);
+        // 更新
+        brandService.modifyBrandWechatQr(brandId,uri);
+        // 删除不再使用文件数据
+        fileStoreService.deleteFile(brand.getWechat());
+        return new SuccessVO(CodeEnum.SUCCESS);
+
     }
 }

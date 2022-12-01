@@ -26,4 +26,7 @@ public interface StudioBrandService {
     void modifyBrandAvatar(String brandId, String uri);
 
     StudioBrandContact findContactByUserId(String userId);
+
+    void modifyBrandWechatQr(String brandId, String uri);
+
 }

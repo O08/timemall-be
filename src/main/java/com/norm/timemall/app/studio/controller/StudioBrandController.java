@@ -38,7 +38,11 @@ public class StudioBrandController {
         studioBrandService.modifyBrandProfile(brandId,user.getUserId(),dto);
         return new SuccessVO(CodeEnum.SUCCESS);
     }
-
+    /**
+     *
+     * 商家联系方式
+     * @return
+     */
     @ResponseBody
     @GetMapping(value = "/api/v1/web_estudio/brand/contact")
     public StudioBrandContactVO getBrandContact(@AuthenticationPrincipal CustomizeUser user){

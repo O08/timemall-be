@@ -94,4 +94,9 @@ public class StudioBrandServiceImpl implements StudioBrandService {
         return  contact;
 
     }
+
+    @Override
+    public void modifyBrandWechatQr(String brandId, String uri) {
+        studioBrandMapper.updateBrandWechatQr(brandId,uri);
+    }
 }
