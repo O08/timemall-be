@@ -10,5 +10,6 @@ public class PodWorkFlowNode {
     @NotNull(message = "millstones node required")
     @Valid
     private PodMillStoneNode[] millstones;
+    private PodWorkflowServiceInfo serviceInfo;
 
 }

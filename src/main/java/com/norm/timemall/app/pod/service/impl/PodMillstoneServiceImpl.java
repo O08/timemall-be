@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.norm.timemall.app.base.mo.Millstone;
 import com.norm.timemall.app.pod.domain.dto.PodModifyWorkflowDTO;
 import com.norm.timemall.app.pod.domain.pojo.PodWorkFlowNode;
+import com.norm.timemall.app.pod.domain.pojo.PodWorkflowServiceInfo;
 import com.norm.timemall.app.pod.mapper.PodMillstoneMapper;
 import com.norm.timemall.app.pod.service.PodMillstoneService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import java.util.Date;
 public class PodMillstoneServiceImpl implements PodMillstoneService {
     @Autowired
     private PodMillstoneMapper podMillstoneMapper;
+
     @Override
     public void modifyWorkflow(String workflwoId, PodModifyWorkflowDTO dto) {
         Gson gson = new Gson();
@@ -44,7 +46,14 @@ public class PodMillstoneServiceImpl implements PodMillstoneService {
         Millstone millstone = podMillstoneMapper.selectOne(wrapper);
         Gson gson = new Gson();
         // todo empty stagelist
-        PodWorkFlowNode workflow = gson.fromJson(millstone.getStageList().toString(), PodWorkFlowNode.class);
+        PodWorkFlowNode workflow = new PodWorkFlowNode();
+        if(millstone.getStageList() == null){
+            PodWorkflowServiceInfo info = podMillstoneMapper.selectWorkflowServiceInfoById(workflwoId);
+            workflow.setServiceInfo(info);
+        }
+        if(millstone.getStageList() != null){
+            workflow = gson.fromJson(millstone.getStageList().toString(), PodWorkFlowNode.class);
+        }
         return workflow;
     }
 }
