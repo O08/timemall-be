@@ -30,13 +30,13 @@ public class OrderDetails extends Model<OrderDetails> implements Serializable {
     @TableId
 	private String id;
     /**
-     * customerId
+     * 客户id
      */
-    private String customerId;
+    private String consumerId;
     /**
-     * customerName
+     * 客户姓名
      */
-    private String customerName;
+    private String consumerName;
     /**
      * cellId
      */

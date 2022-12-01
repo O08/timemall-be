@@ -28,6 +28,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         InsertOrderParameter parameter = new InsertOrderParameter()
                 .setId(orderId)
                 .setUserId(userDetails.getUserId())
+                .setUsername(userDetails.getUsername())
                 .setCellId(cellId)
                 .setQuantity(orderDTO.getQuantity())
                 .setSbu(orderDTO.getSbu());

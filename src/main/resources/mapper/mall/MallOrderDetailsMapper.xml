@@ -6,15 +6,15 @@
     </sql>
 
     <sql id="baseColumn">
-        id,customer_id,customer_name,cell_id,cell_title,brand_id,brand_name,total,quantity,sbu,cancelled,cancelled_reason,cancelled_at,refunded,create_at,modified_at
+        id,consumer_id,consumer_name,cell_id,cell_title,brand_id,brand_name,total,quantity,sbu,cancelled,cancelled_reason,cancelled_at,refunded,create_at,modified_at
     </sql>
 
     <insert id="insertNewOrder">
-        insert order_details(id,customer_id,customer_name,cell_id,cell_title,brand_id,brand_name,total,quantity,sbu,create_at,modified_at)
+        insert order_details(id,consumer_id,consumer_name,cell_id,cell_title,brand_id,brand_name,total,quantity,sbu,create_at,modified_at)
         select
         #{pt.id} id,
-        '1' customer_id,
-        #{pt.userId} customer_name,
+        #{pt.userId} consumer_id,
+        #{pt.username} consumer_name,
         c.id cell_id,
         c.title cell_title,
         b.id brand_id,

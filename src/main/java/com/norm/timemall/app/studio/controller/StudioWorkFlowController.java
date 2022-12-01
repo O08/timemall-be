@@ -26,7 +26,7 @@ public class StudioWorkFlowController {
      * @return
      */
     @ResponseBody
-    @GetMapping(value = "/api/v1/web_estudio/brand/{brand_id}/millstone/workflow")
+    @GetMapping(value = "/api/v1/web_estudio/brand/millstone/workflow")
     public StudioTransPageVO retrievWrokflows(
             @AuthenticationPrincipal CustomizeUser user,
             @Validated StudioWorkflowPageDTO dto)
