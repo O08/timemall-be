@@ -1,6 +1,7 @@
 package com.norm.timemall.app.base.service;
 
 import com.norm.timemall.app.base.entity.Account;
+import com.norm.timemall.app.base.mo.Brand;
 import com.norm.timemall.app.base.security.CustomizeUser;
 
 
@@ -11,4 +12,6 @@ public interface AccountService {
     void deleteAccount(CustomizeUser userDetails);
 
     void modifiedPasswordByUserName(String encryptedPassword, String username);
+
+    Brand findBrandInfoByUserId(String userId);
 }

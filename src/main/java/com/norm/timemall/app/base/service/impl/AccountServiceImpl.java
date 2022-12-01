@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
+import com.norm.timemall.app.base.mapper.BaseBrandMapper;
+import com.norm.timemall.app.base.mo.Brand;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.base.entity.Customer;
@@ -23,6 +25,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private CustomerMapper customerMapper;
+    @Autowired
+    private BaseBrandMapper baseBrandMapper;
     @Override
     public Account findAccountByUserName(String username) {
         LambdaQueryWrapper<Customer> lambdaQuery = Wrappers.<Customer>lambdaQuery();
@@ -57,6 +61,9 @@ public class AccountServiceImpl implements AccountService {
                 .setModifiedAt(new Date());
 
         customerMapper.insert(customer);
+
+        // bind a brand for new user
+        newBrandWhenUserRegister(customer.getId());
         return true;
     }
 
@@ -76,6 +83,20 @@ public class AccountServiceImpl implements AccountService {
 
         customerMapper.updatePasswordByUserName(encryptedPassword,username);
 
+    }
+
+    @Override
+    public Brand findBrandInfoByUserId(String userId) {
+        LambdaQueryWrapper<Brand> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Brand::getCustomerId,userId);
+        Brand brand = baseBrandMapper.selectOne(wrapper);
+        return brand;
+    }
+    private void newBrandWhenUserRegister(String userId){
+        Brand brand = new Brand();
+        brand.setId(IdUtil.simpleUUID())
+                .setCustomerId(userId);
+        baseBrandMapper.insert(brand);
     }
 
 }

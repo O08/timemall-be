@@ -10,4 +10,5 @@ import lombok.experimental.Accessors;
 public class CurrentUser {
     private String userId;
     private String username;
+    private String brandId;
 }
