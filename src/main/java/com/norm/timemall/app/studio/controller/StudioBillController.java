@@ -25,7 +25,7 @@ public class StudioBillController {
     @GetMapping(value = "/api/v1/web_estudio/brand/bill")
     public StudioBillPageVO retrieveBills(
                                           @AuthenticationPrincipal CustomizeUser user,
-                                          @Validated @RequestBody StudioBrandBillPageDTO dto)
+                                          @Validated StudioBrandBillPageDTO dto)
     {
         IPage<StudioBillRO> bills = studioBillService.findBills(user.getUserId(),dto);
         StudioBillPageVO vo = new StudioBillPageVO();
