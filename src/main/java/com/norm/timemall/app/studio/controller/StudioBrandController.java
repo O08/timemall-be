@@ -45,7 +45,7 @@ public class StudioBrandController {
      * @return
      */
     @ResponseBody
-    @GetMapping(value = "/api/v1/web_estudio/brand/contact")
+    @GetMapping(value = "/api/v1/web_estudio/brand/info")
     public StudioBrandInfoVO getBrandContact(@AuthenticationPrincipal CustomizeUser user){
         BrandInfo brand = studioBrandService.findBrandInfoByUserId(user.getUserId());
         StudioBrandInfoVO vo =new StudioBrandInfoVO();
