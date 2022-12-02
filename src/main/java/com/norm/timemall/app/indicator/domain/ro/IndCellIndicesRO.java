@@ -10,6 +10,8 @@ public class IndCellIndicesRO {
     private String id;
     // cell title
     private String title;
+    // cell mark
+    private String mark;
     // 曝光率
     private Integer impressions;
     // 点击数
