@@ -4,7 +4,7 @@ import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.service.DataPolicyService;
 import com.norm.timemall.app.pod.domain.pojo.PodBrandContact;
-import com.norm.timemall.app.pod.domain.pojo.PodPayway;
+import com.norm.timemall.app.base.pojo.BrandPayway;
 import com.norm.timemall.app.pod.domain.vo.PodBrandContactVO;
 import com.norm.timemall.app.pod.domain.vo.PodBrandPayWayVO;
 import com.norm.timemall.app.pod.service.PodBrandService;
@@ -55,7 +55,7 @@ public class PodBrandController {
         {
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
-        PodPayway payway = podBrandService.findPaywayById(brandId);
+        BrandPayway payway = podBrandService.findPaywayById(brandId);
         PodBrandPayWayVO vo = new PodBrandPayWayVO();
         vo.setPayway(payway);
         vo.setResponseCode(CodeEnum.SUCCESS);

@@ -7,12 +7,15 @@ import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.Brand;
+import com.norm.timemall.app.base.pojo.BrandBank;
+import com.norm.timemall.app.base.pojo.BrandInfo;
+import com.norm.timemall.app.base.pojo.BrandPayway;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.studio.domain.dto.StudioBrandBankDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioBrandProfileDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioContactDTO;
 import com.norm.timemall.app.studio.domain.pojo.StudioBank;
-import com.norm.timemall.app.studio.domain.pojo.StudioBrandContact;
+import com.norm.timemall.app.base.pojo.BrandContact;
 import com.norm.timemall.app.studio.mapper.StudioBrandMapper;
 import com.norm.timemall.app.studio.service.StudioBrandService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,15 +86,26 @@ public class StudioBrandServiceImpl implements StudioBrandService {
     }
 
     @Override
-    public StudioBrandContact findContactByUserId(String userId) {
+    public BrandInfo findBrandInfoByUserId(String userId) {
         LambdaQueryWrapper<Brand> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(Brand::getCustomerId,userId);
         Brand brand = studioBrandMapper.selectOne(wrapper);
-        StudioBrandContact contact = new StudioBrandContact();
+        BrandBank bank = new BrandBank();
+        bank.setCardholder(brand.getCardholder());
+        bank.setCardNo(brand.getCardno());
+        BrandPayway payway =new BrandPayway();
+        payway.setBank(bank)
+                .setAliPay(brand.getAlipay())
+                .setWechatPay(brand.getWechatpay());
+        BrandContact contact = new BrandContact();
         contact.setEmail(brand.getEmail())
                 .setPhone(brand.getPhone())
                 .setWechat(brand.getWechat());
-        return  contact;
+
+        BrandInfo brandInfo = new BrandInfo();
+        brandInfo.setContact(contact)
+                .setPayway(payway);
+        return  brandInfo;
 
     }
 
