@@ -10,4 +10,5 @@ public interface StudioBillService {
 
     IPage<StudioBillRO> findBills(String userId,StudioBrandBillPageDTO dto);
 
+    void markBillForBrandByIdAndCode(String billId, String code);
 }

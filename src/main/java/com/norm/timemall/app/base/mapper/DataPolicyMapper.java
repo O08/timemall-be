@@ -30,4 +30,6 @@ public interface DataPolicyMapper extends BaseMapper<Customer> {
     Integer selectCountOrderDetails(@Param("brand_id") String brandId, @Param("user_id") String userId);
     @Select("select count(1) cnt from order_details o, brand b where o.id= #{id} and o.brand_id = b.id and b.customer_id = #{user_id}")
     Integer selectCountWorkflowForBrandByIdAndCustomerId(@Param("id") String workflwoId, @Param("user_id") String userId);
+    @Select("select count(1) cnt from bill b , order_details o, brand r where o.brand_id = r.id and b.id = #{id} and b.order_id = o.id and r.customer_id = #{user_id}")
+    Integer selectCountBillIdForBrandByIdAndCustomerId(@Param("id")  String billId,@Param("user_id")  String userId);
 }

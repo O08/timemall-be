@@ -10,4 +10,5 @@ public class StudioBillRO {
     private String amount;
     private String billId;
     private String voucher;
+    private String added;
 }

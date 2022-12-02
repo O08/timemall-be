@@ -58,4 +58,12 @@ public class DataPolicyServiceImpl implements DataPolicyService {
         Integer cnt = dataPolicyMapper.selectCountWorkflowForBrandByIdAndCustomerId(workflwoId,userId);
         return cnt>0;
     }
+
+    @Override
+    public boolean billIdCheckForBrand(String billId) {
+        String  userId = SecurityUserHelper.getCurrentPrincipal().getUserId();
+        Integer cnt = dataPolicyMapper.selectCountBillIdForBrandByIdAndCustomerId(billId,userId);
+        return cnt>0;
+
+    }
 }

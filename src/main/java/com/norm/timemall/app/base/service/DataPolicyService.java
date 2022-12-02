@@ -17,4 +17,6 @@ public interface DataPolicyService {
 
     boolean workflowIdCheckForBrand(String workflwoId);
 
+    boolean billIdCheckForBrand(String billId);
+
 }

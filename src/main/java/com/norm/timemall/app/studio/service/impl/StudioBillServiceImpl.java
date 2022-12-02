@@ -21,4 +21,9 @@ public class StudioBillServiceImpl implements StudioBillService {
         page.setSize(dto.getSize());
         return studioBillMapper.selectBillPageByBrandId(page, userId,dto.getCode());
     }
+
+    @Override
+    public void markBillForBrandByIdAndCode(String billId, String code) {
+        studioBillMapper.updateBillForBrandMarkById(billId,code);
+    }
 }
