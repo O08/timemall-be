@@ -8,6 +8,6 @@ import org.springframework.stereotype.Service;
 @Service
 public interface StudioBillService {
 
-    IPage<StudioBillRO> findBills(String brandId, String userId,StudioBrandBillPageDTO dto);
+    IPage<StudioBillRO> findBills(String userId,StudioBrandBillPageDTO dto);
 
 }

@@ -19,16 +19,15 @@ public class StudioBillController {
     /**
      *
      * 商家账单
-     * @param brandId
      * @return
      */
     @ResponseBody
-    @GetMapping(value = "/api/v1/web_estudio/brand/{brand_id}/bill")
-    public StudioBillPageVO retrieveBills(@PathVariable("brand_id") String brandId,
+    @GetMapping(value = "/api/v1/web_estudio/brand/bill")
+    public StudioBillPageVO retrieveBills(
                                           @AuthenticationPrincipal CustomizeUser user,
                                           @Validated @RequestBody StudioBrandBillPageDTO dto)
     {
-        IPage<StudioBillRO> bills = studioBillService.findBills(brandId,user.getUserId(),dto);
+        IPage<StudioBillRO> bills = studioBillService.findBills(user.getUserId(),dto);
         StudioBillPageVO vo = new StudioBillPageVO();
         vo.setResponseCode(CodeEnum.SUCCESS);
         vo.setBills(bills);

@@ -17,7 +17,7 @@ import org.apache.ibatis.annotations.Param;
 */
 @Mapper
 public interface StudioBillMapper extends BaseMapper<Bill> {
-    IPage<StudioBillRO> selectBillPageByBrandId(IPage<StudioBillRO> page, @Param("brand_id") String brandId,
+    IPage<StudioBillRO> selectBillPageByBrandId(IPage<StudioBillRO> page,
     @Param("user_id") String userId,
     @Param("code") String code);
 

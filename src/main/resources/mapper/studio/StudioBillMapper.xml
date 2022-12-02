@@ -12,8 +12,8 @@
         select b.stage,d.customer_name customer,d.cell_title service,b.amount,b.id billId,b.voucher
         from bill b
         inner join order_details d on b.order_id = d.id
-        where d.brand_id = #{brand_id}
-        and d.customer_id = #{user_id}
+        inner join brand r on r.id=d.brand_id
+        where r.customer_id = #{user_id}
         and b.mark = #{code}
     </select>
 
