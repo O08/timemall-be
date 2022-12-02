@@ -12,7 +12,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @Configuration
 @MapperScan({"com.norm.timemall.app.base.mapper", "com.norm.timemall.app.mall.mapper",
-        "com.norm.timemall.app.pod.mapper", "com.norm.timemall.app.studio.mapper"
+        "com.norm.timemall.app.pod.mapper", "com.norm.timemall.app.studio.mapper",
+        "com.norm.timemall.app.indicator.mapper"
 })
 public class MybatisConfig {
     /**

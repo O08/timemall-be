@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.indicator.mapper.IndCellIndicesMapper">
+    <sql id="tableName">
+        cell_indices
+    </sql>
+
+    <sql id="baseColumn">
+        id,cell_id,impressions,clicks,orders
+    </sql>
+    <select id="selectCellIndicesPageByUserId" resultType="com.norm.timemall.app.indicator.domain.ro.IndCellIndicesRO">
+        select c.id,c.title,IFNULL(i.impressions,0) impressions,IFNULL(i.clicks,0) clicks,IFNULL(i.orders,0) orders
+        from cell  c
+        inner join brand b on b.id = c.brand_id
+        left join cell_indices i on c.id = i.cell_id
+        where b.customer_id = #{customer_id}
+    </select>
+
+</mapper>
