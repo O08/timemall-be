@@ -82,7 +82,7 @@ public class StudioCellServiceImpl implements StudioCellService {
     public void trashCell(String cellId) {
         LambdaQueryWrapper<Cell> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(Cell::getId,cellId);
-        wrapper.eq(Cell::getMark, CellMarkEnum.DRAFT);
+        wrapper.eq(Cell::getMark, CellMarkEnum.DRAFT.getMark());
         studioCellMapper.delete(wrapper);
     }
 
