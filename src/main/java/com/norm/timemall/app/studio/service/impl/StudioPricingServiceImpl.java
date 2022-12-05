@@ -3,6 +3,8 @@ package com.norm.timemall.app.studio.service.impl;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.norm.timemall.app.base.mo.Pricing;
 import com.norm.timemall.app.studio.domain.dto.StudioPricingDTO;
 import com.norm.timemall.app.studio.mapper.StudioPricingMapper;
@@ -21,6 +23,13 @@ public class StudioPricingServiceImpl implements StudioPricingService {
     public void newPricing(String cellId, StudioPricingDTO dto) {
         List<Pricing> pricingList = getPricingList(cellId,dto);
         studioPricingMapper.insertBatchSomeColumn(pricingList);
+    }
+
+    @Override
+    public void removePricing(String cellId) {
+        LambdaQueryWrapper<Pricing> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Pricing::getCellId,cellId);
+        studioPricingMapper.delete(wrapper);
     }
 
     private List<Pricing> getPricingList(String cellId, StudioPricingDTO dto)

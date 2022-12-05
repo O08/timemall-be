@@ -7,4 +7,6 @@ import org.springframework.stereotype.Service;
 public interface StudioPricingService {
     void newPricing(String cellId, StudioPricingDTO dto);
 
+    void removePricing(String cellId);
+
 }

@@ -26,4 +26,6 @@ public interface StudioCellService {
 
     String initCell(String brandId);
 
+    void trashCell(String cellId);
+
 }

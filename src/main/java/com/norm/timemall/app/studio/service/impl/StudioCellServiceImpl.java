@@ -1,10 +1,13 @@
 package com.norm.timemall.app.studio.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.gson.Gson;
 import com.norm.timemall.app.base.entity.PageDTO;
+import com.norm.timemall.app.base.enums.CellMarkEnum;
 import com.norm.timemall.app.base.mo.Cell;
 import com.norm.timemall.app.studio.domain.dto.StudioCellIntroContentDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioCellOverViewDTO;
@@ -67,12 +70,20 @@ public class StudioCellServiceImpl implements StudioCellService {
     public String initCell(String brandId) {
         Cell cell = new Cell();
         cell.setBrandId(brandId)
+                .setMark(CellMarkEnum.DRAFT.getMark())
                 .setId(IdUtil.simpleUUID())
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
         studioCellMapper.insert(cell);
-        // todo mark
         return cell.getId();
+    }
+
+    @Override
+    public void trashCell(String cellId) {
+        LambdaQueryWrapper<Cell> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Cell::getId,cellId);
+        wrapper.eq(Cell::getMark, CellMarkEnum.DRAFT);
+        studioCellMapper.delete(wrapper);
     }
 
 }
