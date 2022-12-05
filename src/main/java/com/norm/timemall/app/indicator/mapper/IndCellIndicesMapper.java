@@ -17,5 +17,6 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface IndCellIndicesMapper extends BaseMapper<CellIndices> {
 
-    IPage<IndCellIndicesRO> selectCellIndicesPageByUserId(IPage<IndCellIndicesRO> page, @Param("customer_id")  String userId);
+    IPage<IndCellIndicesRO> selectCellIndicesPageByUserId(IPage<IndCellIndicesRO> page, @Param("code") String code,
+                                                          @Param("customer_id")  String userId);
 }
