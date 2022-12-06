@@ -23,5 +23,9 @@ public class PodBillsRO {
 
     // 支付凭证 ref: bill.voucher
     private String voucher;
+    // ref: bill.create_at
+    private String added;
+    // ref: brand.id
+    private String brandId;
 
 }

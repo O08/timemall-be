@@ -9,7 +9,7 @@
         id,stage,amount,voucher,mark,order_id,create_at,modified_at
     </sql>
     <select id="selectBillPageByUserId" resultType="com.norm.timemall.app.pod.domain.ro.PodBillsRO">
-        select b.stage,d.brand_name brand,d.cell_title service,b.amount,b.id billId,b.voucher
+        select b.stage,d.brand_name brand,d.cell_title service,b.amount,b.id billId,b.voucher,b.create_at added,d.brand_id brandId
         from bill b
         inner join order_details d on b.order_id = d.id
         where d.consumer_id = #{user_id}
