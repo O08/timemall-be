@@ -2,9 +2,9 @@ package com.norm.timemall.app.pod.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.norm.timemall.app.base.entity.PageDTO;
 import com.norm.timemall.app.base.mo.Bill;
 import com.norm.timemall.app.base.security.CustomizeUser;
+import com.norm.timemall.app.pod.domain.dto.PodBillPageDTO;
 import com.norm.timemall.app.pod.domain.ro.PodBillsRO;
 import com.norm.timemall.app.pod.mapper.PodBillMapper;
 import com.norm.timemall.app.pod.service.PodBillService;
@@ -33,11 +33,11 @@ public class PodBillServiceImpl implements PodBillService {
     }
 
     @Override
-    public IPage<PodBillsRO> findBills(PageDTO pageDTO, CustomizeUser user) {
+    public IPage<PodBillsRO> findBills(PodBillPageDTO pageDTO, CustomizeUser user) {
         IPage<PodBillsRO> page = new Page<>();
         page.setCurrent(pageDTO.getCurrent());
         page.setSize(pageDTO.getSize());
-        IPage<PodBillsRO>  bills = podBillMapper.selectBillPageByUserId(page, user.getUserId());
+        IPage<PodBillsRO>  bills = podBillMapper.selectBillPageByUserId(page, pageDTO.getCode(),user.getUserId());
         return bills;
     }
 }

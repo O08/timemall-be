@@ -8,6 +8,7 @@ import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.mo.Bill;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.base.service.DataPolicyService;
+import com.norm.timemall.app.pod.domain.dto.PodBillPageDTO;
 import com.norm.timemall.app.pod.domain.ro.PodBillsRO;
 import com.norm.timemall.app.pod.domain.vo.PodBillsPageVO;
 import com.norm.timemall.app.base.enums.FileStoreDir;
@@ -85,7 +86,7 @@ public class PodBillController {
      */
     @ResponseBody
     @GetMapping(value = "/api/v1/web_epod/me/bill")
-    public PodBillsPageVO retrieveBills(@Validated @RequestBody PageDTO PageDTO, @AuthenticationPrincipal CustomizeUser user)
+    public PodBillsPageVO retrieveBills(@Validated PodBillPageDTO PageDTO, @AuthenticationPrincipal CustomizeUser user)
     {
         IPage<PodBillsRO> bills = podBillService.findBills(PageDTO,user);
         PodBillsPageVO billsPageVO = new PodBillsPageVO();

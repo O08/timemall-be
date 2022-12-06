@@ -26,6 +26,6 @@ public interface PodBillMapper extends BaseMapper<Bill> {
     @Update(value = "update bill set mark = #{code} where id = #{id}")
     void updateBillMarkById(@Param("id")  String billId, @Param("code") String code);
 
-    IPage<PodBillsRO> selectBillPageByUserId(IPage<PodBillsRO> page, @Param("customer_id") String customerId);
+    IPage<PodBillsRO> selectBillPageByUserId(IPage<PodBillsRO> page,  @Param("mark") String  code, @Param("user_id") String customerId);
 
 }
