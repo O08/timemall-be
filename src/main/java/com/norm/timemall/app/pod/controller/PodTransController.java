@@ -29,7 +29,7 @@ public class PodTransController {
      */
     @ResponseBody
     @GetMapping(value = "/api/v1/web_epod/me/transaction")
-    public PodTransPageVO retrieveTrans(@Validated @RequestBody PageDTO transPageDTO, @AuthenticationPrincipal CustomizeUser user)
+    public PodTransPageVO retrieveTrans(@Validated  PageDTO transPageDTO, @AuthenticationPrincipal CustomizeUser user)
     {
         IPage<PodTransRO> trans = podOrderDetailService.findTrans(transPageDTO,user);
         PodTransPageVO transPageVO = new PodTransPageVO();
