@@ -11,9 +11,7 @@ import com.norm.timemall.app.base.pojo.BrandBank;
 import com.norm.timemall.app.base.pojo.BrandInfo;
 import com.norm.timemall.app.base.pojo.BrandPayway;
 import com.norm.timemall.app.base.security.CustomizeUser;
-import com.norm.timemall.app.studio.domain.dto.StudioBrandBankDTO;
-import com.norm.timemall.app.studio.domain.dto.StudioBrandProfileDTO;
-import com.norm.timemall.app.studio.domain.dto.StudioContactDTO;
+import com.norm.timemall.app.studio.domain.dto.*;
 import com.norm.timemall.app.studio.domain.pojo.StudioBank;
 import com.norm.timemall.app.base.pojo.BrandContact;
 import com.norm.timemall.app.studio.mapper.StudioBrandMapper;
@@ -112,5 +110,22 @@ public class StudioBrandServiceImpl implements StudioBrandService {
     @Override
     public void modifyBrandWechatQr(String brandId, String uri) {
         studioBrandMapper.updateBrandWechatQr(brandId,uri);
+    }
+
+    @Override
+    public void modifyBrandBasic(String brandId, String userId, StudioBrandBasicInfoDTO dto) {
+        studioBrandMapper.updateBrandBasicInfo(brandId,userId,dto);
+    }
+
+    @Override
+    public void modifyBrandSkills(String brandId, String userId, StudioBrandSkillsDTO dto) {
+        Gson gson = new Gson();
+        studioBrandMapper.updateBrandSkills(brandId,userId,gson.toJson(dto.getSkill().getSkills()));
+    }
+
+    @Override
+    public void modifyBrandExperience(String brandId, String userId, StudioBrandExperienceDTO dto) {
+        Gson gson = new Gson();
+        studioBrandMapper.updateBrandExperience(brandId,userId,gson.toJson(dto.getHistory().getExperience()));
     }
 }

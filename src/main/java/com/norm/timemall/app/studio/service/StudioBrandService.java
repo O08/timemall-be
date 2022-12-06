@@ -2,9 +2,7 @@ package com.norm.timemall.app.studio.service;
 
 import com.norm.timemall.app.base.mo.Brand;
 import com.norm.timemall.app.base.pojo.BrandInfo;
-import com.norm.timemall.app.studio.domain.dto.StudioBrandBankDTO;
-import com.norm.timemall.app.studio.domain.dto.StudioBrandProfileDTO;
-import com.norm.timemall.app.studio.domain.dto.StudioContactDTO;
+import com.norm.timemall.app.studio.domain.dto.*;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,4 +27,9 @@ public interface StudioBrandService {
 
     void modifyBrandWechatQr(String brandId, String uri);
 
+    void modifyBrandBasic(String brandId, String userId, StudioBrandBasicInfoDTO dto);
+
+    void modifyBrandSkills(String brandId, String userId, StudioBrandSkillsDTO dto);
+
+    void modifyBrandExperience(String brandId, String userId, StudioBrandExperienceDTO dto);
 }

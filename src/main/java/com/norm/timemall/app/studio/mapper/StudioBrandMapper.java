@@ -2,6 +2,7 @@ package com.norm.timemall.app.studio.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.norm.timemall.app.base.mo.Brand;
+import com.norm.timemall.app.studio.domain.dto.StudioBrandBasicInfoDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
@@ -35,5 +36,11 @@ public interface StudioBrandMapper extends BaseMapper<Brand> {
     void updateBrandAvatar(@Param("id") String brandId, @Param("uri") String uri);
     @Update(value="update brand set wechat = #{uri} where id = #{id}")
     void updateBrandWechatQr(@Param("id") String brandId, @Param("uri") String uri);
+    @Update(value="update brand set brand_name = #{dto.brand},title= #{dto.title},location=#{dto.location} where id = #{id}  and customer_id = #{user_id}")
+    void updateBrandBasicInfo(@Param("id") String brandId, @Param("user_id") String userId, @Param("dto") StudioBrandBasicInfoDTO dto);
+    @Update(value="update brand set skills = #{skills} where id = #{id}  and customer_id = #{user_id}")
+    void updateBrandSkills(@Param("id")String brandId, @Param("user_id")String userId, @Param("skills")String skillJson);
+    @Update(value="update brand set experience = #{experience} where id = #{id}  and customer_id = #{user_id}")
+    void updateBrandExperience(@Param("id") String brandId, @Param("user_id") String userId, @Param("experience") String experienceJson);
 
 }

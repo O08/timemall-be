@@ -4,8 +4,10 @@ import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.pojo.BrandInfo;
 import com.norm.timemall.app.base.security.CustomizeUser;
+import com.norm.timemall.app.studio.domain.dto.StudioBrandBasicInfoDTO;
+import com.norm.timemall.app.studio.domain.dto.StudioBrandExperienceDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioBrandProfileDTO;
-import com.norm.timemall.app.base.pojo.BrandContact;
+import com.norm.timemall.app.studio.domain.dto.StudioBrandSkillsDTO;
 import com.norm.timemall.app.studio.domain.vo.StudioBrandInfoVO;
 import com.norm.timemall.app.studio.service.StudioBrandService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,7 @@ public class StudioBrandController {
      * @return
      */
     @ResponseBody
+    @Deprecated
     @PutMapping(value = "/api/v1/web_estudio/brand/{brand_id}/profile")
     public SuccessVO modifyBrandProfile(@PathVariable("brand_id") String brandId,
                                         @AuthenticationPrincipal CustomizeUser user,
@@ -52,6 +55,57 @@ public class StudioBrandController {
         vo.setBrand(brand);
         vo.setResponseCode(CodeEnum.SUCCESS);
         return vo;
+    }
+
+    /**
+     *
+     * 商家资料-基本信息
+     * @param brandId
+     * @param dto
+     * @return
+     */
+    @ResponseBody
+    @PutMapping(value = "/api/v1/web_estudio/brand/{brand_id}/basic_info")
+    public SuccessVO modifyBrandBasicInfo(@PathVariable("brand_id") String brandId,
+                                        @AuthenticationPrincipal CustomizeUser user,
+                                        @RequestBody StudioBrandBasicInfoDTO dto)
+    {
+        studioBrandService.modifyBrandBasic(brandId,user.getUserId(),dto);
+        return new SuccessVO(CodeEnum.SUCCESS);
+    }
+
+    /**
+     *
+     * 商家资料-专业能力
+     * @param brandId
+     * @param dto
+     * @return
+     */
+    @ResponseBody
+    @PutMapping(value = "/api/v1/web_estudio/brand/{brand_id}/skills")
+    public SuccessVO modifyBrandSkills(@PathVariable("brand_id") String brandId,
+                                          @AuthenticationPrincipal CustomizeUser user,
+                                          @RequestBody StudioBrandSkillsDTO dto)
+    {
+        studioBrandService.modifyBrandSkills(brandId,user.getUserId(),dto);
+        return new SuccessVO(CodeEnum.SUCCESS);
+    }
+
+    /**
+     *
+     * 商家资料-品牌历史
+     * @param brandId
+     * @param dto
+     * @return
+     */
+    @ResponseBody
+    @PutMapping(value = "/api/v1/web_estudio/brand/{brand_id}/experience")
+    public SuccessVO modifyBrandExperience(@PathVariable("brand_id") String brandId,
+                                       @AuthenticationPrincipal CustomizeUser user,
+                                       @RequestBody StudioBrandExperienceDTO dto)
+    {
+        studioBrandService.modifyBrandExperience(brandId,user.getUserId(),dto);
+        return new SuccessVO(CodeEnum.SUCCESS);
     }
 
 
