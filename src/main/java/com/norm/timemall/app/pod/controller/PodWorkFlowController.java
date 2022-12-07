@@ -1,14 +1,21 @@
 package com.norm.timemall.app.pod.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
+import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.base.service.DataPolicyService;
 import com.norm.timemall.app.pod.domain.dto.PodModifyWorkflowDTO;
+import com.norm.timemall.app.pod.domain.dto.PodWorkflowPageDTO;
 import com.norm.timemall.app.pod.domain.pojo.PodWorkFlowNode;
+import com.norm.timemall.app.pod.domain.ro.PodWorkflowRO;
 import com.norm.timemall.app.pod.domain.vo.PodSingleWorkFlowVO;
+import com.norm.timemall.app.pod.domain.vo.PodWorkflowPageVO;
 import com.norm.timemall.app.pod.service.PodMillstoneService;
+import com.norm.timemall.app.pod.service.PodOrderDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +30,9 @@ public class PodWorkFlowController {
 
     @Autowired
     private DataPolicyService dataPolicyService;
+
+    @Autowired
+    private PodOrderDetailService podOrderDetailService;
 
     /*
      * 更新工作流
@@ -74,6 +84,23 @@ public class PodWorkFlowController {
         result.setWorkflow(workFlowNode)
             .setResponseCode(CodeEnum.SUCCESS);
         return result;
+    }
+    /**
+     *
+     * 商家工作流查询
+     * @return
+     */
+    @ResponseBody
+    @GetMapping(value = "/api/v1/web_epod/me/millstone/workflow")
+    public PodWorkflowPageVO retrievWrokflows(
+            @AuthenticationPrincipal CustomizeUser user,
+            @Validated PodWorkflowPageDTO dto)
+    {
+        IPage<PodWorkflowRO> workflows = podOrderDetailService.findWorkflowForBrand(user.getUserId(),dto);
+        PodWorkflowPageVO vo = new PodWorkflowPageVO();
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        vo.setWorkflows(workflows);
+        return vo;
     }
 
 
