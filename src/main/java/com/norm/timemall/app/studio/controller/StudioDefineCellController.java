@@ -76,7 +76,7 @@ public class StudioDefineCellController {
         // find cell
         Cell cell = studioCellService.findSingleCell(cellId);
         // store cell cover file
-        String uri = fileStoreService.storeWithSpecifiedDir(file, FileStoreDir.CELL_COVER);
+        String uri = fileStoreService.storeWithUnlimitedAccess(file, FileStoreDir.CELL_COVER);
         // update cell cover uri
         studioCellService.modifyCellCover(cellId,uri);
         // delete unused file
@@ -94,7 +94,7 @@ public class StudioDefineCellController {
         // find cell
         Cell cell = studioCellService.findSingleCell(cellId);
         // store file
-        String uri = fileStoreService.storeWithSpecifiedDir(file,FileStoreDir.CELL_INTRO_COVER);
+        String uri = fileStoreService.storeWithUnlimitedAccess(file,FileStoreDir.CELL_INTRO_COVER);
         // update cell cover uri
         studioCellService.modifyIntroCover(cellId,uri);
         // delete unused file

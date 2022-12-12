@@ -79,6 +79,14 @@ rsa:
 env:
   website: ${website}
 
+aliyun:
+  oss:
+    endpoint: ${oss_endpoint}
+    access-key-id: ${oss_accessKeyId}
+    access-key-secret: ${oss_accessKeySecret}
+    public-bucket: ${oss_public_bucket}
+    limited-bucket: ${oss_limited_bucket}
+
 
 
 

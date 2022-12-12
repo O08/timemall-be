@@ -64,7 +64,7 @@ public class StudioBrandSettingController {
             throw new ErrorCodeException(CodeEnum.INVALID_TOKEN);
         }
         // 存储图片
-        String uri = fileStoreService.storeWithSpecifiedDir(file, FileStoreDir.PAY_ALI);
+        String uri = fileStoreService.storeWithLimitedAccess(file, FileStoreDir.PAY_ALI);
         // 更新
         brandService.modifyAliPay(brandId,uri);
         // 删除不再使用文件数据
@@ -105,7 +105,7 @@ public class StudioBrandSettingController {
             throw new ErrorCodeException(CodeEnum.INVALID_TOKEN);
         }
         // 存储图片
-        String uri = fileStoreService.storeWithSpecifiedDir(file, FileStoreDir.PAY_WECAHAT);
+        String uri = fileStoreService.storeWithLimitedAccess(file, FileStoreDir.PAY_WECAHAT);
         // 更新
         brandService.modifyWeChatPay(brandId,uri);
         // 删除不再使用文件数据
@@ -132,7 +132,7 @@ public class StudioBrandSettingController {
             throw new ErrorCodeException(CodeEnum.INVALID_TOKEN);
         }
         // 存储图片
-        String uri = fileStoreService.storeWithSpecifiedDir(file, FileStoreDir.BRAND_COVER);
+        String uri = fileStoreService.storeWithUnlimitedAccess(file, FileStoreDir.BRAND_COVER);
         // 更新
         brandService.modifyBrandCover(brandId,uri);
         // 删除不再使用文件数据
@@ -158,7 +158,7 @@ public class StudioBrandSettingController {
             throw new ErrorCodeException(CodeEnum.INVALID_TOKEN);
         }
         // 存储图片
-        String uri = fileStoreService.storeWithSpecifiedDir(file, FileStoreDir.BRAND_AVATOR);
+        String uri = fileStoreService.storeWithUnlimitedAccess(file, FileStoreDir.BRAND_AVATOR);
         // 更新
         brandService.modifyBrandAvatar(brandId,uri);
         // 删除不再使用文件数据
@@ -167,7 +167,7 @@ public class StudioBrandSettingController {
     }
     /**
      *
-     *头像设置
+     *微信二维码
      * @param brandId
      * @return
      */
@@ -183,7 +183,7 @@ public class StudioBrandSettingController {
             throw new ErrorCodeException(CodeEnum.INVALID_TOKEN);
         }
         // 存储图片
-        String uri = fileStoreService.storeWithSpecifiedDir(file, FileStoreDir.WECHAT_QR);
+        String uri = fileStoreService.storeWithLimitedAccess(file, FileStoreDir.WECHAT_QR);
         // 更新
         brandService.modifyBrandWechatQr(brandId,uri);
         // 删除不再使用文件数据

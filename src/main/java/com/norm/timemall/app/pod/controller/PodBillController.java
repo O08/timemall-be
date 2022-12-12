@@ -53,7 +53,7 @@ public class PodBillController {
             throw new ErrorCodeException(CodeEnum.BILL_NOT_EXIST);
         }
         // 存储文件
-        String uri = fileStoreService.storeWithSpecifiedDir(file, FileStoreDir.VOUCHER);
+        String uri = fileStoreService.storeWithLimitedAccess(file, FileStoreDir.VOUCHER);
         // 更新数据库 凭证uri
         podBillService.modifyBillVoucherUri(billId,uri);
 
