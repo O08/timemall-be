@@ -7,6 +7,7 @@ import com.norm.timemall.app.base.enums.CellMarkEnum;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.mo.Cell;
+import com.norm.timemall.app.base.pojo.vo.CellIntroVO;
 import com.norm.timemall.app.base.service.DataPolicyService;
 import com.norm.timemall.app.base.service.FileStoreService;
 import com.norm.timemall.app.studio.domain.ro.StudioCellRO;
@@ -100,6 +101,17 @@ public class StudioCellController {
         // remove cell
         studioCellService.trashCell(cellId);
         return new SuccessVO(CodeEnum.SUCCESS);
+    }
+
+    /*
+     * 服务详情
+     */
+    @ResponseBody
+    @GetMapping(value = "/api/v1/web_estudio/cell/{cell_id}/profile")
+    public CellIntroVO retrieveCellIntroForStudio(@PathVariable("cell_id") String cellId)
+    {
+        CellIntroVO result = studioCellService.findCellProfileInfo(cellId);
+        return result;
     }
 
 

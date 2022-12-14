@@ -6,7 +6,7 @@ import com.norm.timemall.app.mall.domain.dto.BrandCellsPageDTO;
 import com.norm.timemall.app.mall.domain.dto.CellPageDTO;
 import com.norm.timemall.app.base.mo.Cell;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.norm.timemall.app.mall.domain.ro.CellIntroRO;
+import com.norm.timemall.app.base.pojo.ro.CellIntroRO;
 import com.norm.timemall.app.mall.domain.ro.CellRO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

@@ -26,5 +26,36 @@
         )
     </update>
 
+    <resultMap id="cellIntroResultMap" type="com.norm.timemall.app.base.pojo.ro.CellIntroRO">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="cover" column="cover"/>
+        <result property="introCover" column="intro_cover"/>
+        <result property="brandId" column="brandId"/>
+        <result property="brand" column="brand"/>
+        <result property="avator" column="avator"/>
+        <!--        <result property="content" column="content"/>-->
+        <result property="content"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
+                column="content"/>
+        <association property="brandContact" javaType="com.norm.timemall.app.mall.domain.pojo.BrandContact" >
+            <result property="wechat" column="wechat"/>
+            <result property="phone" column="phone"/>
+            <result property="email" column="email"/>
+        </association>
+        <collection property="fee" ofType="com.norm.timemall.app.mall.domain.pojo.Fee" javaType="ArrayList">
+            <result property="price" column="price"/>
+            <result property="sbu" column="sbu"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectCellProfileInfo" resultMap="cellIntroResultMap">
+        select c.title, c.id, c.cover, c.intro_cover,b.id brandId,b.brand_name brand,b.avator,b.wechat,b.phone,b.email,c.content,p.price,p.sbu
+        from cell c
+        inner join brand b on c.brand_id = b.id
+        left join pricing p on c.id = p.cell_id
+        where c.id = #{id}
+    </select>
+
 
 </mapper>

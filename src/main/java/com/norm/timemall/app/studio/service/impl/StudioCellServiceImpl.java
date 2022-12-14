@@ -8,7 +8,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.gson.Gson;
 import com.norm.timemall.app.base.entity.PageDTO;
 import com.norm.timemall.app.base.enums.CellMarkEnum;
+import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.mo.Cell;
+import com.norm.timemall.app.base.pojo.ro.CellIntroRO;
+import com.norm.timemall.app.base.pojo.vo.CellIntroVO;
 import com.norm.timemall.app.studio.domain.dto.StudioCellIntroContentDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioCellOverViewDTO;
 import com.norm.timemall.app.studio.domain.ro.StudioCellRO;
@@ -84,6 +87,14 @@ public class StudioCellServiceImpl implements StudioCellService {
         wrapper.eq(Cell::getId,cellId);
         wrapper.eq(Cell::getMark, CellMarkEnum.DRAFT.getMark());
         studioCellMapper.delete(wrapper);
+    }
+
+    @Override
+    public CellIntroVO findCellProfileInfo(String cellId) {
+        CellIntroRO intro = studioCellMapper.selectCellProfileInfo(cellId);
+        CellIntroVO result = new CellIntroVO().setResponseCode(CodeEnum.SUCCESS)
+                .setProfile(intro);
+        return result;
     }
 
 }

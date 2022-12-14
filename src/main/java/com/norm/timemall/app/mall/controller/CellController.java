@@ -5,7 +5,7 @@ import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.mall.domain.dto.BrandCellsPageDTO;
 import com.norm.timemall.app.mall.domain.dto.CellPageDTO;
 import com.norm.timemall.app.mall.domain.ro.CellRO;
-import com.norm.timemall.app.mall.domain.vo.CellIntroVO;
+import com.norm.timemall.app.base.pojo.vo.CellIntroVO;
 import com.norm.timemall.app.mall.domain.vo.CellListVO;
 import com.norm.timemall.app.mall.domain.vo.CellPageVO;
 import com.norm.timemall.app.mall.service.CellListService;

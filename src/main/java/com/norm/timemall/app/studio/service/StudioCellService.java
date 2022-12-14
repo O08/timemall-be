@@ -3,6 +3,7 @@ package com.norm.timemall.app.studio.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.entity.PageDTO;
 import com.norm.timemall.app.base.mo.Cell;
+import com.norm.timemall.app.base.pojo.vo.CellIntroVO;
 import com.norm.timemall.app.studio.domain.dto.StudioCellIntroContentDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioCellOverViewDTO;
 import com.norm.timemall.app.studio.domain.ro.StudioCellRO;
@@ -27,5 +28,7 @@ public interface StudioCellService {
     String initCell(String brandId);
 
     void trashCell(String cellId);
+
+    CellIntroVO findCellProfileInfo(String cellId);
 
 }

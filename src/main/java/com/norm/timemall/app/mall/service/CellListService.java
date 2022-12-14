@@ -1,6 +1,5 @@
 package com.norm.timemall.app.mall.service;
 
-import com.norm.timemall.app.mall.domain.vo.CellIntroVO;
 import com.norm.timemall.app.mall.domain.vo.CellListVO;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.norm.timemall.app.mall.domain.ro;
+package com.norm.timemall.app.base.pojo.ro;
 
 import com.norm.timemall.app.mall.domain.pojo.BrandContact;
 import com.norm.timemall.app.mall.domain.pojo.Fee;
@@ -15,7 +15,10 @@ public class CellIntroRO {
     // The id for cell
     private String id;
 
-    // The cover url for cell
+    // The intro cover url for cell
+    private String cover;
+
+    // The intro cover url for cell
     private String introCover;
     //The brand Id of providing cell
     private String brandId;

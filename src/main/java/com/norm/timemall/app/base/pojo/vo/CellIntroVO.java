@@ -1,7 +1,7 @@
-package com.norm.timemall.app.mall.domain.vo;
+package com.norm.timemall.app.base.pojo.vo;
 
 import com.norm.timemall.app.base.enums.Code;
-import com.norm.timemall.app.mall.domain.ro.CellIntroRO;
+import com.norm.timemall.app.base.pojo.ro.CellIntroRO;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
