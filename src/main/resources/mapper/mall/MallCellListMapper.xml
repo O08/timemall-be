@@ -30,12 +30,13 @@
     </resultMap>
     <select id="selectCellListByBrandId" resultMap="cellListInfoResultMap">
         select l.id celllistID,l.title celllistTitle,b.brand_name brand,b.avator,c.title,p.price,c.id,p.sbu,b.cover,c.cover preview
-        from cell_list l
-        inner join cell c on c.brand_id = l.brand_id
-        
-        inner join brand b on c.brand_id = b.id
-        inner join pricing p on c.id = p.cell_id
-        where l.brand_id = #{brandId}
+        from brand b
+        left join cell_list l on l.brand_id = b.id
+        left join cell_list_item i on i.cell_list_id = l.id
+        left join cell c on c.id = i.cell_id
+        left join pricing p on p.cell_id = c.id and p.sbu ='day'
+        where b.id = #{brandId}
+
     </select>
 
 
