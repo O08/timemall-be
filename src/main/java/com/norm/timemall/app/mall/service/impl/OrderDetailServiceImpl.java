@@ -1,6 +1,7 @@
 package com.norm.timemall.app.mall.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import com.norm.timemall.app.base.enums.WorkflowMarkEnum;
 import com.norm.timemall.app.base.mo.Millstone;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.mall.domain.dto.OrderDTO;
@@ -36,9 +37,10 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
         // 增加该订单对应的空Workflow
         Millstone millstone = new Millstone();
-        millstone.setOrderId(orderId);
-        millstone.setCreateAt(new Date());
-        millstone.setModifiedAt(new Date());
+        millstone.setOrderId(orderId)
+                .setMark(WorkflowMarkEnum.IN_QUEUE.getMark())
+                .setCreateAt(new Date())
+                .setModifiedAt(new Date());
         millstoneMapper.insert(millstone);
 
 
