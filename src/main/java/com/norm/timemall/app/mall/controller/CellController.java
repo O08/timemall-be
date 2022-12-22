@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.mall.domain.dto.BrandCellsPageDTO;
 import com.norm.timemall.app.mall.domain.dto.CellPageDTO;
+import com.norm.timemall.app.mall.domain.pojo.MallHomeInfo;
 import com.norm.timemall.app.mall.domain.ro.CellRO;
 import com.norm.timemall.app.base.pojo.vo.CellIntroVO;
 import com.norm.timemall.app.mall.domain.vo.CellListVO;
 import com.norm.timemall.app.mall.domain.vo.CellPageVO;
+import com.norm.timemall.app.mall.domain.vo.HomeInfoVO;
 import com.norm.timemall.app.mall.service.CellListService;
 import com.norm.timemall.app.mall.service.CellServic;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,7 @@ public class CellController {
      * 服务清单查询
      */
     @ResponseBody
+    @Deprecated
     @GetMapping(value = "/api/v1/web_mall/brand/{brand_id}/celllist")
     public CellListVO retrieveCellList(@PathVariable("brand_id") String brandId)
     {
@@ -70,5 +73,19 @@ public class CellController {
                 .setResponseCode(CodeEnum.SUCCESS)
                 .setCells(cells);
         return cellPageVO;
+    }
+
+    /*
+     * 商家首页数据
+     */
+    @ResponseBody
+    @GetMapping(value = "/api/v1/web_mall/brand/{brand_id}/homeinfo")
+    public HomeInfoVO retrieveHomeInfo(@PathVariable("brand_id") String brandId)
+    {
+        MallHomeInfo data = cellServic.findHomeInfo(brandId);
+        HomeInfoVO vo = new HomeInfoVO();
+                vo.setData(data);
+                vo.setResponseCode(CodeEnum.SUCCESS);
+        return vo;
     }
 }

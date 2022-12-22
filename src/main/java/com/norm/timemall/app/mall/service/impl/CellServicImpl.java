@@ -7,6 +7,7 @@ import com.norm.timemall.app.mall.domain.dto.BrandCellsPageDTO;
 import com.norm.timemall.app.mall.domain.dto.CellPageDTO;
 import com.norm.timemall.app.base.pojo.ro.CellIntroRO;
 import com.norm.timemall.app.base.pojo.vo.CellIntroVO;
+import com.norm.timemall.app.mall.domain.pojo.MallHomeInfo;
 import com.norm.timemall.app.mall.mapper.CellMapper;
 import com.norm.timemall.app.mall.domain.ro.CellRO;
 import com.norm.timemall.app.mall.service.CellServic;
@@ -39,5 +40,11 @@ public class CellServicImpl implements CellServic {
         page.setSize(dto.getSize());
         page.setCurrent(dto.getCurrent());
         return cellMapper.selectBrandCellPage(page, dto);
+    }
+
+    @Override
+    public MallHomeInfo findHomeInfo(String brandId) {
+        MallHomeInfo data = cellMapper.selectHomeInfoByBrandId(brandId);
+        return data;
     }
 }

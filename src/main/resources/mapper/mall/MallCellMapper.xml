@@ -83,4 +83,28 @@
         and p.sbu = #{dto.sbu}
     </select>
 
+    <resultMap id="cellsResultMap" type="com.norm.timemall.app.mall.domain.ro.MallCellRO">
+        <id property="id" column="id"></id>
+        <result property="title" column="title"></result>
+        <result property="price" column="price"></result>
+        <result property="sbu" column="sbu"></result>
+        <result property="preview" column="preview"></result>
+    </resultMap>
+    <resultMap id="homeInfoResultMap" type="com.norm.timemall.app.mall.domain.pojo.MallHomeInfo">
+        <result property="brand" column="brand"/>
+        <result property="avator" column="avator"/>
+        <result property="cover" column="cover"/>
+        <collection property="cells" ofType="com.norm.timemall.app.mall.domain.ro.MallCellRO" javaType="ArrayList" resultMap="cellsResultMap"/>
+    </resultMap>
+    <select id="selectHomeInfoByBrandId" resultMap="homeInfoResultMap">
+        select b.brand_name brand,b.avator,b.cover, c.cover preview,c.title,p.price,c.id,p.sbu
+        from brand b
+        left join cell c on c.brand_id = b.id  and c.mark = '2'
+        left join pricing p on c.id = p.cell_id and p.sbu = 'day'
+        where b.id = #{id}
+        order by modified_at desc limit 10
+
+    </select>
+
+
 </mapper>

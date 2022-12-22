@@ -8,7 +8,7 @@
     <sql id="baseColumn">
         id,brand_id,title,create_at,modified_at
     </sql>
-    <resultMap id="cellsResultMap" type="com.norm.timemall.app.mall.domain.pojo.CellListCell">
+    <resultMap id="cellsResultMap" type="com.norm.timemall.app.mall.domain.ro.MallCellRO">
         <id property="id" column="id"></id>
         <result property="title" column="title"></result>
         <result property="price" column="price"></result>
@@ -20,7 +20,7 @@
     <resultMap id="cellListResultMap" type="com.norm.timemall.app.mall.domain.ro.CellListRO">
         <id property="celllistID" column="celllistID"/>
         <result property="title" column="celllistTitle"/>
-        <collection property="cells" ofType="com.norm.timemall.app.mall.domain.pojo.CellListCell" javaType="ArrayList" resultMap="cellsResultMap"/>
+        <collection property="cells" ofType="com.norm.timemall.app.mall.domain.ro.MallCellRO" javaType="ArrayList" resultMap="cellsResultMap"/>
     </resultMap>
     <resultMap id="cellListInfoResultMap" type="com.norm.timemall.app.mall.domain.pojo.CellListInfo">
         <result property="brand" column="brand"/>

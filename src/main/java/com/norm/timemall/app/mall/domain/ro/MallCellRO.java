@@ -1,11 +1,11 @@
-package com.norm.timemall.app.mall.domain.pojo;
+package com.norm.timemall.app.mall.domain.ro;
 
 import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Data
-public class CellListCell {
+public class MallCellRO {
     private String preview;
     private String title;
     private BigDecimal price;
