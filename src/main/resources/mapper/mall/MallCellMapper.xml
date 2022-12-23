@@ -16,8 +16,9 @@
         inner join pricing p on c.id = p.cell_id
         <where>
             1=1
+            AND c.mark = '2'
             <if test="dto.q != null and dto.q != ''">
-                AND b.brand_name regexp #{dto.q} or c.title regexp #{dto.q}
+                AND locate(#{dto.q}, b.brand_name)>0  or  locate(#{dto.q}, c.title)>0
             </if>
             <if test="dto.budgetMin > 0">
                 AND p.price  &gt;= #{dto.budgetMin}
@@ -81,6 +82,7 @@
         inner join pricing p on c.id = p.cell_id
         where b.id = #{dto.brandId}
         and p.sbu = #{dto.sbu}
+        and c.mark ='2'
     </select>
 
     <resultMap id="cellsResultMap" type="com.norm.timemall.app.mall.domain.ro.MallCellRO">

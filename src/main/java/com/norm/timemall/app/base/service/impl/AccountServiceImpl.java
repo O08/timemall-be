@@ -63,7 +63,7 @@ public class AccountServiceImpl implements AccountService {
         customerMapper.insert(customer);
 
         // bind a brand for new user
-        newBrandWhenUserRegister(customer.getId());
+        newBrandWhenUserRegister(customer.getId(),username);
         return true;
     }
 
@@ -92,9 +92,10 @@ public class AccountServiceImpl implements AccountService {
         Brand brand = baseBrandMapper.selectOne(wrapper);
         return brand;
     }
-    private void newBrandWhenUserRegister(String userId){
+    private void newBrandWhenUserRegister(String userId,String brandName){
         Brand brand = new Brand();
         brand.setId(IdUtil.simpleUUID())
+                .setBrandName(brandName)
                 .setCustomerId(userId);
         baseBrandMapper.insert(brand);
     }
