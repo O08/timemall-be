@@ -1,0 +1,15 @@
+package com.norm.timemall.app.mall.domain.pojo;
+
+import com.norm.timemall.app.mall.domain.ro.MallCellRO;
+import lombok.Data;
+
+import java.util.ArrayList;
+
+
+@Data
+public class MallHomeInfo {
+    private String brand;
+    private String avator;
+    private String cover;
+    private ArrayList<MallCellRO> cells;
+}

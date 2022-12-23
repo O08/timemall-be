@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.mall.mapper.CellMapper">
+    <sql id="tableName">
+        cell
+    </sql>
+
+    <sql id="baseColumn">
+        id,title,cover,intro_cover,content,brand_id,mark,create_at,modified_at
+    </sql>
+
+    <select id="selectCellPage" resultType="com.norm.timemall.app.mall.domain.ro.CellRO">
+        select b.id brandId,b.brand_name brand,b.avator,c.cover preview,c.title,p.price,c.id,p.sbu
+        from cell c
+        inner join brand b on c.brand_id = b.id
+        inner join pricing p on c.id = p.cell_id
+        <where>
+            1=1
+            AND c.mark = '2'
+            <if test="dto.q != null and dto.q != ''">
+                AND locate(#{dto.q}, b.brand_name)>0  or  locate(#{dto.q}, c.title)>0
+            </if>
+            <if test="dto.budgetMin > 0">
+                AND p.price  &gt;= #{dto.budgetMin}
+            </if>
+            <if test="dto.budgetMax > 0">
+                AND p.price  &lt;= #{dto.budgetMax}
+            </if>
+            <if test="dto.sbu != null and dto.sbu != ''">
+                AND p.sbu = #{dto.sbu}
+            </if>
+        </where>
+        <if test="dto.sort != null and dto.sort != ''">
+            <choose>
+                <when test='dto.sort == "1"'>
+                    Order by c.create_At
+                </when>
+                <when test='dto.sort == "2"'>
+                    Order by p.price desc
+                </when>
+                <when test='dto.sort == "3"'>
+                    Order by p.price asc
+                </when>
+            </choose>
+        </if>
+    </select>
+    <resultMap id="cellIntroResultMap" type="com.norm.timemall.app.base.pojo.ro.CellIntroRO">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="cover" column="cover"/>
+        <result property="introCover" column="intro_cover"/>
+        <result property="brandId" column="brandId"/>
+        <result property="brand" column="brand"/>
+        <result property="avator" column="avator"/>
+<!--        <result property="content" column="content"/>-->
+        <result property="content"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
+                column="content"/>
+        <association property="brandContact" javaType="com.norm.timemall.app.mall.domain.pojo.BrandContact" >
+            <result property="wechat" column="wechat"/>
+            <result property="phone" column="phone"/>
+            <result property="email" column="email"/>
+        </association>
+        <collection property="fee" ofType="com.norm.timemall.app.mall.domain.pojo.Fee" javaType="ArrayList">
+            <result property="price" column="price"/>
+            <result property="sbu" column="sbu"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectCellIntro" resultMap="cellIntroResultMap">
+        select c.title, c.id, c.cover, c.intro_cover,b.id brandId,b.brand_name brand,b.avator,b.wechat,b.phone,b.email,c.content,p.price,p.sbu
+        from cell c
+        inner join brand b on c.brand_id = b.id
+        inner join pricing p on c.id = p.cell_id
+        where c.id = #{id}
+    </select>
+
+    <select id="selectBrandCellPage" resultType="com.norm.timemall.app.mall.domain.ro.CellRO">
+        select b.id brandId,b.brand_name brand,b.avator,c.cover preview,c.title,p.price,c.id,p.sbu
+        from cell c
+        inner join brand b on c.brand_id = b.id
+        inner join pricing p on c.id = p.cell_id
+        where b.id = #{dto.brandId}
+        and p.sbu = #{dto.sbu}
+        and c.mark ='2'
+    </select>
+
+    <resultMap id="cellsResultMap" type="com.norm.timemall.app.mall.domain.ro.MallCellRO">
+        <id property="id" column="id"></id>
+        <result property="title" column="title"></result>
+        <result property="price" column="price"></result>
+        <result property="sbu" column="sbu"></result>
+        <result property="preview" column="preview"></result>
+    </resultMap>
+    <resultMap id="homeInfoResultMap" type="com.norm.timemall.app.mall.domain.pojo.MallHomeInfo">
+        <result property="brand" column="brand"/>
+        <result property="avator" column="avator"/>
+        <result property="cover" column="cover"/>
+        <collection property="cells" ofType="com.norm.timemall.app.mall.domain.ro.MallCellRO" javaType="ArrayList" resultMap="cellsResultMap"/>
+    </resultMap>
+    <select id="selectHomeInfoByBrandId" resultMap="homeInfoResultMap">
+        select b.brand_name brand,b.avator,b.cover, c.cover preview,c.title,p.price,c.id,p.sbu
+        from brand b
+        left join cell c on c.brand_id = b.id  and c.mark = '2'
+        left join pricing p on c.id = p.cell_id and p.sbu = 'day'
+        where b.id = #{id}
+        order by modified_at desc limit 10
+
+    </select>
+
+
+</mapper>
