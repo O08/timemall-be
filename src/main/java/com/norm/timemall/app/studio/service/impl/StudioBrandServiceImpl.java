@@ -103,6 +103,8 @@ public class StudioBrandServiceImpl implements StudioBrandService {
         BrandInfo brandInfo = new BrandInfo();
         brandInfo.setContact(contact)
                 .setPayway(payway);
+        brandInfo.setBrand(brand.getBrandName());
+        brandInfo.setAvatar(brand.getAvator());
         return  brandInfo;
 
     }
