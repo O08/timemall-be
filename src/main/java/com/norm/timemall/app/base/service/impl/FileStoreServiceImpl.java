@@ -21,7 +21,7 @@ import java.nio.file.Paths;
 @Slf4j
 public class FileStoreServiceImpl implements FileStoreService {
 
-
+    private String limitedFileAccessPrefix="/api/file/";
 
     @Autowired
     private AliOssClientUtil aliOssClientUtil;
@@ -50,8 +50,8 @@ public class FileStoreServiceImpl implements FileStoreService {
         String extName = FileUtil.extName(file.getOriginalFilename());
         // 重命名
         String fileName = IdUtil.simpleUUID() + "." + extName;
-        // 存储
-        String storeDir =  dir.getDir();
+        // 存储 ，私有文件拼接前缀，私有文件访问入口 /api/file/
+        String storeDir =  isPublic ? dir.getDir() : limitedFileAccessPrefix + dir.getDir();
         Path rootLocation = Paths.get(storeDir);
         // 文件存储路径
         Path destinationFile = rootLocation.resolve(Paths.get(fileName))
@@ -61,7 +61,7 @@ public class FileStoreServiceImpl implements FileStoreService {
              url =   aliOssClientUtil.fileUploadForPublic(file,destinationFile.toString());
         }
         if(!isPublic){
-            url =   aliOssClientUtil.fileUploadForLimited(file,destinationFile.toString());
+            url =   aliOssClientUtil.fileUploadForLimited(file,destinationFile.toString().replaceFirst("/",""));
         }
         if(StrUtil.isBlank(url)){
             throw new ErrorCodeException(CodeEnum.FILE_STORE_FAIL);
@@ -69,13 +69,25 @@ public class FileStoreServiceImpl implements FileStoreService {
         return url;
     }
 
-
+    /**
+     *  limited uri:
+     *  public uri:
+     * @param uri
+     * @return
+     */
     @Override
     public boolean deleteFile(String uri) {
         if(StrUtil.isEmpty(uri)){
             return true;
         }
-        Path filepath = Paths.get(uri);
-        return  FileUtil.del(filepath);
+        // 匹配到私有前缀 为私有文件 uri 与 objectName 相同
+        if(uri.startsWith(limitedFileAccessPrefix)){
+            aliOssClientUtil.deleteLimitedBucketFile(uri);
+        }
+        if(!uri.startsWith(limitedFileAccessPrefix)){
+            // 公共访问文件 去掉uri前缀从而获取objectName
+            aliOssClientUtil.deletePublicBucketFile(uri.replace(aliOssClientUtil.getPublicFileEndpoint(),""));
+        }
+        return  true;
     }
 }

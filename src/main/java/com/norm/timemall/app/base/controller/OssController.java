@@ -31,7 +31,7 @@ public class OssController {
         if (null != arguments && !arguments.isEmpty()) {
             fileName = fileName + '/' + arguments;
         }
-           fileStoreService.download(fileName,c,response);
+           fileStoreService.download("api/file/"+fileName,c,response);
 
     }
 

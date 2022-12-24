@@ -1,6 +1,5 @@
 package com.norm.timemall.app.base.util;
 
-import cn.hutool.core.date.DateUtil;
 import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
@@ -19,10 +18,12 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
+/***
+ * oss reference book: https://help.aliyun.com/document_detail/84842.html
+ *
+ */
 @Slf4j
 @Component
 public class AliOssClientUtil {
@@ -35,6 +36,9 @@ public class AliOssClientUtil {
     // 个人文件存储，不可公共读
     public  String fileUploadForLimited(MultipartFile file,String objectName){
         return doFileUpload(file,objectName,false);
+    }
+    public String getPublicFileEndpoint(){
+        return "https://"+ aliOssConfigure.getPublicBucket()+"."+aliOssConfigure.getEndpoint().replace("https://","")+"/";
     }
 
 
@@ -113,5 +117,30 @@ public class AliOssClientUtil {
 
 
     }
-
+    public void deletePublicBucketFile(String objectName){
+        deleteBucketFile(aliOssConfigure.getPublicBucket(),objectName);
     }
+    public void deleteLimitedBucketFile(String objectName){
+        deleteBucketFile(aliOssConfigure.getLimitedBucket(),objectName);
+    }
+
+    public void deleteBucketFile(String bucketName, String objectName){
+        // 创建OSSClient实例。
+        OSS ossClient = new OSSClientBuilder().build(aliOssConfigure.getEndpoint(), aliOssConfigure.getAccessKeyId(),
+                aliOssConfigure.getAccessKeySecret());
+        try {
+            // 删除文件或目录。如果要删除目录，目录必须为空。
+            ossClient.deleteObject(bucketName, objectName);
+        } catch (OSSException oe) {
+            log.error("oss download exception:",oe);
+        } catch (ClientException ce) {
+            log.error("oss download ClientException:",ce);
+        } finally {
+            if (ossClient != null) {
+                ossClient.shutdown();
+            }
+        }
+    }
+
+
+}
