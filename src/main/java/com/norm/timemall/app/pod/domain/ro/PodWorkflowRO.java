@@ -1,6 +1,7 @@
 package com.norm.timemall.app.pod.domain.ro;
 
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -14,6 +15,7 @@ public class PodWorkflowRO {
     // The total fee for order,ref: order_details.total
     private BigDecimal fee;
     // Create date for order, ref: order_details.create_at
+    @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date added;
     // The id for workflow, ref: order_details.id
     private String id;
