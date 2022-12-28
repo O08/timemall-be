@@ -61,6 +61,9 @@ public class StudioDefineCellController {
         if(!dataPolicyService.cellOwnerCheck(cellId)){
             throw new ErrorCodeException(CodeEnum.INVALID_TOKEN);
         }
+        // remove old pricing
+        studioPricingService.removePricing(cellId);
+        // insert new pricing
         studioPricingService.newPricing(cellId,dto);
         return new SuccessVO(CodeEnum.SUCCESS);
     }
