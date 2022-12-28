@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import com.norm.timemall.app.base.config.env.EnvBean;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.EmailMessageTopicEnum;
 import com.norm.timemall.app.base.enums.RichTextConfigEnum;
@@ -30,6 +31,9 @@ public class VerificationCodeHandler {
 
     @Autowired
     EmailUtil emailUtil;
+
+    @Autowired
+    private EnvBean env;
 
     /**
      * @param email , email of  recipient
@@ -60,7 +64,9 @@ public class VerificationCodeHandler {
         // 保存消息记录
         emailMessageService.save(message);
         // 生成邮件内容
-        String content = emailHtmlConfig.getContent().replace("#{qrcode}", qrcode);
+        String content = emailHtmlConfig.getContent()
+                .replace("#{webaddress}", env.getWebsite())
+                .replace("#{qrcode}", qrcode);
         // 发送邮件 1 html 2 发送对象 3 主题
         emailUtil.sendHtmlEmail(content, email, "您的邮箱验证码：" + qrcode);
     }

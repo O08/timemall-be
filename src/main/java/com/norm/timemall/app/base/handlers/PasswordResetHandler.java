@@ -116,7 +116,7 @@ public class PasswordResetHandler {
         // 生成邮件内容
         String content = emailHtmlConfig.getContent()
                 .replace("#{webaddress}", env.getWebsite())
-                .replace("#{supportLink}",env.getWebsite()+"contact.html");
+                .replace("#{supportLink}",env.getWebsite()+"mall/contact-us.html");
         // 发送邮件 1 html 2 发送对象 3 主题
         emailUtil.sendHtmlEmail(content,email,"密码重置成功");
     }
