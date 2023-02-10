@@ -1,7 +1,10 @@
 package com.norm.timemall.app.studio.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.OrderStatusEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
@@ -67,6 +70,12 @@ public class StudioBlueSignServiceImpl implements StudioBlueSignService {
         // select bluesign info
         Brand brand = accountService.findBrandInfoByUserId(user.getUserId());
         StudioBlueSign blueSign = tradingMapper.selectBlueSign(brand.getId());
+
+        // if user already buy and bluesign still valid,return
+        if(ObjectUtil.isNotEmpty(blueSign.getBlueEndAt())
+                && DateUtil.compare(blueSign.getBlueEndAt(),new Date())>=0){
+            throw new ErrorCodeException(CodeEnum.PRODUCT_VALID);
+        }
 
         // new ProprietaryTradingOrder
         ProprietaryTradingOrder proprietaryTradingOrder=new ProprietaryTradingOrder();
