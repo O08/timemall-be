@@ -10,7 +10,7 @@
     </sql>
 
     <select id="selectCellPage" resultType="com.norm.timemall.app.mall.domain.ro.CellRO">
-        select b.id brandId,b.brand_name brand,b.avator,c.cover preview,c.title,p.price,c.id,p.sbu
+        select b.id brandId,b.brand_name brand,b.avator,c.cover preview,c.title,p.price,c.id,p.sbu,ifnull(b.blue_end_at > now(),0) enableBlue
         from cell c
         inner join brand b on c.brand_id = b.id
         inner join pricing p on c.id = p.cell_id
