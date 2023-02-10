@@ -2,12 +2,18 @@ package com.norm.timemall.app.pay.controller;
 
 
 import cn.hutool.core.date.DateUtil;
+import com.alibaba.fastjson.JSON;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradePagePayRequest;
+import com.norm.timemall.app.base.mo.ProprietaryTradingOrder;
+import com.norm.timemall.app.base.mo.ProprietaryTradingPayment;
 import com.norm.timemall.app.pay.config.AliPayResource;
+import com.norm.timemall.app.pay.helper.PayHelper;
+import com.norm.timemall.app.studio.service.StudioProprietaryTradingOrderService;
+import com.norm.timemall.app.studio.service.StudioProprietaryTradingPaymentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +36,15 @@ public class AlipayController {
     @Autowired
     private AliPayResource aliPayResource;
 
+    @Autowired
+    private StudioProprietaryTradingOrderService studioProprietaryTradingOrderService;
+
+    @Autowired
+    private StudioProprietaryTradingPaymentService studioProprietaryTradingPaymentService;
+
+    @Autowired
+    private PayHelper payHelper;
+
     /**
      * 前往支付宝进行支付
      */
@@ -48,11 +63,13 @@ public class AlipayController {
         AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
         alipayRequest.setReturnUrl(aliPayResource.getReturnUrl());
         alipayRequest.setNotifyUrl(aliPayResource.getNotifyUrl());
+        ProprietaryTradingOrder proprietaryTradingOrder = studioProprietaryTradingOrderService.getById(merchantOrderId);
+
 
         // 商户订单号, 商户网站订单系统中唯一订单号, 必填
         String out_trade_no = merchantOrderId;
         // 付款金额, 必填 单位元
-        String total_amount = "0.01";  // 测试用 1分钱
+        String total_amount = proprietaryTradingOrder.getTotal().toString();  // 测试用 1分钱
         // 订单名称, 必填
         String subject = "自营-付款[" + merchantUserId + "]";
         // 商品描述, 可空, 目前先用订单名称
@@ -103,6 +120,9 @@ public class AlipayController {
             params.put(name, valueStr);
         }
 
+        String paramsJson = JSON.toJSONString(params);
+        log.info("支付宝回调，{}", paramsJson);
+
         boolean signVerified = AlipaySignature.rsaCheckV1(params,
                 aliPayResource.getAlipayPublicKey(),
                 aliPayResource.getCharset(),
@@ -119,6 +139,10 @@ public class AlipayController {
             String total_amount = new String(request.getParameter("total_amount").getBytes("ISO-8859-1"),"UTF-8");
 
             if (trade_status.equals("TRADE_SUCCESS")){
+                ProprietaryTradingPayment proprietaryTradingPayment = payHelper.generatePaymentWhenSuccessForAliPay(out_trade_no, trade_no, trade_status, total_amount, paramsJson);
+                studioProprietaryTradingPaymentService.insertTradingPayment(proprietaryTradingPayment);
+                studioProprietaryTradingOrderService.updateTradingOrderStatusAsPaid(out_trade_no);
+                payHelper.busiHandler("bluesign",params);
 //                String merchantReturnUrl = paymentOrderService.updateOrderPaid(out_trade_no, CurrencyUtils.getYuan2Fen(total_amount));
 //                notifyFoodieShop(out_trade_no,merchantReturnUrl);
             }

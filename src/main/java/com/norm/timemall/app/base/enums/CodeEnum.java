@@ -53,7 +53,8 @@ public enum CodeEnum implements Code{
     BILL_NOT_EXIST(40001,"账单不存在" ),
     EMAIL_TEMPLATE_NOT_CONFIG(40002,"邮箱模板未配置" ),
     EMAIL_LIMIT(40003, "邮件发送已达最大次数"),
-    INVALID_QRCODE(40004,"验证码无效" );
+    INVALID_QRCODE(40004,"验证码无效" ),
+    PROCESSING(40005,"处理中" );
 
     private int code;
     private String desc;

@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
  * (proprietary_trading_payment)实体类
  *
  * @author kancy
- * @since 2023-02-04 16:06:43
+ * @since 2023-02-08 17:11:38
  * @description 由 Mybatisplus Code Generator 创建
  */
 @Data
@@ -45,11 +45,19 @@ public class ProprietaryTradingPayment extends Model<ProprietaryTradingPayment> 
      */
     private String payTypeDesc;
     /**
-     * 支付状态说明
+     * 订单号
      */
     private String tradingOrderId;
     /**
-     * 支付报文
+     * 支付平台交易号
+     */
+    private String tradeNo;
+    /**
+     * 实付金额
+     */
+    private String totalAmount;
+    /**
+     * 报文
      */
     private String message;
     /**

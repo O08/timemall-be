@@ -42,5 +42,7 @@ public interface StudioBrandMapper extends BaseMapper<Brand> {
     void updateBrandSkills(@Param("id")String brandId, @Param("user_id")String userId, @Param("skills")String skillJson);
     @Update(value="update brand set experience = #{experience} where id = #{id}  and customer_id = #{user_id}")
     void updateBrandExperience(@Param("id") String brandId, @Param("user_id") String userId, @Param("experience") String experienceJson);
+    @Update(value="update brand set blue_begain_at = now(), blue_end_at=DATE_ADD(now(), INTERVAL 30 DAY) where  customer_id = #{user_id}")
+    void updateBlueSignByUserId(@Param("user_id") String userId);
 
 }
