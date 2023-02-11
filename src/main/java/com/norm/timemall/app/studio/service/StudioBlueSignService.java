@@ -14,5 +14,5 @@ public interface StudioBlueSignService {
     /**
      * 激活蓝标
      */
-    void enableBlueSign();
+    void enableBlueSign(String userId);
 }

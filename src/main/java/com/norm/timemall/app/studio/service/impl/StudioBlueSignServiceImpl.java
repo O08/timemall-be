@@ -110,8 +110,7 @@ public class StudioBlueSignServiceImpl implements StudioBlueSignService {
     }
 
     @Override
-    public void enableBlueSign() {
-        CustomizeUser user = SecurityUserHelper.getCurrentPrincipal();
-        studioBrandMapper.updateBlueSignByUserId(user.getUserId());
+    public void enableBlueSign(String userId) {
+        studioBrandMapper.updateBlueSignByUserId(userId);
     }
 }
