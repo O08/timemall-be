@@ -21,10 +21,12 @@
         <result property="skills"
                 typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
                 column="skills"/>
+        <result property="enableBlue" column="enableBlue"/>
+
     </resultMap>
 
     <select id="selectProileByBrandId" resultMap="brandProfileResultMap">
-        select b.brand_name brand,b.avator,b.cover,b.experience,b.title,b.location,b.skills
+        select b.brand_name brand,b.avator,b.cover,b.experience,b.title,b.location,b.skills,ifnull(b.blue_end_at > now(),0) enableBlue
         from brand b
         where b.id = #{brandId}
     </select>

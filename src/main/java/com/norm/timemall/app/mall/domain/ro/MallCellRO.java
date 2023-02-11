@@ -10,5 +10,6 @@ public class MallCellRO {
     private String title;
     private BigDecimal price;
     private String id;
+    private String brandId;
     private String sbu;
 }

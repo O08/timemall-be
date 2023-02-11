@@ -16,4 +16,7 @@ public class BrandProfileRO {
     private String title;
     private String location;
     private ArrayList<MallExperienceEntry> skills;
+
+    // 激活蓝标： 0 未激活 1 激活
+    private String enableBlue;
 }
