@@ -17,6 +17,7 @@ import com.norm.timemall.app.studio.service.StudioProprietaryTradingPaymentServi
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -99,7 +100,7 @@ public class AlipayController {
     /**
      * 支付成功后的支付宝异步通知
      */
-    @RequestMapping(value="/alipay")
+    @PostMapping(value="/alipay")
     public String alipay(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         log.info("支付成功后的支付宝异步通知");
