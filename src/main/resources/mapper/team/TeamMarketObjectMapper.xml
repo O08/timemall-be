@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamMarketObjectMapper">
+    <sql id="tableName">
+        market_object
+    </sql>
+
+    <sql id="baseColumn">
+        id,cell_id,sbu,quantity,sale_price,object_val
+    </sql>
+    <select id="selectPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamObjRO">
+        select
+        obj.id,c.title,c.cover avatar,obj.sbu,obj.quantity,obj.sale_price,obj.object_val
+        from market_object obj
+        left join cell c on c.id = obj.cell_id
+        where
+        1 = 1
+        <if test="q != null and q != ''">
+            AND c.title = #{q}
+        </if>
+
+    </select>
+
+</mapper>

@@ -9,7 +9,7 @@
         id,title,cover,intro_cover,content,brand_id,mark,create_at,modified_at
     </sql>
 
-    <select id="selectCellPage" resultType="com.norm.timemall.app.studio.domain.ro.StudioCellRO">
+    <select id="selectCellPage" resultType="com.norm.timemall.app.base.pojo.ro.CellInfoRO">
         select b.brand_name brand,b.avator,c.title,p.price,c.id,c.mark, p.sbu
         from cell c
         inner join brand b on c.brand_id = b.id

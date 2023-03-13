@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamCommissionMapper">
+    <sql id="tableName">
+        commission
+    </sql>
+
+    <sql id="baseColumn">
+        id,oasis_id,title,tag,founder,worker,bonus,create_at,modified_at
+    </sql>
+    <select id="selectPageByFilter" resultType="com.norm.timemall.app.team.domain.ro.TeamCommissionRO">
+        select
+          id,title,create_at addDate,founder,tag,worker,bonus
+        from commission
+        where
+        1 = 1
+        <if test="dto.q != null and dto.q != ''">
+            AND title = #{dto.q}
+        </if>
+        <if test="dto.tag != null and dto.tag != ''">
+            AND tag= #{dto.tag}
+        </if>
+    </select>
+
+</mapper>

@@ -10,7 +10,7 @@ import com.norm.timemall.app.base.mo.Cell;
 import com.norm.timemall.app.base.pojo.vo.CellIntroVO;
 import com.norm.timemall.app.base.service.DataPolicyService;
 import com.norm.timemall.app.base.service.FileStoreService;
-import com.norm.timemall.app.studio.domain.ro.StudioCellRO;
+import com.norm.timemall.app.base.pojo.ro.CellInfoRO;
 import com.norm.timemall.app.studio.domain.vo.StudioCellInitVO;
 import com.norm.timemall.app.studio.domain.vo.StudioCellPageVO;
 import com.norm.timemall.app.studio.service.StudioCellService;
@@ -39,7 +39,7 @@ public class StudioCellController {
     @GetMapping(value = "/api/v1/web_estudio/brand/{brand_id}/cells")
     public StudioCellPageVO retrieveCells(@PathVariable("brand_id") String brandId, @Validated PageDTO cellPageDTO)
     {
-        IPage<StudioCellRO> cells = studioCellService.findCells(brandId,cellPageDTO);
+        IPage<CellInfoRO> cells = studioCellService.findCells(brandId,cellPageDTO);
         StudioCellPageVO cellPageVO = new StudioCellPageVO();
         cellPageVO.setCells(cells)
                 .setResponseCode(CodeEnum.SUCCESS);

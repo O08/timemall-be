@@ -1,11 +1,11 @@
-package com.norm.timemall.app.studio.domain.ro;
+package com.norm.timemall.app.base.pojo.ro;
 
 import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Data
-public class StudioCellRO {
+public class CellInfoRO {
     private String brand;
     private String avator;
     private String title;

@@ -6,12 +6,12 @@ import com.norm.timemall.app.base.mo.Cell;
 import com.norm.timemall.app.base.pojo.vo.CellIntroVO;
 import com.norm.timemall.app.studio.domain.dto.StudioCellIntroContentDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioCellOverViewDTO;
-import com.norm.timemall.app.studio.domain.ro.StudioCellRO;
+import com.norm.timemall.app.base.pojo.ro.CellInfoRO;
 import org.springframework.stereotype.Service;
 
 @Service
 public interface StudioCellService {
-    IPage<StudioCellRO> findCells(String brandId,PageDTO cellPageDTO);
+    IPage<CellInfoRO> findCells(String brandId, PageDTO cellPageDTO);
 
     void modifyTitle(String cellId, String userId,StudioCellOverViewDTO dto);
 

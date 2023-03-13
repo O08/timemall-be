@@ -14,7 +14,7 @@ import com.norm.timemall.app.base.pojo.ro.CellIntroRO;
 import com.norm.timemall.app.base.pojo.vo.CellIntroVO;
 import com.norm.timemall.app.studio.domain.dto.StudioCellIntroContentDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioCellOverViewDTO;
-import com.norm.timemall.app.studio.domain.ro.StudioCellRO;
+import com.norm.timemall.app.base.pojo.ro.CellInfoRO;
 import com.norm.timemall.app.studio.mapper.StudioCellMapper;
 import com.norm.timemall.app.studio.service.StudioCellService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +28,11 @@ public class StudioCellServiceImpl implements StudioCellService {
     @Autowired
     private StudioCellMapper studioCellMapper;
     @Override
-    public IPage<StudioCellRO> findCells(String brandId, PageDTO cellPageDTO) {
-        IPage<StudioCellRO> page = new Page<>();
+    public IPage<CellInfoRO> findCells(String brandId, PageDTO cellPageDTO) {
+        IPage<CellInfoRO> page = new Page<>();
         page.setSize(cellPageDTO.getSize());
         page.setCurrent(cellPageDTO.getCurrent());
-        IPage<StudioCellRO> ro = studioCellMapper.selectCellPage(page, brandId);
+        IPage<CellInfoRO> ro = studioCellMapper.selectCellPage(page, brandId);
         return ro;
     }
 

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.mo.Cell;
 import com.norm.timemall.app.base.pojo.ro.CellIntroRO;
-import com.norm.timemall.app.studio.domain.ro.StudioCellRO;
+import com.norm.timemall.app.base.pojo.ro.CellInfoRO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
@@ -18,7 +18,7 @@ import org.apache.ibatis.annotations.Update;
 */
 @Mapper
 public interface StudioCellMapper extends BaseMapper<Cell> {
-    IPage<StudioCellRO> selectCellPage(IPage<StudioCellRO> page, @Param("brand_id") String brandId);
+    IPage<CellInfoRO> selectCellPage(IPage<CellInfoRO> page, @Param("brand_id") String brandId);
     void updatTitleById(@Param("id") String cellId,@Param("user_id") String userId, @Param("title") String title);
     @Update(value = "update cell set cover = #{uri} where id = #{id}")
     void updateCoverById(@Param("id") String cellId, @Param("uri") String uri);

@@ -1,7 +1,7 @@
 package com.norm.timemall.app.mall.domain.ro;
 
 import com.norm.timemall.app.mall.domain.pojo.MallBrandExperience;
-import com.norm.timemall.app.mall.domain.pojo.MallExperienceEntry;
+import com.norm.timemall.app.base.pojo.ExperienceEntry;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class BrandProfileRO {
     // Brand Title or other Info. maybe your Occuption Title
     private String title;
     private String location;
-    private ArrayList<MallExperienceEntry> skills;
+    private ArrayList<ExperienceEntry> skills;
 
     // 激活蓝标： 0 未激活 1 激活
     private String enableBlue;

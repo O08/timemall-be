@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamBrandMapper">
+    <sql id="tableName">
+        brand
+    </sql>
+
+    <sql id="baseColumn">
+        id,brand_name,title,cover,avator,customer_id,wechat,phone,email,cardholder,cardno,alipay,wechatpay,experience,skills,location
+    </sql>
+
+    <resultMap id="selectPageByQResultMap" type="com.norm.timemall.app.team.domain.ro.TeamTalentRO">
+        <result property="id" column="id"/>
+        <result property="avator" column="avator"/>
+        <result property="title" column="title"/>
+        <result property="skill"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
+                column="skills"/>
+
+    </resultMap>
+
+    <select id="selectPageByQ" resultMap="selectPageByQResultMap">
+        select avator avatar,title,skills ,id
+        from brand
+        where
+        1 = 1
+        <if test="q != null and q != ''">
+            AND title = #{q}
+        </if>
+
+    </select>
+
+</mapper>

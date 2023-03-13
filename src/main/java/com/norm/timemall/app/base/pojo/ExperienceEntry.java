@@ -1,9 +1,9 @@
-package com.norm.timemall.app.mall.domain.pojo;
+package com.norm.timemall.app.base.pojo;
 
 import lombok.Data;
 
 @Data
-public class MallExperienceEntry {
+public class ExperienceEntry {
     private String title;
     private String start;
     private String end;

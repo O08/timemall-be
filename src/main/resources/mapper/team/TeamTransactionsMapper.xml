@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamTransactionsMapper">
+    <sql id="tableName">
+        transactions
+    </sql>
+
+    <sql id="baseColumn">
+        id,fid,trans_no,trans_type,trans_type_desc,amount,account_id,direction,remark,create_at,modified_at
+    </sql>
+    <resultMap id="detailTransResultMap" type="com.norm.timemall.app.team.domain.pojo.TeamDetailTrans">
+        <association property="item" javaType="com.norm.timemall.app.team.domain.pojo.TeamAtomTran" >
+            <result property="transType" column="trans_type"/>
+            <result property="transTypeDesc" column="trans_type_desc"/>
+            <result property="addDate" column="addDate"/>
+            <result property="amount" column="amount"/>
+            <result property="remark" column="remark"/>
+            <result property="normal" column="normal"/>
+        </association>
+    </resultMap>
+    <resultMap id="selectTransByFidResultMap" type="com.norm.timemall.app.team.domain.pojo.TeamTrans">
+        <id property="totalIn" column="totalIn"/>
+        <id property="totalOut" column="totalOut"/>
+        <association property="records" javaType="com.norm.timemall.app.team.domain.pojo.TeamMonthTrans" >
+            <result property="year" column="year"/>
+            <result property="month" column="month"/>
+            <result property="in" column="in"/>
+            <result property="out" column="out"/>
+            <collection property="detail" ofType="com.norm.timemall.app.team.domain.pojo.TeamDetailTrans" javaType="ArrayList" resultMap="detailTransResultMap"/>
+        </association>
+    </resultMap>
+    <select id="selectTransByFid" resultMap="selectTransByFidResultMap">
+        select
+            l.in totalIn,l.out totalOut,m.year,m.month,m.in,m.out,t.trans_type,t.trans_type_desc,t.create_at addDate,
+            t.amount,t.remark,t.direction normal
+        from account_cal_total l
+        left join account_cal_month m on m.fid = l.fid
+        left join transactions t on t.fid = l.fid
+        where l.fid = #{fid}
+         and m.year = #{year}
+         and m.month = #{month}
+         and year(t.create_at) = #{year}
+         and month(t.create_at) = #{month}
+    </select>
+
+</mapper>
