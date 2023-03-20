@@ -73,6 +73,7 @@ public class TeamOasisController {
         TeamOasisAnnounce announce = teamOasisService.findOasisAnnounce(oasisId);
         TeamOasisAnnounceVO vo = new TeamOasisAnnounceVO();
         vo.setAnnounce(announce);
+        vo.setResponseCode(CodeEnum.SUCCESS);
         return vo;
     }
 
@@ -85,6 +86,7 @@ public class TeamOasisController {
         TeamOasisIndex index = teamOasisService.findOasisValIndex(oasisId);
         TeamOasisValIndexVO vo = new TeamOasisValIndexVO();
         vo.setIndex(index);
+        vo.setResponseCode(CodeEnum.SUCCESS);
         return vo;
     }
 
