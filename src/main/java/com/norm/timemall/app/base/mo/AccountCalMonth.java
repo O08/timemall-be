@@ -33,6 +33,10 @@ public class AccountCalMonth extends Model<AccountCalMonth> implements Serializa
      */
     private String fid;
     /**
+     * 交易对象type: oasis or brand or user or other
+     */
+    private String fidType;
+    /**
      * year
      */
     private String year;
@@ -48,5 +52,13 @@ public class AccountCalMonth extends Model<AccountCalMonth> implements Serializa
      * out
      */
     private BigDecimal out;
+    /**
+     * 可提取币种收入
+     */
+    private BigDecimal drawableIn;
+    /**
+     * 可提取币种支出
+     */
+    private BigDecimal drawableOut;
 
 }

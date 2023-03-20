@@ -1,8 +1,8 @@
 package com.norm.timemall.app.studio.controller;
 
 import com.norm.timemall.app.base.enums.CodeEnum;
-import com.norm.timemall.app.studio.domain.ro.StudioNewOrderRO;
-import com.norm.timemall.app.studio.domain.vo.StudioNewOrderVO;
+import com.norm.timemall.app.base.pojo.ro.NewOrderRO;
+import com.norm.timemall.app.base.pojo.vo.NewOrderVO;
 import com.norm.timemall.app.studio.service.StudioBlueSignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,9 +20,9 @@ public class StudioOrderController {
      */
     @ResponseBody
     @PostMapping(value = "/api/v1/web_estudio/order/new_order")
-    public StudioNewOrderVO newOrder(String productCode){
-        StudioNewOrderRO studioNewOrderRO = studioBlueSignService.newBlueSignOrder();
-        StudioNewOrderVO vo = new StudioNewOrderVO();
+    public NewOrderVO newOrder(String productCode){
+        NewOrderRO studioNewOrderRO = studioBlueSignService.newBlueSignOrder();
+        NewOrderVO vo = new NewOrderVO();
         vo.setResponseCode(CodeEnum.SUCCESS);
         vo.setOrder(studioNewOrderRO);
         return vo;

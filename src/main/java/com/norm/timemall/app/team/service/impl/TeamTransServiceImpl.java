@@ -11,7 +11,7 @@ public class TeamTransServiceImpl implements TeamTransService {
     @Autowired
     private TeamTransactionsMapper teamTransactionsMapper;
     @Override
-    public TeamTrans findTrans(String fid,String year,String month) {
-        return teamTransactionsMapper.selectTransByFid(fid,year,month);
+    public TeamTrans findTrans(String fid,String fidType,String year,String month) {
+        return teamTransactionsMapper.selectTransByFid(fid,fidType,year,month);
     }
 }

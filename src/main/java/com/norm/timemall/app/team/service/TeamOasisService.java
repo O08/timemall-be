@@ -5,6 +5,8 @@ import com.norm.timemall.app.base.mo.Oasis;
 import com.norm.timemall.app.team.domain.dto.TeamNewOasisDTO;
 import com.norm.timemall.app.team.domain.dto.TeamOasisPageDTO;
 import com.norm.timemall.app.team.domain.dto.TeamOasisRiskDTO;
+import com.norm.timemall.app.team.domain.pojo.TeamOasisAnnounce;
+import com.norm.timemall.app.team.domain.pojo.TeamOasisIndex;
 import com.norm.timemall.app.team.domain.ro.TeamOasisRO;
 import org.springframework.stereotype.Service;
 
@@ -19,4 +21,13 @@ public interface TeamOasisService {
     void modifyOasisRisk(TeamOasisRiskDTO dto);
 
     void newOasis(TeamNewOasisDTO dto);
+
+    TeamOasisAnnounce findOasisAnnounce(String oasisId);
+
+    TeamOasisIndex findOasisValIndex(String oasisId);
+
+    void modifyOasisAvatar(String oasisId, String uri);
+
+    void tagOasisTag(String oasisId, String mark);
+
 }

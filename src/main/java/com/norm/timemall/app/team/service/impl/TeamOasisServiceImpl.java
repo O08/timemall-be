@@ -10,17 +10,23 @@ import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.Oasis;
 import com.norm.timemall.app.base.mo.OasisMember;
 import com.norm.timemall.app.base.security.CustomizeUser;
+import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.team.constant.OasisConstant;
 import com.norm.timemall.app.team.domain.dto.TeamNewOasisDTO;
 import com.norm.timemall.app.team.domain.dto.TeamOasisPageDTO;
 import com.norm.timemall.app.team.domain.dto.TeamOasisRiskDTO;
+import com.norm.timemall.app.team.domain.pojo.TeamOasisAnnounce;
+import com.norm.timemall.app.team.domain.pojo.TeamOasisIndex;
+import com.norm.timemall.app.team.domain.pojo.TeamOasisIndexEntry;
 import com.norm.timemall.app.team.domain.ro.TeamOasisRO;
+import com.norm.timemall.app.team.mapper.TeamOasisIndMapper;
 import com.norm.timemall.app.team.mapper.TeamOasisMapper;
 import com.norm.timemall.app.team.mapper.TeamOasisMemberMapper;
 import com.norm.timemall.app.team.service.TeamOasisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 @Service
@@ -30,6 +36,11 @@ public class TeamOasisServiceImpl implements TeamOasisService {
     private TeamOasisMapper teamOasisMapper;
     @Autowired
     private TeamOasisMemberMapper teamOasisMemberMapper;
+    @Autowired
+    private TeamOasisIndMapper teamOasisIndMapper;
+
+    @Autowired
+    private AccountService accountService;
 
     @Override
     public IPage<TeamOasisRO> findOasis(TeamOasisPageDTO dto) {
@@ -57,13 +68,15 @@ public class TeamOasisServiceImpl implements TeamOasisService {
 
     @Override
     public void newOasis(TeamNewOasisDTO dto) {
-        CustomizeUser user = SecurityUserHelper.getCurrentPrincipal();
+        String brandId = accountService.
+                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
+                .getId();
 
         Oasis oasis = new Oasis();
         oasis.setId(IdUtil.simpleUUID())
                 .setTitle(dto.getTitle())
                 .setSubtitle(dto.getSubTitle())
-                .setInitiatorId(user.getUserId()) // todo change to brand id
+                .setInitiatorId(brandId)
                 .setMark(OasisMarkEnum.CREATED.getMark())
                 .setMembership(OasisConstant.INIT_MEMBERSHIP) // init
                 .setMaxMembers(OasisConstant.INIT_MAXMEMBERS)
@@ -76,10 +89,36 @@ public class TeamOasisServiceImpl implements TeamOasisService {
         OasisMember member = new OasisMember();
         member.setId(IdUtil.simpleUUID())
                 .setOasisId(oasis.getId())
-                .setBrandId(user.getUserId()) // todo change to brand id
+                .setBrandId(brandId)
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
         teamOasisMemberMapper.insert(member);
 
+    }
+
+    @Override
+    public TeamOasisAnnounce findOasisAnnounce(String oasisId) {
+        // todo
+        TeamOasisAnnounce announce = teamOasisMapper.selectAnnounceById(oasisId);
+        return  announce;
+    }
+
+    @Override
+    public TeamOasisIndex findOasisValIndex(String oasisId) {
+        ArrayList<TeamOasisIndexEntry> inds = teamOasisMapper.selectOasisValByOasisId(oasisId);
+        TeamOasisIndex ro = new TeamOasisIndex();
+        ro.setRecords(inds);
+        return ro;
+    }
+
+    @Override
+    public void modifyOasisAvatar(String oasisId, String uri) {
+        teamOasisMapper.updateAvatarById(oasisId,uri);
+
+    }
+
+    @Override
+    public void tagOasisTag(String oasisId, String mark) {
+        teamOasisMapper.updateMarkById(oasisId,mark);
     }
 }

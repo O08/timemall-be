@@ -5,6 +5,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface TeamTransService {
-    TeamTrans findTrans(String fid,String year,String month);
+    TeamTrans findTrans(String fid,String fidType,String year,String month);
 
 }

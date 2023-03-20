@@ -7,7 +7,7 @@ import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.Brand;
-import com.norm.timemall.app.base.pojo.BrandBank;
+import com.norm.timemall.app.base.pojo.SimpleBrandBank;
 import com.norm.timemall.app.base.pojo.BrandInfo;
 import com.norm.timemall.app.base.pojo.BrandPayway;
 import com.norm.timemall.app.base.security.CustomizeUser;
@@ -88,7 +88,7 @@ public class StudioBrandServiceImpl implements StudioBrandService {
         LambdaQueryWrapper<Brand> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(Brand::getCustomerId,userId);
         Brand brand = studioBrandMapper.selectOne(wrapper);
-        BrandBank bank = new BrandBank();
+        SimpleBrandBank bank = new SimpleBrandBank();
         bank.setCardholder(brand.getCardholder());
         bank.setCardNo(brand.getCardno());
         BrandPayway payway =new BrandPayway();

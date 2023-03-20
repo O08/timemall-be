@@ -34,9 +34,10 @@
             l.in totalIn,l.out totalOut,m.year,m.month,m.in,m.out,t.trans_type,t.trans_type_desc,t.create_at addDate,
             t.amount,t.remark,t.direction normal
         from account_cal_total l
-        left join account_cal_month m on m.fid = l.fid
-        left join transactions t on t.fid = l.fid
+        left join account_cal_month m on m.fid = l.fid and m.fid_type=l.fid_type
+        left join transactions t on t.fid = l.fid and t.fid_type=l.fid_type
         where l.fid = #{fid}
+         and l.fid_type = #{fid_type}
          and m.year = #{year}
          and m.month = #{month}
          and year(t.create_at) = #{year}

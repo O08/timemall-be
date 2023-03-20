@@ -11,6 +11,7 @@ import com.norm.timemall.app.base.mo.OasisMember;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.team.domain.dto.TeamInviteToOasisDTO;
 import com.norm.timemall.app.team.domain.ro.TeamInviteRO;
+import com.norm.timemall.app.team.domain.ro.TeamJoinedRO;
 import com.norm.timemall.app.team.mapper.TeamOasisJoinMapper;
 import com.norm.timemall.app.team.mapper.TeamOasisMapper;
 import com.norm.timemall.app.team.mapper.TeamOasisMemberMapper;
@@ -33,9 +34,8 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
 
 
     @Override
-    public ArrayList<TeamInviteRO> findInvitedOasis() {
-        CustomizeUser user = SecurityUserHelper.getCurrentPrincipal();
-        return teamOasisJoinMapper.selectListByUser(user.getUserId());
+    public ArrayList<TeamInviteRO> findInvitedOasis(String brandId) {
+        return teamOasisJoinMapper.selectListByUser(brandId);
     }
 
     @Override
@@ -78,5 +78,10 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
 
         teamOasisJoinMapper.insert(join);
 
+    }
+
+    @Override
+    public ArrayList<TeamJoinedRO> findJoinedOasis(String brandId) {
+        return teamOasisJoinMapper.selectJoinedOasesByUser(brandId);
     }
 }

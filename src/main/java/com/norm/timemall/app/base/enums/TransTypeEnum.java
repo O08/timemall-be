@@ -2,7 +2,8 @@ package com.norm.timemall.app.base.enums;
 
 public enum TransTypeEnum {
     COMMISSION("1","佣金"),
-    OTHER("2","其他");
+    OTHER("2","其他"),
+    TRANSFER("3","交易");
     private String mark;
     private String desc;
 

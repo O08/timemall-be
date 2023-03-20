@@ -9,10 +9,13 @@ import com.norm.timemall.app.team.domain.vo.TeamOasisMemberVO;
 import com.norm.timemall.app.team.service.TeamOasisJoinService;
 import com.norm.timemall.app.team.service.TeamOasisMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 
+import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
+@Validated
 @RestController
 public class TeamMemberController {
     @Autowired
@@ -25,7 +28,7 @@ public class TeamMemberController {
     */
     @ResponseBody
     @GetMapping(value = "/api/v1/team/member")
-    public TeamOasisMemberVO retrieveOasisMember(String oasisId){
+    public TeamOasisMemberVO retrieveOasisMember(@RequestParam @NotBlank(message = "oasisId is required")String oasisId){
       ArrayList<TeamOasisMemberRO> ros =  teamOasisMemberService.findOasisMember(oasisId);
 
       TeamOasisMember member = new TeamOasisMember();
@@ -39,7 +42,7 @@ public class TeamMemberController {
     }
     @ResponseBody
     @PutMapping(value = "/api/v1/team/invite")
-    public SuccessVO inviteBrandJoinOasis(TeamInviteToOasisDTO dto){
+    public SuccessVO inviteBrandJoinOasis(@Validated @RequestBody  TeamInviteToOasisDTO dto){
         teamOasisJoinService.inviteBrand(dto);
         return new SuccessVO(CodeEnum.SUCCESS);
     }

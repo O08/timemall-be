@@ -4,7 +4,6 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.OrderStatusEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
@@ -15,7 +14,7 @@ import com.norm.timemall.app.base.mo.ProprietaryTradingOrder;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.studio.domain.pojo.StudioBlueSign;
-import com.norm.timemall.app.studio.domain.ro.StudioNewOrderRO;
+import com.norm.timemall.app.base.pojo.ro.NewOrderRO;
 import com.norm.timemall.app.studio.mapper.StudioBrandMapper;
 import com.norm.timemall.app.studio.mapper.StudioProprietaryTradingMapper;
 import com.norm.timemall.app.studio.mapper.StudioProprietaryTradingOrderMapper;
@@ -24,7 +23,6 @@ import com.norm.timemall.app.studio.service.StudioBlueSignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -60,7 +58,7 @@ public class StudioBlueSignServiceImpl implements StudioBlueSignService {
      * @return
      */
     @Override
-    public StudioNewOrderRO newBlueSignOrder() {
+    public NewOrderRO newBlueSignOrder() {
         // verify
         CustomizeUser user = SecurityUserHelper.getCurrentPrincipal();
         boolean verify =payVerify(user.getUserId(),OrderStatusEnum.CREATING.name());
@@ -92,7 +90,7 @@ public class StudioBlueSignServiceImpl implements StudioBlueSignService {
         studioProprietaryTradingOrderMapper.insert(proprietaryTradingOrder);
 
         // return StudioNewOrderRO
-        StudioNewOrderRO ro = new StudioNewOrderRO();
+        NewOrderRO ro = new NewOrderRO();
         ro.setMerchantOrderId(proprietaryTradingOrder.getId());
         ro.setMerchantUserId(user.getUserId());
 

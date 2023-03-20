@@ -12,13 +12,33 @@
         select
         obj.id,c.title,c.cover avatar,obj.sbu,obj.quantity,obj.sale_price,obj.object_val
         from market_object obj
+        left join market_object_record r on r.obj_id = obj.id
         left join cell c on c.id = obj.cell_id
         where
-        1 = 1
+         1 = 1
+         and r.tag = '2'
         <if test="q != null and q != ''">
-            AND c.title = #{q}
+            AND locate(#{q}, c.title)>0
         </if>
 
+    </select>
+    <select id="selectOneObj" resultType="com.norm.timemall.app.team.domain.ro.TeamObj2RO">
+        select
+        obj.id,c.title,obj.sbu,obj.quantity,obj.sale_price,obj.object_val,r.debit_id,r.credit_id
+        from market_object obj
+        left join market_object_record r on r.obj_id = obj.id
+        left join cell c on c.id = obj.cell_id
+        where obj.id=#{obj_id}
+    </select>
+    <select id="selectPagebyTagAndCreditId" resultType="com.norm.timemall.app.team.domain.ro.TeamObjRO">
+        select
+        obj.id,c.title,c.cover avatar,obj.sbu,obj.quantity,obj.sale_price,obj.object_val
+        from market_object obj
+        left join market_object_record r on r.obj_id = obj.id
+        left join cell c on c.id = obj.cell_id
+        where
+          r.mark = #{mark}
+          and r.credit_id = #{credit_id}
     </select>
 
 </mapper>

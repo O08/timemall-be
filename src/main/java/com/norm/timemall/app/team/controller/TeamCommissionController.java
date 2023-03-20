@@ -35,7 +35,7 @@ public class TeamCommissionController {
     }
     @ResponseBody
     @PutMapping(value = "/api/v1/team/commission")
-    public SuccessVO newTask(TeamOasisNewTaskDTO dto){
+    public SuccessVO newTask(@Validated TeamOasisNewTaskDTO dto){
         teamCommissionService.newOasisTask(dto);
         return new SuccessVO(CodeEnum.SUCCESS);
     }
@@ -47,13 +47,13 @@ public class TeamCommissionController {
      */
     @ResponseBody
     @PutMapping(value = "/api/v1/team/commission/accept")
-    public SuccessVO acceptTask(TeamAcceptOasisTaskDTO dto){
+    public SuccessVO acceptTask(@Validated TeamAcceptOasisTaskDTO dto){
         teamCommissionService.acceptOasisTask(dto);
         return new SuccessVO(CodeEnum.SUCCESS);
     }
     @ResponseBody
     @PutMapping(value = "/api/v1/team/commission/finish")
-    public SuccessVO finishTask(TeamFinishOasisTask dto){
+    public SuccessVO finishTask(@Validated TeamFinishOasisTask dto){
         teamCommissionService.finishOasisTask(dto);
         return new SuccessVO(CodeEnum.SUCCESS);
     }

@@ -2,9 +2,11 @@ package com.norm.timemall.app.team.domain.dto;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+
 @Data
 public class TeamFinishOasisTask {
-    private String oasisId;
+    @NotBlank(message = "commissionId required")
     private String commissionId;
-    private String brandId;
+
 }

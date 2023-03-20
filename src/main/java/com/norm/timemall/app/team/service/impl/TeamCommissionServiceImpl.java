@@ -3,15 +3,15 @@ package com.norm.timemall.app.team.service.impl;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.norm.timemall.app.base.enums.OasisCommissionTagEnum;
-import com.norm.timemall.app.base.enums.TransDirectionEnum;
-import com.norm.timemall.app.base.enums.TransTypeEnum;
+import com.norm.timemall.app.base.enums.*;
+import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.AccountCalMonth;
 import com.norm.timemall.app.base.mo.AccountCalTotal;
 import com.norm.timemall.app.base.mo.Commission;
 import com.norm.timemall.app.base.mo.Transactions;
 import com.norm.timemall.app.base.security.CustomizeUser;
+import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.team.domain.dto.TeamAcceptOasisTaskDTO;
 import com.norm.timemall.app.team.domain.dto.TeamCommissionDTO;
 import com.norm.timemall.app.team.domain.dto.TeamFinishOasisTask;
@@ -43,6 +43,8 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
 
     @Autowired
     private TeamCommissionHelper teamCommissionHelper;
+    @Autowired
+    private AccountService accountService;
     @Override
     public IPage<TeamCommissionRO> findCommission(TeamCommissionDTO dto) {
         IPage<TeamCommissionRO> page =  new Page<>();
@@ -53,14 +55,16 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
 
     @Override
     public void newOasisTask(TeamOasisNewTaskDTO dto) {
-        CustomizeUser user = SecurityUserHelper.getCurrentPrincipal();
+        String brandId = accountService.
+                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
+                .getId();
 
         Commission commission =new Commission();
         commission.setId(IdUtil.simpleUUID())
                 .setOasisId(dto.getOasisId())
                 .setTitle(dto.getTitle())
                 .setBonus(dto.getBonus())
-                .setFounder(user.getUserId())// todo userid change to brandId
+                .setFounder(brandId)
                 .setTag(OasisCommissionTagEnum.CREATED.getMark())
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
@@ -80,17 +84,21 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
     @Override
     public void finishOasisTask(TeamFinishOasisTask dto) {
         Commission commission = teamCommissionMapper.selectById(dto.getCommissionId());
+        if(commission == null || commission.getTag().equals(OasisCommissionTagEnum.FINISH.getMark())){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
         // tag task to finish
         teamCommissionMapper.updateCommissionByIdAndTag(
                 dto.getCommissionId(),
-                dto.getBrandId(),
+                commission.getWorker(),
                 OasisCommissionTagEnum.FINISH.getMark());
         // calculate finance info
         // 1.insert trans
         String transNo = IdUtil.simpleUUID();
         Transactions creditTrans = new Transactions();
         creditTrans.setId(IdUtil.simpleUUID())
-                .setFid(dto.getBrandId())
+                .setFid(commission.getWorker())
+                .setFidType(FidTypeEnum.OASIS.getMark())
                 .setTransNo(transNo)
                 .setTransType(TransTypeEnum.COMMISSION.getMark())
                 .setTransTypeDesc(TransTypeEnum.COMMISSION.getDesc())
@@ -101,7 +109,8 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
                 .setModifiedAt(new Date());
         Transactions debitTrans = new Transactions();
         debitTrans.setId(IdUtil.simpleUUID())
-                .setFid(dto.getOasisId())
+                .setFid(commission.getOasisId())
+                .setFidType(FidTypeEnum.OASIS.getMark())
                 .setTransNo(transNo)
                 .setTransType(TransTypeEnum.COMMISSION.getMark())
                 .setTransTypeDesc(TransTypeEnum.COMMISSION.getDesc())
@@ -115,12 +124,12 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
         teamTransactionsMapper.insert(debitTrans);
 
         //2. calculate total
-        teamCommissionHelper.calTotalTransWhenFinishTask(dto.getBrandId()
-                ,dto.getOasisId(),commission.getBonus());
+        teamCommissionHelper.calTotalTransWhenFinishTask(commission.getWorker()
+                ,commission.getOasisId(),commission.getBonus());
 
         //3. calculate month
-        teamCommissionHelper.calMonthTransWhenFinishTask(dto.getBrandId()
-                ,dto.getOasisId(),commission.getBonus());
+        teamCommissionHelper.calMonthTransWhenFinishTask(commission.getWorker()
+                ,commission.getOasisId(),commission.getBonus());
 
 
 

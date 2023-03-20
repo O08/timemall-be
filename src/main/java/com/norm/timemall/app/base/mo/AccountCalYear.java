@@ -33,16 +33,28 @@ public class AccountCalYear extends Model<AccountCalYear> implements Serializabl
      */
     private String fid;
     /**
+     * 交易对象type: oasis or brand or user or other
+     */
+    private String fidType;
+    /**
      * year
      */
     private String year;
     /**
-     * in
+     * 持有价值流入
      */
     private BigDecimal in;
     /**
-     * out
+     * 持有价值流出
      */
     private BigDecimal out;
+    /**
+     * 可提取币种收入
+     */
+    private BigDecimal drawableIn;
+    /**
+     * 可提取币种支出
+     */
+    private BigDecimal drawableOut;
 
 }

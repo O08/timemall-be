@@ -33,6 +33,11 @@ public class Transactions extends Model<Transactions> implements Serializable {
      * 交易对象
      */
     private String fid;
+
+    /**
+     * 交易对象type: oasis or brand or user or other
+     */
+    private String fidType;
     /**
      * 交易号
      */
@@ -49,10 +54,7 @@ public class Transactions extends Model<Transactions> implements Serializable {
      * 交易金额
      */
     private BigDecimal amount;
-    /**
-     * accountId
-     */
-    private String accountId;
+
     /**
      * debit or credit
      */

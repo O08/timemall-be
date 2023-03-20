@@ -10,17 +10,17 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
- * (account)实体类
+ * (oasis_ind)实体类
  *
  * @author kancy
- * @since 2023-03-02 10:23:07
+ * @since 2023-03-15 14:54:19
  * @description 由 Mybatisplus Code Generator 创建
  */
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("account")
-public class Account extends Model<Account> implements Serializable {
+@TableName("oasis_ind")
+public class OasisInd extends Model<OasisInd> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -29,16 +29,22 @@ public class Account extends Model<Account> implements Serializable {
     @TableId
 	private String id;
     /**
-     * 交易对象
+     * oasisId
      */
-    private String fid;
+    private String oasisId;
+
     /**
-     * 交易金额
+     * item_code
      */
-    private BigDecimal amount;
+    private String itemCode;
+
     /**
-     * debit or credit
+     * item
      */
-    private Integer normal;
+    private String item;
+    /**
+     * val
+     */
+    private BigDecimal val;
 
 }

@@ -3,6 +3,7 @@ package com.norm.timemall.app.team.mapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.mo.MarketObject;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.norm.timemall.app.team.domain.ro.TeamObj2RO;
 import com.norm.timemall.app.team.domain.ro.TeamObjRO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -18,4 +19,9 @@ import org.apache.ibatis.annotations.Param;
 public interface TeamMarketObjectMapper extends BaseMapper<MarketObject> {
 
     IPage<TeamObjRO> selectPageByQ(IPage<TeamObjRO> page, @Param("q") String q);
+
+    TeamObj2RO selectOneObj(@Param("obj_id") String objId);
+
+    IPage<TeamObjRO> selectPagebyTagAndCreditId(IPage<TeamObjRO> page, @Param("mark") String tag,
+                                                @Param("credit_id") String creditId);
 }

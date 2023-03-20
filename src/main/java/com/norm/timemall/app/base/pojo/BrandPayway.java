@@ -6,7 +6,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class BrandPayway {
-    private BrandBank bank;
+    private SimpleBrandBank bank;
     private String aliPay;
     private String wechatPay;
 }

@@ -15,7 +15,7 @@
         where
         1 = 1
         <if test="dto.q != null and dto.q != ''">
-            AND title = #{dto.q}
+            AND locate(#{dto.q}, title)>0
         </if>
         <if test="dto.tag != null and dto.tag != ''">
             AND tag= #{dto.tag}

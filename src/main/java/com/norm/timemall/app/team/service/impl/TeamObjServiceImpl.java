@@ -3,12 +3,17 @@ package com.norm.timemall.app.team.service.impl;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.norm.timemall.app.base.enums.CodeEnum;
+import com.norm.timemall.app.base.enums.ObjectRecordMarkEnum;
 import com.norm.timemall.app.base.enums.ObjectRecordTagEnum;
+import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.mo.MarketObject;
 import com.norm.timemall.app.base.mo.MarketObjectRecord;
 import com.norm.timemall.app.base.pojo.ro.CellInfoRO;
 import com.norm.timemall.app.team.domain.dto.TeamObjPageDTO;
+import com.norm.timemall.app.team.domain.dto.TeamOwnedObjPageDTO;
 import com.norm.timemall.app.team.domain.dto.TeamSwapCellDTO;
+import com.norm.timemall.app.team.domain.dto.TeamTagObjDTO;
 import com.norm.timemall.app.team.domain.ro.TeamObjRO;
 import com.norm.timemall.app.team.mapper.TeamCellMapper;
 import com.norm.timemall.app.team.mapper.TeamMarketObjectMapper;
@@ -44,6 +49,9 @@ public class TeamObjServiceImpl implements TeamObjService {
         CellInfoRO sponsorCellRO = teamCellMapper.selectCellByIdAndSbu(dto.getSponsorCellId(), dto.getSponsorCellSbu());
         CellInfoRO partnerCellRO = teamCellMapper.selectCellByIdAndSbu(dto.getPartnerCellId(),dto.getPartnerCellSbu());
 
+        if(sponsorCellRO==null || partnerCellRO ==null){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
         MarketObject sponsorObj = new MarketObject();
         sponsorObj.setId(IdUtil.simpleUUID())
                         .setCellId(sponsorCellRO.getId())
@@ -62,6 +70,7 @@ public class TeamObjServiceImpl implements TeamObjService {
         sponsorRecord.setId(IdUtil.simpleUUID())
                 .setSwapNo(swapNo)
                 .setObjId(sponsorObj.getId())
+                .setMark(ObjectRecordMarkEnum.COOPERATION.getMark())
                         .setTag(ObjectRecordTagEnum.CREATED.getMark())
                                 .setCreditId(dto.getSponsor())
                                         .setDebitId(dto.getPartner())
@@ -71,6 +80,7 @@ public class TeamObjServiceImpl implements TeamObjService {
         partnerRecord.setId(IdUtil.simpleUUID())
                 .setSwapNo(swapNo)
                 .setObjId(partnerObj.getId())
+                .setMark(ObjectRecordMarkEnum.COOPERATION.getMark())
                 .setTag(ObjectRecordTagEnum.CREATED.getMark())
                         .setCreditId(dto.getPartner())
                                 .setDebitId(dto.getSponsor())
@@ -87,5 +97,19 @@ public class TeamObjServiceImpl implements TeamObjService {
         // insert partner record
         teamMarketObjectRecordMapper.insert(partnerRecord);
 
+    }
+
+    @Override
+    public IPage<TeamObjRO> findOwnedObjs(TeamOwnedObjPageDTO dto) {
+        String brandId = dto.getBrandId();
+        IPage<TeamObjRO>  page = new Page<>();
+        page.setSize(dto.getSize());
+        page.setCurrent(dto.getCurrent());
+        return  teamMarketObjectMapper.selectPagebyTagAndCreditId(page,dto.getMark(),brandId);
+    }
+
+    @Override
+    public void tagObj(TeamTagObjDTO dto) {
+        teamMarketObjectRecordMapper.updateTagByObjId(dto.getObjId(),dto.getTag());
     }
 }

@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.team.domain.dto.TeamObjPageDTO;
+import com.norm.timemall.app.team.domain.dto.TeamOwnedObjPageDTO;
 import com.norm.timemall.app.team.domain.dto.TeamSwapCellDTO;
+import com.norm.timemall.app.team.domain.dto.TeamTagObjDTO;
 import com.norm.timemall.app.team.domain.ro.TeamObjRO;
 import com.norm.timemall.app.team.domain.vo.TeamObjPageVO;
 import com.norm.timemall.app.team.service.TeamObjService;
@@ -33,8 +35,26 @@ public class TeamObjController {
     }
     @ResponseBody
     @PutMapping(value = "/api/v1/team/swap_cell")
-    public SuccessVO swapCell(TeamSwapCellDTO dto){
+    public SuccessVO swapCell(@Validated  TeamSwapCellDTO dto){
         teamObjService.swapCell(dto);
+        return new SuccessVO(CodeEnum.SUCCESS);
+    }
+    /**
+     * 获取拥有的objs
+     */
+    @ResponseBody
+    @GetMapping(value = "/api/v1/team/obj/me")
+    public TeamObjPageVO retrieveObjOwned(@Validated TeamOwnedObjPageDTO dto){
+        IPage<TeamObjRO> objRos = teamObjService.findOwnedObjs(dto);
+        TeamObjPageVO vo = new TeamObjPageVO();
+        vo.setObj(objRos);
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        return  vo;
+    }
+    @ResponseBody
+    @PutMapping(value = "/api/v1/team/obj/tag")
+    public SuccessVO tagObj(TeamTagObjDTO dto){
+        teamObjService.tagObj(dto);
         return new SuccessVO(CodeEnum.SUCCESS);
     }
 

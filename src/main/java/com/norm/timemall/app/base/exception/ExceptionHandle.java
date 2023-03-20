@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MultipartException;
 
+import javax.validation.ConstraintViolationException;
+
 /**
  * 异常处理
  *
@@ -56,6 +58,14 @@ public class ExceptionHandle {
     }
     @ExceptionHandler(value = MissingServletRequestParameterException.class)
     public ErrorVO missingServletRequestParameterExceptionHandler(MissingServletRequestParameterException e) {
+        log.error("error:", e);
+        ErrorVO vo = new ErrorVO();
+        vo.setCode(CodeEnum.INVALID_PARAMETERS.getCode());
+        vo.setMessage(e.getMessage());
+        return vo;
+    }
+    @ExceptionHandler(value = ConstraintViolationException.class)
+    public ErrorVO constraintViolationExceptionHandler(Exception e) {
         log.error("error:", e);
         ErrorVO vo = new ErrorVO();
         vo.setCode(CodeEnum.INVALID_PARAMETERS.getCode());

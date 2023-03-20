@@ -3,7 +3,7 @@ package com.norm.timemall.app.pod.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.norm.timemall.app.base.mo.Brand;
-import com.norm.timemall.app.base.pojo.BrandBank;
+import com.norm.timemall.app.base.pojo.SimpleBrandBank;
 import com.norm.timemall.app.pod.domain.pojo.PodBrandContact;
 import com.norm.timemall.app.base.pojo.BrandPayway;
 import com.norm.timemall.app.pod.mapper.PodBrandMapper;
@@ -33,7 +33,7 @@ public class PodBrandServiceImpl implements PodBrandService {
         LambdaQueryWrapper<Brand> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(Brand::getId,brandId);
         Brand brand = podBrandMapper.selectById(brandId);
-        BrandBank bank = new BrandBank();
+        SimpleBrandBank bank = new SimpleBrandBank();
         bank.setCardholder(brand.getCardholder());
         bank.setCardNo(brand.getCardno());
         BrandPayway payway =new BrandPayway();

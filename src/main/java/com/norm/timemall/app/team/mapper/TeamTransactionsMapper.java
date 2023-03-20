@@ -16,5 +16,6 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface TeamTransactionsMapper extends BaseMapper<Transactions> {
 
-    TeamTrans selectTransByFid(@Param("fid") String fid,@Param("year") String year, @Param("month") String month);
+    TeamTrans selectTransByFid(@Param("fid") String fid,@Param("fid_type") String fidType,
+                               @Param("year") String year, @Param("month") String month);
 }

@@ -5,18 +5,32 @@
         oasis
     </sql>
 
-    <sql id="baseColumn">
-        id,initiator_id,title,subtitle,avatar,membership,max_members,risk,announce,create_at,modified_at
-    </sql>
+
     <select id="selectPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamOasisRO">
         select avatar, title,subtitle,id
         from oasis
         where
          1 = 1
+        and mark='2'
         <if test="q != null and q != ''">
-            AND title = #{q}
+            AND locate(#{q}, title)>0
         </if>
 
     </select>
+    <resultMap id="selectAnnounceByIdResultMap" type="com.norm.timemall.app.team.domain.pojo.TeamOasisAnnounce">
+        <result property="title" column="title"/>
+        <result property="avatar" column="avatar"/>
+        <result property="subTitle" column="subTitle"/>
+        <result property="announceUrl" column="announceUrl"/>
+        <result property="risk"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
+                column="risk"/>
+    </resultMap>
+    <select id="selectAnnounceById" resultMap="selectAnnounceByIdResultMap">
+        select title,avatar,subTitle,announce announceUrl,risk  from oasis
+        where
+          id=#{id}
+    </select>
+
 
 </mapper>

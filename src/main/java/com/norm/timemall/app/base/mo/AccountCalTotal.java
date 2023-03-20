@@ -33,6 +33,10 @@ public class AccountCalTotal extends Model<AccountCalTotal> implements Serializa
      */
     private String fid;
     /**
+     * 交易对象type: oasis or brand or user or other
+     */
+    private String fidType;
+    /**
      * in
      */
     private BigDecimal in;
@@ -40,5 +44,13 @@ public class AccountCalTotal extends Model<AccountCalTotal> implements Serializa
      * out
      */
     private BigDecimal out;
+    /**
+     * 可提取币种收入
+     */
+    private BigDecimal drawableIn;
+    /**
+     * 可提取币种支出
+     */
+    private BigDecimal drawableOut;
 
 }

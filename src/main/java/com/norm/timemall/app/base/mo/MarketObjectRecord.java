@@ -50,6 +50,10 @@ public class MarketObjectRecord extends Model<MarketObjectRecord> implements Ser
      */
     private String tag;
     /**
+     * 合作意向/拥有等标记
+     */
+    private String mark;
+    /**
      * createAt
      */
     private Date createAt;
