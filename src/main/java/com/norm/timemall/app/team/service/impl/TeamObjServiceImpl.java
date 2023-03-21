@@ -10,10 +10,7 @@ import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.mo.MarketObject;
 import com.norm.timemall.app.base.mo.MarketObjectRecord;
 import com.norm.timemall.app.base.pojo.ro.CellInfoRO;
-import com.norm.timemall.app.team.domain.dto.TeamObjPageDTO;
-import com.norm.timemall.app.team.domain.dto.TeamOwnedObjPageDTO;
-import com.norm.timemall.app.team.domain.dto.TeamSwapCellDTO;
-import com.norm.timemall.app.team.domain.dto.TeamTagObjDTO;
+import com.norm.timemall.app.team.domain.dto.*;
 import com.norm.timemall.app.team.domain.ro.TeamObjRO;
 import com.norm.timemall.app.team.mapper.TeamCellMapper;
 import com.norm.timemall.app.team.mapper.TeamMarketObjectMapper;
@@ -111,5 +108,19 @@ public class TeamObjServiceImpl implements TeamObjService {
     @Override
     public void tagObj(TeamTagObjDTO dto) {
         teamMarketObjectRecordMapper.updateTagByObjId(dto.getObjId(),dto.getTag());
+    }
+
+    @Override
+    public void modifyObjSalePrice(TeamObjPricingDTO dto) {
+        teamMarketObjectMapper.updateSalePriceById(dto);
+    }
+
+    @Override
+    public IPage<TeamObjRO> findtodoObjs(TeamTodoObjPageDTO dto) {
+        String brandId = dto.getBrandId();
+        IPage<TeamObjRO>  page = new Page<>();
+        page.setSize(dto.getSize());
+        page.setCurrent(dto.getCurrent());
+        return teamMarketObjectMapper.selectPagebyTagAndDebitId(page,ObjectRecordMarkEnum.OWNED.getMark(),brandId);
     }
 }

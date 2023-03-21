@@ -3,6 +3,7 @@ package com.norm.timemall.app.team.mapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.mo.Oasis;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.norm.timemall.app.team.domain.dto.TeamOasisGeneralDTO;
 import com.norm.timemall.app.team.domain.pojo.TeamOasisAnnounce;
 import com.norm.timemall.app.team.domain.pojo.TeamOasisIndexEntry;
 import com.norm.timemall.app.team.domain.ro.TeamOasisRO;
@@ -35,4 +36,6 @@ public interface TeamOasisMapper extends BaseMapper<Oasis> {
     void updateAvatarById(@Param("id") String oasisId, @Param("uri") String uri);
 @Update("update oasis set mark=#{mark} where id=#{id}")
     void updateMarkById(@Param("id") String oasisId, @Param("mark") String mark);
+    @Update("update oasis set title=#{dto.title},subtitle=#{dto.subTitle} where id=#{dto.oasisId}")
+    void updateTitleAndSubTitleById(@Param("dto") TeamOasisGeneralDTO dto);
 }

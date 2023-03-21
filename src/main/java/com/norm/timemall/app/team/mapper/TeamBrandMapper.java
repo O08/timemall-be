@@ -19,6 +19,5 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface TeamBrandMapper extends BaseMapper<Brand> {
 
-@Select("select avator avatar,title,skills ,id from brand where title = #{q}")
     IPage<TeamTalentRO> selectPageByQ(IPage<TeamTalentRO> page, @Param("q") String q);
 }

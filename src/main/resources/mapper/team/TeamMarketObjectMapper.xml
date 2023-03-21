@@ -10,7 +10,7 @@
     </sql>
     <select id="selectPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamObjRO">
         select
-        obj.id,c.title,c.cover avatar,obj.sbu,obj.quantity,obj.sale_price,obj.object_val
+        obj.id,c.title,c.cover avatar,obj.sbu,obj.quantity,obj.sale_price,obj.object_val,obj.cell_id,c.brand_id
         from market_object obj
         left join market_object_record r on r.obj_id = obj.id
         left join cell c on c.id = obj.cell_id
@@ -32,13 +32,23 @@
     </select>
     <select id="selectPagebyTagAndCreditId" resultType="com.norm.timemall.app.team.domain.ro.TeamObjRO">
         select
-        obj.id,c.title,c.cover avatar,obj.sbu,obj.quantity,obj.sale_price,obj.object_val
+        obj.id,c.title,c.cover avatar,obj.sbu,obj.quantity,obj.sale_price,obj.object_val,obj.cell_id,c.brand_id
         from market_object obj
         left join market_object_record r on r.obj_id = obj.id
         left join cell c on c.id = obj.cell_id
         where
           r.mark = #{mark}
           and r.credit_id = #{credit_id}
+    </select>
+    <select id="selectPagebyTagAndDebitId" resultType="com.norm.timemall.app.team.domain.ro.TeamObjRO">
+        select
+        obj.id,c.title,c.cover avatar,obj.sbu,obj.quantity,obj.sale_price,obj.object_val,obj.cell_id,c.brand_id
+        from market_object obj
+        left join market_object_record r on r.obj_id = obj.id
+        left join cell c on c.id = obj.cell_id
+        where
+        r.mark = #{mark}
+        and r.debit_id = #{debit_id}
     </select>
 
 </mapper>

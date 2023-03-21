@@ -11,4 +11,6 @@ public class TeamObjRO {
     private String quantity;
     private String salePrice;
     private String objectVal;
+    private String cellId;
+    private String brandId;
 }

@@ -13,6 +13,7 @@ import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.team.constant.OasisConstant;
 import com.norm.timemall.app.team.domain.dto.TeamNewOasisDTO;
+import com.norm.timemall.app.team.domain.dto.TeamOasisGeneralDTO;
 import com.norm.timemall.app.team.domain.dto.TeamOasisPageDTO;
 import com.norm.timemall.app.team.domain.dto.TeamOasisRiskDTO;
 import com.norm.timemall.app.team.domain.pojo.TeamOasisAnnounce;
@@ -120,5 +121,10 @@ public class TeamOasisServiceImpl implements TeamOasisService {
     @Override
     public void tagOasisTag(String oasisId, String mark) {
         teamOasisMapper.updateMarkById(oasisId,mark);
+    }
+
+    @Override
+    public void modifyOasisBaseInfo(TeamOasisGeneralDTO dto) {
+        teamOasisMapper.updateTitleAndSubTitleById(dto);
     }
 }

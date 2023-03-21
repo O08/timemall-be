@@ -7,11 +7,13 @@ import java.util.ArrayList;
 
 @Data
 public class TeamTalentRO {
+    private  String brandName;
     // brand avatar
     private String avatar;
     // brand tile
     private String title;
     // brand skill
-    private ArrayList<ExperienceEntry> skill;    // brand id
+    private ArrayList<ExperienceEntry> skill;
+    // brand id
     private String id;
 }
