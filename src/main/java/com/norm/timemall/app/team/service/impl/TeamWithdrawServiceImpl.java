@@ -11,6 +11,7 @@ import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.*;
 import com.norm.timemall.app.base.security.CustomizeUser;
+import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.pay.domain.dto.WithDrawDTO;
 import com.norm.timemall.app.studio.service.OrderFlowService;
 import com.norm.timemall.app.team.domain.pojo.WithdrawToALiPayBO;
@@ -39,10 +40,14 @@ public class TeamWithdrawServiceImpl implements TeamWithdrawService {
     private TeamWithdrawRecordMapper teamWithdrawRecordMapper;
     @Autowired
     private TeamTransactionsMapper teamTransactionsMapper;
+    @Autowired
+    private AccountService accountService;
     @Override
     public WithdrawToALiPayBO toAliPay(WithDrawDTO dto) {
         log.info("群巅-提现到支付宝"+ JSON.toJSONString(dto));
-        String brandId = ""; // todo
+        String brandId = accountService.
+                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
+                .getId();
 
         // 查询账户信息 提现金额验证
         FinAccount account = teamAccountMapper.selectOneByFid(brandId, FidTypeEnum.BRAND.getMark());
@@ -77,7 +82,9 @@ public class TeamWithdrawServiceImpl implements TeamWithdrawService {
 
     @Override
     public void toAliPaySuccess(String orderNo, AlipayFundTransToaccountTransferResponse response) {
-        String brandId =""; // todo
+        String brandId = accountService.
+                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
+                .getId();
         // update tag and msg
         WithdrawRecord record = teamWithdrawRecordMapper.selectById(orderNo);
         record.setTag(WithdrawTagEnum.SUCCESS.getMark())
@@ -86,7 +93,7 @@ public class TeamWithdrawServiceImpl implements TeamWithdrawService {
                 .setModifiedAt(new Date());
         teamWithdrawRecordMapper.updateById(record);
         // account option
-        teamAccountMapper.updateAccountByFid(record.getAmount(),brandId,FidTypeEnum.BRAND.getMark());
+        teamAccountMapper.updateMinusAccountByFid(record.getAmount(),brandId,FidTypeEnum.BRAND.getMark());
 
     }
 

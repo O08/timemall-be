@@ -23,7 +23,7 @@ public interface TeamAccountMapper extends BaseMapper<FinAccount> {
     FinAccount selectOneByFid(@Param("fid") String fid,@Param("type") String fidType);
 
     @Update("update fin_account set drawable=drawable-#{amount} where fid =#{fid} and fid_type=#{fid_type}")
-    void updateAccountByFid(@Param("amount") BigDecimal amount,
+    void updateMinusAccountByFid(@Param("amount") BigDecimal amount,
                             @Param("fid") String fid,
                             @Param("fid_type") String fiType);
 }

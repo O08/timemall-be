@@ -54,6 +54,10 @@ public class WithdrawRecord extends Model<WithdrawRecord> implements Serializabl
      */
     private BigDecimal feeRate;
     /**
+     * 最终到用户的额度
+     */
+    private BigDecimal finalAmount;
+    /**
      * tag
      */
     private String tag;
