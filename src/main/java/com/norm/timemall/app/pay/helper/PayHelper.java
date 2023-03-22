@@ -5,6 +5,7 @@ import com.norm.timemall.app.base.mo.ProprietaryTradingOrder;
 import com.norm.timemall.app.base.mo.ProprietaryTradingPayment;
 import com.norm.timemall.app.studio.service.StudioBlueSignService;
 import com.norm.timemall.app.studio.service.StudioProprietaryTradingOrderService;
+import com.norm.timemall.app.studio.service.StudioTopUpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,8 @@ public class PayHelper {
 
     @Autowired
     private StudioProprietaryTradingOrderService studioProprietaryTradingOrderService;
+    @Autowired
+    private StudioTopUpService studioTopUpService;
     public ProprietaryTradingPayment generatePaymentWhenSuccessForAliPay(String outTradeNo,String tradeNo,
                                                      String tradeStatus,String totalAmount,String message){
         ProprietaryTradingPayment tradingPayment = new ProprietaryTradingPayment();
@@ -31,12 +34,43 @@ public class PayHelper {
         return tradingPayment;
     }
 
-    public void busiHandler(String busiType, Map<String,String> params){
+    public void busiHandler(Map<String,String> params){
+        String out_trade_no = params.get("out_trade_no");
+        ProprietaryTradingOrder tradingOrder = studioProprietaryTradingOrderService.getById(out_trade_no);
+        String busiType = getBusiType(tradingOrder.getTradingId());
         if("bluesign".equals(busiType)){
-            String out_trade_no = params.get("out_trade_no");
-            ProprietaryTradingOrder tradingOrder = studioProprietaryTradingOrderService.getById(out_trade_no);
             studioBlueSignService.enableBlueSign(tradingOrder.getCustomerId());
         }
+        if("topUp".equals(busiType)){
+            studioTopUpService.topUpPostHandler(tradingOrder.getBrandId(),tradingOrder.getTotal());
+        }
+    }
+    public String getPaySubject(String tradingId){
+        String subject="";
+        switch (tradingId){
+            case "prd-0002":
+                subject="充值";
+                break;
+            default:
+                subject="自营";
+                break;
+        }
+        return  subject;
+    }
+    private String getBusiType(String tradingId){
+        String busiType="";
+        switch (tradingId){
+            case "prd-0001":
+                busiType="bluesign";
+                break;
+            case "prd-0002":
+                busiType="topUp";
+                break;
+            default:
+                busiType="others";
+                break;
+        }
+        return busiType;
     }
 
 }

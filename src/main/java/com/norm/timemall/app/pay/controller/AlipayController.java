@@ -72,7 +72,8 @@ public class AlipayController {
         // 付款金额, 必填 单位元
         String total_amount = proprietaryTradingOrder.getTotal().toString();  // 测试用 1分钱
         // 订单名称, 必填
-        String subject = "自营-付款[" + merchantUserId + "]";
+        String subject = payHelper.getPaySubject(proprietaryTradingOrder.getTradingId())
+                +"-付款[" + merchantUserId + "]";
         // 商品描述, 可空, 目前先用订单名称
         String body = subject;
 
@@ -143,7 +144,7 @@ public class AlipayController {
                 ProprietaryTradingPayment proprietaryTradingPayment = payHelper.generatePaymentWhenSuccessForAliPay(out_trade_no, trade_no, trade_status, total_amount, paramsJson);
                 studioProprietaryTradingPaymentService.insertTradingPayment(proprietaryTradingPayment);
                 studioProprietaryTradingOrderService.updateTradingOrderStatusAsPaid(out_trade_no);
-                payHelper.busiHandler("bluesign",params);
+                payHelper.busiHandler(params);
 //                String merchantReturnUrl = paymentOrderService.updateOrderPaid(out_trade_no, CurrencyUtils.getYuan2Fen(total_amount));
 //                notifyFoodieShop(out_trade_no,merchantReturnUrl);
             }
