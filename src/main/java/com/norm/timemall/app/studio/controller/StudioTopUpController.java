@@ -8,6 +8,7 @@ import com.norm.timemall.app.studio.service.StudioTopUpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,7 +18,7 @@ public class StudioTopUpController {
     private StudioTopUpService studioTopUpService;
     @ResponseBody
     @PostMapping(value = "/api/v1/web_estudio/order/top_up")
-    public NewOrderVO topUp(@Validated StudioTopUpDTO dto){
+    public NewOrderVO topUp(@Validated @RequestBody StudioTopUpDTO dto){
         NewOrderRO studioNewOrderRO = studioTopUpService.topUp(dto);
         NewOrderVO vo = new NewOrderVO();
         vo.setResponseCode(CodeEnum.SUCCESS);
