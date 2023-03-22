@@ -5,10 +5,13 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.norm.timemall.app.base.enums.CodeEnum;
+import com.norm.timemall.app.base.enums.FidTypeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mapper.BaseBrandMapper;
+import com.norm.timemall.app.base.mapper.FinAccountMapper;
 import com.norm.timemall.app.base.mo.Brand;
+import com.norm.timemall.app.base.mo.FinAccount;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.base.entity.Customer;
@@ -18,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Service
@@ -27,6 +31,8 @@ public class AccountServiceImpl implements AccountService {
     private CustomerMapper customerMapper;
     @Autowired
     private BaseBrandMapper baseBrandMapper;
+    @Autowired
+    private FinAccountMapper finAccountMapper;
     @Override
     public Account findAccountByUserName(String username) {
         LambdaQueryWrapper<Customer> lambdaQuery = Wrappers.<Customer>lambdaQuery();
@@ -98,6 +104,16 @@ public class AccountServiceImpl implements AccountService {
                 .setBrandName(brandName)
                 .setCustomerId(userId);
         baseBrandMapper.insert(brand);
+        newFinAccountWhenBrandRegister(brand.getId());
+    }
+    private void newFinAccountWhenBrandRegister(String brandId){
+        FinAccount finAccount = new FinAccount();
+        finAccount.setId(IdUtil.simpleUUID())
+                .setFid(brandId)
+                .setFidType(FidTypeEnum.BRAND.getMark())
+                .setAmount(BigDecimal.ZERO)
+                .setDrawable(BigDecimal.ZERO);
+        finAccountMapper.insert(finAccount);
     }
 
 }
