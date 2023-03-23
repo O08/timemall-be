@@ -4,6 +4,8 @@ import com.norm.timemall.app.team.domain.pojo.TeamFinDistriution;
 import com.norm.timemall.app.team.domain.ro.TeamFinBoardRO;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 public interface TeamFinanceService {
     void orderObj(String objId);
@@ -13,4 +15,7 @@ public interface TeamFinanceService {
     TeamFinDistriution findFinDistribution();
 
 
+    TeamFinBoardRO oasisKanban(String oasisId);
+
+    BigDecimal findPointInOasis(String oasisId, String brandId);
 }

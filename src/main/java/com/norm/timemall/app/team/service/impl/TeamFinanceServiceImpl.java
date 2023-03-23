@@ -1,6 +1,8 @@
 package com.norm.timemall.app.team.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.FidTypeEnum;
 import com.norm.timemall.app.base.enums.TransDirectionEnum;
@@ -8,6 +10,7 @@ import com.norm.timemall.app.base.enums.TransTypeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.FinAccount;
+import com.norm.timemall.app.base.mo.FinDistribute;
 import com.norm.timemall.app.base.mo.Transactions;
 import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.team.domain.pojo.TeamFinDistriution;
@@ -133,5 +136,21 @@ public class TeamFinanceServiceImpl implements TeamFinanceService {
         TeamFinDistriution ro = new TeamFinDistriution();
         ro.setRecords(items);
         return ro;
+    }
+
+    @Override
+    public TeamFinBoardRO oasisKanban(String oasisId) {
+        FinAccount account = teamAccountMapper.selectOneByFid(oasisId, FidTypeEnum.OASIS.getMark());
+        TeamFinBoardRO ro = new TeamFinBoardRO();
+        ro.setAmount(account==null ? BigDecimal.ZERO : account.getAmount());
+        ro.setDrawable(account==null? BigDecimal.ZERO :account.getDrawable());
+        return ro;
+    }
+
+    @Override
+    public BigDecimal findPointInOasis(String oasisId, String brandId) {
+
+        FinDistribute finDistribute = teamFinDistributeMapper.selectDistributeByBrandIdAndOasisId(brandId, oasisId);
+        return finDistribute == null ? BigDecimal.ZERO : finDistribute.getAmount() ;
     }
 }
