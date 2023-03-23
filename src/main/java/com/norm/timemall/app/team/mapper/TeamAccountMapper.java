@@ -26,4 +26,6 @@ public interface TeamAccountMapper extends BaseMapper<FinAccount> {
     void updateMinusAccountByFid(@Param("amount") BigDecimal amount,
                             @Param("fid") String fid,
                             @Param("fid_type") String fiType);
+    @Select("select * from fin_account where fid=#{fid} and fid_type=#{type} for update")
+    FinAccount selectOneByFidForUpdate(@Param("fid") String fid, @Param("type") String fidType);
 }

@@ -17,4 +17,6 @@ public interface TeamOasisJoinService {
 
     ArrayList<TeamJoinedRO> findJoinedOasis(String brandId);
 
+    void followOasis(String oasisId,String brandId);
+
 }

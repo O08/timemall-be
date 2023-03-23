@@ -84,4 +84,33 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
     public ArrayList<TeamJoinedRO> findJoinedOasis(String brandId) {
         return teamOasisJoinMapper.selectJoinedOasesByUser(brandId);
     }
+
+    @Override
+    public void followOasis(String oasisId,String brandId) {
+        // query oasis member info
+        Oasis oasis = teamOasisMapper.selectById(oasisId);
+
+
+        // if membership < max_members insert oasis_member else deny
+        if(oasis != null && oasis.getMembership() < oasis.getMaxMembers()){
+            OasisMember member = new OasisMember();
+            member.setId(IdUtil.simpleUUID())
+                    .setCreateAt(new Date())
+                    .setModifiedAt(new Date())
+                    .setOasisId(oasisId)
+                    .setBrandId(brandId);
+            teamOasisMemberMapper.insert(member);
+
+            OasisJoin join =new OasisJoin();
+            join.setId(IdUtil.simpleUUID())
+                    .setBrandId(brandId)
+                    .setOasisId(oasisId)
+                    .setTag(OasisJoinTagEnum.ACCEPT.getMark())
+                    .setCreateAt(new Date())
+                    .setModifiedAt(new Date());
+            teamOasisJoinMapper.insert(join);
+        }else {
+            throw new ErrorCodeException(CodeEnum.MEMBERS_LIMIT);
+        }
+    }
 }

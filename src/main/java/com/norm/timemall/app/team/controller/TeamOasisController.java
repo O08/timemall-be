@@ -157,6 +157,13 @@ public class TeamOasisController {
         teamOasisService.newOasis(dto);
         return new SuccessVO(CodeEnum.SUCCESS);
     }
+    @ResponseBody
+    @PutMapping(value = "/api/v1/team/be_oasis_member")
+    public SuccessVO followOasis(@RequestParam @NotBlank(message = "oasisId is required") String oasisId,
+                                 @RequestParam @NotBlank(message = "brandId is required") String brandId){
+        teamOasisJoinService.followOasis(oasisId,brandId);
+        return new SuccessVO(CodeEnum.SUCCESS);
+    }
 
 
 }
