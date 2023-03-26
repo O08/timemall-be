@@ -15,6 +15,8 @@ import javax.validation.constraints.Positive;
 public class BrandCellsPageDTO {
     @NotBlank(message = "brandId is required")
     private String brandId;
+
+    private String q;
     @NotNull(message = "current is required and must be number")
     @Positive(message = "current value should be positive.")
     private Long current;

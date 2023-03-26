@@ -83,6 +83,9 @@
         where b.id = #{dto.brandId}
         and p.sbu = #{dto.sbu}
         and c.mark ='2'
+        <if test="dto.q != null and dto.q != ''">
+            AND locate(#{dto.q}, c.title)>0
+        </if>
     </select>
 
     <resultMap id="cellsResultMap" type="com.norm.timemall.app.mall.domain.ro.MallCellRO">
