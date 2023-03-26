@@ -1,5 +1,6 @@
 package com.norm.timemall.app.mall.service.impl;
 
+
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.norm.timemall.app.base.enums.CodeEnum;
@@ -7,17 +8,26 @@ import com.norm.timemall.app.mall.domain.dto.BrandCellsPageDTO;
 import com.norm.timemall.app.mall.domain.dto.CellPageDTO;
 import com.norm.timemall.app.base.pojo.ro.CellIntroRO;
 import com.norm.timemall.app.base.pojo.vo.CellIntroVO;
+import com.norm.timemall.app.mall.domain.pojo.Fee;
+import com.norm.timemall.app.mall.domain.pojo.MallCellPricing;
 import com.norm.timemall.app.mall.domain.pojo.MallHomeInfo;
+import com.norm.timemall.app.mall.domain.vo.CellPricingVO;
 import com.norm.timemall.app.mall.mapper.CellMapper;
 import com.norm.timemall.app.mall.domain.ro.CellRO;
+import com.norm.timemall.app.mall.mapper.PricingMapper;
 import com.norm.timemall.app.mall.service.CellServic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 
 @Service
 public class CellServicImpl implements CellServic {
     @Autowired
     private CellMapper cellMapper;
+    @Autowired
+    private PricingMapper pricingMapper;
+
     @Override
     public IPage<CellRO> findCells(CellPageDTO cellPageDTO) {
         Page<CellRO> page = new Page<>();
@@ -46,5 +56,18 @@ public class CellServicImpl implements CellServic {
     public MallHomeInfo findHomeInfo(String brandId) {
         MallHomeInfo data = cellMapper.selectHomeInfoByBrandId(brandId);
         return data;
+    }
+
+    @Override
+    public CellPricingVO findCellPricing(String cellId) {
+        ArrayList<Fee> fees =pricingMapper.selectFeeList(cellId);
+
+        MallCellPricing pricing = new MallCellPricing();
+        pricing.setFee(fees);
+
+        CellPricingVO vo = new CellPricingVO();
+        vo.setPricing(pricing);
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        return vo;
     }
 }

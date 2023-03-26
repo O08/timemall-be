@@ -9,6 +9,7 @@ import com.norm.timemall.app.mall.domain.ro.CellRO;
 import com.norm.timemall.app.base.pojo.vo.CellIntroVO;
 import com.norm.timemall.app.mall.domain.vo.CellListVO;
 import com.norm.timemall.app.mall.domain.vo.CellPageVO;
+import com.norm.timemall.app.mall.domain.vo.CellPricingVO;
 import com.norm.timemall.app.mall.domain.vo.HomeInfoVO;
 import com.norm.timemall.app.mall.service.CellListService;
 import com.norm.timemall.app.mall.service.CellServic;
@@ -87,5 +88,15 @@ public class CellController {
                 vo.setData(data);
                 vo.setResponseCode(CodeEnum.SUCCESS);
         return vo;
+    }
+    /*
+     * 服务详情
+     */
+    @ResponseBody
+    @GetMapping(value = "/api/v1/web_estudio/cell/{cell_id}/pricing")
+    public CellPricingVO retrieveCellPricing(@PathVariable("cell_id") String cellId)
+    {
+        CellPricingVO result = cellServic.findCellPricing(cellId);
+        return result;
     }
 }

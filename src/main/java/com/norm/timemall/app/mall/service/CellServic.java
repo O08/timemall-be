@@ -6,6 +6,7 @@ import com.norm.timemall.app.mall.domain.dto.CellPageDTO;
 import com.norm.timemall.app.mall.domain.pojo.MallHomeInfo;
 import com.norm.timemall.app.mall.domain.ro.CellRO;
 import com.norm.timemall.app.base.pojo.vo.CellIntroVO;
+import com.norm.timemall.app.mall.domain.vo.CellPricingVO;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,4 +19,5 @@ public interface CellServic {
 
     MallHomeInfo findHomeInfo(String brandId);
 
+    CellPricingVO findCellPricing(String cellId);
 }
