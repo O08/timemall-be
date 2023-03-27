@@ -83,7 +83,7 @@ public class TeamBrandController {
         return new SuccessVO(CodeEnum.SUCCESS);
     }
     /**
-     * 添加商家支付宝账号
+     * 删除商家支付宝账号
      */
     @ResponseBody
     @DeleteMapping(value = "/api/v1/team/delAlipayAccount")

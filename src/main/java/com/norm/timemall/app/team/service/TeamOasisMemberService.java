@@ -10,4 +10,6 @@ import java.util.ArrayList;
 public interface TeamOasisMemberService {
     ArrayList<TeamOasisMemberRO> findOasisMember(String oasisId);
 
+    void unfollowOasis(String oasisId,String brandId);
+
 }

@@ -1,6 +1,7 @@
 package com.norm.timemall.app.team.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.OasisJoinTagEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
@@ -9,6 +10,7 @@ import com.norm.timemall.app.base.mo.Oasis;
 import com.norm.timemall.app.base.mo.OasisJoin;
 import com.norm.timemall.app.base.mo.OasisMember;
 import com.norm.timemall.app.base.security.CustomizeUser;
+import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.team.domain.dto.TeamInviteToOasisDTO;
 import com.norm.timemall.app.team.domain.ro.TeamInviteRO;
 import com.norm.timemall.app.team.domain.ro.TeamJoinedRO;
@@ -31,6 +33,7 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
 
     @Autowired
     private TeamOasisMemberMapper teamOasisMemberMapper;
+
 
 
     @Override
@@ -112,5 +115,16 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
         }else {
             throw new ErrorCodeException(CodeEnum.MEMBERS_LIMIT);
         }
+    }
+
+    @Override
+    public void unfollowOasis(String oasisId,String brandId) {
+
+
+        LambdaQueryWrapper<OasisJoin> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(OasisJoin::getOasisId,oasisId)
+                        .eq(OasisJoin::getBrandId,brandId);
+
+        teamOasisJoinMapper.delete(wrapper);
     }
 }

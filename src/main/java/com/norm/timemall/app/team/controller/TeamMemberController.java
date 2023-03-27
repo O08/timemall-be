@@ -2,10 +2,13 @@ package com.norm.timemall.app.team.controller;
 
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
+import com.norm.timemall.app.base.helper.SecurityUserHelper;
+import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.team.domain.dto.TeamInviteToOasisDTO;
 import com.norm.timemall.app.team.domain.pojo.TeamOasisMember;
 import com.norm.timemall.app.team.domain.ro.TeamOasisMemberRO;
 import com.norm.timemall.app.team.domain.vo.TeamOasisMemberVO;
+import com.norm.timemall.app.team.service.TeamDataPolicyService;
 import com.norm.timemall.app.team.service.TeamOasisJoinService;
 import com.norm.timemall.app.team.service.TeamOasisMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,11 @@ public class TeamMemberController {
 
     @Autowired
     private TeamOasisJoinService teamOasisJoinService;
+
+    @Autowired
+    private TeamDataPolicyService teamDataPolicyService;
+    @Autowired
+    private AccountService accountService;
     /**
     * oasis 组员列表
     */
@@ -44,6 +52,41 @@ public class TeamMemberController {
     @PutMapping(value = "/api/v1/team/invite")
     public SuccessVO inviteBrandJoinOasis(@Validated @RequestBody  TeamInviteToOasisDTO dto){
         teamOasisJoinService.inviteBrand(dto);
+        return new SuccessVO(CodeEnum.SUCCESS);
+    }
+    /**
+     * 退出oasis
+     */
+    @ResponseBody
+    @DeleteMapping(value = "/api/v1/team/oasis/unfollow")
+    public SuccessVO unfollowOasis(@RequestParam("oasisId") String oasisId){
+        String brandId = accountService.
+                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
+                .getId();
+        // remove from oasis join tbl
+        teamOasisJoinService.unfollowOasis(oasisId,brandId);
+        // remove from oasis member tbl
+        teamOasisMemberService.unfollowOasis(oasisId,brandId);
+
+        return new SuccessVO(CodeEnum.SUCCESS);
+    }
+    /**
+     * 移出oasis
+     */
+    @ResponseBody
+    @DeleteMapping(value = "/api/v1/team/oasis/remove_member")
+    public SuccessVO unfollowOasis(@RequestParam("oasisId") String oasisId,
+                                   @RequestParam("brandId") String brandId){
+        // check oasis ,if role is oasis creator ,pass
+        boolean pass = teamDataPolicyService.passIfBrandIsCreatorOfOasis(oasisId);
+        if(pass){
+            // remove from oasis join tbl
+            teamOasisJoinService.unfollowOasis(oasisId,brandId);
+            // remove from oasis member tbl
+            teamOasisMemberService.unfollowOasis(oasisId,brandId);
+        }
+
+
         return new SuccessVO(CodeEnum.SUCCESS);
     }
 }
