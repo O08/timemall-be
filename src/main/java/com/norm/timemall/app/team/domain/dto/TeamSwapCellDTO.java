@@ -3,6 +3,8 @@ package com.norm.timemall.app.team.domain.dto;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 @Data
 public class TeamSwapCellDTO {
@@ -10,7 +12,8 @@ public class TeamSwapCellDTO {
     private String sponsor;
     @NotBlank(message = "sponsorCellId required")
     private String sponsorCellId;
-    @NotBlank(message = "sponsorCellQuantity required")
+    @NotNull(message = "sponsorCellQuantity required")
+    @Positive(message = "sponsorCellQuantity required must be positive")
     private int sponsorCellQuantity;
     @NotBlank(message = "sponsorCellSbu required")
     private String sponsorCellSbu;
@@ -18,8 +21,9 @@ public class TeamSwapCellDTO {
     private String partner;
     @NotBlank(message = "partnerCellId required")
     private String partnerCellId;
-    @NotBlank(message = "partnerrCellQuantity required")
-    private int partnerrCellQuantity;
+    @NotNull(message = "partnerCellQuantity required")
+    @Positive(message = "partnerCellQuantity required and must be positive")
+    private int partnerCellQuantity;
     @NotBlank(message = "partnerCellSbu required")
     private String partnerCellSbu;
 
