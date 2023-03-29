@@ -58,9 +58,9 @@ public class TeamObjServiceImpl implements TeamObjService {
         MarketObject partnerObj = new MarketObject();
         partnerObj.setId(IdUtil.simpleUUID())
                         .setCellId(dto.getPartnerCellId())
-                                .setQuantity(dto.getPartnerrCellQuantity())
+                                .setQuantity(dto.getPartnerCellQuantity())
                                         .setSbu(dto.getPartnerCellSbu())
-                                                .setObjectVal(partnerCellRO.getPrice().multiply(new BigDecimal(dto.getPartnerrCellQuantity())));
+                                                .setObjectVal(partnerCellRO.getPrice().multiply(new BigDecimal(dto.getPartnerCellQuantity())));
 
         String swapNo = IdUtil.simpleUUID();// generate swap no
         MarketObjectRecord sponsorRecord = new MarketObjectRecord();
