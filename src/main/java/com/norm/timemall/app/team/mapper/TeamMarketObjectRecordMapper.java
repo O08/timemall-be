@@ -2,6 +2,7 @@ package com.norm.timemall.app.team.mapper;
 
 import com.norm.timemall.app.base.mo.MarketObjectRecord;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.norm.timemall.app.team.domain.dto.TeamMarkObjDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
@@ -19,4 +20,6 @@ public interface TeamMarketObjectRecordMapper extends BaseMapper<MarketObjectRec
     void updateCreditIdById(@Param("obj_id") String objId,@Param("credit_id") String creditId);
     @Update("update market_object_record set tag = #{tag} where obj_id=#{obj_id}")
     void updateTagByObjId(@Param("obj_id") String objId, @Param("tag") String tag);
+    @Update("update market_object_record set mark = #{dto.mark} where swap_no=#{dto.swapNo}")
+    void updateMarkBySwapNo(@Param("dto") TeamMarkObjDTO dto);
 }

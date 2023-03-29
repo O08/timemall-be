@@ -70,5 +70,11 @@ public class TeamObjController {
         vo.setResponseCode(CodeEnum.SUCCESS);
         return  vo;
     }
+    @ResponseBody
+    @PutMapping(value = "/api/v1/team/obj/mark")
+    public SuccessVO markObj(@Validated @RequestBody TeamMarkObjDTO dto){
+        teamObjService.markObj(dto);
+        return new SuccessVO(CodeEnum.SUCCESS);
+    }
 
 }

@@ -18,4 +18,6 @@ public interface TeamObjService {
     void modifyObjSalePrice(TeamObjPricingDTO dto);
 
     IPage<TeamObjRO> findtodoObjs(TeamTodoObjPageDTO dto);
+
+    void markObj(TeamMarkObjDTO dto);
 }

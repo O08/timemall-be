@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class TeamObjRO {
     private String id;
+    private String swapNo;
     private String title;
     private String avatar;
     private String sbu;

@@ -126,4 +126,9 @@ public class TeamObjServiceImpl implements TeamObjService {
         page.setCurrent(dto.getCurrent());
         return teamMarketObjectMapper.selectPagebyTagAndDebitId(page,ObjectRecordMarkEnum.OWNED.getMark(),brandId);
     }
+
+    @Override
+    public void markObj(TeamMarkObjDTO dto) {
+        teamMarketObjectRecordMapper.updateMarkBySwapNo(dto);
+    }
 }
