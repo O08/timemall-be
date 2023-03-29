@@ -54,6 +54,10 @@ public class MarketObjectRecord extends Model<MarketObjectRecord> implements Ser
      */
     private String mark;
     /**
+     * 顺序 ，发起人为 1 ，目标交易方为2
+     */
+    private String od;
+    /**
      * createAt
      */
     private Date createAt;

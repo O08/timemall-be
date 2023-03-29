@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.ObjectRecordMarkEnum;
+import com.norm.timemall.app.base.enums.ObjectRecordOdEnum;
 import com.norm.timemall.app.base.enums.ObjectRecordTagEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.mo.MarketObject;
@@ -69,8 +70,9 @@ public class TeamObjServiceImpl implements TeamObjService {
                 .setObjId(sponsorObj.getId())
                 .setMark(ObjectRecordMarkEnum.COOPERATION.getMark())
                         .setTag(ObjectRecordTagEnum.CREATED.getMark())
-                                .setCreditId(dto.getSponsor())
-                                        .setDebitId(dto.getPartner())
+                .setOd(ObjectRecordOdEnum.SPONSOR.getMark())
+                                .setCreditId(dto.getPartner())
+                                        .setDebitId(dto.getSponsor())
                                                 .setCreateAt(new Date())
                                                         .setModifiedAt(new Date());
         MarketObjectRecord partnerRecord = new MarketObjectRecord();
@@ -79,8 +81,9 @@ public class TeamObjServiceImpl implements TeamObjService {
                 .setObjId(partnerObj.getId())
                 .setMark(ObjectRecordMarkEnum.COOPERATION.getMark())
                 .setTag(ObjectRecordTagEnum.CREATED.getMark())
-                        .setCreditId(dto.getPartner())
-                                .setDebitId(dto.getSponsor())
+                .setOd(ObjectRecordOdEnum.TARGET.getMark())
+                        .setCreditId(dto.getSponsor())
+                                .setDebitId(dto.getPartner())
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
 

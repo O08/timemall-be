@@ -39,6 +39,9 @@
         where
           r.mark = #{mark}
           and r.credit_id = #{credit_id}
+        <if test="mark == '1'.toString()">
+            AND r.od='1'
+        </if>
     </select>
     <select id="selectPagebyTagAndDebitId" resultType="com.norm.timemall.app.team.domain.ro.TeamObjRO">
         select
