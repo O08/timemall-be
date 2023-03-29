@@ -29,7 +29,7 @@ public class TeamObjController {
     }
     @ResponseBody
     @PutMapping(value = "/api/v1/team/swap_cell")
-    public SuccessVO swapCell(@Validated  TeamSwapCellDTO dto){
+    public SuccessVO swapCell(@Validated  @RequestBody TeamSwapCellDTO dto){
         teamObjService.swapCell(dto);
         return new SuccessVO(CodeEnum.SUCCESS);
     }
