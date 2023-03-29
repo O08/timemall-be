@@ -26,8 +26,8 @@ public interface TeamOasisMapper extends BaseMapper<Oasis> {
     IPage<TeamOasisRO> selectPageByQ(IPage<TeamOasisRO> page, @Param("q") String q);
 @Update("update oasis set announce = #{uri} where id=#{id}")
     void updateAnnounceById(@Param("id") String oasisId, @Param("uri") String uri);
-    @Update("update oasis set risk = #{riskJson} where id=#{id}")
-    void updateRiskById(@Param("id") String oasisId,@Param("riskJson") String riskJson);
+    @Update("update oasis set risk = #{risk} where id=#{id}")
+    void updateRiskById(@Param("id") String oasisId,@Param("risk") String risk);
 
     TeamOasisAnnounce selectAnnounceById(@Param("id") String oasisId);
 @Select("select item,val from oasis_ind where oasis_id=#{oasis_id}")

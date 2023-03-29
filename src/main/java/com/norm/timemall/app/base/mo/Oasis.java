@@ -55,7 +55,7 @@ public class Oasis extends Model<Oasis> implements Serializable {
     /**
      * 风险
      */
-    private Object risk;
+    private String risk;
     /**
      * 宣言
      */

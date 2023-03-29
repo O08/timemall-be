@@ -153,9 +153,12 @@ public class TeamOasisController {
     }
     @ResponseBody
     @PostMapping(value = "/api/v1/team/oasis/new")
-    public SuccessVO newOasis(@Validated  @RequestBody TeamNewOasisDTO dto){
-        teamOasisService.newOasis(dto);
-        return new SuccessVO(CodeEnum.SUCCESS);
+    public TeamNewOasisVO newOasis(@Validated  @RequestBody TeamNewOasisDTO dto){
+        String oasisId = teamOasisService.newOasis(dto);
+        TeamNewOasisVO vo = new TeamNewOasisVO();
+        vo.setOasisId(oasisId);
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        return vo;
     }
     @ResponseBody
     @PutMapping(value = "/api/v1/team/be_oasis_member")

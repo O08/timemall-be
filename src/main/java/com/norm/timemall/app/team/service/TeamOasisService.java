@@ -21,7 +21,7 @@ public interface TeamOasisService {
 
     void modifyOasisRisk(TeamOasisRiskDTO dto);
 
-    void newOasis(TeamNewOasisDTO dto);
+    String newOasis(TeamNewOasisDTO dto);
 
     TeamOasisAnnounce findOasisAnnounce(String oasisId);
 

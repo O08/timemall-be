@@ -17,16 +17,7 @@
         </if>
 
     </select>
-    <resultMap id="selectAnnounceByIdResultMap" type="com.norm.timemall.app.team.domain.pojo.TeamOasisAnnounce">
-        <result property="title" column="title"/>
-        <result property="avatar" column="avatar"/>
-        <result property="subTitle" column="subTitle"/>
-        <result property="announceUrl" column="announceUrl"/>
-        <result property="risk"
-                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
-                column="risk"/>
-    </resultMap>
-    <select id="selectAnnounceById" resultMap="selectAnnounceByIdResultMap">
+    <select id="selectAnnounceById" resultType="com.norm.timemall.app.team.domain.pojo.TeamOasisAnnounce">
         select title,avatar,subTitle,announce announceUrl,risk  from oasis
         where
           id=#{id}

@@ -64,11 +64,11 @@ public class TeamOasisServiceImpl implements TeamOasisService {
     @Override
     public void modifyOasisRisk(TeamOasisRiskDTO dto) {
         Gson gson = new Gson();
-        teamOasisMapper.updateRiskById(dto.getRisk().getOasisId(),gson.toJson(dto.getRisk().getRiskEntries()));
+        teamOasisMapper.updateRiskById(dto.getOasisId(),dto.getRisk());
     }
 
     @Override
-    public void newOasis(TeamNewOasisDTO dto) {
+    public String newOasis(TeamNewOasisDTO dto) {
         String brandId = accountService.
                 findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
                 .getId();
@@ -94,6 +94,8 @@ public class TeamOasisServiceImpl implements TeamOasisService {
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
         teamOasisMemberMapper.insert(member);
+
+        return oasis.getId();
 
     }
 

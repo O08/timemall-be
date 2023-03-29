@@ -8,5 +8,5 @@ public class TeamOasisAnnounce {
     private String avatar;
     private String subTitle;
     private String announceUrl;
-    private TeamRiskEntry[] risk;
+    private String risk;
 }
