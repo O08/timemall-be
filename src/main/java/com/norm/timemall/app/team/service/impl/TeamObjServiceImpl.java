@@ -181,4 +181,9 @@ public class TeamObjServiceImpl implements TeamObjService {
         // tag to used
         teamMarketObjectRecordMapper.updateTagByObjId(teamObj3RO.getId(), ObjectRecordTagEnum.IN_USE.getMark());
     }
+
+    @Override
+    public TeamObjRO findObjInfo(String objId) {
+        return teamMarketObjectMapper.selectOneObjById(objId);
+    }
 }

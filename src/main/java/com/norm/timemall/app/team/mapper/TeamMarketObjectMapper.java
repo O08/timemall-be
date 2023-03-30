@@ -37,4 +37,6 @@ public interface TeamMarketObjectMapper extends BaseMapper<MarketObject> {
     TeamObjRO selectOneObjBySwapNoAndOd(@Param("dto") TeamObjDTO dto);
 
     TeamObj3RO selectObjInfoByObjId(@Param("obj_id") String objId);
+
+    TeamObjRO selectOneObjById(@Param("obj_id") String objId);
 }

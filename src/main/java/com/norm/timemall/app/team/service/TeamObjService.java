@@ -2,6 +2,7 @@ package com.norm.timemall.app.team.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.team.domain.dto.*;
+import com.norm.timemall.app.team.domain.ro.TeamObj2RO;
 import com.norm.timemall.app.team.domain.ro.TeamObjRO;
 import org.springframework.stereotype.Service;
 
@@ -24,4 +25,7 @@ public interface TeamObjService {
     TeamObjRO findObj(TeamObjDTO dto);
 
     void useObj(String objId);
+
+    TeamObjRO findObjInfo(String objId);
+
 }

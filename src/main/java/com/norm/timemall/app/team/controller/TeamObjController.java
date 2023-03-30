@@ -40,6 +40,18 @@ public class TeamObjController {
         vo.setResponseCode(CodeEnum.SUCCESS);
         return  vo;
     }
+    /**
+     * 获取obj info
+     */
+    @ResponseBody
+    @GetMapping(value = "/api/v1/team/obj/{obj_id}")
+    public TeamObjVO retrieveObj(@PathVariable("obj_id") String objId){
+        TeamObjRO objRo = teamObjService.findObjInfo(objId);
+        TeamObjVO vo = new TeamObjVO();
+        vo.setObj(objRo);
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        return  vo;
+    }
     @ResponseBody
     @PutMapping(value = "/api/v1/team/swap_cell")
     public SuccessVO swapCell(@Validated  @RequestBody TeamSwapCellDTO dto){
