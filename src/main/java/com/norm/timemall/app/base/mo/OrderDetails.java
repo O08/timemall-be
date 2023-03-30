@@ -65,6 +65,7 @@ public class OrderDetails extends Model<OrderDetails> implements Serializable {
      * 付费单位 year quarter month day hour minute second
      */
     private String sbu;
+    private String orderType;
     /**
      * cancelled
      */

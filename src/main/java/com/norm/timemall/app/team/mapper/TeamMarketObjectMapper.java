@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.norm.timemall.app.team.domain.dto.TeamObjDTO;
 import com.norm.timemall.app.team.domain.dto.TeamObjPricingDTO;
 import com.norm.timemall.app.team.domain.ro.TeamObj2RO;
+import com.norm.timemall.app.team.domain.ro.TeamObj3RO;
 import com.norm.timemall.app.team.domain.ro.TeamObjRO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -34,4 +35,6 @@ public interface TeamMarketObjectMapper extends BaseMapper<MarketObject> {
                                                @Param("debit_id") String debitId);
 
     TeamObjRO selectOneObjBySwapNoAndOd(@Param("dto") TeamObjDTO dto);
+
+    TeamObj3RO selectObjInfoByObjId(@Param("obj_id") String objId);
 }

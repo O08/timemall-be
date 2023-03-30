@@ -3,19 +3,21 @@ package com.norm.timemall.app.team.service.impl;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.norm.timemall.app.base.enums.CodeEnum;
-import com.norm.timemall.app.base.enums.ObjectRecordMarkEnum;
-import com.norm.timemall.app.base.enums.ObjectRecordOdEnum;
-import com.norm.timemall.app.base.enums.ObjectRecordTagEnum;
+import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
+import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.MarketObject;
 import com.norm.timemall.app.base.mo.MarketObjectRecord;
+import com.norm.timemall.app.base.mo.Millstone;
 import com.norm.timemall.app.base.pojo.ro.CellInfoRO;
+import com.norm.timemall.app.base.security.CustomizeUser;
+import com.norm.timemall.app.base.service.AccountService;
+import com.norm.timemall.app.mall.domain.pojo.InsertOrderParameter;
 import com.norm.timemall.app.team.domain.dto.*;
+import com.norm.timemall.app.team.domain.ro.TeamObj2RO;
+import com.norm.timemall.app.team.domain.ro.TeamObj3RO;
 import com.norm.timemall.app.team.domain.ro.TeamObjRO;
-import com.norm.timemall.app.team.mapper.TeamCellMapper;
-import com.norm.timemall.app.team.mapper.TeamMarketObjectMapper;
-import com.norm.timemall.app.team.mapper.TeamMarketObjectRecordMapper;
+import com.norm.timemall.app.team.mapper.*;
 import com.norm.timemall.app.team.service.TeamObjService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,14 @@ public class TeamObjServiceImpl implements TeamObjService {
     private TeamMarketObjectRecordMapper teamMarketObjectRecordMapper;
     @Autowired
     private TeamCellMapper teamCellMapper;
+
+    @Autowired
+    private TeamMillstoneMapper teamMillstoneMapper;
+    @Autowired
+    private TeamOrderDetailsMapper teamOrderDetailsMapper;
+
+    @Autowired
+    private AccountService accountService;
 
     @Override
     public IPage<TeamObjRO> findObjs(TeamObjPageDTO dto) {
@@ -135,5 +145,40 @@ public class TeamObjServiceImpl implements TeamObjService {
     @Override
     public TeamObjRO findObj(TeamObjDTO dto) {
         return teamMarketObjectMapper.selectOneObjBySwapNoAndOd(dto);
+    }
+
+    @Override
+    public void useObj(String objId) {
+        CustomizeUser user = SecurityUserHelper.getCurrentPrincipal();
+        String brandId = accountService.
+                findBrandInfoByUserId(user.getUserId())
+                .getId();
+        TeamObj3RO teamObj3RO = teamMarketObjectMapper.selectObjInfoByObjId(objId);
+        // check
+        if(teamObj3RO==null || !brandId.equals(teamObj3RO.getCreditId()) ){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        // 增加新订单
+        String orderId = IdUtil.simpleUUID();
+        InsertOrderParameter parameter = new InsertOrderParameter()
+                .setId(orderId)
+                .setUserId(user.getUserId())
+                .setUsername(user.getUsername())
+                .setCellId(teamObj3RO.getCellId())
+                .setQuantity(teamObj3RO.getQuantity())
+                .setSbu(teamObj3RO.getSbu())
+                .setOrderType(OrderTypeEnum.MALL.getMark());
+        teamOrderDetailsMapper.insertNewOrder(parameter);
+
+        // 增加该订单对应的空Workflow
+        Millstone millstone = new Millstone();
+        millstone.setOrderId(orderId)
+                .setMark(WorkflowMarkEnum.IN_QUEUE.getMark())
+                .setCreateAt(new Date())
+                .setModifiedAt(new Date());
+        teamMillstoneMapper.insert(millstone);
+
+        // tag to used
+        teamMarketObjectRecordMapper.updateTagByObjId(teamObj3RO.getId(), ObjectRecordTagEnum.IN_USE.getMark());
     }
 }

@@ -16,5 +16,6 @@ public class InsertOrderParameter {
     private int quantity;
 
     private String sbu;
+    private String orderType;
 
 }

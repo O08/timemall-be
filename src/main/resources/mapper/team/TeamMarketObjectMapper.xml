@@ -39,6 +39,7 @@
         where
           r.mark = #{mark}
           and r.credit_id = #{credit_id}
+          and r.tag in ('1','2','3')
         <if test="mark == '1'.toString()">
             AND r.od='1'
         </if>
@@ -52,6 +53,7 @@
         where
         r.mark = #{mark}
         and r.debit_id = #{debit_id}
+        and r.tag in ('1','2','3')
     </select>
     <select id="selectOneObjBySwapNoAndOd" resultType="com.norm.timemall.app.team.domain.ro.TeamObjRO">
         select
@@ -62,6 +64,14 @@
         where
         r.od = #{dto.od}
         and r.swap_no = #{dto.swapNo}
+    </select>
+    <select id="selectObjInfoByObjId" resultType="com.norm.timemall.app.team.domain.ro.TeamObj3RO">
+        select
+        obj.id,c.title,obj.sbu,obj.quantity,obj.sale_price,obj.object_val,r.debit_id,r.credit_id,obj.cell_id
+        from market_object obj
+        left join market_object_record r on r.obj_id = obj.id
+        left join cell c on c.id = obj.cell_id
+        where obj.id=#{obj_id}
     </select>
 
 </mapper>

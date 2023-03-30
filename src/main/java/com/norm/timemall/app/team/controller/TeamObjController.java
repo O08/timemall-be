@@ -60,8 +60,14 @@ public class TeamObjController {
     }
     @ResponseBody
     @PutMapping(value = "/api/v1/team/obj/tag")
-    public SuccessVO tagObj(TeamTagObjDTO dto){
+    public SuccessVO tagObj(@RequestBody  TeamTagObjDTO dto){
         teamObjService.tagObj(dto);
+        return new SuccessVO(CodeEnum.SUCCESS);
+    }
+    @ResponseBody
+    @PutMapping(value = "/api/v1/team/obj/{obj_id}/using")
+    public SuccessVO useObj(@PathVariable("obj_id") String objId ){
+        teamObjService.useObj(objId);
         return new SuccessVO(CodeEnum.SUCCESS);
     }
     @ResponseBody

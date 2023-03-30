@@ -22,4 +22,6 @@ public interface TeamObjService {
     void markObj(TeamMarkObjDTO dto);
 
     TeamObjRO findObj(TeamObjDTO dto);
+
+    void useObj(String objId);
 }

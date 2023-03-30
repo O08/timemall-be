@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.gson.Gson;
 import com.norm.timemall.app.base.enums.BillMarkEnum;
+import com.norm.timemall.app.base.enums.OrderTypeEnum;
 import com.norm.timemall.app.base.enums.WorkflowMarkEnum;
 import com.norm.timemall.app.base.mo.Bill;
 import com.norm.timemall.app.base.mo.Millstone;
@@ -100,6 +101,10 @@ public class PodMillstoneServiceImpl implements PodMillstoneService {
             // 逆序第一条
             PodMillStoneNode millStoneNode = millstones[millstones.length -1];
             OrderDetails orderDetails = podOrderDetailsMapper.selectById(workflwoId);
+            // 特殊订单不走账单
+            if(orderDetails.getOrderType().equals(OrderTypeEnum.SWAP.getMark())){
+                return;
+            }
             BigDecimal amount = orderDetails.getTotal().multiply(BigDecimal.valueOf(millStoneNode.getPayRate() / 100d))
                     .setScale(2, RoundingMode.HALF_UP);
 

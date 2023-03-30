@@ -1,6 +1,7 @@
 package com.norm.timemall.app.mall.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import com.norm.timemall.app.base.enums.OrderTypeEnum;
 import com.norm.timemall.app.base.enums.WorkflowMarkEnum;
 import com.norm.timemall.app.base.mo.Millstone;
 import com.norm.timemall.app.base.security.CustomizeUser;
@@ -32,7 +33,8 @@ public class OrderDetailServiceImpl implements OrderDetailService {
                 .setUsername(userDetails.getUsername())
                 .setCellId(cellId)
                 .setQuantity(orderDTO.getQuantity())
-                .setSbu(orderDTO.getSbu());
+                .setSbu(orderDTO.getSbu())
+                .setOrderType(OrderTypeEnum.MALL.getMark());
         orderDetailsMapper.insertNewOrder(parameter);
 
         // 增加该订单对应的空Workflow

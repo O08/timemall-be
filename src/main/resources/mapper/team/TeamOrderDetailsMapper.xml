@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.norm.timemall.app.mall.mapper.OrderDetailsMapper">
-    <sql id="tableName">
-        order_details
-    </sql>
-
-    <sql id="baseColumn">
-        id,consumer_id,consumer_name,cell_id,cell_title,brand_id,brand_name,total,quantity,sbu,cancelled,cancelled_reason,cancelled_at,refunded,create_at,modified_at
-    </sql>
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamOrderDetailsMapper">
 
     <insert id="insertNewOrder">
         insert order_details(id,consumer_id,consumer_name,cell_id,cell_title,brand_id,brand_name,total,quantity,sbu,order_type,create_at,modified_at)
