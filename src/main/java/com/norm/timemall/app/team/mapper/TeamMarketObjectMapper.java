@@ -3,6 +3,7 @@ package com.norm.timemall.app.team.mapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.mo.MarketObject;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.norm.timemall.app.team.domain.dto.TeamObjDTO;
 import com.norm.timemall.app.team.domain.dto.TeamObjPricingDTO;
 import com.norm.timemall.app.team.domain.ro.TeamObj2RO;
 import com.norm.timemall.app.team.domain.ro.TeamObjRO;
@@ -31,4 +32,6 @@ public interface TeamMarketObjectMapper extends BaseMapper<MarketObject> {
 
     IPage<TeamObjRO> selectPagebyTagAndDebitId(IPage<TeamObjRO> page, @Param("mark")  String mark,
                                                @Param("debit_id") String debitId);
+
+    TeamObjRO selectOneObjBySwapNoAndOd(@Param("dto") TeamObjDTO dto);
 }

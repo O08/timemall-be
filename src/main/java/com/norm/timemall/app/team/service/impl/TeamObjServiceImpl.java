@@ -131,4 +131,9 @@ public class TeamObjServiceImpl implements TeamObjService {
     public void markObj(TeamMarkObjDTO dto) {
         teamMarketObjectRecordMapper.updateMarkBySwapNo(dto);
     }
+
+    @Override
+    public TeamObjRO findObj(TeamObjDTO dto) {
+        return teamMarketObjectMapper.selectOneObjBySwapNoAndOd(dto);
+    }
 }

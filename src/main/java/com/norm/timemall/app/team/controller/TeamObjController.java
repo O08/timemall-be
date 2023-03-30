@@ -6,6 +6,7 @@ import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.team.domain.dto.*;
 import com.norm.timemall.app.team.domain.ro.TeamObjRO;
 import com.norm.timemall.app.team.domain.vo.TeamObjPageVO;
+import com.norm.timemall.app.team.domain.vo.TeamObjVO;
 import com.norm.timemall.app.team.service.TeamObjService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -24,6 +25,18 @@ public class TeamObjController {
         IPage<TeamObjRO> objRos = teamObjService.findObjs(dto);
         TeamObjPageVO vo = new TeamObjPageVO();
         vo.setObj(objRos);
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        return  vo;
+    }
+    /**
+     * 获取obj info
+     */
+    @ResponseBody
+    @GetMapping(value = "/api/v1/team/obj/by_swapno")
+    public TeamObjVO retrieveObj(@Validated TeamObjDTO dto){
+        TeamObjRO objRo = teamObjService.findObj(dto);
+        TeamObjVO vo = new TeamObjVO();
+        vo.setObj(objRo);
         vo.setResponseCode(CodeEnum.SUCCESS);
         return  vo;
     }

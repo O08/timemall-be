@@ -53,5 +53,15 @@
         r.mark = #{mark}
         and r.debit_id = #{debit_id}
     </select>
+    <select id="selectOneObjBySwapNoAndOd" resultType="com.norm.timemall.app.team.domain.ro.TeamObjRO">
+        select
+        obj.id,r.swap_no,c.title,c.cover avatar,obj.sbu,obj.quantity,obj.sale_price,obj.object_val,obj.cell_id,c.brand_id
+        from market_object obj
+        left join market_object_record r on r.obj_id = obj.id
+        left join cell c on c.id = obj.cell_id
+        where
+        r.od = #{dto.od}
+        and r.swap_no = #{dto.swapNo}
+    </select>
 
 </mapper>

@@ -20,4 +20,6 @@ public interface TeamObjService {
     IPage<TeamObjRO> findtodoObjs(TeamTodoObjPageDTO dto);
 
     void markObj(TeamMarkObjDTO dto);
+
+    TeamObjRO findObj(TeamObjDTO dto);
 }

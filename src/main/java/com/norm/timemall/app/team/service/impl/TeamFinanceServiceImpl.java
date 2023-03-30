@@ -43,7 +43,9 @@ public class TeamFinanceServiceImpl implements TeamFinanceService {
     private AccountService accountService;
     @Override
     public void orderObj(String objId) {
-        String brandId =""; // todo
+        String brandId =accountService.
+                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
+                .getId();
         //1.query obj info
         TeamObj2RO objRO = teamMarketObjectMapper.selectOneObj(objId);
         if(objRO==null){
