@@ -14,4 +14,5 @@ public class TeamObjRO {
     private String objectVal;
     private String cellId;
     private String brandId;
+    private String tag;
 }
