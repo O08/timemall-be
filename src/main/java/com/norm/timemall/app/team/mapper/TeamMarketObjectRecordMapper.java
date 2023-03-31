@@ -16,8 +16,8 @@ import org.apache.ibatis.annotations.Update;
 */
 @Mapper
 public interface TeamMarketObjectRecordMapper extends BaseMapper<MarketObjectRecord> {
-@Update("update market_object_record set credit_id = #{credit_id} where obj_id=#{obj_id}")
-    void updateCreditIdById(@Param("obj_id") String objId,@Param("credit_id") String creditId);
+@Update("update market_object_record set credit_id = #{credit_id},tag='1' where obj_id=#{obj_id}")
+    void updateCreditIdAndRecoverTagById(@Param("obj_id") String objId,@Param("credit_id") String creditId);
     @Update("update market_object_record set tag = #{tag} where obj_id=#{obj_id}")
     void updateTagByObjId(@Param("obj_id") String objId, @Param("tag") String tag);
     @Update("update market_object_record set mark = #{dto.mark} where swap_no=#{dto.swapNo}")
