@@ -12,10 +12,7 @@ import com.norm.timemall.app.team.domain.vo.TeamCommissionPageVO;
 import com.norm.timemall.app.team.service.TeamCommissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class TeamCommissionController {
@@ -35,7 +32,7 @@ public class TeamCommissionController {
     }
     @ResponseBody
     @PutMapping(value = "/api/v1/team/commission")
-    public SuccessVO newTask(@Validated TeamOasisNewTaskDTO dto){
+    public SuccessVO newTask(@Validated @RequestBody TeamOasisNewTaskDTO dto){
         teamCommissionService.newOasisTask(dto);
         return new SuccessVO(CodeEnum.SUCCESS);
     }
