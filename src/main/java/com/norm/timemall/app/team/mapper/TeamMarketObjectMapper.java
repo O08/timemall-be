@@ -38,5 +38,4 @@ public interface TeamMarketObjectMapper extends BaseMapper<MarketObject> {
 
     TeamObj3RO selectObjInfoByObjId(@Param("obj_id") String objId);
 
-    TeamObjRO selectOneObjById(@Param("obj_id") String objId);
 }

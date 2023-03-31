@@ -26,6 +26,6 @@ public interface TeamObjService {
 
     void useObj(String objId);
 
-    TeamObjRO findObjInfo(String objId);
+    TeamObj2RO findObjInfo(String objId);
 
 }

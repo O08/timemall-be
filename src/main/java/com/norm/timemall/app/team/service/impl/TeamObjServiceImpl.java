@@ -183,7 +183,7 @@ public class TeamObjServiceImpl implements TeamObjService {
     }
 
     @Override
-    public TeamObjRO findObjInfo(String objId) {
-        return teamMarketObjectMapper.selectOneObjById(objId);
+    public TeamObj2RO  findObjInfo(String objId) {
+        return teamMarketObjectMapper.selectOneObj(objId);
     }
 }

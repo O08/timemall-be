@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.team.domain.dto.*;
+import com.norm.timemall.app.team.domain.ro.TeamObj2RO;
 import com.norm.timemall.app.team.domain.ro.TeamObjRO;
+import com.norm.timemall.app.team.domain.vo.TeamObjInfoVO;
 import com.norm.timemall.app.team.domain.vo.TeamObjPageVO;
 import com.norm.timemall.app.team.domain.vo.TeamObjVO;
 import com.norm.timemall.app.team.service.TeamObjService;
@@ -45,9 +47,9 @@ public class TeamObjController {
      */
     @ResponseBody
     @GetMapping(value = "/api/v1/team/obj/{obj_id}")
-    public TeamObjVO retrieveObj(@PathVariable("obj_id") String objId){
-        TeamObjRO objRo = teamObjService.findObjInfo(objId);
-        TeamObjVO vo = new TeamObjVO();
+    public TeamObjInfoVO retrieveObj(@PathVariable("obj_id") String objId){
+        TeamObj2RO objRo = teamObjService.findObjInfo(objId);
+        TeamObjInfoVO vo = new TeamObjInfoVO();
         vo.setObj(objRo);
         vo.setResponseCode(CodeEnum.SUCCESS);
         return  vo;
