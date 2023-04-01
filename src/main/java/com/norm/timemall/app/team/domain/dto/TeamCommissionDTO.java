@@ -13,4 +13,7 @@ public class TeamCommissionDTO extends PageDTO  {
     private String oasisId;
     private String tag;
     private String sort;
+    private String filter;
+    private String worker;
+
 }

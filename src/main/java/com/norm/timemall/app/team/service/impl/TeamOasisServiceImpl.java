@@ -68,7 +68,6 @@ public class TeamOasisServiceImpl implements TeamOasisService {
 
     @Override
     public void modifyOasisRisk(TeamOasisRiskDTO dto) {
-        Gson gson = new Gson();
         teamOasisMapper.updateRiskById(dto.getOasisId(),dto.getRisk());
     }
 

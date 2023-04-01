@@ -26,8 +26,8 @@
         1 = 1
         and title is not null
         <if test="q != null and q != ''">
-            AND locate(#{q}, title)>0
-            or locate(#{q}, brand_name)>0
+            AND (locate(#{q}, title)>0
+            or locate(#{q}, brand_name)>0)
         </if>
 
     </select>
