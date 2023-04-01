@@ -44,13 +44,13 @@ public class TeamCommissionController {
      */
     @ResponseBody
     @PutMapping(value = "/api/v1/team/commission/accept")
-    public SuccessVO acceptTask(@Validated TeamAcceptOasisTaskDTO dto){
+    public SuccessVO acceptTask(@Validated @RequestBody TeamAcceptOasisTaskDTO dto){
         teamCommissionService.acceptOasisTask(dto);
         return new SuccessVO(CodeEnum.SUCCESS);
     }
     @ResponseBody
     @PutMapping(value = "/api/v1/team/commission/finish")
-    public SuccessVO finishTask(@Validated TeamFinishOasisTask dto){
+    public SuccessVO finishTask(@Validated @RequestBody TeamFinishOasisTask dto){
         teamCommissionService.finishOasisTask(dto);
         return new SuccessVO(CodeEnum.SUCCESS);
     }
