@@ -5,15 +5,12 @@ import com.alibaba.fastjson.JSON;
 import com.alipay.api.response.AlipayFundTransToaccountTransferResponse;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.FidTypeEnum;
-import com.norm.timemall.app.base.enums.OrderStatusEnum;
 import com.norm.timemall.app.base.enums.WithdrawTagEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.*;
-import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.pay.domain.dto.WithDrawDTO;
-import com.norm.timemall.app.studio.service.OrderFlowService;
 import com.norm.timemall.app.team.domain.pojo.WithdrawToALiPayBO;
 import com.norm.timemall.app.team.mapper.TeamAccountMapper;
 import com.norm.timemall.app.team.mapper.TeamBrandAlipayMapper;
@@ -26,7 +23,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 @Service
 @Slf4j

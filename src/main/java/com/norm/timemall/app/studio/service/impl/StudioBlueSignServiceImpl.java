@@ -18,7 +18,7 @@ import com.norm.timemall.app.base.pojo.ro.NewOrderRO;
 import com.norm.timemall.app.studio.mapper.StudioBrandMapper;
 import com.norm.timemall.app.studio.mapper.StudioProprietaryTradingMapper;
 import com.norm.timemall.app.studio.mapper.StudioProprietaryTradingOrderMapper;
-import com.norm.timemall.app.studio.service.OrderFlowService;
+import com.norm.timemall.app.base.service.OrderFlowService;
 import com.norm.timemall.app.studio.service.StudioBlueSignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

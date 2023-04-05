@@ -1,4 +1,4 @@
-package com.norm.timemall.app.studio.service;
+package com.norm.timemall.app.base.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.norm.timemall.app.base.mo.OrderFlow;

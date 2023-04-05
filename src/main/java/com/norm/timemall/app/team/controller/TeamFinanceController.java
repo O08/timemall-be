@@ -2,6 +2,8 @@ package com.norm.timemall.app.team.controller;
 
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
+import com.norm.timemall.app.base.enums.OrderStatusEnum;
+import com.norm.timemall.app.base.service.OrderFlowService;
 import com.norm.timemall.app.team.domain.pojo.TeamFinDistriution;
 import com.norm.timemall.app.team.domain.ro.TeamFinBoardRO;
 import com.norm.timemall.app.team.domain.vo.TeamFinBoardVO;
@@ -21,13 +23,19 @@ public class TeamFinanceController {
 
     @Autowired
     private TeamFinanceService teamFinanceService;
+    @Autowired
+    private OrderFlowService orderFlowService;
+
     /**
      * 下单标的
      */
     @ResponseBody
     @PostMapping(value = "/api/v1/team/obj/order")
     public SuccessVO orderObj(String objId){
+        // orderFlow ctl repeat processing
+        orderFlowService.insertOrderFlow(objId, OrderStatusEnum.CREATING.name());
         teamFinanceService.orderObj(objId);
+        orderFlowService.deleteOrderFlow(objId,OrderStatusEnum.CREATED.name());
         return new SuccessVO(CodeEnum.SUCCESS);
     }
     /**

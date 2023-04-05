@@ -1,7 +1,6 @@
 package com.norm.timemall.app.studio.service.impl;
 
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.NumberUtil;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.FidTypeEnum;
 import com.norm.timemall.app.base.enums.OrderStatusEnum;
@@ -15,7 +14,7 @@ import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.studio.domain.dto.StudioTopUpDTO;
 import com.norm.timemall.app.studio.mapper.StudioFinAccountMapper;
 import com.norm.timemall.app.studio.mapper.StudioProprietaryTradingOrderMapper;
-import com.norm.timemall.app.studio.service.OrderFlowService;
+import com.norm.timemall.app.base.service.OrderFlowService;
 import com.norm.timemall.app.studio.service.StudioTopUpService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

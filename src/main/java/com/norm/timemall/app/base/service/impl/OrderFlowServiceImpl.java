@@ -1,4 +1,4 @@
-package com.norm.timemall.app.studio.service.impl;
+package com.norm.timemall.app.base.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -7,7 +7,7 @@ import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.OrderFlow;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.studio.mapper.OrderFlowMapper;
-import com.norm.timemall.app.studio.service.OrderFlowService;
+import com.norm.timemall.app.base.service.OrderFlowService;
 import org.springframework.stereotype.Service;
 
 @Service
