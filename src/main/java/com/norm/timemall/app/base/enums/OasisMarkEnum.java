@@ -2,7 +2,7 @@ package com.norm.timemall.app.base.enums;
 
 public enum OasisMarkEnum {
     CREATED("1","创建"),
-    ACCEPT("2","发布");
+    PUBLISH("2","发布");
     private String mark;
     private String desc;
 

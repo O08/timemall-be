@@ -5,9 +5,12 @@ import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.gson.Gson;
+import com.norm.timemall.app.base.enums.FidTypeEnum;
 import com.norm.timemall.app.base.enums.OasisJoinTagEnum;
 import com.norm.timemall.app.base.enums.OasisMarkEnum;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
+import com.norm.timemall.app.base.mapper.FinAccountMapper;
+import com.norm.timemall.app.base.mo.FinAccount;
 import com.norm.timemall.app.base.mo.Oasis;
 import com.norm.timemall.app.base.mo.OasisJoin;
 import com.norm.timemall.app.base.mo.OasisMember;
@@ -30,6 +33,7 @@ import com.norm.timemall.app.team.service.TeamOasisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -47,6 +51,8 @@ public class TeamOasisServiceImpl implements TeamOasisService {
 
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private FinAccountMapper finAccountMapper;
 
     @Override
     public IPage<TeamOasisRO> findOasis(TeamOasisPageDTO dto) {
@@ -109,8 +115,19 @@ public class TeamOasisServiceImpl implements TeamOasisService {
                 .setModifiedAt(new Date());
         teamOasisJoinMapper.insert(join);
 
+
+
         return oasis.getId();
 
+    }
+    private void newFinAccountWhenOasisCreate(String oasisId){
+        FinAccount finAccount = new FinAccount();
+        finAccount.setId(IdUtil.simpleUUID())
+                .setFid(oasisId)
+                .setFidType(FidTypeEnum.OASIS.getMark())
+                .setAmount(BigDecimal.ZERO)
+                .setDrawable(BigDecimal.ZERO);
+        finAccountMapper.insert(finAccount);
     }
 
     @Override
@@ -137,6 +154,10 @@ public class TeamOasisServiceImpl implements TeamOasisService {
     @Override
     public void tagOasisTag(String oasisId, String mark) {
         teamOasisMapper.updateMarkById(oasisId,mark);
+        // open new fin_account for oasis when oasis publish
+        if(mark.equals(OasisMarkEnum.PUBLISH.getMark())){
+            newFinAccountWhenOasisCreate(oasisId);
+        }
     }
 
     @Override

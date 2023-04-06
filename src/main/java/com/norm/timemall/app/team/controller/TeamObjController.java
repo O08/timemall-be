@@ -3,6 +3,8 @@ package com.norm.timemall.app.team.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
+import com.norm.timemall.app.base.enums.ObjectRecordTagEnum;
+import com.norm.timemall.app.base.service.OrderFlowService;
 import com.norm.timemall.app.team.domain.dto.*;
 import com.norm.timemall.app.team.domain.ro.TeamObj2RO;
 import com.norm.timemall.app.team.domain.ro.TeamObjRO;
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 public class TeamObjController {
     @Autowired
     private TeamObjService teamObjService;
+    @Autowired
+    private OrderFlowService orderFlowService;
     /**
      * 获取obj列表
      */
@@ -81,7 +85,10 @@ public class TeamObjController {
     @ResponseBody
     @PutMapping(value = "/api/v1/team/obj/{obj_id}/using")
     public SuccessVO useObj(@PathVariable("obj_id") String objId ){
-        teamObjService.useObj(objId);
+        // orderFlow ctl repeat processing
+        orderFlowService.insertOrderFlow(objId, ObjectRecordTagEnum.IN_USE.getMark());
+                teamObjService.useObj(objId);
+        orderFlowService.deleteOrderFlow(objId, ObjectRecordTagEnum.IN_USE.getMark());
         return new SuccessVO(CodeEnum.SUCCESS);
     }
     @ResponseBody
