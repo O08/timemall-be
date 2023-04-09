@@ -8,8 +8,10 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.norm.timemall.app.base.enums.FidTypeEnum;
 import com.norm.timemall.app.base.mo.AccountCalMonth;
 import com.norm.timemall.app.base.mo.AccountCalTotal;
+import com.norm.timemall.app.base.mo.FinDistribute;
 import com.norm.timemall.app.team.mapper.TeamAccountCalMonthMapper;
 import com.norm.timemall.app.team.mapper.TeamAccountCalTotalMapper;
+import com.norm.timemall.app.team.mapper.TeamFinDistributeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +24,9 @@ public class TeamCommissionHelper {
 
     @Autowired
     private TeamAccountCalTotalMapper teamAccountCalTotalMapper;
+
+    @Autowired
+    private TeamFinDistributeMapper teamFinDistributeMapper;
     public void calMonthTransWhenFinishTask(String creditFid, String debitFid, BigDecimal bonus){
         LambdaQueryWrapper<AccountCalMonth> creditWrapper = Wrappers.lambdaQuery();
         creditWrapper.eq(AccountCalMonth::getFid,creditFid)
@@ -104,5 +109,21 @@ public class TeamCommissionHelper {
                     .setOut(bonus);
             teamAccountCalTotalMapper.insert(debitTotal);
         }
+    }
+    public void UpdateFinDistribute(String oasisId,String brandId,BigDecimal amount){
+        FinDistribute finDistribute = teamFinDistributeMapper.selectDistributeByBrandIdAndOasisIdForUpdate(oasisId, brandId);
+        if(finDistribute == null){
+            finDistribute = new FinDistribute();
+            finDistribute.setId(IdUtil.simpleUUID())
+                    .setOasisId(oasisId)
+                    .setBrandId(brandId)
+                    .setAmount(amount);
+            teamFinDistributeMapper.insert(finDistribute);
+        }else {
+            BigDecimal balance = finDistribute.getAmount().add(amount);
+            finDistribute.setAmount(balance);
+            teamFinDistributeMapper.updateById(finDistribute);
+        }
+
     }
 }

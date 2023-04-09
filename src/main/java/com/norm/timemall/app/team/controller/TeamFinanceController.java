@@ -32,10 +32,13 @@ public class TeamFinanceController {
     @ResponseBody
     @PostMapping(value = "/api/v1/team/obj/order")
     public SuccessVO orderObj(String objId){
-        // orderFlow ctl repeat processing
-        orderFlowService.insertOrderFlow(objId, OrderStatusEnum.CREATING.name());
-        teamFinanceService.orderObj(objId);
-        orderFlowService.deleteOrderFlow(objId,OrderStatusEnum.CREATED.name());
+        try{
+            // orderFlow ctl repeat processing
+            orderFlowService.insertOrderFlow(objId, OrderStatusEnum.CREATING.name());
+            teamFinanceService.orderObj(objId);
+        }finally {
+            orderFlowService.deleteOrderFlow(objId,OrderStatusEnum.CREATED.name());
+        }
         return new SuccessVO(CodeEnum.SUCCESS);
     }
     /**

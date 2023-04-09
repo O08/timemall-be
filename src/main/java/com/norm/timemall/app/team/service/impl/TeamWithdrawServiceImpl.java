@@ -10,6 +10,7 @@ import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.*;
 import com.norm.timemall.app.base.service.AccountService;
+import com.norm.timemall.app.base.service.OrderFlowService;
 import com.norm.timemall.app.pay.domain.dto.WithDrawDTO;
 import com.norm.timemall.app.team.domain.pojo.WithdrawToALiPayBO;
 import com.norm.timemall.app.team.mapper.TeamAccountMapper;
@@ -38,9 +39,23 @@ public class TeamWithdrawServiceImpl implements TeamWithdrawService {
     private TeamTransactionsMapper teamTransactionsMapper;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private OrderFlowService orderFlowService;
     @Override
     public WithdrawToALiPayBO toAliPay(WithDrawDTO dto) {
         log.info("群巅-提现到支付宝"+ JSON.toJSONString(dto));
+        WithdrawToALiPayBO bo = new WithdrawToALiPayBO();
+        try{
+            // orderFlow ctl repeat processing
+            orderFlowService.insertOrderFlow(dto.getToAccountId(),WithdrawTagEnum.CREATED.getMark() );
+            bo = doToAliPay(dto);
+        }finally {
+            orderFlowService.deleteOrderFlow(dto.getToAccountId(), WithdrawTagEnum.CREATED.getMark());
+        }
+        return bo;
+
+    }
+    public WithdrawToALiPayBO doToAliPay(WithDrawDTO dto) {
         String brandId = accountService.
                 findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
                 .getId();
@@ -72,7 +87,7 @@ public class TeamWithdrawServiceImpl implements TeamWithdrawService {
         bo.setOrderNo(record.getId());
         bo.setPayeeAccount(brandAlipay.getPayeeAccount());
         bo.setPayeeRealName(brandAlipay.getPayeeRealName());
-        bo.setAmount(dto.getAmount());
+        bo.setAmount(dto.getAmount().multiply(BigDecimal.ONE.subtract(feeRate)));
         return bo;
     }
 

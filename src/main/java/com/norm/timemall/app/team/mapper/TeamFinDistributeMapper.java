@@ -24,4 +24,7 @@ public interface TeamFinDistributeMapper extends BaseMapper<FinDistribute> {
 @Select("select * from fin_distribute where brand_id=#{brand_id} and oasis_id=#{oasis_id}")
     FinDistribute selectDistributeByBrandIdAndOasisId(@Param("brand_id") String brandId,
                                                       @Param("oasis_id") String oasisId);
+    @Select("select * from fin_distribute where brand_id=#{brand_id} and oasis_id=#{oasis_id} for update")
+    FinDistribute selectDistributeByBrandIdAndOasisIdForUpdate(@Param("brand_id") String brandId,
+                                                               @Param("oasis_id") String oasisId);
 }

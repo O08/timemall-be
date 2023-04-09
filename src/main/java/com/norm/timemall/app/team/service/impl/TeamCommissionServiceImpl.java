@@ -122,14 +122,16 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
 
         teamTransactionsMapper.insert(creditTrans);
         teamTransactionsMapper.insert(debitTrans);
+        // 2. update or insert fin_distribute
+        teamCommissionHelper.UpdateFinDistribute(commission.getOasisId(), commission.getWorker(), commission.getBonus());
 
-        //2. calculate total
-        teamCommissionHelper.calTotalTransWhenFinishTask(commission.getWorker()
-                ,commission.getOasisId(),commission.getBonus());
-
-        //3. calculate month
-        teamCommissionHelper.calMonthTransWhenFinishTask(commission.getWorker()
-                ,commission.getOasisId(),commission.getBonus());
+//        //2. calculate total
+//        teamCommissionHelper.calTotalTransWhenFinishTask(commission.getWorker()
+//                ,commission.getOasisId(),commission.getBonus());
+//
+//        //3. calculate month
+//        teamCommissionHelper.calMonthTransWhenFinishTask(commission.getWorker()
+//                ,commission.getOasisId(),commission.getBonus());
 
 
 

@@ -85,10 +85,14 @@ public class TeamObjController {
     @ResponseBody
     @PutMapping(value = "/api/v1/team/obj/{obj_id}/using")
     public SuccessVO useObj(@PathVariable("obj_id") String objId ){
-        // orderFlow ctl repeat processing
-        orderFlowService.insertOrderFlow(objId, ObjectRecordTagEnum.IN_USE.getMark());
-                teamObjService.useObj(objId);
-        orderFlowService.deleteOrderFlow(objId, ObjectRecordTagEnum.IN_USE.getMark());
+
+        try{
+            // orderFlow ctl repeat processing
+            orderFlowService.insertOrderFlow(objId, ObjectRecordTagEnum.IN_USE.getMark());
+            teamObjService.useObj(objId);
+        }finally {
+            orderFlowService.deleteOrderFlow(objId, ObjectRecordTagEnum.IN_USE.getMark());
+        }
         return new SuccessVO(CodeEnum.SUCCESS);
     }
     @ResponseBody
