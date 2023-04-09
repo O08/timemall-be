@@ -6,10 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
-import com.norm.timemall.app.base.mo.AccountCalMonth;
-import com.norm.timemall.app.base.mo.AccountCalTotal;
-import com.norm.timemall.app.base.mo.Commission;
-import com.norm.timemall.app.base.mo.Transactions;
+import com.norm.timemall.app.base.mo.*;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.team.domain.dto.TeamAcceptOasisTaskDTO;
@@ -18,10 +15,7 @@ import com.norm.timemall.app.team.domain.dto.TeamFinishOasisTask;
 import com.norm.timemall.app.team.domain.dto.TeamOasisNewTaskDTO;
 import com.norm.timemall.app.team.domain.ro.TeamCommissionRO;
 import com.norm.timemall.app.team.helper.TeamCommissionHelper;
-import com.norm.timemall.app.team.mapper.TeamAccountCalMonthMapper;
-import com.norm.timemall.app.team.mapper.TeamAccountCalTotalMapper;
-import com.norm.timemall.app.team.mapper.TeamCommissionMapper;
-import com.norm.timemall.app.team.mapper.TeamTransactionsMapper;
+import com.norm.timemall.app.team.mapper.*;
 import com.norm.timemall.app.team.service.TeamCommissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +31,8 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
 
     @Autowired
     private TeamTransactionsMapper teamTransactionsMapper;
+    @Autowired
+    private TeamAccountMapper teamAccountMapper;
 
 
 
@@ -124,6 +120,12 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
         teamTransactionsMapper.insert(debitTrans);
         // 2. update or insert fin_distribute
         teamCommissionHelper.UpdateFinDistribute(commission.getOasisId(), commission.getWorker(), commission.getBonus());
+        // 3. update finAccount amount
+        FinAccount brandFinAccount = teamAccountMapper.selectOneByFidForUpdate(commission.getWorker(),FidTypeEnum.BRAND.getMark());
+        BigDecimal brandFinAccountAmountBalance = brandFinAccount.getAmount().add(commission.getBonus());
+        brandFinAccount.setAmount(brandFinAccountAmountBalance);
+        teamAccountMapper.updateById(brandFinAccount);
+
 
 //        //2. calculate total
 //        teamCommissionHelper.calTotalTransWhenFinishTask(commission.getWorker()
