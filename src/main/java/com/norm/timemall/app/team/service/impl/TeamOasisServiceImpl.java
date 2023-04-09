@@ -132,7 +132,6 @@ public class TeamOasisServiceImpl implements TeamOasisService {
 
     @Override
     public TeamOasisAnnounce findOasisAnnounce(String oasisId) {
-        // todo
         TeamOasisAnnounce announce = teamOasisMapper.selectAnnounceById(oasisId);
         return  announce;
     }

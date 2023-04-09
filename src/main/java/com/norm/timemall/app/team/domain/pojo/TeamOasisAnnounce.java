@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class TeamOasisAnnounce {
+    private String initiator;
     private String title;
     private String avatar;
     private String subTitle;
