@@ -10,7 +10,7 @@
         from fin_distribute d
         left join oasis o on d.oasis_id=o.id
         left join fin_account a on a.fid = d.brand_id and a.fid_type = #{brand_fid_type}
-        left join fin_account a1 on a1.fid = d.brand_id and a1.fid_type = #{oasis_fid_type}
+        left join fin_account a1 on a1.fid = d.oasis_id and a1.fid_type = #{oasis_fid_type}
         where d.brand_id=#{brand_id}
     </select>
 
