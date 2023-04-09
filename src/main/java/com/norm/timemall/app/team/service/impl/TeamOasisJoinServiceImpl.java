@@ -133,7 +133,7 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
     public void removeOasisInvitation(String id) {
         LambdaQueryWrapper<OasisJoin> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(OasisJoin::getId,id)
-                        .eq(OasisJoin::getTag,OasisJoinTagEnum.CREATED);
+                        .eq(OasisJoin::getTag,OasisJoinTagEnum.CREATED.getMark());
         teamOasisJoinMapper.delete(wrapper);
     }
 }
