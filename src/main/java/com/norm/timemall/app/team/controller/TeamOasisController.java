@@ -107,8 +107,8 @@ public class TeamOasisController {
 
     @ResponseBody
     @PutMapping(value = "/api/v1/team/acceptOasisInvitation")
-    public SuccessVO joinAOasis(@RequestParam @NotBlank(message = "oasisId is required") String oasisId){
-        teamOasisJoinService.acceptOasisInvitation(oasisId);
+    public SuccessVO joinAOasis(@RequestParam @NotBlank(message = "id is required") String id){
+        teamOasisJoinService.acceptOasisInvitation(id);
         return new SuccessVO(CodeEnum.SUCCESS);
     }
     @ResponseBody
