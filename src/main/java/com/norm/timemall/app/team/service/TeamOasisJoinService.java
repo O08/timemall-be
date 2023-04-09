@@ -20,4 +20,6 @@ public interface TeamOasisJoinService {
     void followOasis(String oasisId,String brandId);
 
     void unfollowOasis(String oasisId,String brandId);
+
+    void removeOasisInvitation(String id);
 }

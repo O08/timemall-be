@@ -2,6 +2,7 @@ package com.norm.timemall.app.team.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.OasisJoinTagEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
@@ -125,6 +126,14 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
         wrapper.eq(OasisJoin::getOasisId,oasisId)
                         .eq(OasisJoin::getBrandId,brandId);
 
+        teamOasisJoinMapper.delete(wrapper);
+    }
+
+    @Override
+    public void removeOasisInvitation(String id) {
+        LambdaQueryWrapper<OasisJoin> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(OasisJoin::getId,id)
+                        .eq(OasisJoin::getTag,OasisJoinTagEnum.CREATED);
         teamOasisJoinMapper.delete(wrapper);
     }
 }

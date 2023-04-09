@@ -50,20 +50,7 @@ public class TeamOasisController {
         pageVO.setResponseCode(CodeEnum.SUCCESS);
         return pageVO;
     }
-    /**
-     * 获取受邀请的oasis列表
-     */
-    @ResponseBody
-    @GetMapping(value = "/api/v1/team/invitedOases")
-    public TeamInviteVO retrieveInvitedOasis(@RequestParam @NotBlank(message = "brandId is required") String brandId){
-        ArrayList<TeamInviteRO> invitedRO = teamOasisJoinService.findInvitedOasis(brandId);
-        TeamInvitedOasis invited = new TeamInvitedOasis();
-        invited.setRecords(invitedRO);
-        TeamInviteVO vo = new TeamInviteVO();
-        vo.setInvited(invited);
-        vo.setResponseCode(CodeEnum.SUCCESS);
-        return vo;
-    }
+
     /**
      * 获取oasis announce info
      */
@@ -105,12 +92,7 @@ public class TeamOasisController {
         return vo;
     }
 
-    @ResponseBody
-    @PutMapping(value = "/api/v1/team/acceptOasisInvitation")
-    public SuccessVO joinAOasis(@RequestParam @NotBlank(message = "id is required") String id){
-        teamOasisJoinService.acceptOasisInvitation(id);
-        return new SuccessVO(CodeEnum.SUCCESS);
-    }
+
     @ResponseBody
     @PutMapping(value = "/api/v1/team/oasis/{oasis_id}/announce")
     public SuccessVO uploadOasisAnnounce(@PathVariable(value = "oasis_id") String oasisId,@RequestParam("file") MultipartFile file){
