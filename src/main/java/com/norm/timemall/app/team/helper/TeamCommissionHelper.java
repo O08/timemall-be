@@ -111,7 +111,7 @@ public class TeamCommissionHelper {
         }
     }
     public void UpdateFinDistribute(String oasisId,String brandId,BigDecimal amount){
-        FinDistribute finDistribute = teamFinDistributeMapper.selectDistributeByBrandIdAndOasisIdForUpdate(oasisId, brandId);
+        FinDistribute finDistribute = teamFinDistributeMapper.selectDistributeByBrandIdAndOasisIdForUpdate(brandId, oasisId);
         if(finDistribute == null){
             finDistribute = new FinDistribute();
             finDistribute.setId(IdUtil.simpleUUID())
