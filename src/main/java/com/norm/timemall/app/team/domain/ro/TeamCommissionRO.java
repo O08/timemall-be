@@ -11,4 +11,5 @@ public class TeamCommissionRO {
     private String tag;
     private String worker;
     private String bonus;
+    private String founderName;
 }

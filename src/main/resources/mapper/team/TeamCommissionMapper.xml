@@ -10,37 +10,39 @@
     </sql>
     <select id="selectPageByFilter" resultType="com.norm.timemall.app.team.domain.ro.TeamCommissionRO">
         select
-          id,title,create_at addDate,founder,tag,worker,bonus
-        from commission
+          c.id,c.title,c.create_at addDate,c.founder,c.tag,c.worker,c.bonus,b.brand_name founder_name
+        from commission c
+        left join brand b
+          on c.founder=b.id
         where
         1 = 1
-        AND oasis_id = #{dto.oasisId}
+        AND c.oasis_id = #{dto.oasisId}
         <if test="dto.q != null and dto.q != ''">
-            AND locate(#{dto.q}, title)>0
+            AND locate(#{dto.q}, c.title)>0
         </if>
         <if test="dto.tag != null and dto.tag != ''">
-            AND tag= #{dto.tag}
+            AND c.tag= #{dto.tag}
         </if>
         <if test="dto.filter != null and dto.filter != ''">
             <choose>
                 <when test='dto.filter == "1"'>
-                    AND worker = #{dto.worker}
+                    AND c.worker = #{dto.worker}
                 </when>
                 <when test='dto.filter == "2"'>
-                    AND DATE_SUB(CURDATE(), INTERVAL 7 DAY)  &lt;= date(create_at)
+                    AND DATE_SUB(CURDATE(), INTERVAL 7 DAY)  &lt;= date(c.create_at)
                 </when>
                 <when test='dto.filter == "3"'>
-                    AND DATE_SUB(CURDATE(), INTERVAL 1 DAY)  &lt;= date(create_at)
+                    AND DATE_SUB(CURDATE(), INTERVAL 1 DAY)  &lt;= date(c.create_at)
                 </when>
             </choose>
         </if>
         <if test="dto.sort != null and dto.sort != ''">
             <choose>
                 <when test='dto.sort == "1"'>
-                    Order by create_At desc
+                    Order by c.create_At desc
                 </when>
                 <when test='dto.sort == "2"'>
-                    Order by create_At
+                    Order by c.create_At
                 </when>
             </choose>
         </if>
