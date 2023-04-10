@@ -46,7 +46,9 @@ public class TeamOasisCollectAccountServiceImpl implements TeamOasisCollectAccou
         // query Oasis account
         FinAccount oasisFinAccount = teamAccountMapper.selectOneByFidForUpdate(dto.getOasisId(),FidTypeEnum.OASIS.getMark());
         // query collect account trans
-        Transactions brandCollectAccountTran = teamTransactionsMapper.selectCollectAccountForTodayTransByFid(brandId,FidTypeEnum.BRAND.getMark());
+        Transactions brandCollectAccountTran = teamTransactionsMapper.selectCollectAccountForTodayTrans(brandId,
+                FidTypeEnum.BRAND.getMark(),dto.getOasisId(),FidTypeEnum.OASIS.getMark());
+
 
         // validate
         if(finDistribute==null || brandFinAccount == null || oasisFinAccount == null

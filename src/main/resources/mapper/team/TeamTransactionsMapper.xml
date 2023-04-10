@@ -43,5 +43,17 @@
          and year(t.create_at) = #{year}
          and month(t.create_at) = #{month}
     </select>
+    <select id="selectCollectAccountForTodayTrans">
+        select t2.* from transactions t1
+        left join transactions t2
+          on t2.trans_no = t1.trans_no
+        where t1.fid='91afe86c90ce45d3b3f59b33e9970f9d'
+            and t1.fid_type = #{brandId}
+            and t2.trans_type = #{brand_fid_type}
+            and t2.fid=#{oasisId}
+            and t2.fid_type=#{oasis_fid_type}
+            and  t1.create_at BETWEEN CONCAT(CURDATE(),' 00:00:00') AND CONCAT(CURDATE(),' 23:59:59')
+    </select>
+
 
 </mapper>

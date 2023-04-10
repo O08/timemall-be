@@ -19,6 +19,6 @@ public interface TeamTransactionsMapper extends BaseMapper<Transactions> {
 
     TeamTrans selectTransByFid(@Param("fid") String fid,@Param("fid_type") String fidType,
                                @Param("year") String year, @Param("month") String month);
-@Select("select * from transactions where fid=#{fid} and fid_type = #{fid_type} and create_at BETWEEN CONCAT(CURDATE(),' 00:00:00') AND CONCAT(CURDATE(),' 23:59:59')")
-    Transactions selectCollectAccountForTodayTransByFid(@Param("fid") String fid, @Param("fid_type") String fidType);
+    Transactions selectCollectAccountForTodayTrans(@Param("brandId") String fid, @Param("brand_fid_type") String brandFidType,
+                                                        @Param("oasisId") String oasisId,@Param("oasis_fid_type") String oasisFidType);
 }
