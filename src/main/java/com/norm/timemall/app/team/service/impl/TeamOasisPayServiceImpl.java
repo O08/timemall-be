@@ -36,7 +36,7 @@ public class TeamOasisPayServiceImpl implements TeamOasisPayService {
         String brandId = accountService.
                 findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
                 .getId();
-        FinAccount brandFinAccount = teamAccountMapper.selectOneByFid(brandId, FidTypeEnum.BRAND.getMark());
+        FinAccount brandFinAccount = teamAccountMapper.selectOneByFidForUpdate(brandId, FidTypeEnum.BRAND.getMark());
         // query Oasis account
         FinAccount oasisFinAccount = teamAccountMapper.selectOneByFidForUpdate(dto.getOasisId(),FidTypeEnum.OASIS.getMark());
         // validate
