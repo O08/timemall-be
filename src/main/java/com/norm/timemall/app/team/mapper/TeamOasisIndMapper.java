@@ -3,6 +3,7 @@ package com.norm.timemall.app.team.mapper;
 import com.norm.timemall.app.base.mo.OasisInd;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 
 /**
@@ -15,4 +16,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface TeamOasisIndMapper extends BaseMapper<OasisInd> {
 
+    void calOasisIndexById(@Param("oasis_id") String oasisId);
 }

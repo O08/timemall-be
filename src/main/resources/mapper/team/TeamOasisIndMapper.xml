@@ -5,8 +5,8 @@
         oasis_ind
     </sql>
 
-    <sql id="baseColumn">
-        id,oasis_id,item,val
-    </sql>
+    <update id="calOasisIndexById" parameterType="string" statementType="CALLABLE">
+        {call calOasisIndexById(#{oasis_id, mode=IN})}
+    </update>
 
 </mapper>
