@@ -12,4 +12,5 @@ public class TeamCommissionRO {
     private String worker;
     private String bonus;
     private String founderName;
+    private String workerName;
 }

@@ -10,10 +10,12 @@
     </sql>
     <select id="selectPageByFilter" resultType="com.norm.timemall.app.team.domain.ro.TeamCommissionRO">
         select
-          c.id,c.title,c.create_at addDate,c.founder,c.tag,c.worker,c.bonus,b.brand_name founder_name
+          c.id,c.title,c.create_at addDate,c.founder,c.tag,c.worker,c.bonus,b.brand_name founder_name,b1.brand_name worker_name
         from commission c
         left join brand b
           on c.founder=b.id
+        left join brand b1
+          on c.worker = b1.id
         where
         1 = 1
         AND c.oasis_id = #{dto.oasisId}
