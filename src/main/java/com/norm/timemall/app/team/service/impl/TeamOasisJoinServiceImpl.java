@@ -64,6 +64,9 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
 
             teamOasisMemberMapper.insert(member);
             teamOasisJoinMapper.updateTagById(id, OasisJoinTagEnum.ACCEPT.getMark());
+            // update oasis tb member info
+            oasis.setMembership(oasis.getMembership()+1);
+            teamOasisMapper.updateById(oasis);
         }
         if(oasis !=null && oasis.getMembership() >= oasis.getMaxMembers()){
             teamOasisJoinMapper.updateTagById(id, OasisJoinTagEnum.DENY.getMark());
@@ -113,6 +116,9 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
                     .setCreateAt(new Date())
                     .setModifiedAt(new Date());
             teamOasisJoinMapper.insert(join);
+            // update oasis tb member info
+            oasis.setMembership(oasis.getMembership()+1);
+            teamOasisMapper.updateById(oasis);
         }else {
             throw new ErrorCodeException(CodeEnum.MEMBERS_LIMIT);
         }
