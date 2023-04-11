@@ -112,7 +112,6 @@ public class TeamFinanceServiceImpl implements TeamFinanceService {
 
         // 5. update obj record info
           teamMarketObjectRecordMapper.updateCreditIdAndRecoverTagById(objId,brandId);
-        // 6. update cal tbs todo
 
     }
 

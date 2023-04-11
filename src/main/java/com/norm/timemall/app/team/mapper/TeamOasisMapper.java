@@ -38,4 +38,6 @@ public interface TeamOasisMapper extends BaseMapper<Oasis> {
     void updateMarkById(@Param("id") String oasisId, @Param("mark") String mark);
     @Update("update oasis set title=#{dto.title},subtitle=#{dto.subTitle} where id=#{dto.oasisId}")
     void updateTitleAndSubTitleById(@Param("dto") TeamOasisGeneralDTO dto);
+    @Update("update oasis set membership=membership-1 where id=#{oasis_id}")
+    void subtractOneMembershipById(@Param("oasis_id") String oasisId);
 }

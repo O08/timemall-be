@@ -133,6 +133,9 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
                         .eq(OasisJoin::getBrandId,brandId);
 
         teamOasisJoinMapper.delete(wrapper);
+        // update oasis tb membership
+        teamOasisMapper.subtractOneMembershipById(oasisId);
+
     }
 
     @Override

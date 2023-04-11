@@ -33,6 +33,8 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
     private TeamTransactionsMapper teamTransactionsMapper;
     @Autowired
     private TeamAccountMapper teamAccountMapper;
+    @Autowired
+    private TeamOasisJoinMapper teamOasisJoinMapper;
 
 
 
@@ -66,6 +68,9 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
                 .setModifiedAt(new Date());
 
         teamCommissionMapper.insert(commission);
+        // update oasis join
+        updateOasisJoinModifiedAt(dto.getOasisId(),brandId);
+
 
     }
 
@@ -94,7 +99,7 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
         Transactions creditTrans = new Transactions();
         creditTrans.setId(IdUtil.simpleUUID())
                 .setFid(commission.getWorker())
-                .setFidType(FidTypeEnum.OASIS.getMark())
+                .setFidType(FidTypeEnum.BRAND.getMark())
                 .setTransNo(transNo)
                 .setTransType(TransTypeEnum.COMMISSION.getMark())
                 .setTransTypeDesc(TransTypeEnum.COMMISSION.getDesc())
@@ -125,6 +130,8 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
         BigDecimal brandFinAccountAmountBalance = brandFinAccount.getAmount().add(commission.getBonus());
         brandFinAccount.setAmount(brandFinAccountAmountBalance);
         teamAccountMapper.updateById(brandFinAccount);
+        // 4. update oasis join
+        updateOasisJoinModifiedAt(commission.getOasisId(), commission.getWorker());
 
 
 //        //2. calculate total
@@ -135,10 +142,9 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
 //        teamCommissionHelper.calMonthTransWhenFinishTask(commission.getWorker()
 //                ,commission.getOasisId(),commission.getBonus());
 
-
-
-
-
+    }
+    private void updateOasisJoinModifiedAt(String oasisId,String brandId){
+        teamOasisJoinMapper.updateModifiedAtByBrandIdAndOasisId(oasisId,brandId);
 
     }
 }
