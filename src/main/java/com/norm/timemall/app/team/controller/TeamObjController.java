@@ -3,6 +3,7 @@ package com.norm.timemall.app.team.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
+import com.norm.timemall.app.base.enums.ObjectRecordMarkEnum;
 import com.norm.timemall.app.base.enums.ObjectRecordTagEnum;
 import com.norm.timemall.app.base.service.OrderFlowService;
 import com.norm.timemall.app.team.domain.dto.*;
@@ -61,7 +62,12 @@ public class TeamObjController {
     @ResponseBody
     @PutMapping(value = "/api/v1/team/swap_cell")
     public SuccessVO swapCell(@Validated  @RequestBody TeamSwapCellDTO dto){
-        teamObjService.swapCell(dto);
+        try {
+            orderFlowService.insertOrderFlow(dto.getSponsor(), ObjectRecordMarkEnum.COOPERATION.getMark());
+            teamObjService.swapCell(dto);
+        }finally {
+            orderFlowService.deleteOrderFlow(dto.getSponsor(), ObjectRecordMarkEnum.COOPERATION.getMark());
+        }
         return new SuccessVO(CodeEnum.SUCCESS);
     }
     /**
