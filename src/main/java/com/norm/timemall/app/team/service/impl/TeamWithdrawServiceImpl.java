@@ -76,6 +76,7 @@ public class TeamWithdrawServiceImpl implements TeamWithdrawService {
                 .setPayeeRealName(brandAlipay.getPayeeRealName())
                 .setAmount(dto.getAmount())
                 .setFeeRate(feeRate)
+                .setFinalAmount(dto.getAmount().multiply(BigDecimal.ONE.subtract(feeRate)))
                 .setTag(WithdrawTagEnum.CREATED.getMark())
                 .setTagDesc(WithdrawTagEnum.CREATED.getDesc())
                 .setCreateAt(new Date())
