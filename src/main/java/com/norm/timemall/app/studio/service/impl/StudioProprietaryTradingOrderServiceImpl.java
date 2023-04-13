@@ -11,6 +11,6 @@ import org.springframework.stereotype.Service;
 public class StudioProprietaryTradingOrderServiceImpl  extends ServiceImpl<StudioProprietaryTradingOrderMapper, ProprietaryTradingOrder> implements StudioProprietaryTradingOrderService {
     @Override
     public void updateTradingOrderStatusAsPaid(String tradingOrderId) {
-        this.baseMapper.updateTradingOrderStatus(tradingOrderId, OrderStatusEnum.PAID.name());
+        this.baseMapper.updateTradingOrderStatus(tradingOrderId, ""+OrderStatusEnum.PAID.ordinal(),OrderStatusEnum.PAID.name());
     }
 }

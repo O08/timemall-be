@@ -15,6 +15,8 @@ import org.apache.ibatis.annotations.Update;
 */
 @Mapper
 public interface StudioProprietaryTradingOrderMapper extends BaseMapper<ProprietaryTradingOrder> {
-    @Update(value = "update proprietary_trading_order set status = #{status} where id = #{tradingOrderId}")
-    void updateTradingOrderStatus(@Param("tradingOrderId") String tradingOrderId,  @Param("status") String status);
+    @Update(value = "update proprietary_trading_order set status = #{status},status_desc=#{status_desc} where id = #{tradingOrderId}")
+    void updateTradingOrderStatus(@Param("tradingOrderId") String tradingOrderId,
+                                  @Param("status") String status,
+                                  @Param("status_desc") String statusDesc);
 }
