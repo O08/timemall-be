@@ -38,11 +38,11 @@
         <result property="content"
                 typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
                 column="content"/>
-        <association property="brandContact" javaType="com.norm.timemall.app.mall.domain.pojo.BrandContact" >
-            <result property="wechat" column="wechat"/>
-            <result property="phone" column="phone"/>
-            <result property="email" column="email"/>
-        </association>
+<!--        <association property="brandContact" javaType="com.norm.timemall.app.mall.domain.pojo.BrandContact" >-->
+<!--            <result property="wechat" column="wechat"/>-->
+<!--            <result property="phone" column="phone"/>-->
+<!--            <result property="email" column="email"/>-->
+<!--        </association>-->
         <collection property="fee" ofType="com.norm.timemall.app.mall.domain.pojo.Fee" javaType="ArrayList">
             <result property="price" column="price"/>
             <result property="sbu" column="sbu"/>
