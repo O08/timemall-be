@@ -10,4 +10,6 @@ public interface MsMillstoneMessageService {
     MsMillstoneEvent findMillstoneEvent(String millstoneId);
 
     void addMessage(String millstoneId, MsStoreMillstoneMessageDTO dto);
+
+    void addImageMessage(String millstoneId, String  uri, String authorId, String msgType);
 }

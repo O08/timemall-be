@@ -8,6 +8,7 @@ import com.norm.timemall.app.ms.mapper.MsMillstoneMsgMapper;
 import com.norm.timemall.app.ms.service.MsMillstoneMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 
@@ -28,6 +29,19 @@ public class MsMillstoneMessageServiceImpl implements MsMillstoneMessageService 
                 .setAuthorId(dto.getAuthorId())
                 .setMsgType(dto.getMsgType())
                 .setMsg(dto.getMsg())
+                .setCreateAt(new Date())
+                .setModifiedAt(new Date());
+        msMillstoneMsgMapper.insert(millstoneMsg);
+    }
+
+    @Override
+    public void addImageMessage(String millstoneId, String uri, String authorId, String msgType) {
+        MillstoneMsg millstoneMsg = new MillstoneMsg();
+        millstoneMsg.setMsgId(IdUtil.simpleUUID())
+                .setMillstoneId(millstoneId)
+                .setAuthorId(authorId)
+                .setMsgType(msgType)
+                .setMsg(uri)
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
         msMillstoneMsgMapper.insert(millstoneMsg);
