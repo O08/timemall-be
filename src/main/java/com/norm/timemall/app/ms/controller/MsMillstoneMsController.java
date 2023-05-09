@@ -48,6 +48,18 @@ public class MsMillstoneMsController {
         String uri = fileStoreService.storeWithUnlimitedAccess(file, FileStoreDir.MILLSTONE_IMAGE_MESSAGE);
         msMillstoneMessageService.addImageMessage(millstoneId,uri,authorId,msgType);
         return new SuccessVO(CodeEnum.SUCCESS);
+    }
 
+    @ResponseBody
+    @PutMapping(value = "/api/v1/ms/millstone/{millstone_id}/storeAttachment")
+    public SuccessVO storeMillstoneAttachmentMessage(@PathVariable("millstone_id") String millstoneId,
+                                                @RequestParam("file") MultipartFile file,
+                                                @RequestParam("authorId") String authorId,
+                                                @RequestParam("msgType") String msgType
+    ){
+        // store file
+        String uri = fileStoreService.storeWithUnlimitedAccess(file, FileStoreDir.MILLSTONE_ATTACHMENT_MESSAGE);
+        msMillstoneMessageService.addAttachmentMessage(millstoneId,uri,authorId,msgType);
+        return new SuccessVO(CodeEnum.SUCCESS);
     }
 }

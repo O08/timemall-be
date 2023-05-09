@@ -12,4 +12,6 @@ public interface MsMillstoneMessageService {
     void addMessage(String millstoneId, MsStoreMillstoneMessageDTO dto);
 
     void addImageMessage(String millstoneId, String  uri, String authorId, String msgType);
+
+    void addAttachmentMessage(String millstoneId, String uri, String authorId, String msgType);
 }

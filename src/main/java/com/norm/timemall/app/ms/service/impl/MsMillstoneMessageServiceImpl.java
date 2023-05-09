@@ -46,4 +46,17 @@ public class MsMillstoneMessageServiceImpl implements MsMillstoneMessageService 
                 .setModifiedAt(new Date());
         msMillstoneMsgMapper.insert(millstoneMsg);
     }
+
+    @Override
+    public void addAttachmentMessage(String millstoneId, String uri, String authorId, String msgType) {
+        MillstoneMsg millstoneMsg = new MillstoneMsg();
+        millstoneMsg.setMsgId(IdUtil.simpleUUID())
+                .setMillstoneId(millstoneId)
+                .setAuthorId(authorId)
+                .setMsgType(msgType)
+                .setMsg(uri)
+                .setCreateAt(new Date())
+                .setModifiedAt(new Date());
+        msMillstoneMsgMapper.insert(millstoneMsg);
+    }
 }
