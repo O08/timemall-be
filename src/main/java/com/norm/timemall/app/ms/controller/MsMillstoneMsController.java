@@ -1,10 +1,12 @@
 package com.norm.timemall.app.ms.controller;
 
+import com.google.gson.Gson;
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.FileStoreDir;
 import com.norm.timemall.app.base.service.FileStoreService;
 import com.norm.timemall.app.ms.domain.dto.MsStoreMillstoneMessageDTO;
+import com.norm.timemall.app.ms.domain.pojo.MsMillstoneAttachmentMessage;
 import com.norm.timemall.app.ms.domain.pojo.MsMillstoneEvent;
 import com.norm.timemall.app.ms.domain.vo.MsMillstoneEventVO;
 import com.norm.timemall.app.ms.service.MsMillstoneMessageService;
@@ -59,7 +61,11 @@ public class MsMillstoneMsController {
     ){
         // store file
         String uri = fileStoreService.storeWithUnlimitedAccess(file, FileStoreDir.MILLSTONE_ATTACHMENT_MESSAGE);
-        msMillstoneMessageService.addAttachmentMessage(millstoneId,uri,authorId,msgType);
+        MsMillstoneAttachmentMessage msg = new MsMillstoneAttachmentMessage();
+        msg.setUri(uri);
+        msg.setFileName(file.getOriginalFilename());
+        Gson gson = new Gson();
+        msMillstoneMessageService.addAttachmentMessage(millstoneId,gson.toJson(msg),authorId,msgType);
         return new SuccessVO(CodeEnum.SUCCESS);
     }
 }
