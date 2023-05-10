@@ -26,6 +26,7 @@
         left join brand b
           on b.id = m.author_id
         where m.millstone_id = #{millstone_id}
+        order by m.create_at
     </select>
 
 </mapper>
