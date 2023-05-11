@@ -8,6 +8,10 @@ spring:
       enabled: true
     restart:
       enabled: true
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
