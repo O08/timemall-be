@@ -6,4 +6,5 @@ import lombok.Data;
 @Data
 public class RtmTokenVO extends CodeVO {
     private String token;
+    private String appId;
 }

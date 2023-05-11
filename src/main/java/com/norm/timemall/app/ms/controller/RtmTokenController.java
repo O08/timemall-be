@@ -22,6 +22,7 @@ public class RtmTokenController {
         String result = token.buildToken(rtmResource.getAppId(), rtmResource.getAppCertificate(), user.getUserId(), rtmResource.getExpirationInSeconds());
         RtmTokenVO vo = new RtmTokenVO();
         vo.setToken(result);
+        vo.setAppId(rtmResource.getAppId());
         vo.setResponseCode(CodeEnum.SUCCESS);
         return vo;
 
