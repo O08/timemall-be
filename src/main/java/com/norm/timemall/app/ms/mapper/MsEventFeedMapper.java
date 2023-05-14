@@ -24,6 +24,6 @@ public interface MsEventFeedMapper extends BaseMapper<EventFeed> {
 
 @Select("select id ,feed ,create_at from event_feed where scene=#{dto.scene} and down=#{down} and mark=#{dto.mark}")
 ArrayList<MsEventFeedBO> selectEventFeedBySceneAndDown(@Param("dto") MsEventFeedDTO dto,@Param("down") String down);
-@Update("update event_feed set mark=#{dto.mark} where scene=#{dto.scene} and down=#{down} and locate(dto.workFlowId,feed)>0")
+@Update("update event_feed set mark=#{dto.mark} where scene=#{dto.scene} and down=#{down} and locate(#{dto.workFlowId},feed)>0")
     void updateEventFeedMarkBySceneAndDown(@Param("dto") MsModifyEventFeedMarkNotice notice, @Param("down")  String userId);
 }
