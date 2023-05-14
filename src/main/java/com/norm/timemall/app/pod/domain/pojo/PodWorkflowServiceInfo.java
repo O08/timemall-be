@@ -10,4 +10,6 @@ public class PodWorkflowServiceInfo {
     private String brand;
     // brand avatar providing service
     private String avatar;
+    private String supplierUserId;
+    private String consumerUserId;
 }

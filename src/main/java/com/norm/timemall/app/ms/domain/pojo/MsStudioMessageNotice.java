@@ -6,4 +6,7 @@ import lombok.Data;
 public class MsStudioMessageNotice {
     private String workFlowId;
     private String down;
+    private String eventCode;
+    private String upDesc;
+
 }

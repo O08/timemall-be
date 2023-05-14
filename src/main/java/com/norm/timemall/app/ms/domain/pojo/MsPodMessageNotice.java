@@ -6,5 +6,9 @@ import lombok.Data;
 public class MsPodMessageNotice {
     private String workFlowId;
     private String down;
+    private String eventCode;
+    private String upDesc;
+
+
 
 }

@@ -20,7 +20,7 @@ public interface PodMillstoneMapper extends BaseMapper<Millstone> {
     @Update(value = "update millstone set mark = #{code} where order_id=#{id}")
     void updateWorkflowByIdAndCode(@Param("id") String workflwoId, @Param("code") String code);
 
-    @Select("select o.cell_title title,b.brand_name brand,b.avator avatar from order_details o , brand b where o.brand_id = b.id and o.id=#{id} ")
+    @Select("select o.cell_title title,b.brand_name brand,b.avator avatar,o.consumer_id consumerUserId,b.customer_id supplierUserId from order_details o , brand b where o.brand_id = b.id and o.id=#{id} ")
     PodWorkflowServiceInfo selectWorkflowServiceInfoById(@Param("id") String workflwoId);
 
 }

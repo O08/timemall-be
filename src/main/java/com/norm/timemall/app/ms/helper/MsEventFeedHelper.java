@@ -4,6 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import com.google.gson.Gson;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
+import com.norm.timemall.app.base.helper.SecurityUserHelper;
+import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.ms.domain.dto.MsEventFeedDTO;
 import com.norm.timemall.app.ms.domain.dto.MsEventFeedTriggerDTO;
 import com.norm.timemall.app.ms.domain.pojo.MsPodMessageNotice;
@@ -19,6 +21,7 @@ public class MsEventFeedHelper {
     private MsEventFeedService msEventFeedService;
     public void eventHandler(MsEventFeedTriggerDTO dto){
         Gson gson = new Gson();
+        CustomizeUser customizeUser = SecurityUserHelper.getCurrentPrincipal();
         if(MsEventFeedCodeEnum.UPDATE_EVENT_FEED_MARK.getMark().equals(dto.getEventCode())){
             MsEventFeedDTO msEventFeedDTO = gson.fromJson(dto.getAppendix(), MsEventFeedDTO.class);
             assertMsEventFeedDTO(msEventFeedDTO);
@@ -27,11 +30,19 @@ public class MsEventFeedHelper {
         if(MsEventFeedCodeEnum.SEND_POD_MESSAGE_NOTICE.getMark().equals(dto.getEventCode())){
             MsPodMessageNotice msPodMessageNotice = gson.fromJson(dto.getAppendix(), MsPodMessageNotice.class);
             assertMsPodMessageNotice(msPodMessageNotice);
+
+            msPodMessageNotice.setEventCode(MsEventFeedCodeEnum.SEND_POD_MESSAGE_NOTICE.getMark());
+            msPodMessageNotice.setUpDesc(customizeUser.getUsername());
+
             msEventFeedService.sendPodMessageNotice(msPodMessageNotice);
         }
         if(MsEventFeedCodeEnum.SEND_STUDIO_MESSAGE_NOTICE.getMark().equals(dto.getEventCode())){
             MsStudioMessageNotice msStudioMessageNotice = gson.fromJson(dto.getAppendix(), MsStudioMessageNotice.class);
             assertMsStudioMessageNotice((msStudioMessageNotice));
+
+            msStudioMessageNotice.setEventCode(MsEventFeedCodeEnum.SEND_STUDIO_MESSAGE_NOTICE.getMark());
+            msStudioMessageNotice.setUpDesc(customizeUser.getUsername());
+
             msEventFeedService.send_studio_message_notice(msStudioMessageNotice);
         }
     }
