@@ -31,7 +31,7 @@ public class MsEventFeedServiceImpl implements MsEventFeedService {
         wrapper.eq(EventFeed::getDown,customizeUser.getUserId())
                 .eq(EventFeed::getScene,dto.getScene())
                 .eq(EventFeed::getMark,dto.getMark());
-        return  msEventFeedMapper.selectOne(wrapper) != null;
+        return  msEventFeedMapper.selectList(wrapper) != null;
     }
 
     @Override
