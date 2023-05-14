@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class MsEventFeedServiceImpl implements MsEventFeedService {
@@ -31,7 +32,8 @@ public class MsEventFeedServiceImpl implements MsEventFeedService {
         wrapper.eq(EventFeed::getDown,customizeUser.getUserId())
                 .eq(EventFeed::getScene,dto.getScene())
                 .eq(EventFeed::getMark,dto.getMark());
-        return  msEventFeedMapper.selectList(wrapper) != null;
+        List<EventFeed> eventFeeds = msEventFeedMapper.selectList(wrapper);
+        return  eventFeeds != null && eventFeeds.size()>0 ;
     }
 
     @Override
