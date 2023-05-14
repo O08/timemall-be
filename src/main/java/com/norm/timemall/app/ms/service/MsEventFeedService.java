@@ -3,6 +3,7 @@ package com.norm.timemall.app.ms.service;
 import com.norm.timemall.app.ms.domain.dto.MsEventFeedDTO;
 import com.norm.timemall.app.ms.domain.dto.MsEventFeedSignalDTO;
 import com.norm.timemall.app.ms.domain.pojo.MsEventFeed;
+import com.norm.timemall.app.ms.domain.pojo.MsModifyEventFeedMarkNotice;
 import com.norm.timemall.app.ms.domain.pojo.MsPodMessageNotice;
 import com.norm.timemall.app.ms.domain.pojo.MsStudioMessageNotice;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ public interface MsEventFeedService {
     MsEventFeed fetchEventFeeds(MsEventFeedDTO dto);
 
 
-    void modifyEventFeedMark(MsEventFeedDTO msEventFeedDTO);
+    void modifyEventFeedMark(MsModifyEventFeedMarkNotice notice);
 
     void sendPodMessageNotice(MsPodMessageNotice msPodMessageNotice);
 

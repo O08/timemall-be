@@ -6,8 +6,8 @@ import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.security.CustomizeUser;
-import com.norm.timemall.app.ms.domain.dto.MsEventFeedDTO;
 import com.norm.timemall.app.ms.domain.dto.MsEventFeedTriggerDTO;
+import com.norm.timemall.app.ms.domain.pojo.MsModifyEventFeedMarkNotice;
 import com.norm.timemall.app.ms.domain.pojo.MsPodMessageNotice;
 import com.norm.timemall.app.ms.domain.pojo.MsStudioMessageNotice;
 import com.norm.timemall.app.ms.enums.MsEventFeedCodeEnum;
@@ -23,9 +23,9 @@ public class MsEventFeedHelper {
         Gson gson = new Gson();
         CustomizeUser customizeUser = SecurityUserHelper.getCurrentPrincipal();
         if(MsEventFeedCodeEnum.UPDATE_EVENT_FEED_MARK.getMark().equals(dto.getEventCode())){
-            MsEventFeedDTO msEventFeedDTO = gson.fromJson(dto.getAppendix(), MsEventFeedDTO.class);
-            assertMsEventFeedDTO(msEventFeedDTO);
-            msEventFeedService.modifyEventFeedMark(msEventFeedDTO);
+            MsModifyEventFeedMarkNotice msModifyEventFeedMarkNotice = gson.fromJson(dto.getAppendix(), MsModifyEventFeedMarkNotice.class);
+            assertMsEventFeedDTO(msModifyEventFeedMarkNotice);
+            msEventFeedService.modifyEventFeedMark(msModifyEventFeedMarkNotice);
         }
         if(MsEventFeedCodeEnum.SEND_POD_MESSAGE_NOTICE.getMark().equals(dto.getEventCode())){
             MsPodMessageNotice msPodMessageNotice = gson.fromJson(dto.getAppendix(), MsPodMessageNotice.class);
@@ -48,8 +48,8 @@ public class MsEventFeedHelper {
     }
 
 
-    private void assertMsEventFeedDTO(MsEventFeedDTO msEventFeedDTO){
-        if(StrUtil.isEmpty(msEventFeedDTO.getMark()) || StrUtil.isEmpty(msEventFeedDTO.getScene())){
+    private void assertMsEventFeedDTO(MsModifyEventFeedMarkNotice msModifyEventFeedMarkNotice){
+        if(StrUtil.isEmpty(msModifyEventFeedMarkNotice.getMark()) || StrUtil.isEmpty(msModifyEventFeedMarkNotice.getScene())){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
     }

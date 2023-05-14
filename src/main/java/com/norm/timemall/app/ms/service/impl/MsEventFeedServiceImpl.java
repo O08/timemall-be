@@ -9,10 +9,7 @@ import com.norm.timemall.app.base.mo.EventFeed;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.ms.domain.dto.MsEventFeedDTO;
 import com.norm.timemall.app.ms.domain.dto.MsEventFeedSignalDTO;
-import com.norm.timemall.app.ms.domain.pojo.MsEventFeed;
-import com.norm.timemall.app.ms.domain.pojo.MsEventFeedBO;
-import com.norm.timemall.app.ms.domain.pojo.MsPodMessageNotice;
-import com.norm.timemall.app.ms.domain.pojo.MsStudioMessageNotice;
+import com.norm.timemall.app.ms.domain.pojo.*;
 import com.norm.timemall.app.ms.enums.MsEventFeedMarkEnum;
 import com.norm.timemall.app.ms.enums.MsEventFeedSceneEnum;
 import com.norm.timemall.app.ms.mapper.MsEventFeedMapper;
@@ -47,10 +44,10 @@ public class MsEventFeedServiceImpl implements MsEventFeedService {
     }
 
     @Override
-    public void modifyEventFeedMark(MsEventFeedDTO msEventFeedDTO) {
+    public void modifyEventFeedMark(MsModifyEventFeedMarkNotice notice) {
         CustomizeUser customizeUser = SecurityUserHelper.getCurrentPrincipal();
 
-        msEventFeedMapper.updateEventFeedMarkBySceneAndDown(msEventFeedDTO,customizeUser.getUserId());
+        msEventFeedMapper.updateEventFeedMarkBySceneAndDown(notice,customizeUser.getUserId());
     }
 
     @Override
@@ -58,7 +55,9 @@ public class MsEventFeedServiceImpl implements MsEventFeedService {
         // delete old event
         LambdaQueryWrapper<EventFeed> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(EventFeed::getDown,msPodMessageNotice.getDown())
-                .eq(EventFeed::getScene, MsEventFeedSceneEnum.POD.getMark());
+                .eq(EventFeed::getScene, MsEventFeedSceneEnum.POD.getMark())
+                .like(EventFeed::getFeed,msPodMessageNotice.getWorkFlowId());
+
         msEventFeedMapper.delete(wrapper);
 
         // insert new event
@@ -80,7 +79,8 @@ public class MsEventFeedServiceImpl implements MsEventFeedService {
         // delete old event
         LambdaQueryWrapper<EventFeed> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(EventFeed::getDown,msStudioMessageNotice.getDown())
-                .eq(EventFeed::getScene, MsEventFeedSceneEnum.STUDIO.getMark());
+                .eq(EventFeed::getScene, MsEventFeedSceneEnum.STUDIO.getMark())
+                .like(EventFeed::getFeed,msStudioMessageNotice.getWorkFlowId());
         msEventFeedMapper.delete(wrapper);
 
         // insert new event
