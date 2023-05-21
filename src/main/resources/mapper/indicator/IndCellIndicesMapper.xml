@@ -14,7 +14,8 @@
         inner join brand b on b.id = c.brand_id
         left join cell_indices i on c.id = i.cell_id
         where b.customer_id = #{customer_id}
-        and c.mark = #{code}
+          and c.mark = #{code}
+        order by c.create_at desc
     </select>
 
 </mapper>

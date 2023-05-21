@@ -14,7 +14,8 @@
         inner join order_details d on b.order_id = d.id
         inner join brand r on r.id=d.brand_id
         where r.customer_id = #{user_id}
-        and b.mark = #{code}
+          and b.mark = #{code}
+        order by b.create_at desc
     </select>
 
 </mapper>

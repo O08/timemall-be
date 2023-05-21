@@ -13,7 +13,8 @@
         from bill b
         inner join order_details d on b.order_id = d.id
         where d.consumer_id = #{user_id}
-        and b.mark = #{mark}
+          and b.mark = #{mark}
+        order by b.create_at desc
     </select>
 
 </mapper>
