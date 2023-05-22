@@ -14,6 +14,8 @@ public class CellIntroRO {
     // The id for cell
     private String id;
 
+    private String provideInvoice;
+
     // The intro cover url for cell
     private String cover;
 

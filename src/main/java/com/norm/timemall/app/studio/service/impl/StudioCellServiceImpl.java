@@ -37,8 +37,8 @@ public class StudioCellServiceImpl implements StudioCellService {
     }
 
     @Override
-    public void modifyTitle(String cellId,String userId, StudioCellOverViewDTO dto) {
-        studioCellMapper.updatTitleById(cellId,userId,dto.getOverview().getTitle());
+    public void modifyTitleAndCanProvideInvoice(String cellId,String userId, StudioCellOverViewDTO dto) {
+        studioCellMapper.updatTitleAndCanProvideInvoiceById(cellId,userId,dto.getOverview());
     }
 
     @Override

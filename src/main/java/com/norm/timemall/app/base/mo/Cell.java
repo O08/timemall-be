@@ -53,6 +53,10 @@ public class Cell extends Model<Cell> implements Serializable {
      */
     private String mark;
     /**
+     * mark
+     */
+    private int provideInvoice;
+    /**
      * createAt
      */
     private Date createAt;

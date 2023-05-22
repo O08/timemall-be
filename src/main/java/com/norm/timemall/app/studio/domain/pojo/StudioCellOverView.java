@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class StudioCellOverView {
     private String title;
-    private String cover;
+    private boolean canProvideInvoice;
 }

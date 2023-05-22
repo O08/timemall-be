@@ -44,7 +44,7 @@ public class StudioDefineCellController {
                                     @AuthenticationPrincipal CustomizeUser user,
                                     @RequestBody StudioCellOverViewDTO dto)
     {
-        studioCellService.modifyTitle(cellId,user.getUserId(),dto);
+        studioCellService.modifyTitleAndCanProvideInvoice(cellId,user.getUserId(),dto);
         return new SuccessVO(CodeEnum.SUCCESS);
     }
 
