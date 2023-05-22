@@ -48,6 +48,7 @@
         <id property="id" column="id"/>
         <result property="title" column="title"/>
         <result property="cover" column="cover"/>
+        <result property="provideInvoice" column="provide_invoice"/>
         <result property="introCover" column="intro_cover"/>
         <result property="brandId" column="brandId"/>
         <result property="brand" column="brand"/>
@@ -68,7 +69,7 @@
     </resultMap>
 
     <select id="selectCellIntro" resultMap="cellIntroResultMap">
-        select c.title, c.id, c.cover, c.intro_cover,b.id brandId,b.brand_name brand,b.avator,b.wechat,b.phone,b.email,c.content,p.price,p.sbu
+        select c.title, c.id, c.cover, c.provide_invoice, c.intro_cover,b.id brandId,b.brand_name brand,b.avator,b.wechat,b.phone,b.email,c.content,p.price,p.sbu
         from cell c
         inner join brand b on c.brand_id = b.id
         inner join pricing p on c.id = p.cell_id
