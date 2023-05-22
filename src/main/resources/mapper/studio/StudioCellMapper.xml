@@ -17,7 +17,7 @@
         where c.brand_id = #{brand_id}
         and p.sbu = 'day'
     </select>
-    <update id="updatTitleById">
+    <update id="updatTitleAndCanProvideInvoiceById">
         update cell c set c.title = #{dto.title},c.provide_invoice=#{dto.canProvideInvoice} where c.id = #{id}
         and  exists(
             select 1
