@@ -15,8 +15,7 @@ public class PodWorkflowRO {
     // The total fee for order,ref: order_details.total
     private BigDecimal fee;
     // Create date for order, ref: order_details.create_at
-    @DateTimeFormat(pattern="yyyy-MM-dd")
-    private Date added;
+    private String added;
     // The id for workflow, ref: order_details.id
     private String id;
 }

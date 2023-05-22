@@ -14,7 +14,7 @@ public class PodTransRO {
     // The total fee for order,ref: order_details.total
     private BigDecimal fee;
     // Create date for order, ref: order_details.create_at
-    private Date added;
+    private String added;
     // The id for brand, ref: brand.id
     private String brandId;
 }
