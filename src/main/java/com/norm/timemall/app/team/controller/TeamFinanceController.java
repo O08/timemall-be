@@ -37,7 +37,7 @@ public class TeamFinanceController {
             orderFlowService.insertOrderFlow(objId, OrderStatusEnum.CREATING.name());
             teamFinanceService.orderObj(objId);
         }finally {
-            orderFlowService.deleteOrderFlow(objId,OrderStatusEnum.CREATED.name());
+            orderFlowService.deleteOrderFlow(objId,OrderStatusEnum.CREATING.name());
         }
         return new SuccessVO(CodeEnum.SUCCESS);
     }
