@@ -5,7 +5,7 @@
     <property name="LOG_PATTERN" value="%date{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n" />
     <!-- 定义日志存储的路径，不要配置相对路径 -->
 <!--    <property name="LOG_FILE_PATH" value="/Volumes/T7/workspace/loging/timemall-be.%d{yyyy-MM-dd}.%i.log" />-->
-    <property name="LOG_FILE_PATH" value="/data/logs/timemall-be.%d{yyyy-MM-dd}.%i.log" />
+    <property name="LOG_FILE_PATH" value="/data/timemall-be.%d{yyyy-MM-dd}.%i.log" />
 
 
     <!-- 控制台输出日志 -->
