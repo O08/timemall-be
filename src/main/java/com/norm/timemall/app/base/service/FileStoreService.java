@@ -24,6 +24,8 @@ public interface FileStoreService {
      */
     String storeWithLimitedAccess(MultipartFile file, FileStoreDir dir);
 
+    String storeImageAndProcessAsAvifWithUnlimitedAccess(MultipartFile file, FileStoreDir dir);
+
     void download(String fileName, String c,HttpServletResponse response);
 
 

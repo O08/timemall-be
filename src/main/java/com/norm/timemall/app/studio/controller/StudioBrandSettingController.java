@@ -132,7 +132,7 @@ public class StudioBrandSettingController {
             throw new ErrorCodeException(CodeEnum.INVALID_TOKEN);
         }
         // 存储图片
-        String uri = fileStoreService.storeWithUnlimitedAccess(file, FileStoreDir.BRAND_COVER);
+        String uri = fileStoreService.storeImageAndProcessAsAvifWithUnlimitedAccess(file, FileStoreDir.BRAND_COVER);
         // 更新
         brandService.modifyBrandCover(brandId,uri);
         // 删除不再使用文件数据
@@ -158,7 +158,7 @@ public class StudioBrandSettingController {
             throw new ErrorCodeException(CodeEnum.INVALID_TOKEN);
         }
         // 存储图片
-        String uri = fileStoreService.storeWithUnlimitedAccess(file, FileStoreDir.BRAND_AVATOR);
+        String uri = fileStoreService.storeImageAndProcessAsAvifWithUnlimitedAccess(file, FileStoreDir.BRAND_AVATOR);
         // 更新
         brandService.modifyBrandAvatar(brandId,uri);
         // 删除不再使用文件数据

@@ -102,7 +102,7 @@ public class TeamOasisController {
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
         // store file
-        String uri = fileStoreService.storeWithUnlimitedAccess(file, FileStoreDir.OASIS_ANNOUNCE);
+        String uri = fileStoreService.storeImageAndProcessAsAvifWithUnlimitedAccess(file, FileStoreDir.OASIS_ANNOUNCE);
         // update oasis announce uri
         teamOasisService.modifyOasisAnnounce(oasisId,uri);
         // delete unused file
@@ -119,7 +119,7 @@ public class TeamOasisController {
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
         // store file
-        String uri = fileStoreService.storeWithUnlimitedAccess(file, FileStoreDir.OASIS_AVATAR);
+        String uri = fileStoreService.storeImageAndProcessAsAvifWithUnlimitedAccess(file, FileStoreDir.OASIS_AVATAR);
         // update oasis announce uri
         teamOasisService.modifyOasisAvatar(oasisId,uri);
         // delete unused file

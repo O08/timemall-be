@@ -38,11 +38,32 @@ public class FileStoreServiceImpl implements FileStoreService {
     }
 
     @Override
+    public String storeImageAndProcessAsAvifWithUnlimitedAccess(MultipartFile file, FileStoreDir dir) {
+        Path destinationFile = generateDestinationFilePath(file,dir,true);
+        return aliOssClientUtil.doImageUploadForPublic(file,destinationFile.toString());
+    }
+
+    @Override
     public void download(String filename,String c, HttpServletResponse response) {
         aliOssClientUtil.downloadToFile(filename,c,response);
     }
 
     private String storeFile(MultipartFile file, FileStoreDir dir,boolean isPublic){
+        Path destinationFile = generateDestinationFilePath(file,dir,isPublic);
+
+        String url="";
+        if(isPublic){
+             url =   aliOssClientUtil.fileUploadForPublic(file,destinationFile.toString());
+        }
+        if(!isPublic){
+            url =   aliOssClientUtil.fileUploadForLimited(file,destinationFile.toString().replaceFirst("/",""));
+        }
+        if(StrUtil.isBlank(url)){
+            throw new ErrorCodeException(CodeEnum.FILE_STORE_FAIL);
+        }
+        return url;
+    }
+    private Path generateDestinationFilePath(MultipartFile file, FileStoreDir dir,boolean isPublic){
         if(file.isEmpty()){
             throw new ErrorCodeException(CodeEnum.FILE_IS_EMPTY);
         }
@@ -56,17 +77,9 @@ public class FileStoreServiceImpl implements FileStoreService {
         // 文件存储路径
         Path destinationFile = rootLocation.resolve(Paths.get(fileName))
                 .normalize();
-        String url="";
-        if(isPublic){
-             url =   aliOssClientUtil.fileUploadForPublic(file,destinationFile.toString());
-        }
-        if(!isPublic){
-            url =   aliOssClientUtil.fileUploadForLimited(file,destinationFile.toString().replaceFirst("/",""));
-        }
-        if(StrUtil.isBlank(url)){
-            throw new ErrorCodeException(CodeEnum.FILE_STORE_FAIL);
-        }
-        return url;
+
+        return destinationFile;
+
     }
 
     /**

@@ -4,9 +4,7 @@ import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.OSSException;
-import com.aliyun.oss.model.OSSObject;
-import com.aliyun.oss.model.ObjectMetadata;
-import com.aliyun.oss.model.PutObjectResult;
+import com.aliyun.oss.model.*;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.pojo.AliOssConfigureBean;
@@ -16,9 +14,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
+import java.io.*;
+
 
 /***
  * oss reference book: https://help.aliyun.com/document_detail/84842.html
@@ -27,6 +24,8 @@ import java.io.IOException;
 @Slf4j
 @Component
 public class AliOssClientUtil {
+    private String avifSuffix="avif";
+
     @Autowired
     private AliOssConfigureBean aliOssConfigure;
     // 可公共读文件存储
@@ -40,23 +39,76 @@ public class AliOssClientUtil {
     public String getPublicFileEndpoint(){
         return "https://"+ aliOssConfigure.getPublicBucket()+"."+aliOssConfigure.getEndpoint().replace("https://","")+"/";
     }
+    public String doImageUploadForPublic(MultipartFile file,String objectName){
 
-
-    private  String doFileUpload(MultipartFile file,String objectName, boolean publicAccess){
+        // process oss image as avif format if image not avif
+        if(file.getContentType().equals("image/avif")){
+            throw new ErrorCodeException(CodeEnum.FILE_IMAGE_AVIF_NOT_SUPPORT);
+        }
+        // upload file to oss
+        fileUploadForPublic(file,objectName);
+        return doImageProcessAsAvif(objectName,true);
+    }
+    public String doImageProcessAsAvif(String objectName, boolean publicAccess){
         // 创建OSSClient实例。
         OSS ossClient = new OSSClientBuilder().build(aliOssConfigure.getEndpoint(), aliOssConfigure.getAccessKeyId(),
                 aliOssConfigure.getAccessKeySecret());
-       String bucket = publicAccess ? aliOssConfigure.getPublicBucket() : aliOssConfigure.getLimitedBucket();
+        String bucket = publicAccess ? aliOssConfigure.getPublicBucket() : aliOssConfigure.getLimitedBucket();
+        String url ="";
+        try {
+            OSSObject avifObj = toAvif(ossClient, bucket, objectName);
+
+            String targetName=objectName+"."+avifSuffix;
+//            Map<String, String> headers = new HashMap<>();
+//            headers.put("Content-type","image/avif");
+            ObjectMetadata meta = new ObjectMetadata();
+            meta.setContentType("image/avif");
+
+            url=  uploadFileToOss(avifObj.getObjectContent(),targetName,publicAccess,meta);
+        }catch (OSSException oe) {
+            log.error("oss upload exception:",oe);
+        } catch (ClientException  ce) {
+            log.error("oss upload ClientException:",ce);
+        } finally {
+            if (ossClient != null) {
+                ossClient.shutdown();
+            }
+        }
+        return  url;
+    }
+
+    private OSSObject toAvif(OSS ossClient,String bucketName,String objectName){
+        String style = "image/format,avif";
+        GetObjectRequest request = new GetObjectRequest(bucketName, objectName);
+        request.setProcess(style);
+        OSSObject imgObj= ossClient.getObject(request);
+        return  imgObj;
+    }
+
+
+    private  String doFileUpload(MultipartFile file,String objectName, boolean publicAccess){
+        String url="";
+        try {
+            url=  uploadFileToOss(file.getInputStream(),objectName,publicAccess,new ObjectMetadata());
+        } catch (IOException e) {
+            log.error("oss upload IOException:",e);
+        }
+        return url;
+    }
+    private String uploadFileToOss(InputStream file, String objectName, boolean publicAccess, ObjectMetadata meta){
+        // 创建OSSClient实例。
+        OSS ossClient = new OSSClientBuilder().build(aliOssConfigure.getEndpoint(), aliOssConfigure.getAccessKeyId(),
+                aliOssConfigure.getAccessKeySecret());
+        String bucket = publicAccess ? aliOssConfigure.getPublicBucket() : aliOssConfigure.getLimitedBucket();
 
         String url = "";
         try {
             // 创建上传文件的元信息
-            ObjectMetadata meta = new ObjectMetadata();
 
             meta.addUserMetadata("x-oss-meta-company","7norm.com");
 
             // 创建PutObject请求。
-            PutObjectResult putObjectResult = ossClient.putObject(bucket, objectName, file.getInputStream(), meta);
+            PutObjectResult putObjectResult = ossClient.putObject(bucket, objectName, file, meta);
             if(publicAccess){
                 url = "https://"+ bucket+"."+aliOssConfigure.getEndpoint().replace("https://","")+"/"+objectName;
             }
@@ -65,7 +117,7 @@ public class AliOssClientUtil {
             }
         } catch (OSSException oe) {
             log.error("oss upload exception:",oe);
-        } catch (ClientException | IOException ce) {
+        } catch (ClientException  ce) {
             log.error("oss upload ClientException:",ce);
         } finally {
             if (ossClient != null) {
