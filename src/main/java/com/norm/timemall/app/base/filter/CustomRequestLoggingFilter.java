@@ -11,7 +11,7 @@ public class CustomRequestLoggingFilter extends CommonsRequestLoggingFilter {
     @Override
     protected void afterRequest(HttpServletRequest request, String message) {
         Authentication authentication = SecurityUserHelper.getCurrentUserAuthentication();
-        String userId= authentication == null ? "" : ((CustomizeUser)authentication.getPrincipal()).getUserId();
+        String userId= authentication == null || !(authentication.getPrincipal() instanceof  CustomizeUser) ? "" : ((CustomizeUser)authentication.getPrincipal()).getUserId();
         logger.debug("Current Request User is "+ userId);
         logger.debug(message);
     }
