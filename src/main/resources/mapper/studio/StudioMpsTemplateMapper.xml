@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.studio.mapper.StudioMpsTemplateMapper">
+    <sql id="tableName">
+        mps_template
+    </sql>
+
+    <sql id="baseColumn">
+        id,chain_id,title,sow,piece,bonus,first_supplier,duration,create_at,modified_at
+    </sql>
+
+</mapper>

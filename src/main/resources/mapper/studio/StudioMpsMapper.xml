@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.studio.mapper.StudioMpsMapper">
+
+    <select id="selectMpsListPage" resultType="com.norm.timemall.app.studio.domain.ro.StudioFetchMpsListRO">
+        select title,tag,mps_type,create_at,id
+        from mps
+        <where>
+            1=1
+            and brand_id = #{dto.brandId}
+            <if test="dto.q != null and dto.q != ''">
+                AND locate(#{dto.q}, title)>0
+            </if>
+            <if test="dto.mpsType != null and dto.mpsType != ''">
+                AND mps_type = #{dto.mpsType}
+            </if>
+            <if test="dto.tag != null and dto.tag != ''">
+                AND tag = #{dto.tag}
+            </if>
+        </where>
+    </select>
+
+</mapper>

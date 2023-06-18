@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.studio.mapper.StudioMpsChainMapper">
+
+    <select id="selectMpsChainPage" resultType="com.norm.timemall.app.studio.domain.ro.StudioFetchMpsChainRO">
+        select id,title,processing_cnt,processed_cnt,create_at
+        from mps_chain
+        <where>
+            1=1
+            and brand_id = #{dto.brandId}
+            <if test="dto.q != null and dto.q != ''">
+                AND locate(#{dto.q}, title)>0
+            </if>
+        </where>
+    </select>
+
+</mapper>

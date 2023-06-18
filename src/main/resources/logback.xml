@@ -35,7 +35,7 @@
     </appender>
     <!-- project default level项目输出的日志级别 -->
     <logger name="com.7norm.timemall" level="DEBUG" />
-    <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter">
+    <logger name="com.norm.timemall.app.base.filter.CustomRequestLoggingFilter">
         <level value="DEBUG" />
     </logger>
 

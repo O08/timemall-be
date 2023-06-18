@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.studio.mapper.StudioCommercialPaperMapper">
+
+    <select id="selectPaperPageForBrand" resultType="com.norm.timemall.app.studio.domain.ro.StudioFetchMpsPaperRO">
+
+        select p.id,p.title,p.tag,b1.brand_name supplier,b2.brand_name purchaser,p.piece,p.bonus,p.create_at
+        from commercial_paper p
+        left join brand b1
+          on b1.id=p.supplier
+        left join brand b2
+          on b2.id=p.purchaser
+
+        <where>
+            1=1
+            and p.supplier = #{dto.brandId}
+            <if test="dto.q != null and dto.q != ''">
+                AND locate(#{dto.q}, p.title)>0
+            </if>
+            <if test="dto.tag != null and dto.tag != ''">
+                AND p.tag = #{dto.tag}
+            </if>
+        </where>
+    </select>
+    <select id="selectPaperPageForPublic" resultType="com.norm.timemall.app.studio.domain.ro.StudioDiscoverMpsPaperPageRO">
+        select p.id,p.title,p.piece,p.bonus,b.avator avatar
+        from commercial_paper p
+        left join brand b
+          on p.purchaser = b.id
+        <where>
+            1=1
+            <if test="dto.q != null and dto.q != ''">
+                AND locate(#{dto.q}, p.title)>0
+            </if>
+        </where>
+    </select>
+    <select id="selectPaperDetailById" resultType="com.norm.timemall.app.studio.domain.pojo.StudioFetchMpsPaperDetail">
+
+        select p.title,p.sow,p.piece,p.bonus,b1.brand_name supplier,b2.brand_name purchaser,p.tag
+        from commercial_paper p
+        left join brand b1
+            on b1.id=p.supplier
+        left join brand b2
+            on b2.id=p.purchaser
+        where p.id=#{id}
+    </select>
+</mapper>

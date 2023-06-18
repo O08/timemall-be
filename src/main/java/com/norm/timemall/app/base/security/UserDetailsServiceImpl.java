@@ -21,15 +21,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Account account = accountService.findAccountByUserName(username);
+
         if(account == null){
             throw new UsernameNotFoundException("not found");
         }
+        String  brandId = accountService.
+                findBrandInfoByUserId(account.getUserId())
+                .getId();
         // todo 如果用户未激活 抛出异常
         //定义权限列表.
         List<GrantedAuthority> authorities = new ArrayList<>();
         // 用户可以访问的资源名称（或者说用户所拥有的权限） 注意：必须"ROLE_"开头
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        User userDetails = new CustomizeUser(account.getUserId(),account.getName(),account.getPassword(),authorities);
+        User userDetails = new CustomizeUser(account.getUserId(),account.getName(),account.getPassword(),brandId,authorities);
         return userDetails;
     }
 }

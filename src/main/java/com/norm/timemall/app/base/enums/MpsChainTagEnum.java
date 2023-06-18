@@ -1,13 +1,13 @@
 package com.norm.timemall.app.base.enums;
 
-public enum FidTypeEnum {
-    BRAND("1","Brand"),
-    OASIS("2","Oasis"),
-    MPS_FUND("3", "mps func account");
+public enum MpsChainTagEnum {
+    PUBLISH("1","运行中"),
+    OFFLINE("2","停运")
+    ;
     private String mark;
     private String desc;
 
-    FidTypeEnum(String mark, String desc) {
+    MpsChainTagEnum(String mark, String desc) {
         this.mark = mark;
         this.desc = desc;
     }

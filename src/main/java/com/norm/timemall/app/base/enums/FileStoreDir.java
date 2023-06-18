@@ -11,7 +11,11 @@ public enum FileStoreDir {
     CELL_COVER("cell/cover","服务封面" ), CELL_INTRO_COVER("cell/intro-cover", "服务介绍封面"),
     WECHAT_QR("wechatqr","微信联系方式二维码"), OASIS_ANNOUNCE("oasis/announce", "oasis 宣言"),
     OASIS_AVATAR("oasis/avatar", "oasis avatar"), MILLSTONE_IMAGE_MESSAGE("millstone/image-msg", "millstone 图片消息"),
-    MILLSTONE_ATTACHMENT_MESSAGE("millstone/attachment-msg", "millstone attachment");
+    MILLSTONE_ATTACHMENT_MESSAGE("millstone/attachment-msg", "millstone attachment"),
+    MPS_ATTACHMENT_MESSAGE("mps/attachment-msg","mps attachment" ),
+    MPS_IMAGE_MESSAGE("mps/image-msg", "mps img"), MPS_DELIVER("mps/deliver/deliver", "mps deliver file"),
+    MPS_PREVIEW("mps/deliver/preview", "mps preview")
+    ;
     private String dir;
 
     private String desc;

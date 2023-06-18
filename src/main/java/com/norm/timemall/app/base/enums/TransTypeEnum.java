@@ -6,7 +6,8 @@ public enum TransTypeEnum {
 
     TRANSFER("3","交易"),
     TOPUP_OASIS("4","充值Oasis"),
-    OASIS_COLLECT_IN("5","oasis 收账")
+    OASIS_COLLECT_IN("5","oasis 收账"),
+    TOPUP_MPS_FUND("6","转帐到MPS fund")
     ;
     private String mark;
     private String desc;
