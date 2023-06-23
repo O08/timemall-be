@@ -70,6 +70,7 @@ public class StudioMpsChainServiceImpl implements StudioMpsChainService {
         MpsChain chain = studioMpsChainMapper.selectById(chainId);
         StudioFetchAChain bo = new StudioFetchAChain();
         bo.setTitle(chain.getTitle());
+        bo.setTag(chain.getTag());
         return bo;
     }
 }

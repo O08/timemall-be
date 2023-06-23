@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class StudioFetchAChain {
     private String title;
+    private String tag;
 }
