@@ -26,7 +26,7 @@ public class StudioCommercialPaperController {
     private StudioApiAccessControlService studioApiAccessControlService;
 
     @GetMapping("/api/v1/web_estudio/brand/commercial_paper")
-    public StudioFetchMpsPaperPageVO fetchMpsPaperPageForBrand(@RequestBody StudioFetchMpsPaperPageDTO dto){
+    public StudioFetchMpsPaperPageVO fetchMpsPaperPageForBrand(StudioFetchMpsPaperPageDTO dto){
         IPage<StudioFetchMpsPaperRO> paper = studioCommercialPaperService.findPaperPageForBrand(dto);
         StudioFetchMpsPaperPageVO vo = new StudioFetchMpsPaperPageVO();
         vo.setPaper(paper);
@@ -34,7 +34,7 @@ public class StudioCommercialPaperController {
         return vo;
     }
     @GetMapping("/api/v1/web_estudio/discover/commercial_paper")
-    public StudioDiscoverMpsPaperPageVO discoverMpsPaperPage(@RequestBody StudioDiscoverMpsPaperPageDTO dto){
+    public StudioDiscoverMpsPaperPageVO discoverMpsPaperPage(StudioDiscoverMpsPaperPageDTO dto){
 
         IPage<StudioDiscoverMpsPaperPageRO> paper = studioCommercialPaperService.discoverMpsPaper(dto);
         StudioDiscoverMpsPaperPageVO vo = new StudioDiscoverMpsPaperPageVO();
@@ -52,7 +52,7 @@ public class StudioCommercialPaperController {
         return vo;
     }
     @GetMapping("/api/v1/web_estudio/mps/paper")
-    public StudioFetchMpsPaperVO fetchMpsPaperList(@RequestBody @Validated StudioFetchmpsPaperListDTO dto){
+    public StudioFetchMpsPaperVO fetchMpsPaperList( @Validated StudioFetchmpsPaperListDTO dto){
 
         StudioFetchMpsPaper paper = studioCommercialPaperService.findPaperList(dto);
         StudioFetchMpsPaperVO vo = new StudioFetchMpsPaperVO();

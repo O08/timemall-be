@@ -21,7 +21,7 @@ public class StudioMpsChainController {
 
 
     @GetMapping(value = "/api/v1/web_estudio/brand/mps_chain")
-    public StudioFectchMpsChainPageVO fetchMpsChainPage(@RequestBody StudioMpsChainPageDTO dto){
+    public StudioFectchMpsChainPageVO fetchMpsChainPage(StudioMpsChainPageDTO dto){
 
         IPage<StudioFetchMpsChainRO> chain= studioMpsChainService.fetchMpsChainPage(dto);
         StudioFectchMpsChainPageVO vo = new StudioFectchMpsChainPageVO();

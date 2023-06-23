@@ -22,7 +22,7 @@ public class StudioMpsController {
     private StudioCommercialPaperService studioCommercialPaperService;
     @ResponseBody
     @GetMapping(value = "/api/v1/web_estudio/brand/mps")
-    public StudioFetchMpsListPageVO fetchMpsList(@RequestBody StudioFetchMpsListPageDTO dto){
+    public StudioFetchMpsListPageVO fetchMpsList(StudioFetchMpsListPageDTO dto){
         IPage<StudioFetchMpsListRO> mps= studioMpsService.fetchMpsList(dto);
         StudioFetchMpsListPageVO vo = new StudioFetchMpsListPageVO();
         vo.setMps(mps);
