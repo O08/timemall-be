@@ -24,7 +24,7 @@ public class StudioMpsTemplateController {
 
     @ResponseBody
     @GetMapping(value = "/api/v1/web_estudio/mps_chain/template")
-    public StudioFetchMpsTemplateVO fetchMpsTemplate(@RequestBody @Validated StudioFetchMpsTemplateAllDTO dto){
+    public StudioFetchMpsTemplateVO fetchMpsTemplate(@Validated StudioFetchMpsTemplateAllDTO dto){
 
         StudioFetchMpsTemplate template = studioMpsTemplateService.findMpsTemplate(dto.getChainId());
         StudioFetchMpsTemplateVO vo = new StudioFetchMpsTemplateVO();

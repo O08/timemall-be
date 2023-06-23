@@ -10,6 +10,7 @@ import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.studio.domain.dto.StudioMpsChainPageDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioNewMpsChainDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioPutMpsChainDTO;
+import com.norm.timemall.app.studio.domain.pojo.StudioFetchAChain;
 import com.norm.timemall.app.studio.domain.ro.StudioFetchMpsChainRO;
 import com.norm.timemall.app.studio.mapper.StudioMpsChainMapper;
 import com.norm.timemall.app.studio.service.StudioMpsChainService;
@@ -62,5 +63,13 @@ public class StudioMpsChainServiceImpl implements StudioMpsChainService {
     public void modifyMpsChain(StudioPutMpsChainDTO dto) {
 
         studioMpsChainMapper.updateMpsChainTitleAndTagById(dto);
+    }
+
+    @Override
+    public StudioFetchAChain findChainInfo(String chainId) {
+        MpsChain chain = studioMpsChainMapper.selectById(chainId);
+        StudioFetchAChain bo = new StudioFetchAChain();
+        bo.setTitle(chain.getTitle());
+        return bo;
     }
 }

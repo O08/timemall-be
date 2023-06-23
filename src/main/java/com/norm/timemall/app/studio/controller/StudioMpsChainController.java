@@ -6,8 +6,10 @@ import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.studio.domain.dto.StudioMpsChainPageDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioNewMpsChainDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioPutMpsChainDTO;
+import com.norm.timemall.app.studio.domain.pojo.StudioFetchAChain;
 import com.norm.timemall.app.studio.domain.ro.StudioFetchMpsChainRO;
 import com.norm.timemall.app.studio.domain.vo.StudioFectchMpsChainPageVO;
+import com.norm.timemall.app.studio.domain.vo.StudioFetchAChainVO;
 import com.norm.timemall.app.studio.service.StudioMpsChainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -29,6 +31,16 @@ public class StudioMpsChainController {
         vo.setResponseCode(CodeEnum.SUCCESS);
 
         return vo;
+    }
+    @GetMapping("/api/v1/web_estudio/mps/chain/{chain_id}")
+    public StudioFetchAChainVO fetchAchainInfo(@PathVariable("chain_id") String chainId){
+
+        StudioFetchAChain chain = studioMpsChainService.findChainInfo(chainId);
+        StudioFetchAChainVO vo = new StudioFetchAChainVO();
+        vo.setChain(chain);
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        return vo;
+
     }
     @PostMapping("/api/v1/web_estudio/brand/mps_chain/new")
     public SuccessVO newMpsChain(@RequestBody @Validated StudioNewMpsChainDTO dto){
