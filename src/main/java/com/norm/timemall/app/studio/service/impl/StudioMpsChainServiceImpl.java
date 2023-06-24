@@ -40,11 +40,9 @@ public class StudioMpsChainServiceImpl implements StudioMpsChainService {
     }
 
     @Override
-    public void newMpsChain(StudioNewMpsChainDTO dto) {
+    public String newMpsChain(StudioNewMpsChainDTO dto) {
 
-        String brandId = accountService.
-                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
-                .getId();
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
 
         MpsChain chain = new MpsChain();
         chain.setId(IdUtil.simpleUUID())
@@ -56,6 +54,8 @@ public class StudioMpsChainServiceImpl implements StudioMpsChainService {
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
         studioMpsChainMapper.insert(chain);
+
+        return chain.getId();
 
     }
 

@@ -10,6 +10,7 @@ import com.norm.timemall.app.studio.domain.pojo.StudioFetchAChain;
 import com.norm.timemall.app.studio.domain.ro.StudioFetchMpsChainRO;
 import com.norm.timemall.app.studio.domain.vo.StudioFectchMpsChainPageVO;
 import com.norm.timemall.app.studio.domain.vo.StudioFetchAChainVO;
+import com.norm.timemall.app.studio.domain.vo.StudioNewMpsChainVO;
 import com.norm.timemall.app.studio.service.StudioMpsChainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -43,10 +44,13 @@ public class StudioMpsChainController {
 
     }
     @PostMapping("/api/v1/web_estudio/brand/mps_chain/new")
-    public SuccessVO newMpsChain(@RequestBody @Validated StudioNewMpsChainDTO dto){
+    public StudioNewMpsChainVO newMpsChain(@RequestBody @Validated StudioNewMpsChainDTO dto){
 
-        studioMpsChainService.newMpsChain(dto);
-        return new SuccessVO(CodeEnum.SUCCESS);
+        String chaindId=studioMpsChainService.newMpsChain(dto);
+        StudioNewMpsChainVO vo=new StudioNewMpsChainVO();
+        vo.setChainId(chaindId);
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        return vo;
 
     }
     @PutMapping("/api/v1/web_estudio/brand/mps_chain/chain")

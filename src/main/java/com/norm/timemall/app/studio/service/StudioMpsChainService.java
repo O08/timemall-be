@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public interface StudioMpsChainService {
     IPage<StudioFetchMpsChainRO> fetchMpsChainPage(StudioMpsChainPageDTO dto);
 
-    void newMpsChain(StudioNewMpsChainDTO dto);
+    String  newMpsChain(StudioNewMpsChainDTO dto);
 
     void modifyMpsChain(StudioPutMpsChainDTO dto);
 
