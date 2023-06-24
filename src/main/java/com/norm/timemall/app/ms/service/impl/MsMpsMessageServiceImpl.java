@@ -47,6 +47,7 @@ public class MsMpsMessageServiceImpl implements MsMpsMessageService {
     @Override
     public void addMessage(String room, MsStoreMpsTextMessageDTO dto) {
         MsMpsTextMessage textMessage = new MsMpsTextMessage();
+        textMessage.setContent(dto.getMsg());
         Gson gson = new Gson();
         MpsMsg msg = new MpsMsg();
         msg.setMsgId(IdUtil.simpleUUID())
