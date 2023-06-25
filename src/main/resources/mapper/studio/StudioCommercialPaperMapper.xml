@@ -36,7 +36,7 @@
     </select>
     <select id="selectPaperDetailById" resultType="com.norm.timemall.app.studio.domain.pojo.StudioFetchMpsPaperDetail">
 
-        select p.title,p.sow,p.piece,p.bonus,b1.brand_name supplier,b2.brand_name purchaser,p.tag,p.mps_id
+        select p.title,p.sow,p.piece,p.bonus,b1.brand_name supplier,b2.brand_name purchaser,p.tag,p.mps_id,p.id paperId
         from commercial_paper p
         left join brand b1
             on b1.id=p.supplier

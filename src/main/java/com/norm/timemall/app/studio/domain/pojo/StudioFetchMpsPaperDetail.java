@@ -12,4 +12,5 @@ public class StudioFetchMpsPaperDetail {
     private String purchaser;
     private String tag;
     private String mpsId;
+    private String paperId;
 }
