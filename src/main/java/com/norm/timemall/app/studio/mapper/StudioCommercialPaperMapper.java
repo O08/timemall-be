@@ -9,6 +9,7 @@ import com.norm.timemall.app.studio.domain.dto.StudioPutMpsPaperDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioPutMpsPaperTagDTO;
 import com.norm.timemall.app.studio.domain.pojo.StudioFetchMpsPaperDetail;
 import com.norm.timemall.app.studio.domain.ro.StudioDiscoverMpsPaperPageRO;
+import com.norm.timemall.app.studio.domain.ro.StudioFetchFirstSupplierRO;
 import com.norm.timemall.app.studio.domain.ro.StudioFetchMpsPaperListRO;
 import com.norm.timemall.app.studio.domain.ro.StudioFetchMpsPaperRO;
 import org.apache.ibatis.annotations.Mapper;
@@ -44,4 +45,6 @@ public interface StudioCommercialPaperMapper extends BaseMapper<CommercialPaper>
     void updateSowAndBonusById(@Param("dto") StudioPutMpsPaperDTO dto);
 @Update("update commercial_paper set tag=#{tag},supplier=#{supplier} where id=#{id} and tag='2'")
     void updateTagAndSupplierById(@Param("id") String paperId,@Param("tag") String tag,@Param("supplier") String supplier);
+@Select("select b.id,b.brand_name from commercial_paper p inner join brand b on p.supplier=b.id where p.purchaser=#{purchaser}")
+    ArrayList<StudioFetchFirstSupplierRO> selectFirstSupplierByBrandId(@Param("purchaser") String brandId);
 }
