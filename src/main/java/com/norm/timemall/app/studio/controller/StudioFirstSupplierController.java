@@ -13,9 +13,9 @@ public class StudioFirstSupplierController {
     @Autowired
     private StudioFirstSupplierService studioFirstSupplierService;
     @GetMapping(value = "/api/v1/web_estudio/mps_chain/supplier")
-    public StudioFetchFirstSupplierVO fetchFirstSupplier(){
+    public StudioFetchFirstSupplierVO fetchFirstSupplier(String q){
 
-        StudioFetchFirstSupplier supplier = studioFirstSupplierService.findFirstSupplier();
+        StudioFetchFirstSupplier supplier = studioFirstSupplierService.findFirstSupplier(q);
         StudioFetchFirstSupplierVO vo = new StudioFetchFirstSupplierVO();
         vo.setSupplier(supplier);
         vo.setResponseCode(CodeEnum.SUCCESS);

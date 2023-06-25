@@ -15,10 +15,10 @@ public class StudioFirstSupplierServiceImpl implements StudioFirstSupplierServic
     @Autowired
     private StudioCommercialPaperMapper studioCommercialPaperMapper;
     @Override
-    public StudioFetchFirstSupplier findFirstSupplier() {
+    public StudioFetchFirstSupplier findFirstSupplier(String q) {
 
         String brandId= SecurityUserHelper.getCurrentPrincipal().getBrandId();
-        ArrayList<StudioFetchFirstSupplierRO> ros = studioCommercialPaperMapper.selectFirstSupplierByBrandId(brandId);
+        ArrayList<StudioFetchFirstSupplierRO> ros = studioCommercialPaperMapper.selectFirstSupplierByBrandId(brandId,q);
         StudioFetchFirstSupplier supplier=new StudioFetchFirstSupplier();
         supplier.setRecords(ros);
         return supplier;

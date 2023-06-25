@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface StudioFirstSupplierService {
-    StudioFetchFirstSupplier findFirstSupplier();
+    StudioFetchFirstSupplier findFirstSupplier(String q);
 
 
 }

@@ -44,4 +44,18 @@
             on b2.id=p.purchaser
         where p.id=#{id}
     </select>
+    <select id="selectFirstSupplierByBrandId" resultType="com.norm.timemall.app.studio.domain.ro.StudioFetchFirstSupplierRO">
+
+        select b.id,b.brand_name
+        from commercial_paper p
+        inner join brand b
+          on p.supplier=b.id
+        <where>
+            1=1
+            And p.purchaser=#{purchaser}
+            <if test="q != null and q != ''">
+                AND locate(#{q}, b.brand_name)>0
+            </if>
+        </where>
+    </select>
 </mapper>

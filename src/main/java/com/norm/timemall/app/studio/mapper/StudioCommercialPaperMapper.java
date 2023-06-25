@@ -45,6 +45,6 @@ public interface StudioCommercialPaperMapper extends BaseMapper<CommercialPaper>
     void updateSowAndBonusById(@Param("dto") StudioPutMpsPaperDTO dto);
 @Update("update commercial_paper set tag=#{tag},supplier=#{supplier} where id=#{id} and tag='2'")
     void updateTagAndSupplierById(@Param("id") String paperId,@Param("tag") String tag,@Param("supplier") String supplier);
-@Select("select b.id,b.brand_name from commercial_paper p inner join brand b on p.supplier=b.id where p.purchaser=#{purchaser}")
-    ArrayList<StudioFetchFirstSupplierRO> selectFirstSupplierByBrandId(@Param("purchaser") String brandId);
+
+    ArrayList<StudioFetchFirstSupplierRO> selectFirstSupplierByBrandId(@Param("purchaser") String brandId,@Param("q") String q);
 }
