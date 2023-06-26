@@ -29,17 +29,25 @@ public class CommercialPaperDeliver extends Model<CommercialPaperDeliver> implem
     @TableId
 	private String id;
     /**
-     * mps_template id
+     * paper id
      */
     private String paperId;
     /**
-     * 名称
+     * 交付物
      */
     private String deliver;
     /**
-     * 职能
+     * 交付物
+     */
+    private String deliverName;
+    /**
+     * 预览内容
      */
     private String preview;
+    /**
+     * 预览内容
+     */
+    private String previewName;
     /**
      * mps paper life cycle
      */

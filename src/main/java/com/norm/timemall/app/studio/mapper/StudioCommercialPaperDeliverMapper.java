@@ -20,8 +20,10 @@ import java.util.ArrayList;
 */
 @Mapper
 public interface StudioCommercialPaperDeliverMapper extends BaseMapper<CommercialPaperDeliver> {
-@Select("select preview,deliver,msg from commercial_paper_deliver where paper_id=#{paperId}")
+@Select("select preview,preview_name,if(tag='3',deliver,'') deliver,if(tag='3',deliver_name,'') deliverName,msg,tag  from commercial_paper_deliver where paper_id=#{paperId}")
     ArrayList<StudioFetchMpsPaperDeliverRO> selectPaperDeliverByPaperId(@Param("paperId") String paperId);
 @Update("update commercial_paper_deliver set msg=#{dto.msg} where id=#{dto.deliverId}")
     void updateMsgById(@Param("dto") StudioMpsPaperDeliverLeaveMsgDTO dto);
+
+    ArrayList<StudioFetchMpsPaperDeliverRO> selectPaperDeliverByPaperIdAndBrandId(@Param("paperId") String paperId,@Param("brandId") String brandId);
 }

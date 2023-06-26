@@ -2,6 +2,7 @@ package com.norm.timemall.app.studio.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import com.norm.timemall.app.base.enums.CommercialPaperDeliverTagEnum;
+import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.CommercialPaperDeliver;
 import com.norm.timemall.app.studio.domain.dto.StudioMpsPaperDeliverLeaveMsgDTO;
 import com.norm.timemall.app.studio.domain.pojo.StudioFetchMpsPaperDeliver;
@@ -19,12 +20,14 @@ public class StudioCommercialPaperDeliverServiceImpl implements StudioCommercial
     @Autowired
     private StudioCommercialPaperDeliverMapper studioCommercialPaperDeliverMapper;
     @Override
-    public void newDeliver(String paperId, String previewUri, String deliverUri) {
+    public void newDeliver(String paperId, String previewUri, String deliverUri,String previewName,String deliverName) {
 
         CommercialPaperDeliver deliver = new CommercialPaperDeliver();
         deliver.setId(IdUtil.simpleUUID())
                 .setDeliver(deliverUri)
+                .setDeliverName(deliverName)
                 .setPreview(previewUri)
+                .setPreviewName(previewName)
                 .setPaperId(paperId)
                 .setTag(CommercialPaperDeliverTagEnum.CREATED.getMark())
                 .setCreateAt(new Date())
@@ -49,5 +52,14 @@ public class StudioCommercialPaperDeliverServiceImpl implements StudioCommercial
 
         studioCommercialPaperDeliverMapper.updateMsgById(dto);
 
+    }
+
+    @Override
+    public StudioFetchMpsPaperDeliver findBrandMpsPaperDeliver(String paperId) {
+        String brandId= SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        ArrayList<StudioFetchMpsPaperDeliverRO> records= studioCommercialPaperDeliverMapper.selectPaperDeliverByPaperIdAndBrandId(paperId,brandId);
+        StudioFetchMpsPaperDeliver deliver = new StudioFetchMpsPaperDeliver();
+        deliver.setRecords(records);
+        return deliver;
     }
 }

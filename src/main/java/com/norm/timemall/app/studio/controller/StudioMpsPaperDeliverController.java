@@ -33,7 +33,9 @@ public class StudioMpsPaperDeliverController {
         // store file in classified
         String deliverUri = fileStoreService.storeWithLimitedAccess(deliver, FileStoreDir.MPS_DELIVER);
         String previewUri = fileStoreService.storeWithLimitedAccess(preview, FileStoreDir.MPS_PREVIEW);
-        studioCommercialPaperDeliverService.newDeliver(paperId,previewUri,deliverUri);
+        String previewName=preview.getOriginalFilename();
+        String deliverName=deliver.getOriginalFilename();
+        studioCommercialPaperDeliverService.newDeliver(paperId,previewUri,deliverUri,previewName,deliverName);
         return new SuccessVO(CodeEnum.SUCCESS);
 
     }
@@ -41,6 +43,14 @@ public class StudioMpsPaperDeliverController {
     public StudioFetchMpsPaperDeliverVO fetchMpsPaperDeliver(@PathVariable("paper_id") String paperId){
         StudioFetchMpsPaperDeliver deliver = studioCommercialPaperDeliverService.findMpsPaperDeliver(paperId);
         StudioFetchMpsPaperDeliverVO vo = new StudioFetchMpsPaperDeliverVO();
+        vo.setDeliver(deliver);
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        return vo;
+    }
+    @GetMapping("/api/v1/web_estudio/brand/mps_paper/{paper_id}/deliver")
+    public StudioFetchMpsPaperDeliverVO fetchBrandMpsPaperDeliver(@PathVariable("paper_id") String paperId){
+        StudioFetchMpsPaperDeliver deliver = studioCommercialPaperDeliverService.findBrandMpsPaperDeliver(paperId);
+                StudioFetchMpsPaperDeliverVO vo = new StudioFetchMpsPaperDeliverVO();
         vo.setDeliver(deliver);
         vo.setResponseCode(CodeEnum.SUCCESS);
         return vo;
