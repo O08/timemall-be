@@ -6,7 +6,7 @@
     </sql>
 
     <select id="selectPaperDeliverByPaperIdAndBrandId" resultType="com.norm.timemall.app.studio.domain.ro.StudioFetchMpsPaperDeliverRO">
-        select d.preview,d.preview_name,d.deliver,d.deliver_name,d.msg,d.tag
+        select d.id deliverId, d.preview,d.preview_name,d.deliver,d.deliver_name,d.msg,d.tag
         from commercial_paper_deliver d
         left join commercial_paper p
           on d.paper_id=p.id
