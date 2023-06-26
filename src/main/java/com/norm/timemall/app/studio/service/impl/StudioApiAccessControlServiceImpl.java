@@ -1,10 +1,13 @@
 package com.norm.timemall.app.studio.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.CommercialPaper;
+import com.norm.timemall.app.base.mo.CommercialPaperDeliver;
 import com.norm.timemall.app.base.mo.MpsChain;
+import com.norm.timemall.app.studio.mapper.StudioCommercialPaperDeliverMapper;
 import com.norm.timemall.app.studio.mapper.StudioCommercialPaperMapper;
 import com.norm.timemall.app.studio.mapper.StudioMpsChainMapper;
 import com.norm.timemall.app.studio.service.StudioApiAccessControlService;
@@ -17,6 +20,8 @@ public class StudioApiAccessControlServiceImpl implements StudioApiAccessControl
     private StudioMpsChainMapper studioMpsChainMapper;
     @Autowired
     private StudioCommercialPaperMapper studioCommercialPaperMapper;
+    @Autowired
+    private StudioCommercialPaperDeliverMapper studioCommercialPaperDeliverMapper;
     @Override
     public boolean isMpsChainFounder(String chainId) {
         String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
@@ -33,5 +38,14 @@ public class StudioApiAccessControlServiceImpl implements StudioApiAccessControl
         wrapper.eq(CommercialPaper::getId,paperId)
                 .eq(CommercialPaper::getPurchaser,brandId);
         return studioCommercialPaperMapper.exists(wrapper);
+    }
+
+    @Override
+    public boolean isMpsPaperDeliverReceiver(String deliverId) {
+
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+
+        CommercialPaperDeliver deliver = studioCommercialPaperDeliverMapper.selectPaperDeliverByIdAndBrandId(deliverId,brandId);
+        return ObjectUtil.isNotEmpty(deliver);
     }
 }

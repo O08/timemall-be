@@ -5,6 +5,7 @@ import com.norm.timemall.app.base.enums.CommercialPaperDeliverTagEnum;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.CommercialPaperDeliver;
 import com.norm.timemall.app.studio.domain.dto.StudioMpsPaperDeliverLeaveMsgDTO;
+import com.norm.timemall.app.studio.domain.dto.StudioPutMpsPaperDeliverTagDTO;
 import com.norm.timemall.app.studio.domain.pojo.StudioFetchMpsPaperDeliver;
 import com.norm.timemall.app.studio.domain.ro.StudioFetchMpsPaperDeliverRO;
 import com.norm.timemall.app.studio.mapper.StudioCommercialPaperDeliverMapper;
@@ -61,5 +62,10 @@ public class StudioCommercialPaperDeliverServiceImpl implements StudioCommercial
         StudioFetchMpsPaperDeliver deliver = new StudioFetchMpsPaperDeliver();
         deliver.setRecords(records);
         return deliver;
+    }
+
+    @Override
+    public void modifyPaperDeliverTag(StudioPutMpsPaperDeliverTagDTO dto) {
+        studioCommercialPaperDeliverMapper.updateTagById(dto);
     }
 }

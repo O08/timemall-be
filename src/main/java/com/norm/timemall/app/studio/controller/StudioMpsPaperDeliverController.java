@@ -7,8 +7,10 @@ import com.norm.timemall.app.base.enums.FileStoreDir;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.service.FileStoreService;
 import com.norm.timemall.app.studio.domain.dto.StudioMpsPaperDeliverLeaveMsgDTO;
+import com.norm.timemall.app.studio.domain.dto.StudioPutMpsPaperDeliverTagDTO;
 import com.norm.timemall.app.studio.domain.pojo.StudioFetchMpsPaperDeliver;
 import com.norm.timemall.app.studio.domain.vo.StudioFetchMpsPaperDeliverVO;
+import com.norm.timemall.app.studio.service.StudioApiAccessControlService;
 import com.norm.timemall.app.studio.service.StudioCommercialPaperDeliverService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -21,6 +23,8 @@ public class StudioMpsPaperDeliverController {
     private FileStoreService fileStoreService;
     @Autowired
     private StudioCommercialPaperDeliverService studioCommercialPaperDeliverService;
+    @Autowired
+    private StudioApiAccessControlService studioApiAccessControlService;
     @PostMapping("/api/v1/web_estudio/brand/mps/new_deliver")
     public SuccessVO addMpsPaperDeliver( @RequestParam("preview") MultipartFile preview,
                                          @RequestParam("deliver") MultipartFile deliver,
@@ -61,5 +65,13 @@ public class StudioMpsPaperDeliverController {
         studioCommercialPaperDeliverService.leaveMessage(dto);
         return new SuccessVO(CodeEnum.SUCCESS);
 
+    }
+    @PutMapping("/api/v1/web_estudio/mps_paper_deliver/tag")
+    public SuccessVO tagPaperDeliver(@RequestBody @Validated StudioPutMpsPaperDeliverTagDTO dto){
+        boolean isReceiver =studioApiAccessControlService.isMpsPaperDeliverReceiver(dto.getDeliverId());
+        if(isReceiver){
+            studioCommercialPaperDeliverService.modifyPaperDeliverTag(dto);
+        }
+        return new SuccessVO(CodeEnum.SUCCESS);
     }
 }

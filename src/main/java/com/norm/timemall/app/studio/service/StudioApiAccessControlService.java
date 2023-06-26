@@ -7,4 +7,7 @@ public interface StudioApiAccessControlService {
     boolean isMpsChainFounder(String chainId);
 
     boolean isMpscPaperFounder(String paperId);
+
+    boolean isMpsPaperDeliverReceiver(String deliverId);
+
 }
