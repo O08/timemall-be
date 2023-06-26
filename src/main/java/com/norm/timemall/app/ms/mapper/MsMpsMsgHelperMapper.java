@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * (mps_msg_helper)数据Mapper
@@ -17,5 +18,5 @@ import java.util.ArrayList;
 @Mapper
 public interface MsMpsMsgHelperMapper extends BaseMapper<MpsMsgHelper> {
 
-    ArrayList<String> selectHaveNewMpsMsgRoomByRooms(@Param("rooms") String rooms,@Param("subscriber") String brandId);
+    ArrayList<String> selectHaveNewMpsMsgRoomByRooms(@Param("roomList") List<String> rooms, @Param("subscriber") String brandId);
 }

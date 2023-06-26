@@ -1,5 +1,6 @@
 package com.norm.timemall.app.ms.service.impl;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class MsMpsMsgHelperServiceImpl implements MsMpsMsgHelperService {
@@ -43,7 +45,8 @@ public class MsMpsMsgHelperServiceImpl implements MsMpsMsgHelperService {
     public MsHaveNewMpsMsg haveNewMpsMsg(String rooms) {
 
         String brandId= SecurityUserHelper.getCurrentPrincipal().getBrandId();
-        ArrayList<String> records=msMpsMsgHelperMapper.selectHaveNewMpsMsgRoomByRooms(rooms,brandId);
+        List<String> roomList = Convert.toList(String.class, rooms);
+        ArrayList<String> records=msMpsMsgHelperMapper.selectHaveNewMpsMsgRoomByRooms(roomList,brandId);
         MsHaveNewMpsMsg ids=new MsHaveNewMpsMsg();
         ids.setRecords(records);
         return ids;

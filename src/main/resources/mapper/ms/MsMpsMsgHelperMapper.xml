@@ -11,7 +11,11 @@
         on m.target_id=h.target_id
         where 1=1
         and h.subscriber=#{subscriber}
-        and h.target_id in (#{rooms})
+        and h.target_id in
+        <foreach collection="roomList" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+
         and m.create_at > h.create_at
         group by m.target_id
 
