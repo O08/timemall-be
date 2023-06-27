@@ -14,6 +14,7 @@
         <foreach collection="roomList" item="id" open="(" close=")" separator=",">
             #{id}
         </foreach>
+        and m.author_id not in(#{subscriber})
 
         and (
         h.target_id is null or ( h.subscriber=#{subscriber} and m.create_at > h.create_at)
