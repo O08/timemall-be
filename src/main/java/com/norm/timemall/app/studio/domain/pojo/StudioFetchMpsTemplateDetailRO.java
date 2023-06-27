@@ -10,4 +10,5 @@ public class StudioFetchMpsTemplateDetailRO {
     private String bonus;
     private String firstSupplier;
     private String duration;
+    private String id;
 }
