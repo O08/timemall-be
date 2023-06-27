@@ -7,16 +7,17 @@
 
     <select id="selectHaveNewMpsMsgRoomByRooms" resultType="java.lang.String">
         select m.target_id from mps_msg m
-        inner join mps_msg_helper h
+        left join mps_msg_helper h
         on m.target_id=h.target_id
         where 1=1
-        and h.subscriber=#{subscriber}
-        and h.target_id in
+        and m.target_id in
         <foreach collection="roomList" item="id" open="(" close=")" separator=",">
             #{id}
         </foreach>
 
-        and m.create_at > h.create_at
+        and (
+        h.target_id is null or ( h.subscriber=#{subscriber} and m.create_at > h.create_at)
+        )
         group by m.target_id
 
     </select>
