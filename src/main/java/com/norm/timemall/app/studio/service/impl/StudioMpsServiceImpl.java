@@ -27,9 +27,7 @@ public class StudioMpsServiceImpl implements StudioMpsService {
     private AccountService accountService;
     @Override
     public IPage<StudioFetchMpsListRO> fetchMpsList(StudioFetchMpsListPageDTO dto) {
-        String brandId = accountService.
-                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
-                .getId();
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         dto.setBrandId(brandId);
 
         IPage<StudioFetchMpsListRO> page = new Page<>();
@@ -41,9 +39,7 @@ public class StudioMpsServiceImpl implements StudioMpsService {
 
     @Override
     public Mps  newMps(StudioNewMpsDTO dto) {
-        String brandId = accountService.
-                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
-                .getId();
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         Mps mps = new Mps();
         mps.setId(IdUtil.simpleUUID())
                 .setMpsType(MpsTypeEnum.FROM_PLAN.getMark())
