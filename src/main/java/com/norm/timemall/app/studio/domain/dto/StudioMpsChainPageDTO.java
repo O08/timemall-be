@@ -7,4 +7,5 @@ import lombok.Data;
 public class StudioMpsChainPageDTO extends PageDTO {
     private String q;
     private String brandId;
+    private String tag;
 }

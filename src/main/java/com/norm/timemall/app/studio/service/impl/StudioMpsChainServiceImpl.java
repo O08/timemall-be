@@ -28,9 +28,7 @@ public class StudioMpsChainServiceImpl implements StudioMpsChainService {
 
     @Override
     public IPage<StudioFetchMpsChainRO> fetchMpsChainPage(StudioMpsChainPageDTO dto) {
-        String brandId = accountService.
-                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
-                .getId();
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         dto.setBrandId(brandId);
         IPage<StudioFetchMpsChainRO> page = new Page<>();
         page.setCurrent(dto.getCurrent());

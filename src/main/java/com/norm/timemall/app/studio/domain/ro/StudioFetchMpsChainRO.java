@@ -9,4 +9,5 @@ public class StudioFetchMpsChainRO {
     private String processingCnt;
     private String processedCnt;
     private String createAt;
+    private String tag;
 }
