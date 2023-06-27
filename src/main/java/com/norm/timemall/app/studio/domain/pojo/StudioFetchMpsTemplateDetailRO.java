@@ -9,6 +9,7 @@ public class StudioFetchMpsTemplateDetailRO {
     private String piece;
     private String bonus;
     private String firstSupplier;
+    private String firstSupplierName;
     private String duration;
     private String id;
 }
