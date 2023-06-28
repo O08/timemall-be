@@ -11,6 +11,7 @@ import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.studio.domain.dto.StudioFetchMpsListPageDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioNewMpsDTO;
+import com.norm.timemall.app.studio.domain.dto.StudioTaggingMpsDTO;
 import com.norm.timemall.app.studio.domain.ro.StudioFetchMpsListRO;
 import com.norm.timemall.app.studio.mapper.StudioMpsMapper;
 import com.norm.timemall.app.studio.service.StudioMpsService;
@@ -51,5 +52,17 @@ public class StudioMpsServiceImpl implements StudioMpsService {
                 .setModifiedAt(new Date());
         studioMpsMapper.insert(mps);
         return mps;
+    }
+
+    @Override
+    public void taggingMps(StudioTaggingMpsDTO dto) {
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        studioMpsMapper.updateTagById(dto,brandId);
+    }
+
+    @Override
+    public Mps findMps(String mpsId) {
+
+        return  studioMpsMapper.selectById(mpsId);
     }
 }

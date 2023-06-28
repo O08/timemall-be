@@ -97,6 +97,11 @@ public class StudioCommercialPaperServiceImpl implements StudioCommercialPaperSe
         studioCommercialPaperMapper.updateTagAndSupplierById(dto.getPaperId(),CommercialPaperTagEnum.DELIVERING.getMark(),brandId);
     }
 
+    @Override
+    public void modifyPapersTag(String mpsId, String mark) {
+        studioCommercialPaperMapper.updatePapersTagById(mpsId,mark);
+    }
+
     private List<CommercialPaper> getPaperList(String chainId,String brandId,String mpsId){
 
         LambdaQueryWrapper<MpsTemplate> wrapper = Wrappers.lambdaQuery();
