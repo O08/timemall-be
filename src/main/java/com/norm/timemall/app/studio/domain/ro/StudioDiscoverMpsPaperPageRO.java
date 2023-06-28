@@ -9,5 +9,6 @@ public class StudioDiscoverMpsPaperPageRO {
     private String bonus;
     private String id;
     private String avatar;
+    private String brandName;
 
 }

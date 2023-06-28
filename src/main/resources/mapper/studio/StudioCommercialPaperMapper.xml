@@ -33,7 +33,7 @@
         </where>
     </select>
     <select id="selectPaperPageForPublic" resultType="com.norm.timemall.app.studio.domain.ro.StudioDiscoverMpsPaperPageRO">
-        select p.id,p.title,p.piece,p.bonus,b.avator avatar
+        select p.id,p.title,p.piece,p.bonus,b.avator avatar,b.brand_name
         from commercial_paper p
         left join brand b
           on p.purchaser = b.id
