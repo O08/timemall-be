@@ -10,6 +10,7 @@ public class StudioFetchMpsPaperDetail {
     private String bonus;
     private String supplier;
     private String purchaser;
+    private String purchaserId;
     private String tag;
     private String mpsId;
     private String paperId;
