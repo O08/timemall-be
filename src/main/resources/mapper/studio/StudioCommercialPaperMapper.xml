@@ -30,6 +30,7 @@
                     </when>
                 </choose>
             </if>
+            order by p.create_at desc
         </where>
     </select>
     <select id="selectPaperPageForPublic" resultType="com.norm.timemall.app.studio.domain.ro.StudioDiscoverMpsPaperPageRO">

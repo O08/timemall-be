@@ -14,6 +14,7 @@
             <if test="dto.tag != null and dto.tag != ''">
                 AND tag = #{dto.tag}
             </if>
+            order by create_at desc
         </where>
     </select>
 
