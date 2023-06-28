@@ -20,6 +20,16 @@
             <if test="dto.tag != null and dto.tag != ''">
                 AND p.tag = #{dto.tag}
             </if>
+            <if test="dto.filter != null and dto.filter != ''">
+                <choose>
+                    <when test='dto.filter == "1"'>
+                        AND DATE_SUB(CURDATE(), INTERVAL 7 DAY)  &lt;= date(create_at)
+                    </when>
+                    <when test='dto.filter == "2"'>
+                        AND DATE_SUB(CURDATE(), INTERVAL 30 DAY)  &lt;= date(create_at)
+                    </when>
+                </choose>
+            </if>
         </where>
     </select>
     <select id="selectPaperPageForPublic" resultType="com.norm.timemall.app.studio.domain.ro.StudioDiscoverMpsPaperPageRO">

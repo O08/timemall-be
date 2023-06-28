@@ -46,9 +46,7 @@ public class StudioCommercialPaperServiceImpl implements StudioCommercialPaperSe
     @Override
     public IPage<StudioFetchMpsPaperRO> findPaperPageForBrand(StudioFetchMpsPaperPageDTO dto) {
 
-        String brandId = accountService.
-                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
-                .getId();
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         dto.setBrandId(brandId);
 
         IPage<StudioFetchMpsPaperRO> page=new Page<>();
@@ -95,9 +93,7 @@ public class StudioCommercialPaperServiceImpl implements StudioCommercialPaperSe
 
     @Override
     public void mpsPaperOrderReceiving(StudioMpsOrderReceivingDTO dto) {
-        String brandId = accountService.
-                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
-                .getId();
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         studioCommercialPaperMapper.updateTagAndSupplierById(dto.getPaperId(),CommercialPaperTagEnum.DELIVERING.getMark(),brandId);
     }
 
