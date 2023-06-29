@@ -71,4 +71,17 @@ public class StudioMpsChainServiceImpl implements StudioMpsChainService {
         bo.setTag(chain.getTag());
         return bo;
     }
+
+    @Override
+    public void modifyMpsChainProcessingCnt(String chainId) {
+       studioMpsChainMapper.updateProcessingCntById(1,chainId);
+    }
+
+    @Override
+    public void modifyMpsChainProcessedCnt(String chainId) {
+
+        studioMpsChainMapper.updateProcessedCntById(chainId);
+        studioMpsChainMapper.updateProcessingCntById(-1,chainId);
+
+    }
 }

@@ -4,17 +4,16 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.norm.timemall.app.base.enums.CodeEnum;
-import com.norm.timemall.app.base.enums.FidTypeEnum;
-import com.norm.timemall.app.base.enums.TransDirectionEnum;
-import com.norm.timemall.app.base.enums.TransTypeEnum;
+import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
+import com.norm.timemall.app.base.mo.CommercialPaper;
 import com.norm.timemall.app.base.mo.FinAccount;
 import com.norm.timemall.app.base.mo.MpsFund;
 import com.norm.timemall.app.base.mo.Transactions;
-import com.norm.timemall.app.base.service.AccountService;
+import com.norm.timemall.app.studio.domain.dto.StudioPutMpsPaperDeliverTagDTO;
 import com.norm.timemall.app.studio.domain.pojo.StudioFetchMpsFund;
+import com.norm.timemall.app.studio.mapper.StudioCommercialPaperMapper;
 import com.norm.timemall.app.studio.mapper.StudioFinanceAccountMapper;
 import com.norm.timemall.app.studio.mapper.StudioMpsFundMapper;
 import com.norm.timemall.app.studio.mapper.StudioTransactionsMapper;
@@ -34,15 +33,14 @@ public class StudioMpsFundServiceImpl implements StudioMpsFundService {
     private StudioFinanceAccountMapper studioFinanceAccountMapper;
     @Autowired
     private StudioTransactionsMapper studioTransactionsMapper;
-
     @Autowired
-    private AccountService accountService;
+    private StudioCommercialPaperMapper studioCommercialPaperMapper;
+
+
     @Override
     public StudioFetchMpsFund getMpsFundForBrand() {
         // query brand id
-        String brandId = accountService.
-                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
-                .getId();
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         StudioFetchMpsFund  fund= studioMpsFundMapper.selectMpsFundByBrandId(brandId, FidTypeEnum.BRAND.getMark());
         return fund;
     }
@@ -51,9 +49,7 @@ public class StudioMpsFundServiceImpl implements StudioMpsFundService {
     public void topUpToMpsFund(BigDecimal amount,String mpsFundId) {
 
         // query brand finance account
-        String brandId = accountService.
-                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
-                .getId();
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         FinAccount brandFinAccount = studioFinanceAccountMapper.selectOneByFidForUpdate(brandId, FidTypeEnum.BRAND.getMark());
 
         // query brand mps fund fin account
@@ -114,9 +110,7 @@ public class StudioMpsFundServiceImpl implements StudioMpsFundService {
     @Override
     public void applyMpsFundAccount() {
         // query brand finance account
-        String brandId = accountService.
-                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
-                .getId();
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         // query mps_fund account
         LambdaQueryWrapper<MpsFund> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(MpsFund::getFounder,brandId);
@@ -143,5 +137,75 @@ public class StudioMpsFundServiceImpl implements StudioMpsFundService {
                         .setAmount(BigDecimal.ZERO);
 
         studioFinanceAccountMapper.insert(financeAccount);
+    }
+    @Transactional
+    @Override
+    public void payMpsPaperFee(StudioPutMpsPaperDeliverTagDTO dto) {
+        // query mps paper
+        CommercialPaper paper = studioCommercialPaperMapper.selectPaperByDeliverId(dto.getDeliverId(), CommercialPaperDeliverTagEnum.CREATED.getMark());
+        if(paper==null){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        // query mps fund and mps fund fin account
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        // query mps_fund account
+        LambdaQueryWrapper<MpsFund> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(MpsFund::getFounder,brandId);
+
+        MpsFund qFund = studioMpsFundMapper.selectOne(wrapper);
+
+        FinAccount mpsFundFinAccount = studioFinanceAccountMapper.selectOneByFidForUpdate(qFund.getId(), FidTypeEnum.MPS_FUND.getMark());
+        // query mps supplier brand fin account
+        FinAccount supplierFinAccount = studioFinanceAccountMapper.selectOneByFidForUpdate(paper.getSupplier(), FidTypeEnum.BRAND.getMark());
+
+        // validate
+        if(supplierFinAccount == null || mpsFundFinAccount == null ||
+                mpsFundFinAccount.getDrawable().compareTo(paper.getBonus())<0){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        // insert trans
+        String transNo = IdUtil.simpleUUID();
+        Transactions creditTrans = new Transactions();
+        creditTrans.setId(IdUtil.simpleUUID())
+                .setFid(supplierFinAccount.getFid())
+                .setFidType(FidTypeEnum.BRAND.getMark())
+                .setTransNo(transNo)
+                .setTransType(TransTypeEnum.MPS_FUND_TRANSFER.getMark())
+                .setTransTypeDesc(TransTypeEnum.MPS_FUND_TRANSFER.getDesc())
+                .setAmount(paper.getBonus())
+                .setDirection(TransDirectionEnum.CREDIT.getMark())
+                .setRemark(TransTypeEnum.MPS_FUND_TRANSFER.getDesc())
+                .setCreateAt(new Date())
+                .setModifiedAt(new Date());
+        Transactions debitTrans = new Transactions();
+        debitTrans.setId(IdUtil.simpleUUID())
+                .setFid(mpsFundFinAccount.getFid())
+                .setFidType(FidTypeEnum.MPS_FUND.getMark())
+                .setTransNo(transNo)
+                .setTransType(TransTypeEnum.MPS_FUND_TRANSFER.getMark())
+                .setTransTypeDesc(TransTypeEnum.MPS_FUND_TRANSFER.getDesc())
+                .setAmount(paper.getBonus())
+                .setDirection(TransDirectionEnum.DEBIT.getMark())
+                .setRemark(TransTypeEnum.MPS_FUND_TRANSFER.getDesc())
+                .setCreateAt(new Date())
+                .setModifiedAt(new Date());
+
+        studioTransactionsMapper.insert(creditTrans);
+        studioTransactionsMapper.insert(debitTrans);
+
+        // action option
+        BigDecimal mpsFundBalance = mpsFundFinAccount.getDrawable().subtract(paper.getBonus());
+        mpsFundFinAccount.setDrawable(mpsFundBalance);
+        studioFinanceAccountMapper.updateById(mpsFundFinAccount);
+
+        BigDecimal supplierBalance = supplierFinAccount.getDrawable().add(paper.getBonus());
+        supplierFinAccount.setDrawable(supplierBalance);
+        studioFinanceAccountMapper.updateById(supplierFinAccount);
+
+        // update mps_fund
+        qFund.setBalance(mpsFundBalance);
+        studioMpsFundMapper.updateById(qFund);
+
+
     }
 }

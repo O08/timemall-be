@@ -1,5 +1,6 @@
 package com.norm.timemall.app.studio.service;
 
+import com.norm.timemall.app.studio.domain.dto.StudioPutMpsPaperDeliverTagDTO;
 import com.norm.timemall.app.studio.domain.pojo.StudioFetchMpsFund;
 import org.springframework.stereotype.Service;
 
@@ -14,4 +15,5 @@ public interface StudioMpsFundService {
 
     void applyMpsFundAccount();
 
+    void payMpsPaperFee(StudioPutMpsPaperDeliverTagDTO dto);
 }

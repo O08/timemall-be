@@ -3,15 +3,20 @@ package com.norm.timemall.app.studio.controller;
 import cn.hutool.core.util.StrUtil;
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
+import com.norm.timemall.app.base.enums.CommercialPaperDeliverTagEnum;
 import com.norm.timemall.app.base.enums.FileStoreDir;
+import com.norm.timemall.app.base.enums.TransTypeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
+import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.service.FileStoreService;
+import com.norm.timemall.app.base.service.OrderFlowService;
 import com.norm.timemall.app.studio.domain.dto.StudioMpsPaperDeliverLeaveMsgDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioPutMpsPaperDeliverTagDTO;
 import com.norm.timemall.app.studio.domain.pojo.StudioFetchMpsPaperDeliver;
 import com.norm.timemall.app.studio.domain.vo.StudioFetchMpsPaperDeliverVO;
 import com.norm.timemall.app.studio.service.StudioApiAccessControlService;
 import com.norm.timemall.app.studio.service.StudioCommercialPaperDeliverService;
+import com.norm.timemall.app.studio.service.StudioMpsFundService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +30,12 @@ public class StudioMpsPaperDeliverController {
     private StudioCommercialPaperDeliverService studioCommercialPaperDeliverService;
     @Autowired
     private StudioApiAccessControlService studioApiAccessControlService;
+    @Autowired
+    private StudioMpsFundService studioMpsFundService;
+    @Autowired
+    private OrderFlowService orderFlowService;
+
+
     @PostMapping("/api/v1/web_estudio/brand/mps/new_deliver")
     public SuccessVO addMpsPaperDeliver( @RequestParam("preview") MultipartFile preview,
                                          @RequestParam("deliver") MultipartFile deliver,
@@ -69,8 +80,24 @@ public class StudioMpsPaperDeliverController {
     @PutMapping("/api/v1/web_estudio/mps_paper_deliver/tag")
     public SuccessVO tagPaperDeliver(@RequestBody @Validated StudioPutMpsPaperDeliverTagDTO dto){
         boolean isReceiver =studioApiAccessControlService.isMpsPaperDeliverReceiver(dto.getDeliverId());
-        if(isReceiver){
+        // if tag to revision
+        if(isReceiver && CommercialPaperDeliverTagEnum.REVISION.getMark().equals(dto.getTag())){
             studioCommercialPaperDeliverService.modifyPaperDeliverTag(dto);
+        }
+        // if tag to delivered
+        if(isReceiver && CommercialPaperDeliverTagEnum.DELIVERED.getMark().equals(dto.getTag())){
+            try {
+                orderFlowService.insertOrderFlow(SecurityUserHelper.getCurrentPrincipal().getUserId(),
+                        TransTypeEnum.MPS_FUND_TRANSFER.getMark());
+                // pay mps paper
+                studioMpsFundService.payMpsPaperFee(dto);
+                // update tag
+                studioCommercialPaperDeliverService.modifyPaperDeliverTag(dto);
+            }finally {
+                orderFlowService.deleteOrderFlow(SecurityUserHelper.getCurrentPrincipal().getUserId(),
+                        TransTypeEnum.MPS_FUND_TRANSFER.getMark());
+            }
+
         }
         return new SuccessVO(CodeEnum.SUCCESS);
     }

@@ -49,4 +49,6 @@ public interface StudioCommercialPaperMapper extends BaseMapper<CommercialPaper>
     ArrayList<StudioFetchFirstSupplierRO> selectFirstSupplierByBrandId(@Param("purchaser") String brandId,@Param("q") String q);
 @Update("update commercial_paper set tag=#{tag} where mps_id=#{mpsId}")
     void updatePapersTagById(@Param("mpsId") String mpsId, @Param("tag") String tag);
+
+    CommercialPaper selectPaperByDeliverId(@Param("deliverId") String deliverId,@Param("tag") String tag);
 }

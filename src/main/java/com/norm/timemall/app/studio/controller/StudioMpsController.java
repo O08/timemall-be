@@ -13,6 +13,7 @@ import com.norm.timemall.app.studio.domain.dto.StudioTaggingMpsDTO;
 import com.norm.timemall.app.studio.domain.ro.StudioFetchMpsListRO;
 import com.norm.timemall.app.studio.domain.vo.StudioFetchMpsListPageVO;
 import com.norm.timemall.app.studio.service.StudioCommercialPaperService;
+import com.norm.timemall.app.studio.service.StudioMpsChainService;
 import com.norm.timemall.app.studio.service.StudioMpsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -24,6 +25,9 @@ public class StudioMpsController {
     private StudioMpsService studioMpsService;
     @Autowired
     private StudioCommercialPaperService studioCommercialPaperService;
+    @Autowired
+    private StudioMpsChainService studioMpsChainService;
+
     @ResponseBody
     @GetMapping(value = "/api/v1/web_estudio/brand/mps")
     public StudioFetchMpsListPageVO fetchMpsList(StudioFetchMpsListPageDTO dto){
@@ -53,21 +57,23 @@ public class StudioMpsController {
     private void doTaggingMps(StudioTaggingMpsDTO dto){
         boolean allow=false;
         Mps mps = studioMpsService.findMps(dto.getMpsId());
-        // if tag to  PUBLISH, need to check current tag must be CREATED  if pass then tagging mps paper
+        // if tag to  PUBLISH, need to check current tag must be CREATED  if pass then tagging mps paper and update chain statistics
         if(MpsTagEnum.PUBLISH.getMark().equals(dto.getTag())&&
                 MpsTagEnum.CREATED.getMark().equals(mps.getTag())){
             studioCommercialPaperService.modifyPapersTag(dto.getMpsId(), CommercialPaperTagEnum.PUBLISH.getMark());
+            studioMpsChainService.modifyMpsChainProcessingCnt(dto.getChainId());
             allow=true;
         }
-        // if tag to OFFLINE, need to check mps current tag must be CREATED ,   if pass then tagging mps paper
+        // if tag to OFFLINE, need to check mps current tag must be CREATED ,  if pass then tagging mps paper
         if(MpsTagEnum.OFFLINE.getMark().equals(dto.getTag())
                 && MpsTagEnum.CREATED.getMark().equals(mps.getTag())){
             studioCommercialPaperService.modifyPapersTag(dto.getMpsId(),CommercialPaperTagEnum.OFFLINE.getMark());
             allow=true;
         }
-        // if tag to END,need to check mps current tag must be 'PUBLISH'
+        // if tag to END,need to check mps current tag must be 'PUBLISH' and update chain statistics
         if(MpsTagEnum.END.getMark().equals(dto.getTag())
                 && MpsTagEnum.PUBLISH.getMark().equals(mps.getTag())){
+            studioMpsChainService.modifyMpsChainProcessedCnt(dto.getChainId());
             allow=true;
         }
         if(allow){

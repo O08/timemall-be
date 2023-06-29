@@ -24,4 +24,8 @@ public interface StudioMpsChainMapper extends BaseMapper<MpsChain> {
 
     @Update("update mps_chain set title=#{dto.title},tag=#{dto.tag} where id=#{dto.id} ")
     void updateMpsChainTitleAndTagById(@Param("dto") StudioPutMpsChainDTO dto);
+@Update("update mps_chain set processing_cnt=processing_cnt + #{val} where id=#{chainId}")
+    void updateProcessingCntById(@Param("val") int i, @Param("chainId") String chainId);
+    @Update("update mps_chain set processed_cnt=processed_cnt + 1 where id=#{chainId}")
+    void updateProcessedCntById(@Param("chainId") String chainId);
 }

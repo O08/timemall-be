@@ -9,4 +9,5 @@ public class StudioFetchMpsListRO {
     private String mpsType;
     private String id;
     private String createAt;
+    private String chainId;
 }

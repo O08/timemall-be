@@ -17,4 +17,8 @@ public interface StudioMpsChainService {
     void modifyMpsChain(StudioPutMpsChainDTO dto);
 
     StudioFetchAChain findChainInfo(String chainId);
+
+    void modifyMpsChainProcessingCnt(String chainId);
+
+    void modifyMpsChainProcessedCnt(String chainId);
 }

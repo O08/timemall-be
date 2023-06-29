@@ -69,4 +69,16 @@
             </if>
         </where>
     </select>
+    <select id="selectPaperByDeliverId" resultType="com.norm.timemall.app.base.mo.CommercialPaper">
+
+        select p.id,p.template_id,p.mps_id,p.title,p.sow,p.piece,p.bonus,p.supplier,p.purchaser,p.tag,p.create_at,p.modified_at
+        from commercial_paper p
+        inner join commercial_paper_deliver d
+          on p.id=d.paper_id
+        <where>
+            1=1
+            and d.id=#{deliverId}
+            and d.tag=#{tag}
+        </where>
+    </select>
 </mapper>

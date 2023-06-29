@@ -3,7 +3,7 @@
 <mapper namespace="com.norm.timemall.app.studio.mapper.StudioMpsMapper">
 
     <select id="selectMpsListPage" resultType="com.norm.timemall.app.studio.domain.ro.StudioFetchMpsListRO">
-        select title,tag,mps_type,create_at,id
+        select title,tag,mps_type,create_at,id,chain_id
         from mps
         <where>
             1=1

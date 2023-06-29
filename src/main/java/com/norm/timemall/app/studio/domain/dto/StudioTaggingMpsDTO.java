@@ -10,4 +10,7 @@ public class StudioTaggingMpsDTO {
     private String tag;
     @NotBlank(message = "mpsId required")
     private String mpsId;
+    @NotBlank(message = "chainId required")
+    private String chainId;
+
 }
