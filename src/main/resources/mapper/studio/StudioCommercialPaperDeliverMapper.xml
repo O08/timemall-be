@@ -12,6 +12,7 @@
           on d.paper_id=p.id
         where d.paper_id=#{paperId}
         and p.supplier=#{brandId}
+        order  by p.create_at desc
     </select>
 
 </mapper>
