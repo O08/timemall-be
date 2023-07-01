@@ -67,6 +67,7 @@
             <if test="q != null and q != ''">
                 AND locate(#{q}, b.brand_name)>0
             </if>
+            group by b.id,b.brand_name
         </where>
     </select>
     <select id="selectPaperByDeliverId" resultType="com.norm.timemall.app.base.mo.CommercialPaper">
