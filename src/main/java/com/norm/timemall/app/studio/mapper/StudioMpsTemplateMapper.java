@@ -19,7 +19,7 @@ import java.util.ArrayList;
 */
 @Mapper
 public interface StudioMpsTemplateMapper extends BaseMapper<MpsTemplate> {
-@Select("select id,piece from mps_template where chain_id=#{chainId}")
+@Select("select id,piece from mps_template where chain_id=#{chainId} order by create_at desc")
     ArrayList<StudioFetchMpsTemplateRO> selectMpsTemplateListByChainId(@Param("chainId") String chainId);
 
     @Select("select t.id,t.title,t.sow,t.piece,t.bonus,t.first_supplier,b.brand_name firstSupplierName,t.duration from mps_template t left join brand b on t.first_supplier=b.id where t.id=#{id}")
