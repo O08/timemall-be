@@ -40,6 +40,7 @@
           on p.purchaser = b.id
         <where>
             1=1
+            and p.tag='2'
             <if test="dto.q != null and dto.q != ''">
                 AND locate(#{dto.q}, p.title)>0
             </if>
