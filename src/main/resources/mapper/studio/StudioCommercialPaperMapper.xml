@@ -42,7 +42,7 @@
             1=1
             and p.tag='2'
             <if test="dto.q != null and dto.q != ''">
-                AND locate(#{dto.q}, p.title)>0
+                AND （locate(#{dto.q}, p.title)>0  or  locate(#{dto.q}, p.piece)>0）
             </if>
         </where>
     </select>
