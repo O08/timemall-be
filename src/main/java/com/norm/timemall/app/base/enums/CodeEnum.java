@@ -58,7 +58,7 @@ public enum CodeEnum implements Code{
     PROCESSING(40005,"处理中" ), PRODUCT_VALID(40006, "产品生效中"),
     NO_SUFFICIENT_FUNDS(40007,"余额不足" ), COLLECT_LIMIT(40008,"当日已收账" ),
     MEMBERS_LIMIT(40009,"会员容量已达最大值" ), MPS_FUND_ALREADY_EXIST(40010, "mps fund 账号已开通"),
-    INVALID_MPS_CHAIN(40011, "产链模版为空");
+    INVALID_MPS_CHAIN(40011, "产链模版为空"), INVALID_FIN_ACCOUNT(40012, "收付款账户无效");
 
     private int code;
     private String desc;

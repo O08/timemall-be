@@ -159,10 +159,13 @@ public class StudioMpsFundServiceImpl implements StudioMpsFundService {
         FinAccount supplierFinAccount = studioFinanceAccountMapper.selectOneByFidForUpdate(paper.getSupplier(), FidTypeEnum.BRAND.getMark());
 
         // validate
-        if(supplierFinAccount == null || mpsFundFinAccount == null ||
-                mpsFundFinAccount.getDrawable().compareTo(paper.getBonus())<0){
-            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        if(supplierFinAccount == null || mpsFundFinAccount == null ){
+            throw new ErrorCodeException(CodeEnum.INVALID_FIN_ACCOUNT);
         }
+        if(mpsFundFinAccount.getDrawable().compareTo(paper.getBonus())<0){
+            throw new ErrorCodeException(CodeEnum.NO_SUFFICIENT_FUNDS);
+        }
+
         // insert trans
         String transNo = IdUtil.simpleUUID();
         Transactions creditTrans = new Transactions();
