@@ -143,7 +143,7 @@ public class StudioMpsFundServiceImpl implements StudioMpsFundService {
     public void payMpsPaperFee(StudioPutMpsPaperDeliverTagDTO dto) {
         // query mps paper
         CommercialPaper paper = studioCommercialPaperMapper.selectPaperByDeliverId(dto.getDeliverId(), CommercialPaperDeliverTagEnum.CREATED.getMark());
-        if(paper==null){
+        if(paper==null || CommercialPaperTagEnum.END.getMark().equals(paper.getTag())){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
         // query mps fund and mps fund fin account
