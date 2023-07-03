@@ -108,7 +108,7 @@ public class StudioCommercialPaperServiceImpl implements StudioCommercialPaperSe
         wrapper.eq(MpsTemplate::getChainId,chainId);
         List<MpsTemplate> mpsTemplates = studioMpsTemplateMapper.selectList(wrapper);
         if(mpsTemplates.size()==0){
-            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+            throw new ErrorCodeException(CodeEnum.INVALID_MPS_CHAIN);
         }
 
         List<CommercialPaper> paperList =new ArrayList<>();
