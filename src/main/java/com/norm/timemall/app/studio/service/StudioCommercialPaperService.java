@@ -27,4 +27,6 @@ public interface StudioCommercialPaperService {
     void mpsPaperOrderReceiving(StudioMpsOrderReceivingDTO dto);
 
     void modifyPapersTag(String mpsId, String mark);
+
+    void modifyPaperTagForCurrentUser(String paperId, String mark);
 }

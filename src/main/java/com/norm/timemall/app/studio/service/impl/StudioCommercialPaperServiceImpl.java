@@ -19,6 +19,7 @@ import com.norm.timemall.app.studio.domain.ro.StudioDiscoverMpsPaperPageRO;
 import com.norm.timemall.app.studio.domain.ro.StudioFetchMpsPaperListRO;
 import com.norm.timemall.app.studio.domain.ro.StudioFetchMpsPaperRO;
 import com.norm.timemall.app.studio.mapper.StudioCommercialPaperMapper;
+import com.norm.timemall.app.studio.mapper.StudioMpsMapper;
 import com.norm.timemall.app.studio.mapper.StudioMpsTemplateMapper;
 import com.norm.timemall.app.studio.service.StudioCommercialPaperService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,8 @@ public class StudioCommercialPaperServiceImpl implements StudioCommercialPaperSe
     private StudioMpsTemplateMapper studioMpsTemplateMapper;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private StudioMpsMapper studioMpsMapper;
 
     @Override
     public void generateMpsPaper(String chainId,String brandId,String mpsId) {
@@ -102,12 +105,21 @@ public class StudioCommercialPaperServiceImpl implements StudioCommercialPaperSe
         studioCommercialPaperMapper.updatePapersTagById(mpsId,mark);
     }
 
+    @Override
+    public void modifyPaperTagForCurrentUser(String paperId, String mark) {
+
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        studioCommercialPaperMapper.updateTagByPurchaserAndId(paperId,mark,brandId);
+
+    }
+
     private List<CommercialPaper> getPaperList(String chainId,String brandId,String mpsId){
 
         LambdaQueryWrapper<MpsTemplate> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(MpsTemplate::getChainId,chainId);
         List<MpsTemplate> mpsTemplates = studioMpsTemplateMapper.selectList(wrapper);
         if(mpsTemplates.size()==0){
+            studioMpsMapper.deleteById(mpsId); // delete invalid mps
             throw new ErrorCodeException(CodeEnum.INVALID_MPS_CHAIN);
         }
 

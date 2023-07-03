@@ -2,10 +2,7 @@ package com.norm.timemall.app.studio.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.norm.timemall.app.base.entity.SuccessVO;
-import com.norm.timemall.app.base.enums.CodeEnum;
-import com.norm.timemall.app.base.enums.CommercialPaperDeliverTagEnum;
-import com.norm.timemall.app.base.enums.FileStoreDir;
-import com.norm.timemall.app.base.enums.TransTypeEnum;
+import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.service.FileStoreService;
@@ -16,6 +13,7 @@ import com.norm.timemall.app.studio.domain.pojo.StudioFetchMpsPaperDeliver;
 import com.norm.timemall.app.studio.domain.vo.StudioFetchMpsPaperDeliverVO;
 import com.norm.timemall.app.studio.service.StudioApiAccessControlService;
 import com.norm.timemall.app.studio.service.StudioCommercialPaperDeliverService;
+import com.norm.timemall.app.studio.service.StudioCommercialPaperService;
 import com.norm.timemall.app.studio.service.StudioMpsFundService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -34,6 +32,8 @@ public class StudioMpsPaperDeliverController {
     private StudioMpsFundService studioMpsFundService;
     @Autowired
     private OrderFlowService orderFlowService;
+    @Autowired
+    private StudioCommercialPaperService studioCommercialPaperService;
 
 
     @PostMapping("/api/v1/web_estudio/brand/mps/new_deliver")
@@ -91,7 +91,9 @@ public class StudioMpsPaperDeliverController {
                         TransTypeEnum.MPS_FUND_TRANSFER.getMark());
                 // pay mps paper
                 studioMpsFundService.payMpsPaperFee(dto);
-                // update tag
+                // update paper as finish
+                studioCommercialPaperService.modifyPaperTagForCurrentUser(dto.getPaperId(), CommercialPaperTagEnum.END.getMark());
+                // update deliver tag
                 studioCommercialPaperDeliverService.modifyPaperDeliverTag(dto);
             }finally {
                 orderFlowService.deleteOrderFlow(SecurityUserHelper.getCurrentPrincipal().getUserId(),

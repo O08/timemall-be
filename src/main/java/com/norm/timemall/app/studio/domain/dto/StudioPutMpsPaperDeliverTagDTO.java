@@ -8,6 +8,8 @@ import javax.validation.constraints.NotBlank;
 public class StudioPutMpsPaperDeliverTagDTO {
     @NotBlank(message = "tag required")
     private String tag;
-    @NotBlank(message = "paperId required")
+    @NotBlank(message = "deliverId required")
     private String deliverId;
+    @NotBlank(message = "paperId required")
+    private String paperId;
 }

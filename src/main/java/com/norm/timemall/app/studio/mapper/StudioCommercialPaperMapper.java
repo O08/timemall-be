@@ -51,4 +51,6 @@ public interface StudioCommercialPaperMapper extends BaseMapper<CommercialPaper>
     void updatePapersTagById(@Param("mpsId") String mpsId, @Param("tag") String tag);
 
     CommercialPaper selectPaperByDeliverId(@Param("deliverId") String deliverId,@Param("tag") String tag);
+    @Update("update commercial_paper set tag=#{tag} where id=#{paperId} and purchaser=#{purchaser}")
+    void updateTagByPurchaserAndId(@Param("paperId") String paperId, @Param("tag") String mark, @Param("purchaser") String brandId);
 }
