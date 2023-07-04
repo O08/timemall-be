@@ -45,6 +45,10 @@ public class StudioMpsPaperDeliverController {
         if(preview.isEmpty()|| deliver.isEmpty()|| StrUtil.isBlank(paperId)){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
+        boolean isSupplier=studioApiAccessControlService.isMpsPaperDeliverSupplier(paperId);
+        if(!isSupplier){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
         // store file in classified
         String deliverUri = fileStoreService.storeWithLimitedAccess(deliver, FileStoreDir.MPS_DELIVER);
         String previewUri = fileStoreService.storeWithLimitedAccess(preview, FileStoreDir.MPS_PREVIEW);

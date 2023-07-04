@@ -48,4 +48,16 @@ public class StudioApiAccessControlServiceImpl implements StudioApiAccessControl
         CommercialPaperDeliver deliver = studioCommercialPaperDeliverMapper.selectPaperDeliverByIdAndBrandId(deliverId,brandId);
         return ObjectUtil.isNotEmpty(deliver);
     }
+
+    @Override
+    public boolean isMpsPaperDeliverSupplier(String paperId) {
+
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        LambdaQueryWrapper<CommercialPaper> queryWrapper=Wrappers.lambdaQuery();
+        queryWrapper.eq(CommercialPaper::getId,paperId)
+                        .eq(CommercialPaper::getSupplier,brandId);
+
+        return studioCommercialPaperMapper.exists(queryWrapper);
+
+    }
 }

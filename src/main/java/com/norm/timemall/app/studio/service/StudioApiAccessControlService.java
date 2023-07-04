@@ -10,4 +10,5 @@ public interface StudioApiAccessControlService {
 
     boolean isMpsPaperDeliverReceiver(String deliverId);
 
+    boolean isMpsPaperDeliverSupplier(String paperId);
 }
