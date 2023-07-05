@@ -3,7 +3,6 @@ package com.norm.timemall.app.studio.mapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.mo.CommercialPaper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.norm.timemall.app.studio.domain.dto.StudioDiscoverMpsPaperPageDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioFetchMpsPaperPageDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioPutMpsPaperDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioPutMpsPaperTagDTO;
@@ -34,7 +33,7 @@ public interface StudioCommercialPaperMapper extends BaseMapper<CommercialPaper>
 
     IPage<StudioFetchMpsPaperRO> selectPaperPageForBrand(IPage<StudioFetchMpsPaperRO> page, @Param("dto") StudioFetchMpsPaperPageDTO dto);
 
-    IPage<StudioDiscoverMpsPaperPageRO> selectPaperPageForPublic(IPage<StudioDiscoverMpsPaperPageRO> page, @Param("dto") StudioDiscoverMpsPaperPageDTO dto);
+    IPage<StudioDiscoverMpsPaperPageRO> selectPaperPageForPublic(IPage<StudioDiscoverMpsPaperPageRO> page, @Param("q") String dto);
 
     StudioFetchMpsPaperDetail selectPaperDetailById(@Param("id") String id);
 @Select("select id ,piece,title from commercial_paper where mps_id=#{mpsId}")

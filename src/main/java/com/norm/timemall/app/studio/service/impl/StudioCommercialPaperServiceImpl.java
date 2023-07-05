@@ -65,7 +65,7 @@ public class StudioCommercialPaperServiceImpl implements StudioCommercialPaperSe
         IPage<StudioDiscoverMpsPaperPageRO> page = new Page<>();
         page.setSize(dto.getSize());
         page.setCurrent(dto.getCurrent());
-        IPage<StudioDiscoverMpsPaperPageRO> paper=studioCommercialPaperMapper.selectPaperPageForPublic(page,dto);
+        IPage<StudioDiscoverMpsPaperPageRO> paper=studioCommercialPaperMapper.selectPaperPageForPublic(page,dto.getQ());
         return paper;
     }
 
