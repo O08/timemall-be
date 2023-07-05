@@ -3,6 +3,7 @@ package com.norm.timemall.app.studio.service.impl;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.norm.timemall.app.base.enums.CommercialPaperTagEnum;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.CommercialPaper;
 import com.norm.timemall.app.base.mo.CommercialPaperDeliver;
@@ -55,7 +56,8 @@ public class StudioApiAccessControlServiceImpl implements StudioApiAccessControl
         String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         LambdaQueryWrapper<CommercialPaper> queryWrapper=Wrappers.lambdaQuery();
         queryWrapper.eq(CommercialPaper::getId,paperId)
-                        .eq(CommercialPaper::getSupplier,brandId);
+                        .eq(CommercialPaper::getSupplier,brandId)
+                .eq(CommercialPaper::getTag, CommercialPaperTagEnum.DELIVERING.getMark());
 
         return studioCommercialPaperMapper.exists(queryWrapper);
 
