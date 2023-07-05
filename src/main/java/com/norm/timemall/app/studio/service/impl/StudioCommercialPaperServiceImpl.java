@@ -134,6 +134,7 @@ public class StudioCommercialPaperServiceImpl implements StudioCommercialPaperSe
                     .setPurchaser(brandId)
                     .setMpsId(mpsId)
                     .setSupplier(e.getFirstSupplier())
+                    .setDuration(e.getDuration())
                     .setTag(CommercialPaperTagEnum.CREATED.getMark())
                     .setTemplateId(e.getId())
                     .setCreateAt(new Date())

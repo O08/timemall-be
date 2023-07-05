@@ -68,6 +68,10 @@ public class CommercialPaper extends Model<CommercialPaper> implements Serializa
      */
     private String tag;
     /**
+     * 机遇期
+     */
+    private Integer duration;
+    /**
      * createAt
      */
     private Date createAt;

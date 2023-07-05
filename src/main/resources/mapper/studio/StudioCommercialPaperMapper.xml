@@ -44,6 +44,7 @@
             <if test="dto.q != null and dto.q != ''">
                 AND （locate(#{dto.q}, p.title)>0  or  locate(#{dto.q}, p.piece)>0）
             </if>
+            and DATE_Add(p.create_at, INTERVAL p.duration DAY) &lt; CURDATE()
         </where>
     </select>
     <select id="selectPaperDetailById" resultType="com.norm.timemall.app.studio.domain.pojo.StudioFetchMpsPaperDetail">
