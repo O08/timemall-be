@@ -58,7 +58,7 @@ public class SendCellOrderReceivingEmailNoticeHandler {
         if(StrUtil.isEmpty(brand.getEmail())){
             throw new ErrorCodeException(CodeEnum.EMAIL_NOT_SETTING);
         }
-        Long cnt = emailMessageService.countMessageIn24Hour(EmailMessageTopicEnum.EMAIL_CELL_ORDER_RECEIVING.getTopic(), brand.getEmail());
+        Long cnt = emailMessageService.countMessageUsingRef(EmailMessageTopicEnum.EMAIL_CELL_ORDER_RECEIVING.getTopic(), brand.getEmail(),param.getOrderId());
         if(cnt>=1){
             throw new ErrorCodeException(CodeEnum.EMAIL_LIMIT);
         }
@@ -83,6 +83,7 @@ public class SendCellOrderReceivingEmailNoticeHandler {
         message.setSender("sys")
                 .setRecipient(brand.getEmail())
                 .setTopic(EmailMessageTopicEnum.EMAIL_CELL_ORDER_RECEIVING.getTopic())
+                .setRef(param.getOrderId())
                 .setCreateAt(new Date());
 
         emailMessageService.save(message);

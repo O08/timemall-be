@@ -45,6 +45,10 @@ public class EmailMessage extends Model<EmailMessage> implements Serializable {
      */
     private String body;
     /**
+     *  参考因子
+     */
+    private String ref;
+    /**
      * createAt
      */
     private Date createAt;
