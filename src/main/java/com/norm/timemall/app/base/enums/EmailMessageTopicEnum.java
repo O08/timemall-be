@@ -2,7 +2,8 @@ package com.norm.timemall.app.base.enums;
 
 public enum EmailMessageTopicEnum {
     EMAIL_VERIFICATION_CODE("email_verified_code","邮箱验证码"),
-    EMAIL_PASSWORD_RESET("email_password_reset","密码重置" );
+    EMAIL_PASSWORD_RESET("email_password_reset","密码重置" ),
+    EMAIL_CELL_ORDER_RECEIVING("email_cell_order_receiving_notice","服务预约邮件通知");
     private String topic;
     private String desc;
 

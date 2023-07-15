@@ -1,6 +1,7 @@
 package com.norm.timemall.app.mall.service.impl;
 
 import com.norm.timemall.app.base.enums.CodeEnum;
+import com.norm.timemall.app.base.mo.Brand;
 import com.norm.timemall.app.mall.domain.ro.BrandProfileRO;
 import com.norm.timemall.app.mall.domain.vo.BrandProfileVO;
 import com.norm.timemall.app.mall.mapper.BrandMapper;
@@ -21,5 +22,10 @@ public class BrandServiceImpl implements BrandService {
                 .setResponseCode(CodeEnum.SUCCESS)
         ;
         return result;
+    }
+
+    @Override
+    public Brand findBrand(String brandId) {
+        return brandMapper.selectById(brandId);
     }
 }

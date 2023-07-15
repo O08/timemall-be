@@ -9,9 +9,9 @@ public enum RichTextConfigEnum {
     // email 密码重置模板
     EMAIL_PASSWORD_RESET("emailHtml","password_reset"),
     //密码更新成功提示模板
-    EMAIL_PASSWORD_UPDATED("emailHtml","password_updated")
+    EMAIL_PASSWORD_UPDATED("emailHtml","password_updated"),
 
-    ;
+    EMAIL_CELL_ORDER_RECEIVING("emailHtml", "cell_order_receiving_notice");
     // template type : email or html or sms
     private String type;
     // template no

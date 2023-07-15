@@ -4,6 +4,7 @@ import cn.hutool.core.util.IdUtil;
 import com.norm.timemall.app.base.enums.OrderTypeEnum;
 import com.norm.timemall.app.base.enums.WorkflowMarkEnum;
 import com.norm.timemall.app.base.mo.Millstone;
+import com.norm.timemall.app.base.mo.OrderDetails;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.mall.domain.dto.OrderDTO;
 import com.norm.timemall.app.mall.domain.pojo.InsertOrderParameter;
@@ -24,7 +25,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     @Autowired
     private MillstoneMapper millstoneMapper;
     @Override
-    public void newOrder(CustomizeUser userDetails, String cellId, OrderDTO orderDTO) {
+    public String newOrder(CustomizeUser userDetails, String cellId, OrderDTO orderDTO) {
         // 增加新订单
         String orderId = IdUtil.simpleUUID();
         InsertOrderParameter parameter = new InsertOrderParameter()
@@ -45,6 +46,13 @@ public class OrderDetailServiceImpl implements OrderDetailService {
                 .setModifiedAt(new Date());
         millstoneMapper.insert(millstone);
 
+        return orderId;
 
+    }
+
+    @Override
+    public OrderDetails findOrder(String orderId) {
+        OrderDetails orderDetails = orderDetailsMapper.selectById(orderId);
+        return  orderDetails;
     }
 }
