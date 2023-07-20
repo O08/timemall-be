@@ -3,7 +3,8 @@ package com.norm.timemall.app.base.enums;
 public enum FidTypeEnum {
     BRAND("1","Brand"),
     OASIS("2","Oasis"),
-    MPS_FUND("3", "mps func account");
+    MPS_FUND("3", "mps func account"),
+    OPERATOR("4","sys operator");
     private String mark;
     private String desc;
 

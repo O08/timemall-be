@@ -59,7 +59,7 @@ public enum CodeEnum implements Code{
     NO_SUFFICIENT_FUNDS(40007,"余额不足" ), COLLECT_LIMIT(40008,"当日已收账" ),
     MEMBERS_LIMIT(40009,"会员容量已达最大值" ), MPS_FUND_ALREADY_EXIST(40010, "mps fund 账号已开通"),
     INVALID_MPS_CHAIN(40011, "产链模版为空"), INVALID_FIN_ACCOUNT(40012, "收付款账户无效"),
-    EMAIL_NOT_SETTING(40013, "邮箱未设置");
+    EMAIL_NOT_SETTING(40013, "邮箱未设置"), REFUND_REPEAT(40014, "已退款，请勿重复请求");
 
     private int code;
     private String desc;

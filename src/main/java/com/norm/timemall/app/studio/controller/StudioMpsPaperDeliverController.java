@@ -7,7 +7,7 @@ import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.service.FileStoreService;
 import com.norm.timemall.app.base.service.OrderFlowService;
-import com.norm.timemall.app.studio.domain.dto.StudioMpsPaperDeliverLeaveMsgDTO;
+import com.norm.timemall.app.base.pojo.dto.DeliverLeaveMsgDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioPutMpsPaperDeliverTagDTO;
 import com.norm.timemall.app.studio.domain.pojo.StudioFetchMpsPaperDeliver;
 import com.norm.timemall.app.studio.domain.vo.StudioFetchMpsPaperDeliverVO;
@@ -75,7 +75,7 @@ public class StudioMpsPaperDeliverController {
         return vo;
     }
     @PutMapping("/api/v1/web_estudio/brand/paper_deliver/leave_a_message")
-    public SuccessVO leaveMessage(@RequestBody @Validated StudioMpsPaperDeliverLeaveMsgDTO dto){
+    public SuccessVO leaveMessage(@RequestBody @Validated DeliverLeaveMsgDTO dto){
 
         studioCommercialPaperDeliverService.leaveMessage(dto);
         return new SuccessVO(CodeEnum.SUCCESS);
@@ -85,11 +85,11 @@ public class StudioMpsPaperDeliverController {
     public SuccessVO tagPaperDeliver(@RequestBody @Validated StudioPutMpsPaperDeliverTagDTO dto){
         boolean isReceiver =studioApiAccessControlService.isMpsPaperDeliverReceiver(dto.getDeliverId());
         // if tag to revision
-        if(isReceiver && CommercialPaperDeliverTagEnum.REVISION.getMark().equals(dto.getTag())){
+        if(isReceiver && DeliverTagEnum.REVISION.getMark().equals(dto.getTag())){
             studioCommercialPaperDeliverService.modifyPaperDeliverTag(dto);
         }
         // if tag to delivered
-        if(isReceiver && CommercialPaperDeliverTagEnum.DELIVERED.getMark().equals(dto.getTag())){
+        if(isReceiver && DeliverTagEnum.DELIVERED.getMark().equals(dto.getTag())){
             try {
                 orderFlowService.insertOrderFlow(SecurityUserHelper.getCurrentPrincipal().getUserId(),
                         TransTypeEnum.MPS_FUND_TRANSFER.getMark());

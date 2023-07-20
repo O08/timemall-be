@@ -7,17 +7,14 @@ import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.FileStoreDir;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.service.FileStoreService;
-import com.norm.timemall.app.ms.domain.pojo.MsMpsEvent;
-import com.norm.timemall.app.ms.domain.pojo.MsMpsFileMessage;
-import com.norm.timemall.app.ms.domain.vo.MsMpsEventVO;
+import com.norm.timemall.app.ms.domain.pojo.MsDefaultEvent;
+import com.norm.timemall.app.ms.domain.pojo.MsDefaultFileMessage;
+import com.norm.timemall.app.ms.domain.vo.MsDefaultEventVO;
 import com.norm.timemall.app.ms.service.MsMpsMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 
 @RestController
 public class MsMpsController {
@@ -29,10 +26,10 @@ public class MsMpsController {
 
     @ResponseBody
     @GetMapping(value = "/api/v1/ms/mps/{room}/event")
-    public MsMpsEventVO retrieveMillstoneEvent(@PathVariable("room") String room){
-        MsMpsEvent event = msMpsMessageService.findMillstoneEvent(room);
-        MsMpsEventVO vo = new MsMpsEventVO();
-        vo.setEvent(event==null? new MsMpsEvent(): event);
+    public MsDefaultEventVO retrieveMillstoneEvent(@PathVariable("room") String room){
+        MsDefaultEvent event = msMpsMessageService.findMillstoneEvent(room);
+        MsDefaultEventVO vo = new MsDefaultEventVO();
+        vo.setEvent(event==null? new MsDefaultEvent(): event);
         vo.setResponseCode(CodeEnum.SUCCESS);
         return vo;
     }
@@ -57,7 +54,7 @@ public class MsMpsController {
         }
         // store file
         String uri = fileStoreService.storeWithUnlimitedAccess(file, FileStoreDir.MPS_IMAGE_MESSAGE);
-        MsMpsFileMessage msg = new MsMpsFileMessage();
+        MsDefaultFileMessage msg = new MsDefaultFileMessage();
         msg.setUri(uri);
         msg.setFileName(file.getOriginalFilename());
         Gson gson = new Gson();
@@ -77,7 +74,7 @@ public class MsMpsController {
         }
         // store file
         String uri = fileStoreService.storeWithUnlimitedAccess(file, FileStoreDir.MPS_ATTACHMENT_MESSAGE);
-        MsMpsFileMessage msg = new MsMpsFileMessage();
+        MsDefaultFileMessage msg = new MsDefaultFileMessage();
         msg.setUri(uri);
         msg.setFileName(file.getOriginalFilename());
         Gson gson = new Gson();

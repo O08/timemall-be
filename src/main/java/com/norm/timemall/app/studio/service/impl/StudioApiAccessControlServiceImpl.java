@@ -3,11 +3,14 @@ package com.norm.timemall.app.studio.service.impl;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.norm.timemall.app.base.enums.CellMarkEnum;
 import com.norm.timemall.app.base.enums.CommercialPaperTagEnum;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
+import com.norm.timemall.app.base.mo.Cell;
 import com.norm.timemall.app.base.mo.CommercialPaper;
 import com.norm.timemall.app.base.mo.CommercialPaperDeliver;
 import com.norm.timemall.app.base.mo.MpsChain;
+import com.norm.timemall.app.studio.mapper.StudioCellMapper;
 import com.norm.timemall.app.studio.mapper.StudioCommercialPaperDeliverMapper;
 import com.norm.timemall.app.studio.mapper.StudioCommercialPaperMapper;
 import com.norm.timemall.app.studio.mapper.StudioMpsChainMapper;
@@ -23,6 +26,8 @@ public class StudioApiAccessControlServiceImpl implements StudioApiAccessControl
     private StudioCommercialPaperMapper studioCommercialPaperMapper;
     @Autowired
     private StudioCommercialPaperDeliverMapper studioCommercialPaperDeliverMapper;
+    @Autowired
+    private StudioCellMapper studioCellMapper;
     @Override
     public boolean isMpsChainFounder(String chainId) {
         String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
@@ -60,6 +65,24 @@ public class StudioApiAccessControlServiceImpl implements StudioApiAccessControl
                 .eq(CommercialPaper::getTag, CommercialPaperTagEnum.DELIVERING.getMark());
 
         return studioCommercialPaperMapper.exists(queryWrapper);
+
+    }
+
+    @Override
+    public boolean cellSupportCurrentBrandModify(String cellId) {
+
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        Cell cell = studioCellMapper.selectById(cellId);
+        return cell!=null && brandId.equals(cell.getBrandId()) && (!CellMarkEnum.ONLINE.getMark().equals(cell.getMark()));
+
+    }
+
+    @Override
+    public boolean isCellPlanOrderSupplier(String orderId) {
+        String brandId=SecurityUserHelper.getCurrentPrincipal().getBrandId();
+
+        Cell cell = studioCellMapper.selectCellByCellPlanOrderId(orderId);
+        return cell!=null && brandId.equals(cell.getBrandId());
 
     }
 }

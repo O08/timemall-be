@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.ArrayList;
 
 @Data
-public class MsMpsEvent {
+public class MsDefaultEvent {
     private String room;
-    private ArrayList<MsMpsEventRecord> records;
+    private ArrayList<MsDefaultEventRecord> records;
 }

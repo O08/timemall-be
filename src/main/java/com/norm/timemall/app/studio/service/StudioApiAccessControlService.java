@@ -11,4 +11,9 @@ public interface StudioApiAccessControlService {
     boolean isMpsPaperDeliverReceiver(String deliverId);
 
     boolean isMpsPaperDeliverSupplier(String paperId);
+
+    boolean cellSupportCurrentBrandModify(String cellId);
+
+    boolean isCellPlanOrderSupplier(String orderId);
+
 }

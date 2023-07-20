@@ -4,8 +4,8 @@ import cn.hutool.core.util.IdUtil;
 import com.google.gson.Gson;
 import com.norm.timemall.app.base.mo.MpsMsg;
 import com.norm.timemall.app.ms.controller.MsStoreMpsTextMessageDTO;
-import com.norm.timemall.app.ms.domain.pojo.MsMpsEvent;
-import com.norm.timemall.app.ms.domain.pojo.MsMpsTextMessage;
+import com.norm.timemall.app.ms.domain.pojo.MsDefaultEvent;
+import com.norm.timemall.app.ms.domain.pojo.MsDefaultTextMessage;
 import com.norm.timemall.app.ms.mapper.MsMpsMsgMapper;
 import com.norm.timemall.app.ms.service.MsMpsMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ public class MsMpsMessageServiceImpl implements MsMpsMessageService {
 
     @Override
     public void addMessage(String room, MsStoreMpsTextMessageDTO dto) {
-        MsMpsTextMessage textMessage = new MsMpsTextMessage();
+        MsDefaultTextMessage textMessage = new MsDefaultTextMessage();
         textMessage.setContent(dto.getMsg());
         Gson gson = new Gson();
         MpsMsg msg = new MpsMsg();
@@ -61,7 +61,7 @@ public class MsMpsMessageServiceImpl implements MsMpsMessageService {
     }
 
     @Override
-    public MsMpsEvent findMillstoneEvent(String room) {
+    public MsDefaultEvent findMillstoneEvent(String room) {
         return msMpsMsgMapper.selectMpsEventByTargetId(room);
     }
 

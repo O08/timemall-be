@@ -1,6 +1,6 @@
 package com.norm.timemall.app.studio.service;
 
-import com.norm.timemall.app.studio.domain.dto.StudioMpsPaperDeliverLeaveMsgDTO;
+import com.norm.timemall.app.base.pojo.dto.DeliverLeaveMsgDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioPutMpsPaperDeliverTagDTO;
 import com.norm.timemall.app.studio.domain.pojo.StudioFetchMpsPaperDeliver;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,7 @@ public interface StudioCommercialPaperDeliverService {
 
     StudioFetchMpsPaperDeliver findMpsPaperDeliver(String paperId);
 
-    void leaveMessage(StudioMpsPaperDeliverLeaveMsgDTO dto);
+    void leaveMessage(DeliverLeaveMsgDTO dto);
 
     StudioFetchMpsPaperDeliver findBrandMpsPaperDeliver(String paperId);
 

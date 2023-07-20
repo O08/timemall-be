@@ -8,6 +8,7 @@ import com.norm.timemall.app.base.pojo.ro.CellInfoRO;
 import com.norm.timemall.app.studio.domain.pojo.StudioCellOverView;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 /**
@@ -34,5 +35,7 @@ public interface StudioCellMapper extends BaseMapper<Cell> {
 
     CellIntroRO selectCellProfileInfo(@Param("id")String cellId);
 
+@Select("select c.* from cell c , cell_plan_order o where o.id=#{orderId} and c.id=o.cell_id")
+    Cell selectCellByCellPlanOrderId(@Param("orderId") String orderId);
 }
 

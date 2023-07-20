@@ -142,7 +142,7 @@ public class StudioMpsFundServiceImpl implements StudioMpsFundService {
     @Override
     public void payMpsPaperFee(StudioPutMpsPaperDeliverTagDTO dto) {
         // query mps paper
-        CommercialPaper paper = studioCommercialPaperMapper.selectPaperByDeliverId(dto.getDeliverId(), CommercialPaperDeliverTagEnum.CREATED.getMark());
+        CommercialPaper paper = studioCommercialPaperMapper.selectPaperByDeliverId(dto.getDeliverId(), DeliverTagEnum.CREATED.getMark());
         if(paper==null || CommercialPaperTagEnum.END.getMark().equals(paper.getTag())){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }

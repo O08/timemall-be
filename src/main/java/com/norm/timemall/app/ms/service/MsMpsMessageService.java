@@ -1,8 +1,7 @@
 package com.norm.timemall.app.ms.service;
 
 import com.norm.timemall.app.ms.controller.MsStoreMpsTextMessageDTO;
-import com.norm.timemall.app.ms.domain.pojo.MsMpsEvent;
-import com.norm.timemall.app.ms.domain.pojo.MsMpsRoom;
+import com.norm.timemall.app.ms.domain.pojo.MsDefaultEvent;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,6 +12,6 @@ public interface MsMpsMessageService {
 
     void addMessage(String room, MsStoreMpsTextMessageDTO dto);
 
-    MsMpsEvent findMillstoneEvent(String room);
+    MsDefaultEvent findMillstoneEvent(String room);
 
 }

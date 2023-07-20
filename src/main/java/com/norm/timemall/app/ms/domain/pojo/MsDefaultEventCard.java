@@ -3,7 +3,7 @@ package com.norm.timemall.app.ms.domain.pojo;
 import lombok.Data;
 
 @Data
-public class MsMpsEventCard {
+public class MsDefaultEventCard {
     private String author;
     private String authorIcon;
     private String authorId;

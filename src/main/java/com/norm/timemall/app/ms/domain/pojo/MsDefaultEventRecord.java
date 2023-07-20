@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 
 @Data
-public class MsMpsEventRecord {
+public class MsDefaultEventRecord {
     private String stampDate;
-    private ArrayList<MsMpsEventCard> cards;
+    private ArrayList<MsDefaultEventCard> cards;
 }

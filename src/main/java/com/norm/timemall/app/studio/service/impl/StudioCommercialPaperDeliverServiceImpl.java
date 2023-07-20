@@ -1,10 +1,10 @@
 package com.norm.timemall.app.studio.service.impl;
 
 import cn.hutool.core.util.IdUtil;
-import com.norm.timemall.app.base.enums.CommercialPaperDeliverTagEnum;
+import com.norm.timemall.app.base.enums.DeliverTagEnum;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.CommercialPaperDeliver;
-import com.norm.timemall.app.studio.domain.dto.StudioMpsPaperDeliverLeaveMsgDTO;
+import com.norm.timemall.app.base.pojo.dto.DeliverLeaveMsgDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioPutMpsPaperDeliverTagDTO;
 import com.norm.timemall.app.studio.domain.pojo.StudioFetchMpsPaperDeliver;
 import com.norm.timemall.app.studio.domain.ro.StudioFetchMpsPaperDeliverRO;
@@ -30,7 +30,7 @@ public class StudioCommercialPaperDeliverServiceImpl implements StudioCommercial
                 .setPreview(previewUri)
                 .setPreviewName(previewName)
                 .setPaperId(paperId)
-                .setTag(CommercialPaperDeliverTagEnum.CREATED.getMark())
+                .setTag(DeliverTagEnum.CREATED.getMark())
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
 
@@ -49,7 +49,7 @@ public class StudioCommercialPaperDeliverServiceImpl implements StudioCommercial
     }
 
     @Override
-    public void leaveMessage(StudioMpsPaperDeliverLeaveMsgDTO dto) {
+    public void leaveMessage(DeliverLeaveMsgDTO dto) {
 
         studioCommercialPaperDeliverMapper.updateMsgById(dto);
 

@@ -3,7 +3,6 @@ package com.norm.timemall.app.ms.service.impl;
 import cn.hutool.core.util.IdUtil;
 import com.norm.timemall.app.base.mo.MpsRoom;
 import com.norm.timemall.app.ms.domain.dto.MsCreateMpsRoomDTO;
-import com.norm.timemall.app.ms.domain.pojo.MsMpsEvent;
 import com.norm.timemall.app.ms.domain.pojo.MsMpsRoom;
 import com.norm.timemall.app.ms.domain.pojo.MsMpsRoomBO;
 import com.norm.timemall.app.ms.mapper.MsMpsRoomMapper;

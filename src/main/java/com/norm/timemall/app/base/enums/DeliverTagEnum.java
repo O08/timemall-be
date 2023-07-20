@@ -1,6 +1,6 @@
 package com.norm.timemall.app.base.enums;
 
-public enum CommercialPaperDeliverTagEnum {
+public enum DeliverTagEnum {
     CREATED("1","创建"),
     REVISION("2","修订"),
     DELIVERED("3","已交付")
@@ -8,7 +8,7 @@ public enum CommercialPaperDeliverTagEnum {
     private String mark;
     private String desc;
 
-    CommercialPaperDeliverTagEnum(String mark, String desc) {
+    DeliverTagEnum(String mark, String desc) {
         this.mark = mark;
         this.desc = desc;
     }

@@ -1,11 +1,11 @@
-package com.norm.timemall.app.studio.domain.dto;
+package com.norm.timemall.app.base.pojo.dto;
 
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 
 @Data
-public class StudioMpsPaperDeliverLeaveMsgDTO {
+public class DeliverLeaveMsgDTO {
     @NotBlank(message = "msg required")
     private String msg;
     @NotBlank(message = "deliverId required")

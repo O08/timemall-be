@@ -14,8 +14,10 @@ public enum FileStoreDir {
     MILLSTONE_ATTACHMENT_MESSAGE("millstone/attachment-msg", "millstone attachment"),
     MPS_ATTACHMENT_MESSAGE("mps/attachment-msg","mps attachment" ),
     MPS_IMAGE_MESSAGE("mps/image-msg", "mps img"), MPS_DELIVER("mps/deliver/deliver", "mps deliver file"),
-    MPS_PREVIEW("mps/deliver/preview", "mps preview")
-    ;
+    MPS_PREVIEW("mps/deliver/preview", "mps preview"),
+    CELL_PLAN_DELIVER("cell/plan/deliver", "cell plan deliver"), CELL_PLAN_PREVIEW("cell/plan/preview","cell plan preview" ),
+    DEFAULT_IMAGE_MESSAGE("msg/default/image-msg","default message image dir" ),
+    DEFAULT_ATTACHMENT_MESSAGE("msg/default/attachment-msg","default message attachment dir" );
     private String dir;
 
     private String desc;

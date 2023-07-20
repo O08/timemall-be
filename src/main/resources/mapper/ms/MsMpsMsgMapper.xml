@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.norm.timemall.app.ms.mapper.MsMpsMsgMapper">
 
-    <resultMap id="mpsEventRecordResultMap" type="com.norm.timemall.app.ms.domain.pojo.MsMpsEventRecord">
+    <resultMap id="mpsEventRecordResultMap" type="com.norm.timemall.app.ms.domain.pojo.MsDefaultEventRecord">
         <result property="stampDate" column="stampDate"/>
-        <collection property="cards" ofType="com.norm.timemall.app.ms.domain.pojo.MsMpsEventCard" javaType="ArrayList">
+        <collection property="cards" ofType="com.norm.timemall.app.ms.domain.pojo.MsDefaultEventCard" javaType="ArrayList">
             <result property="author" column="author"/>
             <result property="authorIcon" column="authorIcon"/>
             <result property="authorId" column="author_id"/>
@@ -14,9 +14,9 @@
         </collection>
     </resultMap>
 
-    <resultMap id="mpsEventResultMap" type="com.norm.timemall.app.ms.domain.pojo.MsMpsEvent">
+    <resultMap id="mpsEventResultMap" type="com.norm.timemall.app.ms.domain.pojo.MsDefaultEvent">
         <result property="room" column="target_id"/>
-        <collection property="records" ofType="com.norm.timemall.app.ms.domain.pojo.MsMpsEventRecord" javaType="ArrayList" resultMap="mpsEventRecordResultMap"/>
+        <collection property="records" ofType="com.norm.timemall.app.ms.domain.pojo.MsDefaultEventRecord" javaType="ArrayList" resultMap="mpsEventRecordResultMap"/>
     </resultMap>
 
     <select id="selectMpsEventByTargetId" resultMap="mpsEventResultMap">
