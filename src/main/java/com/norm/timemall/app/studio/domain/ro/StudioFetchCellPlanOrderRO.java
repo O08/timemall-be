@@ -12,4 +12,5 @@ public class StudioFetchCellPlanOrderRO {
     private String feature;
     private String tag;
     private String price;
+    private String planType;
 }
