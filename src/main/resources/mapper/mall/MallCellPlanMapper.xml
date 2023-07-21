@@ -3,7 +3,7 @@
 <mapper namespace="com.norm.timemall.app.mall.mapper.CellPlanMapper">
 
     <select id="selectCellPlanByCellId" resultType="com.norm.timemall.app.mall.domain.ro.FetchCellPlanRO">
-        select p.id planId,p.title,p.feature,p.price
+        select p.id planId,p.title,p.feature,p.price,p.plan_type
         from cell_plan p
         where
         p.cell_id=#{cellId}

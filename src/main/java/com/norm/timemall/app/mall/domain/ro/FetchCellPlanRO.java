@@ -8,4 +8,5 @@ public class FetchCellPlanRO {
     private String title;
     private String feature;
     private String price;
+    private String planType;
 }
