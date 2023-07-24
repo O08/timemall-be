@@ -8,6 +8,7 @@ import com.norm.timemall.app.studio.domain.ro.StudioCellPlanOrderPageRO;
 import com.norm.timemall.app.studio.domain.ro.StudioFetchCellPlanOrderRO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 
 /**
  * (cell_plan_order)数据Mapper
@@ -23,4 +24,6 @@ public interface StudioCellPlanOrderMapper extends BaseMapper<CellPlanOrder> {
     IPage<StudioCellPlanOrderPageRO> selectCellPlanOrderPage(IPage<StudioCellPlanOrderPageRO> page,@Param("brandId") String brandId,
                                                              @Param("dto") FetchCellPlanOrderPageDTO dto);
     StudioFetchCellPlanOrderRO selectCellPlanOrderById(@Param("id") String id);
+@Update("update cell_plan_order set tag=#{tag} where id=#{id}")
+    void updateTagById(@Param("tag") String tag,@Param("id") String id);
 }

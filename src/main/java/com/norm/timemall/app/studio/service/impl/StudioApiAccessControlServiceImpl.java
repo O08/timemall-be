@@ -85,4 +85,12 @@ public class StudioApiAccessControlServiceImpl implements StudioApiAccessControl
         return cell!=null && brandId.equals(cell.getBrandId());
 
     }
+
+    @Override
+    public boolean isCellPlanOrderSupplierAndCheckOrderTag(String orderId, String tag) {
+        String brandId=SecurityUserHelper.getCurrentPrincipal().getBrandId();
+
+        Cell cell = studioCellMapper.selectCellByCellPlanOrderIdAndTag(orderId,tag);
+        return cell!=null && brandId.equals(cell.getBrandId());
+    }
 }

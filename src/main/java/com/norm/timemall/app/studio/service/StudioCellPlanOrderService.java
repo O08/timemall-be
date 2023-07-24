@@ -11,4 +11,6 @@ public interface StudioCellPlanOrderService {
     IPage<StudioCellPlanOrderPageRO> findCellPlanOrderPage(FetchCellPlanOrderPageDTO dto);
 
     StudioFetchCellPlanOrderRO findCellPlanOrder(String id);
+
+    void modifyCellPlanOrderTag(String id,String tag);
 }

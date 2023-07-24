@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.norm.timemall.app.base.config.OperatorConfig;
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.*;
+import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.pojo.FetchCellPlanOrderDeliver;
 import com.norm.timemall.app.base.pojo.TransferBO;
@@ -53,13 +54,16 @@ public class PodCellPlanOrderDeliverController {
     @PutMapping("/api/v1/web_epod/cell/plan_order/deliver/tag")
     public SuccessVO tagPaperDeliver(@RequestBody @Validated PodPutCellPlanDeliverTagDTO dto){
 
-        boolean isReceiver =podApiAccessControlService.isCellPlanOrderDeliverReceiver(dto.getOrderId(),CellPlanOrderTagEnum.DELIVERING.ordinal()+"");
+        boolean checked =podApiAccessControlService.isCellPlanOrderDeliverReceiver(dto.getOrderId(),CellPlanOrderTagEnum.DELIVERING.ordinal()+"");
+        if(!checked){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
         // if tag to revision
-        if(isReceiver && DeliverTagEnum.REVISION.getMark().equals(dto.getTag())){
+        if(checked && DeliverTagEnum.REVISION.getMark().equals(dto.getTag())){
             podCellPlanOrderDeliverService.modifyDeliverTag(dto);
         }
         // if tag to delivered
-        if(isReceiver && DeliverTagEnum.DELIVERED.getMark().equals(dto.getTag())){
+        if(checked && DeliverTagEnum.DELIVERED.getMark().equals(dto.getTag())){
             try {
 
                 orderFlowService.insertOrderFlow(SecurityUserHelper.getCurrentPrincipal().getUserId(),

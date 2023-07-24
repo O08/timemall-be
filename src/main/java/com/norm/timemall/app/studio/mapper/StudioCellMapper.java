@@ -37,5 +37,7 @@ public interface StudioCellMapper extends BaseMapper<Cell> {
 
 @Select("select c.* from cell c , cell_plan_order o where o.id=#{orderId} and c.id=o.cell_id")
     Cell selectCellByCellPlanOrderId(@Param("orderId") String orderId);
+    @Select("select c.* from cell c , cell_plan_order o where o.id=#{orderId} and o.tag=#{tag} and c.id=o.cell_id")
+    Cell selectCellByCellPlanOrderIdAndTag(@Param("orderId") String orderId,@Param("tag") String tag);
 }
 

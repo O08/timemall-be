@@ -33,4 +33,10 @@ public class StudioCellPlanOrderServiceImpl implements StudioCellPlanOrderServic
         StudioFetchCellPlanOrderRO orderRO= studioCellPlanOrderMapper.selectCellPlanOrderById(id);
         return orderRO;
     }
+
+    @Override
+    public void modifyCellPlanOrderTag(String id,String tag) {
+        studioCellPlanOrderMapper.updateTagById(tag,id);
+
+    }
 }
