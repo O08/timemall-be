@@ -10,6 +10,7 @@ import com.norm.timemall.app.base.mo.CellPlan;
 import com.norm.timemall.app.base.mo.CellPlanOrder;
 import com.norm.timemall.app.base.mo.CommonOrderPayment;
 import com.norm.timemall.app.base.pojo.TransferBO;
+import com.norm.timemall.app.mall.domain.ro.CellPlanOrderRO;
 import com.norm.timemall.app.mall.mapper.CellPlanMapper;
 import com.norm.timemall.app.mall.mapper.CellPlanOrderMapper;
 import com.norm.timemall.app.mall.mapper.CommonOrderPaymentMapper;
@@ -65,6 +66,12 @@ public class CellPlanOrderServiceImpl implements CellPlanOrderService {
         return orderId;
 
     }
+
+    @Override
+    public CellPlanOrderRO findOrder(String orderId) {
+        return cellPlanOrderMapper.selectCellPlanOrderROById(orderId);
+    }
+
     private TransferBO generateTransferBO(BigDecimal amount,String outNo){
         TransferBO bo = new TransferBO();
         bo.setAmount(amount)

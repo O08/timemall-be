@@ -1,7 +1,8 @@
 package com.norm.timemall.app.base.enums;
 
 public enum EmailNoticeEnum {
-    CELL_ORDER_RECEIVING("cell_order_receiving"," cell order receiving email notice");
+    CELL_ORDER_RECEIVING("cell_order_receiving"," cell order receiving email notice"),
+    CELL_PLAN_ORDER_RECEIVING("cell_plan_order_receiving","cell plan order receiving email notice");
     private String mark;
     private String desc;
 

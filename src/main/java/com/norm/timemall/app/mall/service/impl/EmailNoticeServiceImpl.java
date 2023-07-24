@@ -6,6 +6,7 @@ import com.norm.timemall.app.base.enums.EmailNoticeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.mall.domain.dto.SendEmailNoticeDTO;
 import com.norm.timemall.app.mall.handler.SendCellOrderReceivingEmailNoticeHandler;
+import com.norm.timemall.app.mall.handler.SendCellPlanOrderReceivingEmailNoticeHandler;
 import com.norm.timemall.app.mall.service.EmailNoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,8 @@ import java.util.stream.Stream;
 public class EmailNoticeServiceImpl implements EmailNoticeService {
     @Autowired
     private SendCellOrderReceivingEmailNoticeHandler sendCellOrderReceivingEmailNoticeHandler;
+    @Autowired
+    private SendCellPlanOrderReceivingEmailNoticeHandler sendCellPlanOrderReceivingEmailNoticeHandler;
     @Override
     public void sendEmailNotice(SendEmailNoticeDTO dto) {
 
@@ -34,6 +37,9 @@ public class EmailNoticeServiceImpl implements EmailNoticeService {
 
         if(EmailNoticeEnum.CELL_ORDER_RECEIVING.getMark().equals(dto.getNoticeType())){
             sendCellOrderReceivingEmailNoticeHandler.doSendEmailNotice(dto);
+        }
+        if(EmailNoticeEnum.CELL_PLAN_ORDER_RECEIVING.getMark().equals(dto.getNoticeType())){
+            sendCellPlanOrderReceivingEmailNoticeHandler.doSendEmailNotice(dto);
         }
     }
 }
