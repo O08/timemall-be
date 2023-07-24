@@ -62,9 +62,11 @@ public class PayTransferHandler {
         // query sys user plan order operator type  fin account
         FinAccount creditFinAccount = payFinanceAccountMapper.selectOneByFidForUpdate(transferBO.getPayeeAccount(), transferBO.getPayeeType());
         // validate
-        if(debitFinAccount == null || creditFinAccount == null ||
-                debitFinAccount.getDrawable().compareTo(transferBO.getAmount())<0){
-            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        if(debitFinAccount == null || creditFinAccount == null){
+            throw new ErrorCodeException(CodeEnum.INVALID_FIN_ACCOUNT);
+        }
+        if(debitFinAccount.getDrawable().compareTo(transferBO.getAmount())<0){
+            throw new ErrorCodeException(CodeEnum.NO_SUFFICIENT_FUNDS);
         }
         String transNo = IdUtil.simpleUUID();
         // insert pay transfer
