@@ -2,6 +2,7 @@ package com.norm.timemall.app.studio.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.norm.timemall.app.base.entity.SuccessVO;
+import com.norm.timemall.app.base.enums.CellPlanOrderTagEnum;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.FileStoreDir;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
@@ -32,8 +33,8 @@ public class StudioCellPlanOrderDeliverController {
         if(preview.isEmpty()|| deliver.isEmpty()|| StrUtil.isBlank(orderId)){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
-        boolean isSupplier = studioApiAccessControlService.isCellPlanOrderSupplier(orderId);
-        if(!isSupplier){
+        boolean checked = studioApiAccessControlService.isCellPlanOrderSupplierAndCheckOrderTag(orderId, CellPlanOrderTagEnum.DELIVERING.ordinal()+"");
+        if(!checked){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
         // store file in classified
