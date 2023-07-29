@@ -6,6 +6,7 @@ import lombok.Data;
 public class FetchCellPlanRO {
     private String planId;
     private String title;
+    private String content;
     private String feature;
     private String price;
     private String planType;

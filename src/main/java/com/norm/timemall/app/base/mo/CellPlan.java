@@ -46,6 +46,10 @@ public class CellPlan extends Model<CellPlan> implements Serializable {
      */
     private String title;
     /**
+     * 单品 内容
+     */
+    private String content;
+    /**
      * 单品 功能
      */
     private String feature;

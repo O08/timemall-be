@@ -18,6 +18,9 @@ public class StudioPutCellPlanDTO {
     @NotBlank(message = "title required")
     @Length(message = "title range in {min}-{max}",min = 1,max = 80)
     private String title;
+    @NotBlank(message = "content required")
+    @Length(message = "content range in {min}-{max}",min = 1,max = 200)
+    private String content;
     @NotBlank(message = "feature required")
     @Length(message = "feature range in {min}-{max}",min = 1,max = 600)
     private String feature;
