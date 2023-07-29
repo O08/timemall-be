@@ -9,6 +9,7 @@ public class StudioFetchCellPlanOrderRO {
     private String supplierName;
     private String planTypeDesc;
     private String planTitle;
+    private String planContent;
     private String feature;
     private String tag;
     private String price;

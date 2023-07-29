@@ -45,6 +45,7 @@ public class CellPlanOrderServiceImpl implements CellPlanOrderService {
                 .setCellId(plan.getCellId())
                 .setPlanId(planId)
                 .setPlanTitle(plan.getTitle())
+                .setPlanContent(plan.getContent())
                 .setPlanFeature(plan.getFeature())
                 .setPlanType(plan.getPlanType())
                 .setPlanTypeDesc(plan.getPlanTypeDesc())

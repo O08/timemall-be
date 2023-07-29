@@ -50,6 +50,10 @@ public class CellPlanOrder extends Model<CellPlanOrder> implements Serializable 
      */
     private String planTitle;
     /**
+     * 单品 内容
+     */
+    private String planContent;
+    /**
      * 单品 功能
      */
     private String planFeature;
