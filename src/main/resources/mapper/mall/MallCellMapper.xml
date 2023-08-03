@@ -33,7 +33,7 @@
         <if test="dto.sort != null and dto.sort != ''">
             <choose>
                 <when test='dto.sort == "1"'>
-                    Order by c.create_At
+                    Order by c.create_At desc
                 </when>
                 <when test='dto.sort == "2"'>
                     Order by p.price desc
