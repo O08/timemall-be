@@ -3,18 +3,19 @@ package com.norm.timemall.app.team.service.impl;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.norm.timemall.app.base.enums.ChannelTypeEnum;
 import com.norm.timemall.app.base.enums.CodeEnum;
+import com.norm.timemall.app.base.enums.GroupMemberPolicyRelEnum;
 import com.norm.timemall.app.base.enums.OasisJoinTagEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
-import com.norm.timemall.app.base.mo.Oasis;
-import com.norm.timemall.app.base.mo.OasisJoin;
-import com.norm.timemall.app.base.mo.OasisMember;
+import com.norm.timemall.app.base.mo.*;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.team.domain.dto.TeamInviteToOasisDTO;
 import com.norm.timemall.app.team.domain.ro.TeamInviteRO;
 import com.norm.timemall.app.team.domain.ro.TeamJoinedRO;
+import com.norm.timemall.app.team.mapper.TeamGroupMemberRelMapper;
 import com.norm.timemall.app.team.mapper.TeamOasisJoinMapper;
 import com.norm.timemall.app.team.mapper.TeamOasisMapper;
 import com.norm.timemall.app.team.mapper.TeamOasisMemberMapper;
@@ -34,6 +35,10 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
 
     @Autowired
     private TeamOasisMemberMapper teamOasisMemberMapper;
+    @Autowired
+    private TeamGroupMemberRelMapper teamGroupMemberRelMapper;
+    @Autowired
+    private AccountService accountService;
 
 
 
@@ -52,6 +57,7 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
 
         // query oasis member info
         Oasis oasis = teamOasisMapper.selectById(oasisJoin.getOasisId());
+        Brand memberBrand=accountService.findBrandInfoByBrandId(oasisJoin.getBrandId());
 
         // if membership < max_members insert oasis_member else deny
         if(oasis != null && oasis.getMembership() < oasis.getMaxMembers()){
@@ -64,9 +70,21 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
 
             teamOasisMemberMapper.insert(member);
             teamOasisJoinMapper.updateTagById(id, OasisJoinTagEnum.ACCEPT.getMark());
+
             // update oasis tb member info
             oasis.setMembership(oasis.getMembership()+1);
             teamOasisMapper.updateById(oasis);
+            // give member channel
+            GroupMemberRel groupMemberRel = new GroupMemberRel();
+            groupMemberRel.setId(IdUtil.simpleUUID())
+                    .setChannelId(oasis.getId())
+                    .setChannelType(ChannelTypeEnum.DEFAULT.getMark())
+                    .setMemberId(memberBrand.getCustomerId())
+                    .setPolicyRel(GroupMemberPolicyRelEnum.READ_WRITE.getMark())
+                    .setCreateAt(new Date())
+                    .setModifiedAt(new Date());
+            teamGroupMemberRelMapper.insert(groupMemberRel);
+
         }
         if(oasis !=null && oasis.getMembership() >= oasis.getMaxMembers()){
             teamOasisJoinMapper.updateTagById(id, OasisJoinTagEnum.DENY.getMark());

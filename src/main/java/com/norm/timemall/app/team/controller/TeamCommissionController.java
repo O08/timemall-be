@@ -9,8 +9,10 @@ import com.norm.timemall.app.team.domain.dto.TeamAcceptOasisTaskDTO;
 import com.norm.timemall.app.team.domain.dto.TeamCommissionDTO;
 import com.norm.timemall.app.team.domain.dto.TeamFinishOasisTask;
 import com.norm.timemall.app.team.domain.dto.TeamOasisNewTaskDTO;
+import com.norm.timemall.app.team.domain.pojo.TeamFetchCommissionDetail;
 import com.norm.timemall.app.team.domain.ro.TeamCommissionRO;
 import com.norm.timemall.app.team.domain.vo.TeamCommissionPageVO;
+import com.norm.timemall.app.team.domain.vo.TeamFetchCommissionDetailVO;
 import com.norm.timemall.app.team.service.TeamCommissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -62,6 +64,20 @@ public class TeamCommissionController {
             orderFlowService.deleteOrderFlow(dto.getCommissionId(), OasisCommissionTagEnum.FINISH.getMark());
         }
         return new SuccessVO(CodeEnum.SUCCESS);
+    }
+    /**
+     * oasis 任务明细
+     */
+    @ResponseBody
+    @GetMapping(value = "/api/v1/team/commission_ws/{id}/detail")
+    public TeamFetchCommissionDetailVO fetchCommissionDetail(@PathVariable("id") String id){
+
+        TeamFetchCommissionDetail detail =  teamCommissionService.findCommissionDetail(id);
+        TeamFetchCommissionDetailVO vo = new TeamFetchCommissionDetailVO();
+        vo.setDetail(detail);
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        return  vo;
+
     }
 
 }

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamCommissionDeliverMapper">
+    <sql id="tableName">
+        commission_deliver
+    </sql>
+    <select id="selectDeliverByCommissionIdAndBrandId" resultType="com.norm.timemall.app.team.domain.ro.TeamFetchCommissionDeliverRO">
+        select d.id deliverId, d.preview,d.preview_name,d.deliver,d.deliver_name,d.msg,d.tag,d.commission_id
+        from commission_deliver d
+        inner join commission p
+         on d.commission_id=p.id
+        where d.commission_id=#{commission_id}
+        and p.worker=#{brandId}
+        order  by p.create_at desc
+    </select>
+</mapper>

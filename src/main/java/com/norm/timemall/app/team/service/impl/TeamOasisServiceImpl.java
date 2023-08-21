@@ -5,15 +5,10 @@ import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.gson.Gson;
-import com.norm.timemall.app.base.enums.FidTypeEnum;
-import com.norm.timemall.app.base.enums.OasisJoinTagEnum;
-import com.norm.timemall.app.base.enums.OasisMarkEnum;
+import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mapper.FinAccountMapper;
-import com.norm.timemall.app.base.mo.FinAccount;
-import com.norm.timemall.app.base.mo.Oasis;
-import com.norm.timemall.app.base.mo.OasisJoin;
-import com.norm.timemall.app.base.mo.OasisMember;
+import com.norm.timemall.app.base.mo.*;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.team.constant.OasisConstant;
@@ -25,10 +20,7 @@ import com.norm.timemall.app.team.domain.pojo.TeamOasisAnnounce;
 import com.norm.timemall.app.team.domain.pojo.TeamOasisIndex;
 import com.norm.timemall.app.team.domain.pojo.TeamOasisIndexEntry;
 import com.norm.timemall.app.team.domain.ro.TeamOasisRO;
-import com.norm.timemall.app.team.mapper.TeamOasisIndMapper;
-import com.norm.timemall.app.team.mapper.TeamOasisJoinMapper;
-import com.norm.timemall.app.team.mapper.TeamOasisMapper;
-import com.norm.timemall.app.team.mapper.TeamOasisMemberMapper;
+import com.norm.timemall.app.team.mapper.*;
 import com.norm.timemall.app.team.service.TeamOasisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,9 +42,9 @@ public class TeamOasisServiceImpl implements TeamOasisService {
     private TeamOasisJoinMapper teamOasisJoinMapper;
 
     @Autowired
-    private AccountService accountService;
-    @Autowired
     private FinAccountMapper finAccountMapper;
+    @Autowired
+    private TeamGroupMemberRelMapper teamGroupMemberRelMapper;
 
     @Override
     public IPage<TeamOasisRO> findOasis(TeamOasisPageDTO dto) {
@@ -79,9 +71,7 @@ public class TeamOasisServiceImpl implements TeamOasisService {
 
     @Override
     public String newOasis(TeamNewOasisDTO dto) {
-        String brandId = accountService.
-                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
-                .getId();
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
 
         Oasis oasis = new Oasis();
         oasis.setId(IdUtil.simpleUUID())
@@ -114,6 +104,17 @@ public class TeamOasisServiceImpl implements TeamOasisService {
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
         teamOasisJoinMapper.insert(join);
+
+        // give member channel
+        GroupMemberRel groupMemberRel = new GroupMemberRel();
+        groupMemberRel.setId(IdUtil.simpleUUID())
+                .setChannelId(oasis.getId())
+                .setChannelType(ChannelTypeEnum.DEFAULT.getMark())
+                .setMemberId(SecurityUserHelper.getCurrentPrincipal().getUserId())
+                .setPolicyRel(GroupMemberPolicyRelEnum.READ_WRITE.getMark())
+                .setCreateAt(new Date())
+                .setModifiedAt(new Date());
+        teamGroupMemberRelMapper.insert(groupMemberRel);
 
 
 

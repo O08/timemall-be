@@ -9,6 +9,7 @@ import com.norm.timemall.app.team.domain.pojo.TeamOasisMember;
 import com.norm.timemall.app.team.domain.ro.TeamOasisMemberRO;
 import com.norm.timemall.app.team.domain.vo.TeamOasisMemberVO;
 import com.norm.timemall.app.team.service.TeamDataPolicyService;
+import com.norm.timemall.app.team.service.TeamGroupMemberRelService;
 import com.norm.timemall.app.team.service.TeamOasisJoinService;
 import com.norm.timemall.app.team.service.TeamOasisMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,8 @@ public class TeamMemberController {
     private TeamDataPolicyService teamDataPolicyService;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private TeamGroupMemberRelService teamGroupMemberRelService;
     /**
     * oasis 组员列表
     */
@@ -67,6 +70,8 @@ public class TeamMemberController {
         teamOasisJoinService.unfollowOasis(oasisId,brandId);
         // remove from oasis member tbl
         teamOasisMemberService.unfollowOasis(oasisId,brandId);
+        // remove from group_member_rel tbl
+        teamGroupMemberRelService.unfollowChannel(oasisId);
 
         return new SuccessVO(CodeEnum.SUCCESS);
     }
@@ -84,6 +89,10 @@ public class TeamMemberController {
             teamOasisJoinService.unfollowOasis(oasisId,brandId);
             // remove from oasis member tbl
             teamOasisMemberService.unfollowOasis(oasisId,brandId);
+
+            // remove from group_member_rel tbl
+            String memberUserId= accountService.findBrandInfoByBrandId(brandId).getCustomerId();
+            teamGroupMemberRelService.removeMemberFromChannel(oasisId,memberUserId);
         }
 
 

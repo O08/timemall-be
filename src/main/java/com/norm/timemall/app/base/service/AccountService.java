@@ -14,4 +14,5 @@ public interface AccountService {
     void modifiedPasswordByUserName(String encryptedPassword, String username);
 
     Brand findBrandInfoByUserId(String userId);
+    Brand findBrandInfoByBrandId(String brandId);
 }

@@ -98,6 +98,12 @@ public class AccountServiceImpl implements AccountService {
         Brand brand = baseBrandMapper.selectOne(wrapper);
         return brand;
     }
+
+    @Override
+    public Brand findBrandInfoByBrandId(String brandId) {
+        return baseBrandMapper.selectById(brandId);
+    }
+
     private void newBrandWhenUserRegister(String userId,String brandName){
         Brand brand = new Brand();
         brand.setId(IdUtil.simpleUUID())
