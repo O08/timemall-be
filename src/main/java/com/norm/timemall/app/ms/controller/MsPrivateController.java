@@ -15,8 +15,11 @@ import com.norm.timemall.app.ms.constant.ChatSupportUploadImageFormat;
 import com.norm.timemall.app.ms.domain.dto.MsStoreDefaultTextMessageDTO;
 import com.norm.timemall.app.ms.domain.pojo.MsDefaultEvent;
 import com.norm.timemall.app.ms.domain.pojo.MsDefaultFileMessage;
+import com.norm.timemall.app.ms.domain.pojo.MsFetchPrivateFriend;
 import com.norm.timemall.app.ms.domain.vo.MsDefaultEventVO;
+import com.norm.timemall.app.ms.domain.vo.MsFetchPrivateFriendVO;
 import com.norm.timemall.app.ms.service.MsPrivateMessageService;
+import com.norm.timemall.app.ms.service.MsPrivateRelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +32,8 @@ import java.util.Arrays;
 public class MsPrivateController {
     @Autowired
     private MsPrivateMessageService msPrivateMessageService;
+    @Autowired
+    private MsPrivateRelService msPrivateRelService;
     @Autowired
     private FileStoreService fileStoreService;
     @Autowired
@@ -134,6 +139,26 @@ public class MsPrivateController {
     public SuccessVO removeOneMessage(@PathVariable("message_id") String messageId){
 
         msPrivateMessageService.removeOneMessage(messageId);
+        return new SuccessVO(CodeEnum.SUCCESS);
+
+    }
+    @ResponseBody
+    @GetMapping("/api/v1/ms/private/me/event/friend/list")
+    public MsFetchPrivateFriendVO fetchPrivateFriend(){
+
+        MsFetchPrivateFriend friend = msPrivateRelService.findFriend();
+        MsFetchPrivateFriendVO vo = new MsFetchPrivateFriendVO();
+        vo.setFriend(friend);
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        return  vo;
+
+    }
+
+    @ResponseBody
+    @PutMapping("/api/v1/ms/private/me/event/friend/{id}/mark_as_read")
+    public SuccessVO markAllMsgAsRead(@PathVariable("id") String friend){
+
+        msPrivateRelService.markAllMsgAsRead(friend);
         return new SuccessVO(CodeEnum.SUCCESS);
 
     }
