@@ -123,7 +123,7 @@ public class PayTransferHandler {
                 .setTransTypeDesc(transTypeEnum.getDesc())
                 .setAmount(transferBO.getAmount())
                 .setDirection(TransDirectionEnum.CREDIT.getMark())
-                .setRemark(TransTypeEnum.PLAN_ORDER_PAY.getDesc())
+                .setRemark(transTypeEnum.getDesc())
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
         Transactions debitTrans = new Transactions();

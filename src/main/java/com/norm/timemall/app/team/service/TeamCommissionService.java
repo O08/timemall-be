@@ -2,10 +2,7 @@ package com.norm.timemall.app.team.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.mo.Commission;
-import com.norm.timemall.app.team.domain.dto.TeamAcceptOasisTaskDTO;
-import com.norm.timemall.app.team.domain.dto.TeamCommissionDTO;
-import com.norm.timemall.app.team.domain.dto.TeamFinishOasisTask;
-import com.norm.timemall.app.team.domain.dto.TeamOasisNewTaskDTO;
+import com.norm.timemall.app.team.domain.dto.*;
 import com.norm.timemall.app.team.domain.pojo.TeamFetchCommissionDetail;
 import com.norm.timemall.app.team.domain.ro.TeamCommissionRO;
 import org.springframework.stereotype.Service;
@@ -18,10 +15,11 @@ public interface TeamCommissionService {
 
     void acceptOasisTask(TeamAcceptOasisTaskDTO dto);
 
-    void finishOasisTask(TeamFinishOasisTask dto);
+    void finishOasisTask(TeamFinishOasisTaskDTO dto);
 
     TeamFetchCommissionDetail findCommissionDetail(String id);
 
     Commission findCommissionUsingId(String commissionId);
 
+    void examineOasisTask(TeamExamineOasisTaskDTO dto);
 }

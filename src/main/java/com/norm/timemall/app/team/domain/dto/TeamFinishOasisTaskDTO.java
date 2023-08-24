@@ -5,8 +5,11 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 
 @Data
-public class TeamFinishOasisTask {
+public class TeamFinishOasisTaskDTO {
     @NotBlank(message = "commissionId required")
     private String commissionId;
+
+    @NotBlank(message = "deliverId required")
+    private String deliverId;
 
 }

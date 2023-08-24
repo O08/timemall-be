@@ -4,11 +4,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.OasisCommissionTagEnum;
+import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.service.OrderFlowService;
-import com.norm.timemall.app.team.domain.dto.TeamAcceptOasisTaskDTO;
-import com.norm.timemall.app.team.domain.dto.TeamCommissionDTO;
-import com.norm.timemall.app.team.domain.dto.TeamFinishOasisTask;
-import com.norm.timemall.app.team.domain.dto.TeamOasisNewTaskDTO;
+import com.norm.timemall.app.team.domain.dto.*;
 import com.norm.timemall.app.team.domain.pojo.TeamFetchCommissionDetail;
 import com.norm.timemall.app.team.domain.ro.TeamCommissionRO;
 import com.norm.timemall.app.team.domain.vo.TeamCommissionPageVO;
@@ -51,12 +49,17 @@ public class TeamCommissionController {
     @ResponseBody
     @PutMapping(value = "/api/v1/team/commission/accept")
     public SuccessVO acceptTask(@Validated @RequestBody TeamAcceptOasisTaskDTO dto){
-        teamCommissionService.acceptOasisTask(dto);
+        try{
+            orderFlowService.insertOrderFlow(dto.getCommissionId(), OasisCommissionTagEnum.ACCEPT.getMark());
+            teamCommissionService.acceptOasisTask(dto);
+        }finally {
+            orderFlowService.deleteOrderFlow(dto.getCommissionId(), OasisCommissionTagEnum.ACCEPT.getMark());
+        }
         return new SuccessVO(CodeEnum.SUCCESS);
     }
     @ResponseBody
     @PutMapping(value = "/api/v1/team/commission/finish")
-    public SuccessVO finishTask(@Validated @RequestBody TeamFinishOasisTask dto){
+    public SuccessVO finishTask(@Validated @RequestBody TeamFinishOasisTaskDTO dto){
         try {
             orderFlowService.insertOrderFlow(dto.getCommissionId(), OasisCommissionTagEnum.FINISH.getMark());
             teamCommissionService.finishOasisTask(dto);
@@ -77,6 +80,25 @@ public class TeamCommissionController {
         vo.setDetail(detail);
         vo.setResponseCode(CodeEnum.SUCCESS);
         return  vo;
+
+    }
+
+    /**
+     *   审核任务
+     * @param dto
+     * @return
+     */
+    @ResponseBody
+    @PutMapping(value = "/api/v1/team/commission/examine")
+    public SuccessVO examineTask(@Validated @RequestBody TeamExamineOasisTaskDTO dto){
+
+        boolean validated= OasisCommissionTagEnum.ABOLISH.getMark().equals(dto.getTag()) || OasisCommissionTagEnum.ADD_TO_NEED_POOL.getMark().equals(dto.getTag());
+        if(!validated){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        teamCommissionService.examineOasisTask(dto);
+
+        return new SuccessVO(CodeEnum.SUCCESS);
 
     }
 

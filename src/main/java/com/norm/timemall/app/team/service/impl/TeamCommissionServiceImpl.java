@@ -7,12 +7,7 @@ import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.*;
-import com.norm.timemall.app.base.security.CustomizeUser;
-import com.norm.timemall.app.base.service.AccountService;
-import com.norm.timemall.app.team.domain.dto.TeamAcceptOasisTaskDTO;
-import com.norm.timemall.app.team.domain.dto.TeamCommissionDTO;
-import com.norm.timemall.app.team.domain.dto.TeamFinishOasisTask;
-import com.norm.timemall.app.team.domain.dto.TeamOasisNewTaskDTO;
+import com.norm.timemall.app.team.domain.dto.*;
 import com.norm.timemall.app.team.domain.pojo.TeamFetchCommissionDetail;
 import com.norm.timemall.app.team.domain.ro.TeamCommissionRO;
 import com.norm.timemall.app.team.helper.TeamCommissionHelper;
@@ -36,14 +31,14 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
     private TeamAccountMapper teamAccountMapper;
     @Autowired
     private TeamOasisJoinMapper teamOasisJoinMapper;
+    @Autowired
+    private TeamCommissionDeliverMapper teamCommissionDeliverMapper;
 
 
 
 
     @Autowired
     private TeamCommissionHelper teamCommissionHelper;
-    @Autowired
-    private AccountService accountService;
     @Override
     public IPage<TeamCommissionRO> findCommission(TeamCommissionDTO dto) {
         IPage<TeamCommissionRO> page =  new Page<>();
@@ -54,15 +49,14 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
 
     @Override
     public void newOasisTask(TeamOasisNewTaskDTO dto) {
-        String brandId = accountService.
-                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
-                .getId();
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
 
         Commission commission =new Commission();
         commission.setId(IdUtil.simpleUUID())
                 .setOasisId(dto.getOasisId())
                 .setTitle(dto.getTitle())
                 .setBonus(dto.getBonus())
+                .setSow(dto.getSow())
                 .setFounder(brandId)
                 .setTag(OasisCommissionTagEnum.CREATED.getMark())
                 .setCreateAt(new Date())
@@ -77,16 +71,30 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
 
     @Override
     public void acceptOasisTask(TeamAcceptOasisTaskDTO dto) {
+
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        Commission commission = teamCommissionMapper.selectById(dto.getCommissionId());
+
+        if(commission==null || brandId.equals(commission.getFounder()) ||
+           !OasisCommissionTagEnum.ADD_TO_NEED_POOL.getMark().equals(commission.getTag())){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+
         teamCommissionMapper.updateCommissionByIdAndTag(
                 dto.getCommissionId(),
-                dto.getBrandId(),
+                brandId,
                 OasisCommissionTagEnum.ACCEPT.getMark());
+
     }
 
     @Override
-    public void finishOasisTask(TeamFinishOasisTask dto) {
+    public void finishOasisTask(TeamFinishOasisTaskDTO dto) {
         Commission commission = teamCommissionMapper.selectById(dto.getCommissionId());
-        if(commission == null || commission.getTag().equals(OasisCommissionTagEnum.FINISH.getMark())){
+        boolean validatedFail= commission == null
+                  || commission.getTag().equals(OasisCommissionTagEnum.FINISH.getMark())
+                  || !commission.getFounder().equals(SecurityUserHelper.getCurrentPrincipal().getBrandId());
+
+        if(validatedFail){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
         // tag task to finish
@@ -133,6 +141,12 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
         teamAccountMapper.updateById(brandFinAccount);
         // 4. update oasis join
         updateOasisJoinModifiedAt(commission.getOasisId(), commission.getWorker());
+        // 5. mark commission   deliver tag as delivered
+        TeamPutCommissionDeliverTagDTO deliverTagDTO = new TeamPutCommissionDeliverTagDTO();
+        deliverTagDTO.setCommissionId(dto.getCommissionId());
+        deliverTagDTO.setDeliverId(dto.getDeliverId());
+        deliverTagDTO.setTag(DeliverTagEnum.DELIVERED.getMark());
+        teamCommissionDeliverMapper.updateTagById(deliverTagDTO);
 
 
 //        //2. calculate total
@@ -153,6 +167,22 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
     @Override
     public Commission findCommissionUsingId(String commissionId) {
         return teamCommissionMapper.selectById(commissionId);
+    }
+
+    @Override
+    public void examineOasisTask(TeamExamineOasisTaskDTO dto) {
+
+        String brandId=SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        Commission commission = teamCommissionMapper.selectById(dto.getCommissionId());
+        if(commission==null
+          || !brandId.equals(commission.getFounder())
+          || !OasisCommissionTagEnum.CREATED.getMark().equals(commission.getTag())){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        commission.setTag(dto.getTag())
+                .setModifiedAt(new Date());
+        teamCommissionMapper.updateById(commission);
+
     }
 
     private void updateOasisJoinModifiedAt(String oasisId,String brandId){

@@ -38,6 +38,10 @@ public class Commission extends Model<Commission> implements Serializable {
      */
     private String title;
     /**
+     * 摘要
+     */
+    private String sow;
+    /**
      * 标签
      */
     private String tag;
