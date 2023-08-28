@@ -7,4 +7,5 @@ public class SseEventMessage {
     private String scene;
     private String handlerId;
     private String msg;
+    private String from;
 }

@@ -199,7 +199,7 @@ public class MsPrivateMessageServiceImpl implements MsPrivateMessageService {
             dbPrivateRel.setModifiedAt(new Date());
             msPrivateRelMapper.updateById(dbPrivateRel);
         }
-        doPushOneMessageToFriend(msgReceiver);
+        doPushOneMessageToFriend(msgReceiver,friendOfReceiver);
 
     }
     private void newPrivateRel(String msgReceiver,String friendOfReceiver,Long unread){
@@ -214,12 +214,13 @@ public class MsPrivateMessageServiceImpl implements MsPrivateMessageService {
         msPrivateRelMapper.insert(privateRel);
 
     }
-    private void doPushOneMessageToFriend(String msgReceiver){
+    private void doPushOneMessageToFriend(String msgReceiver,String from){
 
         SseEventMessage msg = new SseEventMessage();
         msg.setHandlerId(msgReceiver);
         msg.setScene(SseEventBusSceneEnum.PRIVATE.name());
         msg.setMsg("New");
+        msg.setFrom(from);
         SseHelper.sendMessage(msgReceiver,new Gson().toJson(msg));
 
     }
