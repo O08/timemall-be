@@ -22,7 +22,7 @@ public interface MsGroupMemberRelMapper extends BaseMapper<GroupMemberRel> {
                                                              @Param("channel_type") String channelType,
                                                              @Param("member_id") String userId,
                                                              @Param("policy_rel") String policyRel);
-@Select("select b.id,b.brand_name username,b.avator avatar, r.policy_rel from group_member_rel r,brand b where r.member_id=b.customer_id and r.member_id=#{member_id} and channel_id=#{channel_id}  and channel_type=#{channel_type}")
+@Select("select b.customer_id id,b.brand_name username,b.avator avatar, r.policy_rel from group_member_rel r,brand b where r.member_id=b.customer_id and r.member_id=#{member_id} and channel_id=#{channel_id}  and channel_type=#{channel_type}")
     MsFetchGroupMemberProfile selectOneMemberProfile(@Param("channel_id") String channel,
                                                      @Param("channel_type") String channelType,
                                                      @Param("member_id") String memberUserId);
