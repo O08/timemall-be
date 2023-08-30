@@ -111,7 +111,8 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
     }
 
     @Override
-    public void followOasis(String oasisId,String brandId) {
+    public void followOasis(String oasisId) {
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         // query oasis member info
         Oasis oasis = teamOasisMapper.selectById(oasisId);
 
@@ -137,6 +138,18 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
             // update oasis tb member info
             oasis.setMembership(oasis.getMembership()+1);
             teamOasisMapper.updateById(oasis);
+
+            // give member channel
+            GroupMemberRel groupMemberRel = new GroupMemberRel();
+            groupMemberRel.setId(IdUtil.simpleUUID())
+                    .setChannelId(oasis.getId())
+                    .setChannelType(ChannelTypeEnum.DEFAULT.getMark())
+                    .setMemberId(brandId)
+                    .setPolicyRel(GroupMemberPolicyRelEnum.READ_WRITE.getMark())
+                    .setCreateAt(new Date())
+                    .setModifiedAt(new Date());
+            teamGroupMemberRelMapper.insert(groupMemberRel);
+
         }else {
             throw new ErrorCodeException(CodeEnum.MEMBERS_LIMIT);
         }

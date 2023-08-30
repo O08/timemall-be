@@ -13,7 +13,9 @@ import com.norm.timemall.app.ms.constant.ChatSupportUploadImageFormat;
 import com.norm.timemall.app.ms.domain.dto.MsStoreDefaultTextMessageDTO;
 import com.norm.timemall.app.ms.domain.pojo.MsDefaultEvent;
 import com.norm.timemall.app.ms.domain.pojo.MsDefaultFileMessage;
+import com.norm.timemall.app.ms.domain.pojo.MsFetchGroupMemberProfile;
 import com.norm.timemall.app.ms.domain.vo.MsDefaultEventVO;
+import com.norm.timemall.app.ms.domain.vo.MsFetchGroupMemberProfileVO;
 import com.norm.timemall.app.ms.service.MsGroupMemberRelService;
 import com.norm.timemall.app.ms.service.MsGroupMessageService;
 import com.norm.timemall.app.ms.service.MsGroupService;
@@ -146,6 +148,17 @@ public class MsGroupController {
         }
         msGroupMemberRelService.banOneUser(channel,userId);
         return new SuccessVO(CodeEnum.SUCCESS);
+
+    }
+    @ResponseBody
+    @GetMapping(value = "/api/v1/ms/group/{channel}/member/{id}/profile")
+    public MsFetchGroupMemberProfileVO fetchGroupMemberProfile(@PathVariable("channel") String channel, @PathVariable("id") String memberUserId){
+
+        MsFetchGroupMemberProfile profile = msGroupMemberRelService.findOneMemberProfile(channel,memberUserId);
+        MsFetchGroupMemberProfileVO vo = new MsFetchGroupMemberProfileVO();
+        vo.setProfile(profile);
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        return  vo;
 
     }
 

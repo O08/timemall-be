@@ -63,9 +63,7 @@ public class TeamMemberController {
     @ResponseBody
     @DeleteMapping(value = "/api/v1/team/oasis/unfollow")
     public SuccessVO unfollowOasis(@RequestParam("oasisId") String oasisId){
-        String brandId = accountService.
-                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
-                .getId();
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         // remove from oasis join tbl
         teamOasisJoinService.unfollowOasis(oasisId,brandId);
         // remove from oasis member tbl

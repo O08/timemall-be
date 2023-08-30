@@ -6,6 +6,7 @@ import com.norm.timemall.app.base.enums.ChannelTypeEnum;
 import com.norm.timemall.app.base.enums.GroupMemberPolicyRelEnum;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.GroupMemberRel;
+import com.norm.timemall.app.ms.domain.pojo.MsFetchGroupMemberProfile;
 import com.norm.timemall.app.ms.mapper.MsGroupMemberRelMapper;
 import com.norm.timemall.app.ms.service.MsGroupMemberRelService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,5 +43,10 @@ public class MsGroupMemberRelServiceImpl implements MsGroupMemberRelService {
                 .eq(GroupMemberRel::getPolicyRel,GroupMemberPolicyRelEnum.READ_WRITE.getMark());
         return msGroupMemberRelMapper.exists(wrapper);
 
+    }
+
+    @Override
+    public MsFetchGroupMemberProfile findOneMemberProfile(String channel, String memberUserId) {
+        return msGroupMemberRelMapper.selectOneMemberProfile(channel,ChannelTypeEnum.DEFAULT.getMark(), memberUserId);
     }
 }

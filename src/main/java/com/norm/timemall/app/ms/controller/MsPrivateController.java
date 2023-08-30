@@ -16,7 +16,9 @@ import com.norm.timemall.app.ms.domain.dto.MsStoreDefaultTextMessageDTO;
 import com.norm.timemall.app.ms.domain.pojo.MsDefaultEvent;
 import com.norm.timemall.app.ms.domain.pojo.MsDefaultFileMessage;
 import com.norm.timemall.app.ms.domain.pojo.MsFetchPrivateFriend;
+import com.norm.timemall.app.ms.domain.pojo.MsFetchPrivateFriendProfile;
 import com.norm.timemall.app.ms.domain.vo.MsDefaultEventVO;
+import com.norm.timemall.app.ms.domain.vo.MsFetchPrivateFriendProfileVO;
 import com.norm.timemall.app.ms.domain.vo.MsFetchPrivateFriendVO;
 import com.norm.timemall.app.ms.service.MsPrivateMessageService;
 import com.norm.timemall.app.ms.service.MsPrivateRelService;
@@ -160,6 +162,17 @@ public class MsPrivateController {
 
         msPrivateRelService.markAllMsgAsRead(friend);
         return new SuccessVO(CodeEnum.SUCCESS);
+
+    }
+    @ResponseBody
+    @GetMapping(value = "/api/v1/ms/private/user/{id}/profile")
+    public MsFetchPrivateFriendProfileVO fetchPrivateFriendProfile (@PathVariable("id") String friend){
+
+        MsFetchPrivateFriendProfile profile = msPrivateRelService.findOneFriendProfile(friend);
+        MsFetchPrivateFriendProfileVO vo = new MsFetchPrivateFriendProfileVO();
+        vo.setProfile(profile);
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        return  vo;
 
     }
 
