@@ -10,4 +10,5 @@ public class MsDefaultEventCard {
     private String createAt;
     private String msg;
     private String msgType;
+    private String id; // event id
 }

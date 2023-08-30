@@ -14,6 +14,7 @@
             <result property="createAt" column="create_at"/>
             <result property="msg" column="msg"/>
             <result property="msgType" column="msg_type"/>
+            <result property="id" column="msg_id"/>
         </collection>
     </resultMap>
 
@@ -23,7 +24,7 @@
     </resultMap>
 
     <select id="selectEventByChannelIdAndType" resultMap="defaultEventResultMap">
-        select m.channel_id ,DATE_FORMAT(m.create_at,"%Y-%m-%d") stampDate,b.brand_name author,b.avator authorIcon,m.author_id,m.create_at,m.msg_type,m.msg
+        select m.msg_id,m.channel_id ,DATE_FORMAT(m.create_at,"%Y-%m-%d") stampDate,b.brand_name author,b.avator authorIcon,m.author_id,m.create_at,m.msg_type,m.msg
         from group_msg m
         left join brand b
         on b.customer_id = m.author_id
