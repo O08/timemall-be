@@ -153,6 +153,11 @@ public class MsPrivateMessageServiceImpl implements MsPrivateMessageService {
         String currentUserId= SecurityUserHelper.getCurrentPrincipal().getUserId();
         msPrivateMsgMapper.deleteByOwnerIdAndFromIdAndToId(friend,currentUserId);
 
+        LambdaQueryWrapper<PrivateRel> relDelWrapper = Wrappers.lambdaQuery();
+        relDelWrapper.eq(PrivateRel::getUserId,currentUserId)
+                        .eq(PrivateRel::getFriendId,friend);
+        msPrivateRelMapper.delete(relDelWrapper);
+
     }
 
     @Override

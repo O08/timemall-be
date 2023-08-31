@@ -8,6 +8,7 @@ import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.FileStoreDir;
 import com.norm.timemall.app.base.enums.MsgTypeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
+import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.service.FileStoreService;
 import com.norm.timemall.app.ms.constant.ChatSupportUploadImageFormat;
 import com.norm.timemall.app.ms.domain.dto.MsStoreDefaultTextMessageDTO;
@@ -143,7 +144,8 @@ public class MsGroupController {
     public SuccessVO banUser(@PathVariable("channel") String channel,@PathVariable("user_id") String userId){
 
         boolean beAdmin= msGroupService.beAdmin(channel);
-        if(!beAdmin){
+        boolean beAdminUserId= SecurityUserHelper.getCurrentPrincipal().getUserId().equals(userId);
+        if(!beAdmin || beAdminUserId){
             throw  new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
         msGroupMemberRelService.banOneUser(channel,userId);
