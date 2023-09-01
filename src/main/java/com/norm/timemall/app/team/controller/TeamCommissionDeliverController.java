@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
+import com.norm.timemall.app.base.mo.Commission;
 import com.norm.timemall.app.base.service.FileStoreService;
 import com.norm.timemall.app.team.domain.dto.TeamDeliverLeaveMsgDTO;
 import com.norm.timemall.app.team.domain.dto.TeamPutCommissionDeliverTagDTO;
@@ -11,6 +12,7 @@ import com.norm.timemall.app.team.domain.pojo.TeamFetchCommissionDeliver;
 import com.norm.timemall.app.team.domain.vo.TeamFetchCommissionDeliverVO;
 import com.norm.timemall.app.team.service.TeamApiAccessControlService;
 import com.norm.timemall.app.team.service.TeamCommissionDeliverService;
+import com.norm.timemall.app.team.service.TeamCommissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,8 @@ public class TeamCommissionDeliverController {
     private TeamApiAccessControlService teamApiAccessControlService;
     @Autowired
     private FileStoreService fileStoreService;
+    @Autowired
+    private TeamCommissionService teamCommissionService;
     @PostMapping("/api/v1/team/commission_ws/new_deliver")
     public SuccessVO addCommissionDeliver(@RequestParam("preview") MultipartFile preview,
                                         @RequestParam("deliver") MultipartFile deliver,
@@ -36,6 +40,10 @@ public class TeamCommissionDeliverController {
         }
         String role=teamApiAccessControlService.findCommissionWsRole(commissionId);
         if(!CommissionWsRoleEnum.SUPPLIER.getMark().equals(role)){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        Commission commission = teamCommissionService.findCommissionUsingId(commissionId);
+        if(!OasisCommissionTagEnum.ACCEPT.getMark().equals(commission.getTag())){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
         // store file in classified

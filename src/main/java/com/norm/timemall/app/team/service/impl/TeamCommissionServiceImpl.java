@@ -75,7 +75,7 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
         String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         Commission commission = teamCommissionMapper.selectById(dto.getCommissionId());
 
-        if(commission==null || brandId.equals(commission.getFounder()) ||
+        if(commission==null ||
            !OasisCommissionTagEnum.ADD_TO_NEED_POOL.getMark().equals(commission.getTag())){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
@@ -91,8 +91,7 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
     public void finishOasisTask(TeamFinishOasisTaskDTO dto) {
         Commission commission = teamCommissionMapper.selectById(dto.getCommissionId());
         boolean validatedFail= commission == null
-                  || commission.getTag().equals(OasisCommissionTagEnum.FINISH.getMark())
-                  || !commission.getFounder().equals(SecurityUserHelper.getCurrentPrincipal().getBrandId());
+                  || commission.getTag().equals(OasisCommissionTagEnum.FINISH.getMark());
 
         if(validatedFail){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
@@ -172,11 +171,9 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
     @Override
     public void examineOasisTask(TeamExamineOasisTaskDTO dto) {
 
-        String brandId=SecurityUserHelper.getCurrentPrincipal().getBrandId();
         Commission commission = teamCommissionMapper.selectById(dto.getCommissionId());
         if(commission==null
-          || !brandId.equals(commission.getFounder())
-          || !OasisCommissionTagEnum.CREATED.getMark().equals(commission.getTag())){
+          ||  !OasisCommissionTagEnum.CREATED.getMark().equals(commission.getTag())){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
         commission.setTag(dto.getTag())

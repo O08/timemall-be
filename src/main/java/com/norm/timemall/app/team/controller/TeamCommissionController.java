@@ -3,6 +3,7 @@ package com.norm.timemall.app.team.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
+import com.norm.timemall.app.base.enums.CommissionWsRoleEnum;
 import com.norm.timemall.app.base.enums.OasisCommissionTagEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.service.OrderFlowService;
@@ -11,6 +12,7 @@ import com.norm.timemall.app.team.domain.pojo.TeamFetchCommissionDetail;
 import com.norm.timemall.app.team.domain.ro.TeamCommissionRO;
 import com.norm.timemall.app.team.domain.vo.TeamCommissionPageVO;
 import com.norm.timemall.app.team.domain.vo.TeamFetchCommissionDetailVO;
+import com.norm.timemall.app.team.service.TeamApiAccessControlService;
 import com.norm.timemall.app.team.service.TeamCommissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -22,6 +24,8 @@ public class TeamCommissionController {
     private TeamCommissionService teamCommissionService;
     @Autowired
     private OrderFlowService orderFlowService;
+    @Autowired
+    private TeamApiAccessControlService teamApiAccessControlService;
     /**
      * oasis 任务列表
      */
@@ -49,6 +53,10 @@ public class TeamCommissionController {
     @ResponseBody
     @PutMapping(value = "/api/v1/team/commission/accept")
     public SuccessVO acceptTask(@Validated @RequestBody TeamAcceptOasisTaskDTO dto){
+        String role=teamApiAccessControlService.findCommissionWsRole(dto.getCommissionId());
+        if(CommissionWsRoleEnum.ADMIN.getMark().equals(role)){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
         try{
             orderFlowService.insertOrderFlow(dto.getCommissionId(), OasisCommissionTagEnum.ACCEPT.getMark());
             teamCommissionService.acceptOasisTask(dto);
@@ -60,6 +68,10 @@ public class TeamCommissionController {
     @ResponseBody
     @PutMapping(value = "/api/v1/team/commission/finish")
     public SuccessVO finishTask(@Validated @RequestBody TeamFinishOasisTaskDTO dto){
+        String role=teamApiAccessControlService.findCommissionWsRole(dto.getCommissionId());
+        if(!CommissionWsRoleEnum.ADMIN.getMark().equals(role)){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
         try {
             orderFlowService.insertOrderFlow(dto.getCommissionId(), OasisCommissionTagEnum.FINISH.getMark());
             teamCommissionService.finishOasisTask(dto);
@@ -94,6 +106,10 @@ public class TeamCommissionController {
 
         boolean validated= OasisCommissionTagEnum.ABOLISH.getMark().equals(dto.getTag()) || OasisCommissionTagEnum.ADD_TO_NEED_POOL.getMark().equals(dto.getTag());
         if(!validated){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        String role=teamApiAccessControlService.findCommissionWsRole(dto.getCommissionId());
+        if(!CommissionWsRoleEnum.ADMIN.getMark().equals(role)){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
         teamCommissionService.examineOasisTask(dto);
