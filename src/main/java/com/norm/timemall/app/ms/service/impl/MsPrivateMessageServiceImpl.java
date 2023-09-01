@@ -194,25 +194,10 @@ public class MsPrivateMessageServiceImpl implements MsPrivateMessageService {
         wrapper.eq(PrivateRel::getUserId,msgReceiver)
                         .eq(PrivateRel::getFriendId,friendOfReceiver);
         PrivateRel dbPrivateRel = msPrivateRelMapper.selectOne(wrapper);
+
+
         if(dbPrivateRel==null){
             // add friend rel records
-            newPrivateRel(friendOfReceiver,msgReceiver,0L);
-            newOrUpdatePrivateRel(msgReceiver,friendOfReceiver);
-        }
-        if(ObjectUtil.isNotNull(dbPrivateRel)){
-            dbPrivateRel.setUnread(dbPrivateRel.getUnread()+1L);
-            dbPrivateRel.setModifiedAt(new Date());
-            msPrivateRelMapper.updateById(dbPrivateRel);
-        }
-        doPushOneMessageToFriend(msgReceiver,friendOfReceiver);
-
-    }
-    private void newOrUpdatePrivateRel(String msgReceiver,String friendOfReceiver) {
-        LambdaQueryWrapper<PrivateRel> wrapper= Wrappers.lambdaQuery();
-        wrapper.eq(PrivateRel::getUserId,msgReceiver)
-                .eq(PrivateRel::getFriendId,friendOfReceiver);
-        PrivateRel dbPrivateRel = msPrivateRelMapper.selectOne(wrapper);
-        if(dbPrivateRel==null){
             newPrivateRel(msgReceiver,friendOfReceiver,1L);
         }
         if(ObjectUtil.isNotNull(dbPrivateRel)){
@@ -220,7 +205,20 @@ public class MsPrivateMessageServiceImpl implements MsPrivateMessageService {
             dbPrivateRel.setModifiedAt(new Date());
             msPrivateRelMapper.updateById(dbPrivateRel);
         }
+
+        LambdaQueryWrapper<PrivateRel> currentUserRelWrapper= Wrappers.lambdaQuery();
+        currentUserRelWrapper.eq(PrivateRel::getUserId,friendOfReceiver)
+                .eq(PrivateRel::getFriendId,msgReceiver);
+        PrivateRel currentUserDbPrivateRel = msPrivateRelMapper.selectOne(currentUserRelWrapper);
+        if(currentUserDbPrivateRel==null){
+            // add friend rel records
+            newPrivateRel(friendOfReceiver,msgReceiver,0L);
+        }
+
+        doPushOneMessageToFriend(msgReceiver,friendOfReceiver);
+
     }
+
         private void newPrivateRel(String msgReceiver,String friendOfReceiver,Long unread){
 
         PrivateRel privateRel = new PrivateRel();
