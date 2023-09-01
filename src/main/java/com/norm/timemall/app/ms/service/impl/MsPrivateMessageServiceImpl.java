@@ -196,8 +196,8 @@ public class MsPrivateMessageServiceImpl implements MsPrivateMessageService {
         PrivateRel dbPrivateRel = msPrivateRelMapper.selectOne(wrapper);
         if(dbPrivateRel==null){
             // add friend rel records
-            newPrivateRel(msgReceiver,friendOfReceiver,1L);
             newPrivateRel(friendOfReceiver,msgReceiver,0L);
+            newOrUpdatePrivateRel(msgReceiver,friendOfReceiver);
         }
         if(ObjectUtil.isNotNull(dbPrivateRel)){
             dbPrivateRel.setUnread(dbPrivateRel.getUnread()+1L);
@@ -207,7 +207,21 @@ public class MsPrivateMessageServiceImpl implements MsPrivateMessageService {
         doPushOneMessageToFriend(msgReceiver,friendOfReceiver);
 
     }
-    private void newPrivateRel(String msgReceiver,String friendOfReceiver,Long unread){
+    private void newOrUpdatePrivateRel(String msgReceiver,String friendOfReceiver) {
+        LambdaQueryWrapper<PrivateRel> wrapper= Wrappers.lambdaQuery();
+        wrapper.eq(PrivateRel::getUserId,msgReceiver)
+                .eq(PrivateRel::getFriendId,friendOfReceiver);
+        PrivateRel dbPrivateRel = msPrivateRelMapper.selectOne(wrapper);
+        if(dbPrivateRel==null){
+            newPrivateRel(msgReceiver,friendOfReceiver,1L);
+        }
+        if(ObjectUtil.isNotNull(dbPrivateRel)){
+            dbPrivateRel.setUnread(dbPrivateRel.getUnread()+1L);
+            dbPrivateRel.setModifiedAt(new Date());
+            msPrivateRelMapper.updateById(dbPrivateRel);
+        }
+    }
+        private void newPrivateRel(String msgReceiver,String friendOfReceiver,Long unread){
 
         PrivateRel privateRel = new PrivateRel();
         privateRel.setId(IdUtil.simpleUUID())
