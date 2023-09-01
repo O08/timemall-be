@@ -144,7 +144,7 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
             groupMemberRel.setId(IdUtil.simpleUUID())
                     .setChannelId(oasis.getId())
                     .setChannelType(ChannelTypeEnum.DEFAULT.getMark())
-                    .setMemberId(brandId)
+                    .setMemberId(SecurityUserHelper.getCurrentPrincipal().getUserId())
                     .setPolicyRel(GroupMemberPolicyRelEnum.READ_WRITE.getMark())
                     .setCreateAt(new Date())
                     .setModifiedAt(new Date());
