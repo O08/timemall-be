@@ -2,13 +2,16 @@ package com.norm.timemall.app.ms.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.gson.Gson;
+import com.norm.timemall.app.base.entity.PageDTO;
 import com.norm.timemall.app.base.enums.ChannelTypeEnum;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.GroupMsg;
 import com.norm.timemall.app.ms.domain.dto.MsStoreDefaultTextMessageDTO;
-import com.norm.timemall.app.ms.domain.pojo.MsDefaultEvent;
+import com.norm.timemall.app.ms.domain.pojo.MsDefaultEventCard;
 import com.norm.timemall.app.ms.domain.pojo.MsDefaultTextMessage;
 import com.norm.timemall.app.ms.mapper.MsGroupMsgMapper;
 import com.norm.timemall.app.ms.service.MsGroupMessageService;
@@ -21,10 +24,7 @@ import java.util.Date;
 public class MsGroupMessageServiceImpl implements MsGroupMessageService {
     @Autowired
     private MsGroupMsgMapper msGroupMsgMapper;
-    @Override
-    public MsDefaultEvent findEvent(String channel) {
-        return msGroupMsgMapper.selectEventByChannelIdAndType(channel, ChannelTypeEnum.DEFAULT.getMark());
-    }
+
 
     @Override
     public void storeTextMessage(String channel, MsStoreDefaultTextMessageDTO dto) {
@@ -81,6 +81,16 @@ public class MsGroupMessageServiceImpl implements MsGroupMessageService {
                         .eq(GroupMsg::getChannelId,channel)
                                 .eq(GroupMsg::getChannelType,ChannelTypeEnum.DEFAULT.getMark());
         msGroupMsgMapper.delete(wrapper);
+
+    }
+
+    @Override
+    public IPage<MsDefaultEventCard> findEventPage(String channel, PageDTO dto) {
+
+        IPage<MsDefaultEventCard> page = new Page<>();
+        page.setCurrent(dto.getCurrent());
+        page.setSize(dto.getSize());
+        return msGroupMsgMapper.selectEventPage(page,channel,ChannelTypeEnum.DEFAULT.getMark());
 
     }
 

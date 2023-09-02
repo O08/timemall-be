@@ -11,6 +11,6 @@
          on d.commission_id=p.id
         where d.commission_id=#{commission_id}
         and p.worker=#{brandId}
-        order  by p.create_at desc
+        order  by d.create_at desc
     </select>
 </mapper>

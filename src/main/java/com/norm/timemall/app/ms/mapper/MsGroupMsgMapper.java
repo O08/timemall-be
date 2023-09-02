@@ -1,8 +1,9 @@
 package com.norm.timemall.app.ms.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.mo.GroupMsg;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.norm.timemall.app.ms.domain.pojo.MsDefaultEvent;
+import com.norm.timemall.app.ms.domain.pojo.MsDefaultEventCard;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,6 +17,7 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface MsGroupMsgMapper extends BaseMapper<GroupMsg> {
 
-    MsDefaultEvent selectEventByChannelIdAndType(@Param("channel_id") String channel,
-                                                 @Param("channel_type") String mark);
+
+    IPage<MsDefaultEventCard> selectEventPage(IPage<MsDefaultEventCard> page, @Param("channel_id") String channel,
+                                              @Param("channel_type") String mark);
 }

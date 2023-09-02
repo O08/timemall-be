@@ -2,7 +2,9 @@ package com.norm.timemall.app.ms.controller;
 
 import cn.hutool.core.io.FileTypeUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.gson.Gson;
+import com.norm.timemall.app.base.entity.PageDTO;
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.FileStoreDir;
@@ -12,10 +14,10 @@ import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.service.FileStoreService;
 import com.norm.timemall.app.ms.constant.ChatSupportUploadImageFormat;
 import com.norm.timemall.app.ms.domain.dto.MsStoreDefaultTextMessageDTO;
-import com.norm.timemall.app.ms.domain.pojo.MsDefaultEvent;
+import com.norm.timemall.app.ms.domain.pojo.MsDefaultEventCard;
 import com.norm.timemall.app.ms.domain.pojo.MsDefaultFileMessage;
 import com.norm.timemall.app.ms.domain.pojo.MsFetchGroupMemberProfile;
-import com.norm.timemall.app.ms.domain.vo.MsDefaultEventVO;
+import com.norm.timemall.app.ms.domain.vo.MsDefaultEventPageVO;
 import com.norm.timemall.app.ms.domain.vo.MsFetchGroupMemberProfileVO;
 import com.norm.timemall.app.ms.service.MsGroupMemberRelService;
 import com.norm.timemall.app.ms.service.MsGroupMessageService;
@@ -41,17 +43,16 @@ public class MsGroupController {
     private FileStoreService fileStoreService;
     @ResponseBody
     @GetMapping(value = "/api/v1/ms/group/{channel}/event")
-    public MsDefaultEventVO retrieveGroupEvent(@PathVariable("channel") String channel){
+    public MsDefaultEventPageVO retrieveGroupEvent(@PathVariable("channel") String channel, @Validated PageDTO dto ){
 
         boolean beMember= msGroupMemberRelService.beGroupMember(channel);
         if(!beMember){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
 
-        MsDefaultEvent event = msGroupMessageService.findEvent(channel);
-
-        MsDefaultEventVO vo = new MsDefaultEventVO();
-        vo.setEvent(event==null? new MsDefaultEvent(): event);
+        IPage<MsDefaultEventCard> event = msGroupMessageService.findEventPage(channel,dto);
+        MsDefaultEventPageVO vo  = new MsDefaultEventPageVO();
+        vo.setEvent(event);
         vo.setResponseCode(CodeEnum.SUCCESS);
         return vo;
 

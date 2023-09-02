@@ -5,8 +5,11 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.gson.Gson;
+import com.norm.timemall.app.base.entity.PageDTO;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.SseEventBusSceneEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
@@ -14,7 +17,7 @@ import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.PrivateMsg;
 import com.norm.timemall.app.base.mo.PrivateRel;
 import com.norm.timemall.app.ms.domain.dto.MsStoreDefaultTextMessageDTO;
-import com.norm.timemall.app.ms.domain.pojo.MsDefaultEvent;
+import com.norm.timemall.app.ms.domain.pojo.MsDefaultEventCard;
 import com.norm.timemall.app.ms.domain.pojo.MsDefaultTextMessage;
 import com.norm.timemall.app.ms.domain.pojo.SseEventMessage;
 import com.norm.timemall.app.ms.helper.SseHelper;
@@ -34,11 +37,7 @@ public class MsPrivateMessageServiceImpl implements MsPrivateMessageService {
     private MsPrivateMsgMapper msPrivateMsgMapper;
     @Autowired
     private MsPrivateRelMapper msPrivateRelMapper;
-    @Override
-    public MsDefaultEvent findEvent(String friend) {
-        String currentUserId= SecurityUserHelper.getCurrentPrincipal().getUserId();
-        return msPrivateMsgMapper.selectEventByFromIdAndToId(friend,currentUserId);
-    }
+
 
     @Override
     public void storeTextMessage(String friend, MsStoreDefaultTextMessageDTO dto) {
@@ -188,6 +187,19 @@ public class MsPrivateMessageServiceImpl implements MsPrivateMessageService {
         msPrivateMsgMapper.delete(wrapper);
 
     }
+
+    @Override
+    public IPage<MsDefaultEventCard> findEventPage(String friend, PageDTO dto) {
+        String currentUserId= SecurityUserHelper.getCurrentPrincipal().getUserId();
+
+
+        IPage<MsDefaultEventCard> page = new Page<>();
+        page.setCurrent(dto.getCurrent());
+        page.setSize(dto.getSize());
+        return msPrivateMsgMapper.selectEventPage(page,friend,currentUserId);
+
+    }
+
     private void ssePushOneMessageHandler(String msgReceiver,String friendOfReceiver){
 
         LambdaQueryWrapper<PrivateRel> wrapper= Wrappers.lambdaQuery();

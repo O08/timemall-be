@@ -2,7 +2,9 @@ package com.norm.timemall.app.ms.controller;
 
 import cn.hutool.core.io.FileTypeUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.gson.Gson;
+import com.norm.timemall.app.base.entity.PageDTO;
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.FileStoreDir;
@@ -13,11 +15,8 @@ import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.base.service.FileStoreService;
 import com.norm.timemall.app.ms.constant.ChatSupportUploadImageFormat;
 import com.norm.timemall.app.ms.domain.dto.MsStoreDefaultTextMessageDTO;
-import com.norm.timemall.app.ms.domain.pojo.MsDefaultEvent;
-import com.norm.timemall.app.ms.domain.pojo.MsDefaultFileMessage;
-import com.norm.timemall.app.ms.domain.pojo.MsFetchPrivateFriend;
-import com.norm.timemall.app.ms.domain.pojo.MsFetchPrivateFriendProfile;
-import com.norm.timemall.app.ms.domain.vo.MsDefaultEventVO;
+import com.norm.timemall.app.ms.domain.pojo.*;
+import com.norm.timemall.app.ms.domain.vo.MsDefaultEventPageVO;
 import com.norm.timemall.app.ms.domain.vo.MsFetchPrivateFriendProfileVO;
 import com.norm.timemall.app.ms.domain.vo.MsFetchPrivateFriendVO;
 import com.norm.timemall.app.ms.service.MsPrivateMessageService;
@@ -42,12 +41,11 @@ public class MsPrivateController {
     private AccountService accountService;
     @ResponseBody
     @GetMapping(value = "/api/v1/ms/private/{friend}/event")
-    public MsDefaultEventVO retrievePrivateEvent(@PathVariable("friend") String friend){
+    public MsDefaultEventPageVO retrievePrivateEvent(@PathVariable("friend") String friend, @Validated PageDTO dto){
 
-        MsDefaultEvent event = msPrivateMessageService.findEvent(friend);
-
-        MsDefaultEventVO vo = new MsDefaultEventVO();
-        vo.setEvent(event==null? new MsDefaultEvent(): event);
+        IPage<MsDefaultEventCard> event = msPrivateMessageService.findEventPage(friend,dto);
+        MsDefaultEventPageVO vo  = new MsDefaultEventPageVO();
+        vo.setEvent(event);
         vo.setResponseCode(CodeEnum.SUCCESS);
         return vo;
 
