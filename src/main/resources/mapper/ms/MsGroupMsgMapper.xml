@@ -9,7 +9,7 @@
         on b.customer_id = m.author_id
         where m.channel_id = #{channel_id}
         and m.channel_type= #{channel_type}
-        order by m.create_at
+        order by m.create_at desc
     </select>
 
 </mapper>

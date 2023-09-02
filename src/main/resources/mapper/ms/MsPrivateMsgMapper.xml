@@ -13,7 +13,7 @@
         and m.to_id= #{current_user_id})
         or (m.from_id = #{current_user_id}
         and m.to_id= #{friend}))
-        order by m.create_at
+        order by m.create_at desc
     </select>
 
 </mapper>
