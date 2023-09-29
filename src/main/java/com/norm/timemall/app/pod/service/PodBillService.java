@@ -10,10 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface PodBillService {
     Bill findBillByIdAndCustomer(String billId,String customerId);
-    void modifyBillVoucherUri(String billId, String uri);
-
-    void markBillByIdAndCode(String billId, String code);
-
     IPage<PodBillsRO> findBills(PodBillPageDTO pageDTO, CustomizeUser user);
 
+    void pay(String billId);
 }

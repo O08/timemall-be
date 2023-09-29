@@ -20,8 +20,6 @@ import org.apache.ibatis.annotations.Update;
 public interface PodBillMapper extends BaseMapper<Bill> {
     @Select(value = "select b.id,b.stage,b.stage_no,b.amount,b.voucher,b.mark,b.order_id,b.create_at,b.modified_at from bill b,order_details d where b.order_id = d.id and b.id= #{id} and d.consumer_id = #{user_id}")
     Bill selectByIdAndCustomer(@Param("id") String billId, @Param("user_id") String userId);
-    @Update(value = "update bill set voucher = #{uri},modified_at=now() where id = #{id}")
-    void updateBillVoucherById(@Param("id") String billId, @Param("uri") String uri);
 
     @Update(value = "update bill set mark = #{code} where id = #{id}")
     void updateBillMarkById(@Param("id")  String billId, @Param("code") String code);

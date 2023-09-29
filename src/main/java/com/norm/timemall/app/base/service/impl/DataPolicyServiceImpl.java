@@ -1,6 +1,7 @@
 package com.norm.timemall.app.base.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.norm.timemall.app.base.enums.BillMarkEnum;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mapper.DataPolicyMapper;
 import com.norm.timemall.app.base.mo.Cell;
@@ -60,9 +61,9 @@ public class DataPolicyServiceImpl implements DataPolicyService {
     }
 
     @Override
-    public boolean billIdCheckForBrand(String billId) {
+    public boolean billCanMarkAsPendingForBrand(String billId) {
         String  userId = SecurityUserHelper.getCurrentPrincipal().getUserId();
-        Integer cnt = dataPolicyMapper.selectCountBillIdForBrandByIdAndCustomerId(billId,userId);
+        Integer cnt = dataPolicyMapper.selectCountBillIdForBrandByIdAndCustomerId(billId,userId, BillMarkEnum.CREATED.getMark());
         return cnt>0;
 
     }

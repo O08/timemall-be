@@ -11,7 +11,8 @@ public enum TransTypeEnum {
     MPS_FUND_TRANSFER("7","产链基金支付转账"),
     PLAN_ORDER_TRANSFER_TO_BRAND("8","平台单品打款"),
     PLAN_ORDER_PAY("9","单品付款"),
-    REFUND("10","退款")
+    REFUND("10","退款"),
+    MILLSTONE_BILL_PAY("11","特约账单支付")
     ;
     private String mark;
     private String desc;

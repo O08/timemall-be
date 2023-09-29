@@ -7,11 +7,17 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.gson.Gson;
 import com.norm.timemall.app.base.enums.BillMarkEnum;
+import com.norm.timemall.app.base.enums.CodeEnum;
+import com.norm.timemall.app.base.enums.FidTypeEnum;
+import com.norm.timemall.app.base.enums.TransTypeEnum;
+import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.Bill;
 import com.norm.timemall.app.base.mo.Millstone;
 import com.norm.timemall.app.base.mo.OrderDetails;
+import com.norm.timemall.app.base.pojo.TransferBO;
 import com.norm.timemall.app.base.security.CustomizeUser;
+import com.norm.timemall.app.pay.service.DefaultPayService;
 import com.norm.timemall.app.pod.domain.dto.PodBillPageDTO;
 import com.norm.timemall.app.pod.domain.pojo.PodMillStoneNode;
 import com.norm.timemall.app.pod.domain.pojo.PodWorkFlowNode;
@@ -36,26 +42,17 @@ public class PodBillServiceImpl implements PodBillService {
 
     @Autowired
     private PodMillstoneMapper podMillstoneMapper;
+
+    @Autowired
+    private DefaultPayService defaultPayService;
+
     @Override
     public Bill findBillByIdAndCustomer(String billId, String customerId) {
         Bill bill =  podBillMapper.selectByIdAndCustomer( billId,  customerId);
         return bill;
     }
 
-    @Override
-    public void modifyBillVoucherUri(String billId, String uri) {
-        podBillMapper.updateBillVoucherById(billId,uri);
 
-    }
-
-    @Override
-    public void markBillByIdAndCode(String billId, String code) {
-        podBillMapper.updateBillMarkById(billId,code);
-        // 支付完成后，生成下一条账单
-        if(code.equals(BillMarkEnum.PAID.getMark())){
-            generateNextBill(billId);
-        }
-    }
 
     @Override
     public IPage<PodBillsRO> findBills(PodBillPageDTO pageDTO, CustomizeUser user) {
@@ -65,6 +62,44 @@ public class PodBillServiceImpl implements PodBillService {
         IPage<PodBillsRO>  bills = podBillMapper.selectBillPageByUserId(page, pageDTO.getCode(),user.getUserId());
         return bills;
     }
+
+    @Override
+    public void pay(String billId) {
+        doPayMillstoneBill(billId);
+    }
+
+    public void doPayMillstoneBill(String billId){
+
+        Bill bill = podBillMapper.selectById(billId);
+        if(bill==null || !BillMarkEnum.PENDING.getMark().equals(bill.getMark())){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        OrderDetails orderDetails = podOrderDetailsMapper.selectById(bill.getOrderId());
+
+        // pay
+        TransferBO bo = generateTransferBO(bill.getAmount(),orderDetails.getBrandId(),billId);
+        defaultPayService.transfer(new Gson().toJson(bo));
+        // update bill mark as paid
+        podBillMapper.updateBillMarkById(billId,BillMarkEnum.PAID.getMark());
+
+        // 支付完成后，生成下一条账单
+        generateNextBill(billId);
+
+
+    }
+
+    private TransferBO generateTransferBO(BigDecimal amount, String payeeAccount,String outNo){
+        TransferBO bo = new TransferBO();
+        bo.setAmount(amount)
+                .setOutNo(outNo)
+                .setPayeeType(FidTypeEnum.BRAND.getMark())
+                .setPayeeAccount(payeeAccount)
+                .setPayerAccount(SecurityUserHelper.getCurrentPrincipal().getBrandId())
+                .setPayerType(FidTypeEnum.BRAND.getMark())
+                .setTransType(TransTypeEnum.MILLSTONE_BILL_PAY.getMark());
+        return  bo;
+    }
+
     private void generateNextBill(String billId){
         // find bill
         Bill bill = findBillByIdAndCustomer(billId, SecurityUserHelper.getCurrentPrincipal().getUserId());
