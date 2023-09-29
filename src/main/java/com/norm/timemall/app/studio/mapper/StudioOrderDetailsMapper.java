@@ -19,7 +19,7 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface StudioOrderDetailsMapper extends BaseMapper<OrderDetails> {
 
-   @Select("select o.cell_title service, o.consumer_name customer,o.total fee,o.create_at added,o.id from order_details o,brand b where o.brand_id = b.id and b.customer_id = #{user_id} order by o.create_at desc")
+   @Select("select o.cell_title service, o.consumer_name customer,o.total fee,o.create_at added,o.id,o.consumer_id customerUserId from order_details o,brand b where o.brand_id = b.id and b.customer_id = #{user_id} order by o.create_at desc")
     IPage<StudioTransRO> selectTransPageByBrandId(IPage<StudioTransRO> page,
                                                   @Param("user_id") String userId
    );

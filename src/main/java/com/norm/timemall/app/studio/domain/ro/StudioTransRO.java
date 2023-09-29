@@ -11,4 +11,5 @@ public class StudioTransRO {
     private BigDecimal fee;
     private String added;
     private String id;
+    private String customerUserId;
 }

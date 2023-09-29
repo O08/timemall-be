@@ -17,4 +17,6 @@ public class PodTransRO {
     private String added;
     // The id for brand, ref: brand.id
     private String brandId;
+    // The customer_id for brand, ref: brand.customer_id
+    private String supplierUserId;
 }

@@ -20,7 +20,7 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface PodOrderDetailsMapper extends BaseMapper<OrderDetails> {
 
-   @Select("select cell_title service, brand_name supplier,total fee,create_at added,brand_id from order_details where consumer_id = #{user_id} order by create_at desc")
+   @Select("select d.cell_title service, d.brand_name supplier,d.total fee,d.create_at added,d.brand_id,b.customer_id as supplierUserId from order_details d, brand b where b.id=d.brand_id and d.consumer_id = #{user_id} order by d.create_at desc")
     IPage<PodTransRO> selectTransPageByUserId(IPage<PodTransRO> page, @Param("user_id") String username);
     @Select("select o.cell_title service, o.brand_name supplier,o.total fee,o.create_at added,o.id from order_details o,millstone m where   o.id = m.order_id and o.consumer_id = #{user_id} and m.mark= #{mark} order by o.create_at desc")
     IPage<PodWorkflowRO> selectWorkflowByUserId(IPage<PodWorkflowRO> page, @Param("mark") String code,@Param("user_id") String userId);
