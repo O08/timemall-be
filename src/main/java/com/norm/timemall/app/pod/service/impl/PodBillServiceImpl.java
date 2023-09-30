@@ -75,6 +75,9 @@ public class PodBillServiceImpl implements PodBillService {
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
         OrderDetails orderDetails = podOrderDetailsMapper.selectById(bill.getOrderId());
+        if(!SecurityUserHelper.getCurrentPrincipal().getUserId().equals(orderDetails.getConsumerId())){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
 
         // pay
         TransferBO bo = generateTransferBO(bill.getAmount(),orderDetails.getBrandId(),billId);
