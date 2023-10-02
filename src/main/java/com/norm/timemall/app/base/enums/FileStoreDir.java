@@ -18,7 +18,7 @@ public enum FileStoreDir {
     CELL_PLAN_DELIVER("cell/plan/deliver", "cell plan deliver"), CELL_PLAN_PREVIEW("cell/plan/preview","cell plan preview" ),
     DEFAULT_IMAGE_MESSAGE("msg/default/image-msg","default message image dir" ),
     DEFAULT_ATTACHMENT_MESSAGE("msg/default/attachment-msg","default message attachment dir" ), COMMISSION_DELIVER("commission/deliver/deliver","commission ws deliver" ),
-    COMMISSION_PREVIEW("commission/deliver/preview","commission ws deliver preview" );
+    COMMISSION_PREVIEW("commission/deliver/preview","commission ws deliver preview" ), FEEDBACK("feedback", "user feedback attachment");
     private String dir;
 
     private String desc;
