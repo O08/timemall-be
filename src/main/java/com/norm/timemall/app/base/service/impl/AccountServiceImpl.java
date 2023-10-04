@@ -69,7 +69,7 @@ public class AccountServiceImpl implements AccountService {
         customerMapper.insert(customer);
 
         // bind a brand for new user
-        newBrandWhenUserRegister(customer.getId(),username);
+        newBrandWhenUserRegister(customer.getId(),StrUtil.subBefore(username,"@",true));
         return true;
     }
 
@@ -86,8 +86,10 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void modifiedPasswordByUserName(String encryptedPassword, String username) {
-
-        customerMapper.updatePasswordByUserName(encryptedPassword,username);
+        Customer customer = new Customer();
+        customer.setPassword(encryptedPassword)
+                        .setLoginName(username);
+        customerMapper.updatePasswordByUserName(customer);
 
     }
 

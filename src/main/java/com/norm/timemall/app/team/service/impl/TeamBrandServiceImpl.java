@@ -49,10 +49,9 @@ public class TeamBrandServiceImpl implements TeamBrandService {
 
     @Override
     public TeamBrandBank findBrandBank() {
-        String brandId = accountService.
-                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
-                .getId();
-         ArrayList<TeamBrandBankItem> banks = teamBrandBankMapper.selectBankByBrandId(brandId);
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+
+        ArrayList<TeamBrandBankItem> banks = teamBrandBankMapper.selectBankByBrandId(brandId);
         TeamBrandBank ro = new TeamBrandBank();
         ro.setRecords(banks);
         return ro;
@@ -60,9 +59,8 @@ public class TeamBrandServiceImpl implements TeamBrandService {
 
     @Override
     public void addNewBank(TeamAddBrandBankDTO dto) {
-        String brandId = accountService.
-                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
-                .getId();
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+
         BrandBank bank = new BrandBank();
         bank.setId(IdUtil.simpleUUID())
                 .setBrandId(brandId)
@@ -77,9 +75,7 @@ public class TeamBrandServiceImpl implements TeamBrandService {
 
     @Override
     public TeamBrandAlipayAccount findBrandAlipay() {
-        String brandId = accountService.
-                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
-                .getId();
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         ArrayList<TeamBrandAlipayAccountItem>  ros= teamBrandAlipayMapper.selectAlipayByBrandId(brandId);
         TeamBrandAlipayAccount records = new TeamBrandAlipayAccount();
         records.setRecords(ros);
@@ -88,9 +84,8 @@ public class TeamBrandServiceImpl implements TeamBrandService {
 
     @Override
     public void addNewAlipayAccount(TeamAddBrandAlipayDTO dto) {
-        String brandId = accountService.
-                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
-                .getId();
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+
         BrandAlipay alipayAccount = new BrandAlipay();
         alipayAccount.setId(IdUtil.simpleUUID())
                 .setBrandId(brandId)

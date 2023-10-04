@@ -8,6 +8,7 @@ import java.util.Date;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import mybatis.mate.annotation.FieldEncrypt;
 
 /**
  * (brand_alipay)实体类
@@ -39,10 +40,12 @@ public class BrandAlipay extends Model<BrandAlipay> implements Serializable {
     /**
      * payeeAccount
      */
+    @FieldEncrypt
     private String payeeAccount;
     /**
      * payeeRealName
      */
+    @FieldEncrypt
     private String payeeRealName;
     /**
      * createAt

@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import mybatis.mate.annotation.FieldEncrypt;
 
 /**
  * (brand)实体类
@@ -54,18 +55,22 @@ public class Brand extends Model<Brand> implements Serializable {
     /**
      * phone
      */
+    @FieldEncrypt
     private String phone;
     /**
      * email
      */
+    @FieldEncrypt
     private String email;
     /**
      * 银行卡持卡人
      */
+    @FieldEncrypt
     private String cardholder;
     /**
      * 银行卡卡号
      */
+    @FieldEncrypt
     private String cardno;
     /**
      * alipay

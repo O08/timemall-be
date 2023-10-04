@@ -15,6 +15,6 @@ import org.apache.ibatis.annotations.Update;
 */
 @Mapper
 public interface CustomerMapper extends BaseMapper<Customer> {
-@Update("update customer set password=#{password} where login_name=#{username}")
-    void updatePasswordByUserName(@Param("password") String encryptedPassword,@Param("username") String username);
+@Update("update customer set password=#{u.password} where login_name=#{u.loginName}")
+    void updatePasswordByUserName(@Param("u") Customer customer);
 }

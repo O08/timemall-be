@@ -8,6 +8,7 @@ import java.util.Date;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import mybatis.mate.annotation.FieldEncrypt;
 
 /**
  * (email_message)实体类
@@ -31,10 +32,12 @@ public class EmailMessage extends Model<EmailMessage> implements Serializable {
     /**
      * 发件人
      */
+    @FieldEncrypt
     private String sender;
     /**
      * 收件人
      */
+    @FieldEncrypt
     private String recipient;
     /**
      * 主题
@@ -43,6 +46,7 @@ public class EmailMessage extends Model<EmailMessage> implements Serializable {
     /**
      * 发送内容
      */
+    @FieldEncrypt
     private String body;
     /**
      *  参考因子
