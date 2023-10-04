@@ -8,6 +8,7 @@ import java.util.Date;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import mybatis.mate.annotation.Algorithm;
 import mybatis.mate.annotation.FieldEncrypt;
 
 /**
@@ -44,7 +45,7 @@ public class Customer extends Model<Customer> implements Serializable {
     /**
      * notifyEmail
      */
-    @FieldEncrypt
+    @FieldEncrypt(algorithm = Algorithm.AES)
     private String notifyEmail;
     /**
      * notifyPhone
@@ -53,7 +54,7 @@ public class Customer extends Model<Customer> implements Serializable {
     /**
      * 登录时使用的手机号或者邮箱
      */
-    @FieldEncrypt
+    @FieldEncrypt(algorithm = Algorithm.AES)
     private String loginName;
     /**
      * registAt

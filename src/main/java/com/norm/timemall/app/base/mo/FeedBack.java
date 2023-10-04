@@ -8,6 +8,7 @@ import java.util.Date;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import mybatis.mate.annotation.Algorithm;
 import mybatis.mate.annotation.FieldEncrypt;
 
 /**
@@ -36,7 +37,7 @@ public class FeedBack extends Model<FeedBack> implements Serializable {
     /**
      * 联系方式
      */
-    @FieldEncrypt
+    @FieldEncrypt(algorithm = Algorithm.AES)
     private String contactInfo;
     /**
      * 反馈附件

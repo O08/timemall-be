@@ -17,6 +17,7 @@ import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.base.entity.Customer;
 import com.norm.timemall.app.base.mapper.CustomerMapper;
 import com.norm.timemall.app.base.entity.Account;
+import com.norm.timemall.app.base.util.mate.MybatisMateEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,10 +34,12 @@ public class AccountServiceImpl implements AccountService {
     private BaseBrandMapper baseBrandMapper;
     @Autowired
     private FinAccountMapper finAccountMapper;
+    @Autowired
+    private MybatisMateEncryptor mybatisMateEncryptor;
     @Override
     public Account findAccountByUserName(String username) {
         LambdaQueryWrapper<Customer> lambdaQuery = Wrappers.<Customer>lambdaQuery();
-        lambdaQuery.eq(Customer::getLoginName, username);
+        lambdaQuery.eq(Customer::getLoginName, mybatisMateEncryptor.defaultEncrypt(username) );
         Customer customer = customerMapper.selectOne(lambdaQuery);
         Account account = new Account();
         account.setUserId(customer.getId());
@@ -49,7 +52,7 @@ public class AccountServiceImpl implements AccountService {
     public boolean doSignUpWithEmail(String username, String password) {
         // if customer already sign up return
         LambdaQueryWrapper<Customer> lambdaQuery = Wrappers.<Customer>lambdaQuery();
-        lambdaQuery.eq(Customer::getLoginName, username);
+        lambdaQuery.eq(Customer::getLoginName, mybatisMateEncryptor.defaultEncrypt(username) );
         Long cnt = customerMapper.selectCount(lambdaQuery);
         if(cnt > 0){
             throw new ErrorCodeException(CodeEnum.USER_ACCOUNT_ALREADY_EXIST);

@@ -8,6 +8,7 @@ import java.util.Date;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import mybatis.mate.annotation.Algorithm;
 import mybatis.mate.annotation.FieldEncrypt;
 
 /**
@@ -32,12 +33,12 @@ public class EmailMessage extends Model<EmailMessage> implements Serializable {
     /**
      * 发件人
      */
-    @FieldEncrypt
+    @FieldEncrypt(algorithm = Algorithm.AES)
     private String sender;
     /**
      * 收件人
      */
-    @FieldEncrypt
+    @FieldEncrypt(algorithm = Algorithm.AES)
     private String recipient;
     /**
      * 主题
@@ -46,7 +47,7 @@ public class EmailMessage extends Model<EmailMessage> implements Serializable {
     /**
      * 发送内容
      */
-    @FieldEncrypt
+    @FieldEncrypt(algorithm = Algorithm.AES)
     private String body;
     /**
      *  参考因子

@@ -56,9 +56,7 @@ public class TeamWithdrawServiceImpl implements TeamWithdrawService {
 
     }
     public WithdrawToALiPayBO doToAliPay(WithDrawDTO dto) {
-        String brandId = accountService.
-                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
-                .getId();
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
 
         // 查询账户信息 提现金额验证
         FinAccount account = teamAccountMapper.selectOneByFid(brandId, FidTypeEnum.BRAND.getMark());
@@ -94,9 +92,7 @@ public class TeamWithdrawServiceImpl implements TeamWithdrawService {
 
     @Override
     public void toAliPaySuccess(String orderNo, AlipayFundTransToaccountTransferResponse response) {
-        String brandId = accountService.
-                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
-                .getId();
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         // update tag and msg
         WithdrawRecord record = teamWithdrawRecordMapper.selectById(orderNo);
         record.setTag(WithdrawTagEnum.SUCCESS.getMark())

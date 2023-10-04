@@ -11,6 +11,7 @@ import com.norm.timemall.app.base.pojo.SimpleBrandBank;
 import com.norm.timemall.app.base.pojo.BrandInfo;
 import com.norm.timemall.app.base.pojo.BrandPayway;
 import com.norm.timemall.app.base.security.CustomizeUser;
+import com.norm.timemall.app.base.util.mate.MybatisMateEncryptor;
 import com.norm.timemall.app.studio.domain.dto.*;
 import com.norm.timemall.app.studio.domain.pojo.StudioBank;
 import com.norm.timemall.app.base.pojo.BrandContact;
@@ -23,6 +24,8 @@ import org.springframework.stereotype.Service;
 public class StudioBrandServiceImpl implements StudioBrandService {
     @Autowired
     private StudioBrandMapper studioBrandMapper;
+    @Autowired
+    private MybatisMateEncryptor mybatisMateEncryptor;
     @Override
     public void modifyBrandProfile(String brandId, String userId,StudioBrandProfileDTO dto) {
         Gson gson = new Gson();
@@ -46,13 +49,17 @@ public class StudioBrandServiceImpl implements StudioBrandService {
     @Override
     public void modifyBrandBank(String brandId, String userId,StudioBrandBankDTO dto) {
         StudioBank bank = dto.getBank();
-        studioBrandMapper.updateBrandBankById(brandId,userId,bank.getCardholder(),bank.getCardNo());
+        String cardholder= mybatisMateEncryptor.defaultEncrypt(bank.getCardholder());
+        String cardNo= mybatisMateEncryptor.defaultEncrypt(bank.getCardNo());
+        studioBrandMapper.updateBrandBankById(brandId,userId,cardholder,cardNo);
     }
 
     @Override
     public void modifyBrandContact(String brandId, StudioContactDTO contact) {
         CustomizeUser user = SecurityUserHelper.getCurrentPrincipal();
-        studioBrandMapper.updateBrandContactById(brandId, user.getUserId(), contact.getEmail(),contact.getPhone());
+        String email= mybatisMateEncryptor.defaultEncrypt(contact.getEmail());
+        String phone= mybatisMateEncryptor.defaultEncrypt(contact.getPhone());
+        studioBrandMapper.updateBrandContactById(brandId, user.getUserId(), email,phone);
     }
 
     @Override

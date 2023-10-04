@@ -9,6 +9,7 @@ import java.util.Date;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import mybatis.mate.annotation.Algorithm;
 import mybatis.mate.annotation.FieldEncrypt;
 
 /**
@@ -41,12 +42,12 @@ public class WithdrawRecord extends Model<WithdrawRecord> implements Serializabl
     /**
      * payeeAccount
      */
-    @FieldEncrypt
+    @FieldEncrypt(algorithm = Algorithm.AES)
     private String payeeAccount;
     /**
      * payeeRealName
      */
-    @FieldEncrypt
+    @FieldEncrypt(algorithm = Algorithm.AES)
     private String payeeRealName;
     /**
      * amount
