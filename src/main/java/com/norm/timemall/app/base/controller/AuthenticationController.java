@@ -2,6 +2,7 @@ package com.norm.timemall.app.base.controller;
 
 import com.norm.timemall.app.base.entity.PasswordResetDTO;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
+import com.norm.timemall.app.base.handlers.DelAccountHandler;
 import com.norm.timemall.app.base.handlers.PasswordResetHandler;
 import com.norm.timemall.app.base.handlers.VerificationCodeHandler;
 import com.norm.timemall.app.base.entity.EmailJoinDTO;
@@ -31,6 +32,9 @@ public class AuthenticationController {
     @Autowired
     private PasswordResetHandler passwordResetHandler;
 
+    @Autowired
+    private DelAccountHandler delAccountHandler;
+
     /*
       *通过邮箱进行注册
      */
@@ -54,7 +58,7 @@ public class AuthenticationController {
     @RequestMapping(value = "/api/v1/web_mall/account_delete", method = RequestMethod.DELETE)
     public  SuccessVO deleteAccount(@AuthenticationPrincipal CustomizeUser userDetails)
     {
-        accountService.deleteAccount(userDetails);
+        delAccountHandler.delAccountProcess();
         return new SuccessVO(CodeEnum.SUCCESS);
     }
 

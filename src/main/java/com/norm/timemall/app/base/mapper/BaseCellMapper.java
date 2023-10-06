@@ -1,22 +1,21 @@
 package com.norm.timemall.app.base.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.norm.timemall.app.base.mo.Brand;
+import com.norm.timemall.app.base.mo.Cell;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
 
-
 /**
- * (brand)数据Mapper
+ * (cell)数据Mapper
  *
  * @author kancy
- * @since 2022-10-26 15:23:17
+ * @since 2022-10-25 20:09:25
  * @description 由 Mybatisplus Code Generator 创建
 */
 @Mapper
-public interface BaseBrandMapper extends BaseMapper<Brand> {
-
-@Update("update brand set mark=#{mark} where id=#{id}")
-    void updateMarkById(@Param("mark") String mark,@Param("id") String brandId);
+public interface BaseCellMapper extends BaseMapper<Cell> {
+@Update("update cell set mark=#{mark} where brand_id=#{brand_id} and mark='2' ")
+    void updateMarkByBrandId(@Param("mark") String mark,@Param("brand_id") String brandId);
 }
+

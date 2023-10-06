@@ -43,9 +43,7 @@ public class TeamFinanceServiceImpl implements TeamFinanceService {
     private AccountService accountService;
     @Override
     public void orderObj(String objId) {
-        String brandId =accountService.
-                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
-                .getId();
+        String brandId =SecurityUserHelper.getCurrentPrincipal().getBrandId();
         //1.query obj info
         TeamObj2RO objRO = teamMarketObjectMapper.selectOneObj(objId);
         if(objRO==null){
@@ -117,9 +115,7 @@ public class TeamFinanceServiceImpl implements TeamFinanceService {
 
     @Override
     public TeamFinBoardRO kanban() {
-        String brandId = accountService.
-                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
-                .getId();
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         FinAccount account = teamAccountMapper.selectOneByFid(brandId, FidTypeEnum.BRAND.getMark());
         TeamFinBoardRO ro = new TeamFinBoardRO();
         ro.setAmount(account==null ? BigDecimal.ZERO : account.getAmount());
@@ -129,9 +125,7 @@ public class TeamFinanceServiceImpl implements TeamFinanceService {
 
     @Override
     public TeamFinDistriution findFinDistribution() {
-        String brandId = accountService.
-                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
-                .getId();
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         ArrayList<TeamFinDistriutionItem> items = teamFinDistributeMapper.selectDistributeByBrandId(brandId,
                 FidTypeEnum.BRAND.getMark(),FidTypeEnum.OASIS.getMark());
         TeamFinDistriution ro = new TeamFinDistriution();

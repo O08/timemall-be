@@ -4,6 +4,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.norm.timemall.app.base.enums.BrandMarkEnum;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.FidTypeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
@@ -112,6 +113,7 @@ public class AccountServiceImpl implements AccountService {
     private void newBrandWhenUserRegister(String userId,String brandName){
         Brand brand = new Brand();
         brand.setId(IdUtil.simpleUUID())
+                .setMark(BrandMarkEnum.CREATED.getMark())
                 .setBrandName(brandName)
                 .setCustomerId(userId);
         baseBrandMapper.insert(brand);

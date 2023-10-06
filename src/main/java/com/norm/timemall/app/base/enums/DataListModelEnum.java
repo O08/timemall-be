@@ -1,18 +1,12 @@
 package com.norm.timemall.app.base.enums;
 
-public enum CommercialPaperTagEnum {
-    CREATED("1","创建"),
-    PUBLISH("2","上线交易"),
-    OFFLINE("3","下线交易"),
-    END("4","完成"),
-    DELIVERING("5","交付中"),
-    CLOSED("6","关单")
-
-    ;
+public enum DataListModelEnum {
+    USER_INTEREST("user_interest"," compute user rights and interests"),
+    USER_DEL_PRE_REQUIREMENT("user_del_pre_requirement","compute user pre requirement when del");
     private String mark;
     private String desc;
 
-    CommercialPaperTagEnum(String mark, String desc) {
+    DataListModelEnum(String mark, String desc) {
         this.mark = mark;
         this.desc = desc;
     }

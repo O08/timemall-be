@@ -94,4 +94,9 @@ public class Brand extends Model<Brand> implements Serializable {
      */
     private String location;
 
+    /**
+     * brand 状态
+     */
+    private String mark;
+
 }
