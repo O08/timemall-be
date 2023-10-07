@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 @Service
 public interface TeamFinanceService {
-    void orderObj(String objId);
+
 
     TeamFinBoardRO kanban();
 
