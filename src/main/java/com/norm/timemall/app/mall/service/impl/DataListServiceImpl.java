@@ -3,7 +3,6 @@ package com.norm.timemall.app.mall.service.impl;
 import cn.hutool.core.util.ObjectUtil;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.DataListModelEnum;
-import com.norm.timemall.app.base.enums.EmailNoticeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.mall.mapper.CustomerInterestsMapper;

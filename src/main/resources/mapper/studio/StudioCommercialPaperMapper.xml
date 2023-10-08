@@ -44,7 +44,7 @@
             <if test="q != null and q != ''">
                 AND ( locate(#{q}, p.title) > 0  or  locate(#{q}, p.piece) > 0 )
             </if>
-            and CURDATE() > DATE_ADD( p.create_at,  INTERVAL p.duration DAY)
+            and ( p.duration is null or (now() > DATE_ADD( p.create_at,  INTERVAL p.duration DAY)))
         </where>
     </select>
     <select id="selectPaperDetailById" resultType="com.norm.timemall.app.studio.domain.pojo.StudioFetchMpsPaperDetail">

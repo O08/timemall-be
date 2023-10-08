@@ -24,6 +24,7 @@
         from brand
         where
         1 = 1
+        and mark='1'
         and title is not null
         <if test="q != null and q != ''">
             AND (locate(#{q}, title)>0

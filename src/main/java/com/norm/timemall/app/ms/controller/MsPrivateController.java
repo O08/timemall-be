@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.gson.Gson;
 import com.norm.timemall.app.base.entity.PageDTO;
 import com.norm.timemall.app.base.entity.SuccessVO;
+import com.norm.timemall.app.base.enums.BrandMarkEnum;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.FileStoreDir;
 import com.norm.timemall.app.base.enums.MsgTypeEnum;
@@ -57,6 +58,9 @@ public class MsPrivateController {
         if(friendBrand==null || !MsgTypeEnum.TEXT.getMark().equals(dto.getMsgType())){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
+        if(BrandMarkEnum.CLOSED.getMark().equals(friendBrand.getMark())){
+            throw new ErrorCodeException(CodeEnum.FRIEND_ALREADY_CLOSED);
+        }
         msPrivateMessageService.storeTextMessage(friend,dto);
         return new SuccessVO(CodeEnum.SUCCESS);
 
@@ -82,6 +86,9 @@ public class MsPrivateController {
         if(friendBrand==null){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
+        if(BrandMarkEnum.CLOSED.getMark().equals(friendBrand.getMark())){
+            throw new ErrorCodeException(CodeEnum.FRIEND_ALREADY_CLOSED);
+        }
         // store file
         String uri = fileStoreService.storeWithUnlimitedAccess(file, FileStoreDir.DEFAULT_IMAGE_MESSAGE);
         MsDefaultFileMessage msg = new MsDefaultFileMessage();
@@ -106,6 +113,9 @@ public class MsPrivateController {
         Brand friendBrand = accountService.findBrandInfoByUserId(friend);
         if(friendBrand==null){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        if(BrandMarkEnum.CLOSED.getMark().equals(friendBrand.getMark())){
+            throw new ErrorCodeException(CodeEnum.FRIEND_ALREADY_CLOSED);
         }
         // store file
         String uri = fileStoreService.storeWithUnlimitedAccess(file, FileStoreDir.DEFAULT_ATTACHMENT_MESSAGE);
