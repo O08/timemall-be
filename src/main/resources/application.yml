@@ -15,12 +15,6 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-  mail:
-    protocol: smtps
-    host: smtp.163.com
-    username: ${email}
-    password: ${email_token}
-    default-encoding: UTF-8
   datasource:
     hikari:
       maximum-pool-size: 60

@@ -15,8 +15,8 @@ import com.norm.timemall.app.base.mo.RichTextConfig;
 import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.base.service.EmailMessageService;
 import com.norm.timemall.app.base.service.RichTextConfigService;
-import com.norm.timemall.app.base.util.EmailUtil;
 import com.norm.timemall.app.base.util.SecureCheckUtil;
+import com.norm.timemall.app.base.util.zoho.ZohoEmailApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -37,9 +37,10 @@ public class PasswordResetHandler {
 
     @Autowired
     private AccountService accountService;
-
     @Autowired
-    private EmailUtil emailUtil;
+    private ZohoEmailApi zohoEmailApi;
+
+
 
     @Autowired
     private EnvBean env;
@@ -73,8 +74,8 @@ public class PasswordResetHandler {
                 .replace("#{webaddress}", env.getWebsite())
 //                .replace("#{username}",customer.getUsername())
                 .replace("#{resetPasswordLink}",env.getWebsite()+"password-change.html?token="+token);
-        // 发送邮件 1 html 2 发送对象 3 主题
-        emailUtil.sendHtmlEmail(content,email,"密码重置");
+        // 发送邮件 1 发送对象  2 主题 3  html
+        zohoEmailApi.sendNoreplyEmail(email,"密码重置",content);
         // 存储发送记录
         EmailMessage message = new EmailMessage();
         message.setSender("sys")
@@ -117,8 +118,8 @@ public class PasswordResetHandler {
         String content = emailHtmlConfig.getContent()
                 .replace("#{webaddress}", env.getWebsite())
                 .replace("#{supportLink}",env.getWebsite()+"mall/contact-us.html");
-        // 发送邮件 1 html 2 发送对象 3 主题
-        emailUtil.sendHtmlEmail(content,email,"密码重置成功");
+        // 发送邮件 1 发送对象  2 主题 3  html
+        zohoEmailApi.sendNoreplyEmail(email,"密码重置成功",content);
     }
 
 }

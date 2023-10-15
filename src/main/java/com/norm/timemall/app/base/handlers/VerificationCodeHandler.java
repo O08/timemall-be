@@ -13,7 +13,7 @@ import com.norm.timemall.app.base.mo.EmailMessage;
 import com.norm.timemall.app.base.mo.RichTextConfig;
 import com.norm.timemall.app.base.service.EmailMessageService;
 import com.norm.timemall.app.base.service.RichTextConfigService;
-import com.norm.timemall.app.base.util.EmailUtil;
+import com.norm.timemall.app.base.util.zoho.ZohoEmailApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.Date;
@@ -30,7 +30,7 @@ public class VerificationCodeHandler {
     private EmailMessageService emailMessageService;
 
     @Autowired
-    EmailUtil emailUtil;
+    private ZohoEmailApi zohoEmailApi;
 
     @Autowired
     private EnvBean env;
@@ -67,8 +67,8 @@ public class VerificationCodeHandler {
         String content = emailHtmlConfig.getContent()
                 .replace("#{webaddress}", env.getWebsite())
                 .replace("#{qrcode}", qrcode);
-        // 发送邮件 1 html 2 发送对象 3 主题
-        emailUtil.sendHtmlEmail(content, email, "您的邮箱验证码：" + qrcode);
+        // 发送邮件 1 发送对象  2 主题 3  html
+        zohoEmailApi.sendNoreplyEmail(email,"您的邮箱验证码：" + qrcode,content);
     }
 
     /**

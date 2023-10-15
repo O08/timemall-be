@@ -14,7 +14,7 @@ import com.norm.timemall.app.base.mo.OrderDetails;
 import com.norm.timemall.app.base.mo.RichTextConfig;
 import com.norm.timemall.app.base.service.EmailMessageService;
 import com.norm.timemall.app.base.service.RichTextConfigService;
-import com.norm.timemall.app.base.util.EmailUtil;
+import com.norm.timemall.app.base.util.zoho.ZohoEmailApi;
 import com.norm.timemall.app.mall.domain.dto.SendEmailNoticeDTO;
 import com.norm.timemall.app.mall.domain.pojo.CellOrderReceivingNoticeEmailHandlerParam;
 import com.norm.timemall.app.mall.service.BrandService;
@@ -37,9 +37,9 @@ public class SendCellOrderReceivingEmailNoticeHandler {
 
     @Autowired
     private RichTextConfigService richTextConfigService;
-
     @Autowired
-    private EmailUtil emailUtil;
+    private ZohoEmailApi zohoEmailApi;
+
     @Autowired
     private EnvBean env;
 
@@ -75,8 +75,8 @@ public class SendCellOrderReceivingEmailNoticeHandler {
                 .replace("#{webaddress}", env.getWebsite())
                 .replace("#{accountName}", brand.getBrandName())
                 .replace("#{estudioMillstoneLink}",env.getWebsite()+"estudio/studio-millstone.html");
-        // 发送邮件 1 html 2 发送对象 3 主题
-        emailUtil.sendHtmlEmail(content,brand.getEmail(),"hello,您有新的服务预约");
+        // 发送邮件 1 发送对象  2 主题 3  html
+        zohoEmailApi.sendNoreplyEmail(brand.getEmail(),"hello,您有新的服务预约",content);
 
         // 存储发送记录
         EmailMessage message = new EmailMessage();
