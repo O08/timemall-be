@@ -61,7 +61,11 @@ public enum CodeEnum implements Code{
     INVALID_MPS_CHAIN(40011, "产链模版为空"), INVALID_FIN_ACCOUNT(40012, "收付款账户无效"),
     EMAIL_NOT_SETTING(40013, "邮箱未设置"), REFUND_REPEAT(40014, "已退款，请勿重复请求"),
     DEL_ACCOUNT_REQ_LIMIT(40015, "账号删除前置条件未满足"),
-    FRIEND_ALREADY_CLOSED(40016,"好友不存在" );
+    FRIEND_ALREADY_CLOSED(40016,"好友不存在" ),
+    MARKETING_OPENED_BOX(40017,"奖励已发放" ),
+    MARKETING_END(40018,"活动已结束" ),
+    MARKETING_OPEN_FAIL(40019,"开箱失败" ),
+    MARKETING_NOT_RIGHT_TIME(40020,"还没到开箱时间" );
 
     private int code;
     private String desc;
