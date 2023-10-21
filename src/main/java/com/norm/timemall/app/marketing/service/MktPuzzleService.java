@@ -18,5 +18,4 @@ public interface MktPuzzleService {
 
     void openTreasureBox(MultipartFile clueOne, MultipartFile clueTwo, String clueThree, String puzzleVersion);
 
-    String findPieceWhere(String puzzleVersion);
 }

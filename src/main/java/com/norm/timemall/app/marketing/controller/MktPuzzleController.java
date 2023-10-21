@@ -82,17 +82,7 @@ public class MktPuzzleController {
         return new SuccessVO(CodeEnum.SUCCESS);
 
     }
-    @ResponseBody
-    @GetMapping("/api/v1/marketing/puzzle/piece")
-    public MkePuzzlePieceWhereVO fetchTreasurePiece(String puzzleVersion){
 
-        String keyWhere = mktPuzzleService.findPieceWhere(puzzleVersion);
-        MkePuzzlePieceWhereVO vo = new MkePuzzlePieceWhereVO();
-        vo.setKeyWhere(keyWhere);
-        vo.setResponseCode(CodeEnum.SUCCESS);
-        return vo;
-
-    }
 
 
 

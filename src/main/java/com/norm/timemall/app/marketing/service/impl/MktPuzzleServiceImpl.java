@@ -1,6 +1,5 @@
 package com.norm.timemall.app.marketing.service.impl;
 
-import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import com.google.gson.Gson;
@@ -52,12 +51,22 @@ public class MktPuzzleServiceImpl implements MktPuzzleService {
 
         MarketPuzzleEvent puzzleEvent = mktMarketPuzzleEventMapper.selectById(puzzleVersion);
         MktFetchPuzzleInfo puzzle=new MktFetchPuzzleInfo();
+        String brand=SecurityUserHelper.getCurrentPrincipal().getBrandId();
         if(puzzleEvent!=null){
             puzzle.setOd(puzzleEvent.getOd()+"");
             puzzle.setTag(puzzleEvent.getTag());
             puzzle.setWinner(puzzleEvent.getWinner());
             puzzle.setBeginAt(DateUtil.format(puzzleEvent.getBeginAt(), "yyyy-MM-dd HH:mm:ss"));
             puzzle.setEndAt(DateUtil.format(puzzleEvent.getEndAt(), "yyyy-MM-dd HH:mm:ss"));
+            puzzle.setCurrentBrand(brand);
+            puzzle.setPieceWhere("");
+        }
+        if(puzzleEvent!=null && puzzleEvent.getWinner()!=null
+                && MarketPuzzleEventTagEnum.CREATED.getMark().equals(puzzleEvent.getTag())
+                && brand.equals(puzzleEvent.getWinner())){
+
+            puzzle.setPieceWhere(puzzleEvent.getKeyWhere());
+
         }
 
         return puzzle;
@@ -123,24 +132,6 @@ public class MktPuzzleServiceImpl implements MktPuzzleService {
 
     }
 
-    @Override
-    public String findPieceWhere(String puzzleVersion) {
-
-        MarketPuzzleEvent puzzleEvent = mktMarketPuzzleEventMapper.selectById(puzzleVersion);
-        if(puzzleEvent==null
-                || !SecurityUserHelper.getCurrentPrincipal().getBrandId().equals(puzzleEvent.getWinner())
-                || MarketPuzzleEventTagEnum.ALREADY_OPEN_BOX.getMark().equals(puzzleEvent.getTag())){
-            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
-        }
-        boolean canOpen= DateUtil.between(puzzleEvent.getEndAt(), new Date(), DateUnit.SECOND) > 0;
-        if(!canOpen){
-            throw new ErrorCodeException(CodeEnum.MARKETING_NOT_RIGHT_TIME);
-        }
-
-
-        return puzzleEvent.getKeyWhere();
-
-    }
 
     private void  doOpenBox(MultipartFile clueOne, MultipartFile clueTwo, String clueThree,MarketPuzzleEvent puzzleEvent){
         if(puzzleEvent==null){
