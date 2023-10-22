@@ -17,6 +17,7 @@
             <if test="q != null and q != ''">
                 AND d.od=#{q}
             </if>
+            order by d.likes desc
         </where>
     </select>
 

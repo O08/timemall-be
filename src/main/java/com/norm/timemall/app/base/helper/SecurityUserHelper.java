@@ -3,6 +3,7 @@ package com.norm.timemall.app.base.helper;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -25,6 +26,13 @@ public class SecurityUserHelper {
      */
     public static CustomizeUser getCurrentPrincipal(){
         return (CustomizeUser) getCurrentUserAuthentication().getPrincipal();
+    }
+    /**
+     * user 是否登录
+     * @return
+     */
+    public static boolean alreadyLogin(){
+        return !(SecurityUserHelper.getCurrentUserAuthentication()  instanceof AnonymousAuthenticationToken);
     }
 
     /**

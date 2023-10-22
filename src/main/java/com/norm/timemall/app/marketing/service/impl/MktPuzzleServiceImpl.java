@@ -2,6 +2,7 @@ package com.norm.timemall.app.marketing.service.impl;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.google.gson.Gson;
 import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
@@ -51,9 +52,9 @@ public class MktPuzzleServiceImpl implements MktPuzzleService {
 
         MarketPuzzleEvent puzzleEvent = mktMarketPuzzleEventMapper.selectById(puzzleVersion);
         MktFetchPuzzleInfo puzzle=new MktFetchPuzzleInfo();
-        String brand=SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        String brand= !SecurityUserHelper.alreadyLogin() ? "" : SecurityUserHelper.getCurrentPrincipal().getBrandId();
         if(puzzleEvent!=null){
-            puzzle.setOd(puzzleEvent.getOd()+"");
+            puzzle.setOd(puzzleEvent.getOd()==null ? "" : puzzleEvent.getOd()+"");
             puzzle.setTag(puzzleEvent.getTag());
             puzzle.setWinner(puzzleEvent.getWinner());
             puzzle.setBeginAt(DateUtil.format(puzzleEvent.getBeginAt(), "yyyy-MM-dd HH:mm:ss"));
@@ -61,7 +62,7 @@ public class MktPuzzleServiceImpl implements MktPuzzleService {
             puzzle.setCurrentBrand(brand);
             puzzle.setPieceWhere("");
         }
-        if(puzzleEvent!=null && puzzleEvent.getWinner()!=null
+        if(puzzleEvent!=null && ObjectUtil.isNotEmpty(puzzleEvent.getWinner())
                 && MarketPuzzleEventTagEnum.CREATED.getMark().equals(puzzleEvent.getTag())
                 && brand.equals(puzzleEvent.getWinner())){
 
@@ -125,8 +126,9 @@ public class MktPuzzleServiceImpl implements MktPuzzleService {
         // give bonus
         TransferBO bo = generateTransferBO(puzzleEvent.getBonus(),puzzleEvent.getId(),puzzleEvent.getSponsor());
         String transNo=defaultPayService.transfer(new Gson().toJson(bo));
-        // update tag
+        // update tag and winner
         puzzleEvent.setTag(MarketPuzzleEventTagEnum.ALREADY_OPEN_BOX.getMark());
+        puzzleEvent.setWinner(SecurityUserHelper.getCurrentPrincipal().getBrandId());
         mktMarketPuzzleEventMapper.updateById(puzzleEvent);
         log.info(puzzleVersion+ "活动发放成功！transNo："+transNo);
 
