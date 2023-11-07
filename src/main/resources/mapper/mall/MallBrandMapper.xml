@@ -11,6 +11,7 @@
 
     <resultMap id="brandProfileResultMap" type="com.norm.timemall.app.mall.domain.ro.BrandProfileRO">
         <result property="brand" column="brand"/>
+        <result property="brandUserId" column="customer_id"/>
         <result property="avator" column="avator"/>
         <result property="cover" column="cover"/>
         <result property="experience"
@@ -26,7 +27,7 @@
     </resultMap>
 
     <select id="selectProileByBrandId" resultMap="brandProfileResultMap">
-        select b.brand_name brand,b.avator,b.cover,b.experience,b.title,b.location,b.skills,ifnull(b.blue_end_at > now(),0) enableBlue
+        select b.brand_name brand,b.customer_id ,b.avator,b.cover,b.experience,b.title,b.location,b.skills,ifnull(b.blue_end_at > now(),0) enableBlue
         from brand b
         where b.id = #{brandId}
     </select>

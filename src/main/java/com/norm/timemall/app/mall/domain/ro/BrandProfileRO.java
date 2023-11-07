@@ -9,6 +9,7 @@ import java.util.ArrayList;
 @Data
 public class BrandProfileRO {
     private String brand;
+    private String brandUserId;
     private String avator;
     private String cover;
     private ArrayList<MallBrandExperience> experience;
