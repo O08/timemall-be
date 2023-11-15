@@ -9,5 +9,39 @@
         p.cell_id=#{cellId}
     </select>
 
+    <select id="selectCellPlanPage" resultType="com.norm.timemall.app.mall.domain.ro.RetrievePlanRO">
+        select b.id brandId,b.brand_name brand,b.avator,c.cover preview,c.title,p.price,c.id,ifnull(b.blue_end_at > now(),0) enableBlue
+        from cell c
+        inner join brand b on c.brand_id = b.id
+        inner join cell_plan p on c.id = p.cell_id
+        <where>
+            1=1
+            AND c.mark = '2'
+            AND p.plan_type = 'bird'
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, b.brand_name)>0  or  locate(#{dto.q}, c.title)>0)
+            </if>
+            <if test="dto.budgetMin > 0">
+                AND p.price  &gt;= #{dto.budgetMin}
+            </if>
+            <if test="dto.budgetMax > 0">
+                AND p.price  &lt;= #{dto.budgetMax}
+            </if>
+        </where>
+        <if test="dto.sort != null and dto.sort != ''">
+            <choose>
+                <when test='dto.sort == "1"'>
+                    Order by c.create_At desc
+                </when>
+                <when test='dto.sort == "2"'>
+                    Order by p.price desc
+                </when>
+                <when test='dto.sort == "3"'>
+                    Order by p.price asc
+                </when>
+            </choose>
+        </if>
+    </select>
+
 
 </mapper>
