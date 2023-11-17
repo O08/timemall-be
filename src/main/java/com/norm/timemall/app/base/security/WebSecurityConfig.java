@@ -56,7 +56,8 @@ public class WebSecurityConfig {
                         "/api/v1/web_mall/do_password_reset","/api/v1/web_mall/brand/{brand_id}/homeinfo",
                         "/api/v1/web_mall/services/{cell_id}/intro","/api/v1/web_mall/brand/{brand_id}/profile",
                         "/api/v1/web_mall/brandCells","/api/payment/alipay","/api/v1/web_mall/services/{cell_id}/plan",
-                        "/api/v1/marketing/puzzle","/api/v1/marketing/puzzle/dreams","/api/v1/web_mall/plans")
+                        "/api/v1/marketing/puzzle","/api/v1/marketing/puzzle/dreams","/api/v1/web_mall/plans",
+                        "/api/v1/web_mall/user_need_story","/api/v1/web_mall/science")
                 .permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin().loginProcessingUrl("/api/v1/web_mall/email_sign_in")
