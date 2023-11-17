@@ -16,7 +16,7 @@ public class UserNeedStoryController {
     private UserNeedStoryService userNeedStoryService;
 
     @PostMapping("/api/v1/web_mall/user_need_story")
-    public SuccessVO recordNeedStory(@RequestBody @Validated RecordNeedStoryDTO dto){
+    public SuccessVO recordNeedStory( @Validated RecordNeedStoryDTO dto){
 
         userNeedStoryService.addUserNeedStory(dto);
 
