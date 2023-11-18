@@ -15,6 +15,6 @@ public class RecordNeedStoryDTO {
     @Positive(message = "budget value should be positive.")
     private Integer budget;
 
-    @Length(message = "contactInfo length must in range {min}-{max}",min = 1,max = 300)
+    @Length(message = "contactInfo length must in range {min}-{max}",min = 0,max = 300)
     private String contactInfo;
 }
