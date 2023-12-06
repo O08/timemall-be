@@ -18,5 +18,11 @@ public class IndCellIndicesRO {
     private Integer clicks;
     // 订单数
     private Integer orders;
+    // 单品小鸟销量
+    private Integer birdPurchases;
+    // 单品老鹰销量
+    private Integer eaglePurchases;
+    // 单品信天翁销量
+    private Integer albatrossPurchases;
 
 }

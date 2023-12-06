@@ -9,7 +9,7 @@
         id,cell_id,impressions,clicks,orders
     </sql>
     <select id="selectCellIndicesPageByUserId" resultType="com.norm.timemall.app.indicator.domain.ro.IndCellIndicesRO">
-        select c.id,c.title,c.mark,IFNULL(i.impressions,0) impressions,IFNULL(i.clicks,0) clicks,IFNULL(i.orders,0) orders
+        select c.id,c.title,c.mark,IFNULL(i.impressions,0) impressions,IFNULL(i.clicks,0) clicks,IFNULL(i.orders,0) orders,IFNULL(i.bird_purchases,0) birdPurchases,IFNULL(i.eagle_purchases,0) eaglePurchases,IFNULL(i.albatross_purchases,0) albatrossPurchases
         from cell  c
         inner join brand b on b.id = c.brand_id
         left join cell_indices i on c.id = i.cell_id
