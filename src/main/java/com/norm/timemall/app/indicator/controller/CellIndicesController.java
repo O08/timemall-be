@@ -1,18 +1,19 @@
 package com.norm.timemall.app.indicator.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
+
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.indicator.domain.dto.CellIndicesPageDTO;
+import com.norm.timemall.app.indicator.domain.dto.IndDataLayerCellIndicesDTO;
 import com.norm.timemall.app.indicator.domain.ro.IndCellIndicesRO;
 import com.norm.timemall.app.indicator.domain.vo.IndCellIndicesPageVO;
 import com.norm.timemall.app.indicator.service.CellIndicesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class CellIndicesController {
@@ -30,5 +31,15 @@ public class CellIndicesController {
         vo.setCells(cells)
                 .setResponseCode(CodeEnum.SUCCESS);
         return vo;
+    }
+
+
+    @ResponseBody
+    @PutMapping("/api/v1/data_layer/cell/indices")
+    public SuccessVO dataLayerCellIndices(@Validated @RequestBody IndDataLayerCellIndicesDTO dto){
+
+        cellIndicesService.modifyCellIndices(dto);
+        return new SuccessVO(CodeEnum.SUCCESS);
+
     }
 }

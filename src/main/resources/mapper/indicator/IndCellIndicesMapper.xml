@@ -18,4 +18,48 @@
         order by c.create_at desc
     </select>
 
+    <update id="updateImpressions" parameterType="com.norm.timemall.app.indicator.domain.dto.IndDataLayerCellIndicesDTO">
+        insert into cell_indices (id,cell_id,impressions) VALUES
+        <foreach collection="dto.cell.impressions" item="impression" separator=",">
+            (#{impression.cellId}, #{impression.cellId}, 1)
+        </foreach>
+        on duplicate key update impressions=IFNULL(impressions,0)+1
+    </update>
+
+    <update id="updateClicks" parameterType="com.norm.timemall.app.indicator.domain.dto.IndDataLayerCellIndicesDTO">
+        insert into cell_indices (id,cell_id,clicks) VALUES
+        <foreach collection="dto.cell.clicks" item="click" separator=",">
+            (#{click.cellId}, #{click.cellId}, 1)
+        </foreach>
+        on duplicate key update clicks=IFNULL(clicks,0)+1
+    </update>
+
+    <update id="updateAppointments" parameterType="com.norm.timemall.app.indicator.domain.dto.IndDataLayerCellIndicesDTO">
+        insert into cell_indices (id,cell_id,orders) VALUES
+        <foreach collection="dto.cell.appointments" item="appointment" separator=",">
+            (#{appointment.cellId}, #{appointment.cellId}, 1)
+        </foreach>
+        on duplicate key update orders=IFNULL(orders,0)+1
+    </update>
+
+    <update id="updatePurchase" parameterType="com.norm.timemall.app.indicator.domain.dto.IndDataLayerCellIndicesDTO">
+        <choose>
+            <when test='dto.cell.purchases.planType == "bird"'>
+                insert into cell_indices (id,cell_id,bird_purchases) VALUES
+                (#{dto.cell.purchases.cellId}, #{dto.cell.purchases.cellId}, 1)
+                on duplicate key update bird_purchases=IFNULL(bird_purchases,0)+1
+            </when>
+            <when test='dto.cell.purchases.planType == "eagle"'>
+                insert into cell_indices (id,cell_id,eagle_purchases) VALUES
+                (#{dto.cell.purchases.cellId}, #{dto.cell.purchases.cellId}, 1)
+                on duplicate key update eagle_purchases=IFNULL(eagle_purchases,0)+1
+            </when>
+            <when test='dto.cell.purchases.planType == "albatross"'>
+                insert into cell_indices (id,cell_id,albatross_purchases) VALUES
+                (#{dto.cell.purchases.cellId}, #{dto.cell.purchases.cellId}, 1)
+                on duplicate key update albatross_purchases=IFNULL(albatross_purchases,0) +1
+            </when>
+        </choose>
+    </update>
+
 </mapper>
