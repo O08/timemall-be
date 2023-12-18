@@ -4,14 +4,12 @@ import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.pojo.BrandInfo;
 import com.norm.timemall.app.base.security.CustomizeUser;
-import com.norm.timemall.app.studio.domain.dto.StudioBrandBasicInfoDTO;
-import com.norm.timemall.app.studio.domain.dto.StudioBrandExperienceDTO;
-import com.norm.timemall.app.studio.domain.dto.StudioBrandProfileDTO;
-import com.norm.timemall.app.studio.domain.dto.StudioBrandSkillsDTO;
+import com.norm.timemall.app.studio.domain.dto.*;
 import com.norm.timemall.app.studio.domain.vo.StudioBrandInfoVO;
 import com.norm.timemall.app.studio.service.StudioBrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -88,6 +86,21 @@ public class StudioBrandController {
                                           @RequestBody StudioBrandSkillsDTO dto)
     {
         studioBrandService.modifyBrandSkills(brandId,user.getUserId(),dto);
+        return new SuccessVO(CodeEnum.SUCCESS);
+    }
+
+    /**
+     *
+     * 商家资料-链接
+     * @param dto
+     * @return
+     */
+    @ResponseBody
+    @PutMapping(value = "/api/v1/web_studio/brand/links")
+    public SuccessVO modifyBrandSkills(@RequestBody @Validated StudioBrandLinksDTO dto)
+    {
+
+        studioBrandService.modifyBrandLinks(dto);
         return new SuccessVO(CodeEnum.SUCCESS);
     }
 

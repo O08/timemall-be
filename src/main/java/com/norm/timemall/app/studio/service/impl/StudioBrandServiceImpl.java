@@ -137,4 +137,12 @@ public class StudioBrandServiceImpl implements StudioBrandService {
         Gson gson = new Gson();
         studioBrandMapper.updateBrandExperience(brandId,userId,gson.toJson(dto.getHistory().getExperience()));
     }
+
+    @Override
+    public void modifyBrandLinks(StudioBrandLinksDTO dto) {
+        Gson gson = new Gson();
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        studioBrandMapper.updateBrandLinks(brandId,gson.toJson(dto.getLink().getRecords()));
+
+    }
 }

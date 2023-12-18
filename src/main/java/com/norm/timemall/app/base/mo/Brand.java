@@ -99,4 +99,9 @@ public class Brand extends Model<Brand> implements Serializable {
      */
     private String mark;
 
+    /**
+     * brand links
+     */
+    private Object links;
+
 }
