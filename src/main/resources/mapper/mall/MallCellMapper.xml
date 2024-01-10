@@ -111,6 +111,7 @@
         left join cell c on c.brand_id = b.id  and c.mark = '2'
         left join pricing p on c.id = p.cell_id and p.sbu = 'day'
         where b.id = #{id}
+        and c.mark ='2'
         order by modified_at desc limit 10
 
     </select>
