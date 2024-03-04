@@ -109,7 +109,7 @@
         select b.brand_name brand,b.avator,b.cover, c.cover preview,c.title,p.price,c.id,b.id brandId,p.sbu,ifnull(b.blue_end_at > now(),0) enableBlue
         from brand b
         left join cell c on c.brand_id = b.id  and c.mark = '2'
-        left join pricing p on c.id = p.cell_id and p.sbu = 'day'
+        left join pricing p on c.id = p.cell_id and p.sbu = 'hour'
         where b.id = #{id}
         and c.mark ='2'
         order by modified_at desc limit 10
