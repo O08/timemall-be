@@ -1,5 +1,6 @@
 package com.norm.timemall.app.studio.service.impl;
 
+import cn.hutool.core.text.CharSequenceUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.gson.Gson;
@@ -57,8 +58,8 @@ public class StudioBrandServiceImpl implements StudioBrandService {
     @Override
     public void modifyBrandContact(String brandId, StudioContactDTO contact) {
         CustomizeUser user = SecurityUserHelper.getCurrentPrincipal();
-        String email= mybatisMateEncryptor.defaultEncrypt(contact.getEmail());
-        String phone= mybatisMateEncryptor.defaultEncrypt(contact.getPhone());
+        String email= CharSequenceUtil.isEmpty(contact.getEmail()) ? "" : mybatisMateEncryptor.defaultEncrypt(contact.getEmail());
+        String phone= CharSequenceUtil.isEmpty(contact.getPhone()) ? "" : mybatisMateEncryptor.defaultEncrypt(contact.getPhone());
         studioBrandMapper.updateBrandContactById(brandId, user.getUserId(), email,phone);
     }
 
