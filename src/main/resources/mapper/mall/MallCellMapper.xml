@@ -100,13 +100,14 @@
     </resultMap>
     <resultMap id="homeInfoResultMap" type="com.norm.timemall.app.mall.domain.pojo.MallHomeInfo">
         <result property="brand" column="brand"/>
+        <result property="brandTitle" column="brandTitle"/>
         <result property="avator" column="avator"/>
         <result property="cover" column="cover"/>
         <result property="enableBlue" column="enableBlue"/>
         <collection property="cells" ofType="com.norm.timemall.app.mall.domain.ro.MallCellRO" javaType="ArrayList" resultMap="cellsResultMap"/>
     </resultMap>
     <select id="selectHomeInfoByBrandId" resultMap="homeInfoResultMap">
-        select b.brand_name brand,b.avator,b.cover, c.cover preview,c.title,p.price,c.id,b.id brandId,p.sbu,ifnull(b.blue_end_at > now(),0) enableBlue
+        select b.brand_name brand,b.title brandTitle,b.avator,b.cover, c.cover preview,c.title,p.price,c.id,b.id brandId,p.sbu,ifnull(b.blue_end_at > now(),0) enableBlue
         from brand b
         left join cell c on c.brand_id = b.id  and c.mark = '2'
         left join pricing p on c.id = p.cell_id and p.sbu = 'hour'

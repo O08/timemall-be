@@ -9,6 +9,7 @@ import java.util.ArrayList;
 @Data
 public class MallHomeInfo {
     private String brand;
+    private String brandTitle;
     private String avator;
     private String cover;
     // 激活蓝标： 0 未激活 1 激活
