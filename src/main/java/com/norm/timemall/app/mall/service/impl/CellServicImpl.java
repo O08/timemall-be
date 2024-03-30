@@ -10,7 +10,9 @@ import com.norm.timemall.app.base.pojo.ro.CellIntroRO;
 import com.norm.timemall.app.base.pojo.vo.CellIntroVO;
 import com.norm.timemall.app.mall.domain.pojo.Fee;
 import com.norm.timemall.app.mall.domain.pojo.MallCellPricing;
+import com.norm.timemall.app.mall.domain.pojo.MallFetchMarqueeCell;
 import com.norm.timemall.app.mall.domain.pojo.MallHomeInfo;
+import com.norm.timemall.app.mall.domain.ro.MallFetchMarqueeCellRO;
 import com.norm.timemall.app.mall.domain.vo.CellPricingVO;
 import com.norm.timemall.app.mall.mapper.CellMapper;
 import com.norm.timemall.app.mall.domain.ro.CellRO;
@@ -69,5 +71,15 @@ public class CellServicImpl implements CellServic {
         vo.setPricing(pricing);
         vo.setResponseCode(CodeEnum.SUCCESS);
         return vo;
+    }
+
+    @Override
+    public MallFetchMarqueeCell findMarqueeCell() {
+
+        ArrayList<MallFetchMarqueeCellRO> ros = cellMapper.selectMarqueeCell();
+        MallFetchMarqueeCell cell = new MallFetchMarqueeCell();
+        cell.setRecords(ros);
+        return cell;
+
     }
 }

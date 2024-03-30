@@ -49,15 +49,10 @@ public class WebSecurityConfig {
         authenticationManager = authenticationManagerBuilder.build();
 
         http.csrf().disable().cors().disable().authorizeHttpRequests()
-//                .anyRequest().permitAll();
-//
-                .antMatchers("/api/v1/web_mall/email_join","/api/v1/web_mall/send_email_code",
-                        "/api/v1/web_mall/do_send_password_reset_email","/api/v1/web_mall/me","/api/v1/web_mall/cells",
-                        "/api/v1/web_mall/do_password_reset","/api/v1/web_mall/brand/{brand_id}/homeinfo",
-                        "/api/v1/web_mall/services/{cell_id}/intro","/api/v1/web_mall/brand/{brand_id}/profile",
-                        "/api/v1/web_mall/brandCells","/api/payment/alipay","/api/v1/web_mall/services/{cell_id}/plan",
-                        "/api/v1/marketing/puzzle","/api/v1/marketing/puzzle/dreams","/api/v1/web_mall/plans",
-                        "/api/v1/web_mall/user_need_story","/api/v1/web_mall/science","/api/v1/data_layer/cell/indices")
+                .antMatchers("/api/v1/web_mall/**",
+                        "/api/payment/alipay",
+                        "/api/v1/marketing/puzzle","/api/v1/marketing/puzzle/dreams",
+                        "/api/v1/data_layer/cell/indices")
                 .permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin().loginProcessingUrl("/api/v1/web_mall/email_sign_in")

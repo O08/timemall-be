@@ -117,5 +117,13 @@
 
     </select>
 
+    <select id="selectMarqueeCell" resultType="com.norm.timemall.app.mall.domain.ro.MallFetchMarqueeCellRO">
+        select c.cover cellCover,b.avator brandAvatar,b.brand_name brandName, b.id brandId,c.id cellId,c.title cellTitle,i.impressions views
+        from cell c
+        inner join brand b on c.brand_id = b.id
+        inner join cell_indices i on i.cell_id=c.id
+        Order by c.create_At desc limit 30
+    </select>
+
 
 </mapper>

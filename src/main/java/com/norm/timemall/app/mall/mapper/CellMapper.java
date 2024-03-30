@@ -9,8 +9,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.norm.timemall.app.base.pojo.ro.CellIntroRO;
 import com.norm.timemall.app.mall.domain.pojo.MallHomeInfo;
 import com.norm.timemall.app.mall.domain.ro.CellRO;
+import com.norm.timemall.app.mall.domain.ro.MallFetchMarqueeCellRO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.ArrayList;
 
 /**
  * (cell)数据Mapper
@@ -28,5 +31,7 @@ public interface CellMapper extends BaseMapper<Cell> {
     IPage<CellRO> selectBrandCellPage(Page<CellRO> page, @Param("dto") BrandCellsPageDTO dto);
 
     MallHomeInfo selectHomeInfoByBrandId(@Param("id") String brandId);
+
+    ArrayList<MallFetchMarqueeCellRO> selectMarqueeCell();
 }
 
