@@ -122,6 +122,8 @@
         from cell c
         inner join brand b on c.brand_id = b.id
         inner join cell_indices i on i.cell_id=c.id
+        where
+         c.mark = '2'
         Order by c.create_At desc limit 30
     </select>
 
