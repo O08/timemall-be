@@ -3,6 +3,7 @@ package com.norm.timemall.app.base.util;
 import cn.hutool.core.text.CharSequenceUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.lionsoul.ip2region.xdb.Searcher;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,7 +12,7 @@ import java.io.File;
 
 @Slf4j
 public class IpLocationUtil {
-    private static final  String  DBPATH =  "src/xdb/ip2region.xdb";
+    private static final  String  DBPATH =  "xdb/ip2region.xdb";
     private static   byte[] cBuff;
 
     private static  Searcher searcher;
@@ -30,7 +31,7 @@ public class IpLocationUtil {
         // 1、从 DBPATH 加载整个 xdb 到内存。
 
         try {
-            File target = new File(DBPATH);
+            File target = new PathMatchingResourcePatternResolver().getResources(DBPATH)[0].getFile();
 
             cBuff = Searcher.loadContentFromFile(target.getPath());
         } catch (Exception e) {
