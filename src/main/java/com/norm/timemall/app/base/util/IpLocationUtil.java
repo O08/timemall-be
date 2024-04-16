@@ -2,20 +2,19 @@ package com.norm.timemall.app.base.util;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.lionsoul.ip2region.xdb.Searcher;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-
-
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
+import java.io.InputStream;
 
 
 @Slf4j
 public class IpLocationUtil {
-    private static final  String  DBPATH =  "xdb/ip2region.xdb";
-    private static   byte[] cBuff;
+    private static final String DBPATH = "xdb/ip2region.xdb";
+    private static byte[] cBuff;
 
-    private static  Searcher searcher;
+    private static Searcher searcher;
 
     /**
      * 本地环回地址
@@ -31,9 +30,10 @@ public class IpLocationUtil {
         // 1、从 DBPATH 加载整个 xdb 到内存。
 
         try {
-            File target = new PathMatchingResourcePatternResolver().getResources(DBPATH)[0].getFile();
+            InputStream is = new PathMatchingResourcePatternResolver().getResources(DBPATH)[0].getInputStream();
+            cBuff = IOUtils.toByteArray(is);
+            is.close();
 
-            cBuff = Searcher.loadContentFromFile(target.getPath());
         } catch (Exception e) {
             log.error("failed to load content from " + DBPATH + "  \n" + e);
         }
@@ -83,13 +83,14 @@ public class IpLocationUtil {
             }
             return region;
         } catch (Exception e) {
-            log.error("failed to search Ip location: " + ip+ "\n reason:" + e);
+            log.error("failed to search Ip location: " + ip + "\n reason:" + e);
         }
         return "";
     }
 
     /**
      * 获取IP属地
+     *
      * @param ip
      * @return
      */
@@ -115,12 +116,10 @@ public class IpLocationUtil {
         return "未知";
     }
 
-    public static String getIpLocationFromHeader(HttpServletRequest request){
+    public static String getIpLocationFromHeader(HttpServletRequest request) {
 
         String ipAddress = getIpAddress(request);
         return getIpPossession(ipAddress);
 
     }
-
-
-    }
+}
