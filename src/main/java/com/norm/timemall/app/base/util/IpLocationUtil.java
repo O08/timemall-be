@@ -6,12 +6,12 @@ import org.lionsoul.ip2region.xdb.Searcher;
 
 
 import javax.servlet.http.HttpServletRequest;
-
+import java.io.File;
 
 
 @Slf4j
 public class IpLocationUtil {
-    private static final  String  DBPATH =  "src/xdb/ip2region.xdb";
+    private static final  String  DBPATH =  "src/xdb/ip2region.xdb".replace("/", File.separator);
     private static   byte[] cBuff;
 
     private static  Searcher searcher;
