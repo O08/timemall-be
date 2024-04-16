@@ -4,6 +4,7 @@ import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.pojo.BrandInfo;
 import com.norm.timemall.app.base.security.CustomizeUser;
+import com.norm.timemall.app.base.util.IpLocationUtil;
 import com.norm.timemall.app.studio.domain.dto.*;
 import com.norm.timemall.app.studio.domain.vo.StudioBrandInfoVO;
 import com.norm.timemall.app.studio.service.StudioBrandService;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 public class StudioBrandController {
@@ -66,8 +69,13 @@ public class StudioBrandController {
     @PutMapping(value = "/api/v1/web_estudio/brand/{brand_id}/basic_info")
     public SuccessVO modifyBrandBasicInfo(@PathVariable("brand_id") String brandId,
                                         @AuthenticationPrincipal CustomizeUser user,
+                                          HttpServletRequest request,
                                         @RequestBody StudioBrandBasicInfoDTO dto)
     {
+        // get ip location
+        String ipLocation = IpLocationUtil.getIpLocationFromHeader(request);
+        dto.setLocation(ipLocation);
+
         studioBrandService.modifyBrandBasic(brandId,user.getUserId(),dto);
         return new SuccessVO(CodeEnum.SUCCESS);
     }

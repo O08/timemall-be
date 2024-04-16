@@ -113,6 +113,12 @@
 			<artifactId>alipay-sdk-java</artifactId>
 			<version>4.34.0.ALL</version>
 		</dependency>
+<!--ip location-->
+		<dependency>
+			<groupId>org.lionsoul</groupId>
+			<artifactId>ip2region</artifactId>
+			<version>2.7.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
