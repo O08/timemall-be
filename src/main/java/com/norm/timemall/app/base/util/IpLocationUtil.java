@@ -83,7 +83,7 @@ public class IpLocationUtil {
             }
             return region;
         } catch (Exception e) {
-            log.error("failed to search Ip location: " + ip);
+            log.error("failed to search Ip location: " + ip+ "\n reason:" + e);
         }
         return "";
     }
