@@ -11,7 +11,7 @@ import java.io.File;
 
 @Slf4j
 public class IpLocationUtil {
-    private static final  String  DBPATH =  "src/xdb/ip2region.xdb".replace("/", File.separator);
+    private static final  String  DBPATH =  "src/xdb/ip2region.xdb";
     private static   byte[] cBuff;
 
     private static  Searcher searcher;
@@ -30,7 +30,9 @@ public class IpLocationUtil {
         // 1、从 DBPATH 加载整个 xdb 到内存。
 
         try {
-            cBuff = Searcher.loadContentFromFile(DBPATH);
+            File target = new File(DBPATH);
+
+            cBuff = Searcher.loadContentFromFile(target.getPath());
         } catch (Exception e) {
             log.error("failed to load content from " + DBPATH + "  \n" + e);
         }
