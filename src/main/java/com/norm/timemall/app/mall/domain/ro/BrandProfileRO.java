@@ -13,6 +13,10 @@ public class BrandProfileRO {
     private String brandUserId;
     private String avator;
     private String cover;
+    private String occupationCode;
+    private String occupation;
+    private String activityCode;
+    private String brandTypeCode;
     private ArrayList<MallBrandExperience> experience;
     // Brand Title or other Info. maybe your Occuption Title
     private String title;

@@ -14,6 +14,11 @@
         <result property="brandUserId" column="customer_id"/>
         <result property="avator" column="avator"/>
         <result property="cover" column="cover"/>
+        <result property="occupationCode" column="occupation_code"/>
+        <result property="occupation" column="occupation"/>
+        <result property="activityCode" column="activity_code"/>
+        <result property="brandTypeCode" column="brand_type_code"/>
+
         <result property="experience"
                 typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
                 column="experience"/>
@@ -30,8 +35,18 @@
     </resultMap>
 
     <select id="selectProileByBrandId" resultMap="brandProfileResultMap">
-        select b.brand_name brand,b.customer_id ,b.avator,b.cover,b.experience,b.title,b.location,b.skills,b.links,ifnull(b.blue_end_at > now(),0) enableBlue
+        select b.brand_name brand,b.customer_id ,b.avator,b.cover,s.occupation_code,
+        CASE s.occupation_code
+          when '0' then s.self_defined_occupation
+          else c.item
+        END as occupation,
+        s.activity_code,s.brand_type_code, b.experience,b.title,b.location,b.skills,b.links,ifnull(b.blue_end_at > now(),0) enableBlue
         from brand b
+        left join brand_sub s
+          on b.id=s.brand_id
+        left join code_mapping c
+          on c.code_type='occupation'
+            and c.item_code=s.occupation_code
         where b.id = #{brandId}
     </select>
 

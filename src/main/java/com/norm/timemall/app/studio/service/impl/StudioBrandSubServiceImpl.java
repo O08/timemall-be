@@ -1,0 +1,43 @@
+package com.norm.timemall.app.studio.service.impl;
+
+import cn.hutool.core.util.IdUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.norm.timemall.app.base.enums.CodeEnum;
+import com.norm.timemall.app.base.exception.ErrorCodeException;
+import com.norm.timemall.app.base.helper.SecurityUserHelper;
+import com.norm.timemall.app.base.mo.BrandSub;
+import com.norm.timemall.app.studio.domain.dto.StudioBrandBasicSetting;
+import com.norm.timemall.app.studio.mapper.StudioBrandSubMapper;
+import com.norm.timemall.app.studio.service.StudioBrandSubService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class StudioBrandSubServiceImpl implements StudioBrandSubService {
+    @Autowired
+    private StudioBrandSubMapper studioBrandSubMapper;
+
+    @Override
+    public void modifyBrandSub(StudioBrandBasicSetting dto) {
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        // validate if occupationCode is '0',need to check selfDefinedOccupation
+        String selfDefinedOccupationCode = "0";
+        if(selfDefinedOccupationCode.equals(dto.getOccupationCode()) && dto.getSelfDefinedOccupation().isEmpty()){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        // delete data
+        LambdaQueryWrapper<BrandSub> delWrapper=Wrappers.lambdaQuery();
+        delWrapper.eq(BrandSub::getBrandId, brandId);
+        studioBrandSubMapper.delete(delWrapper);
+        // insert data
+        BrandSub brandSub = new BrandSub();
+        brandSub.setId(IdUtil.simpleUUID())
+                .setBrandId(brandId)
+                .setBrandTypeCode(dto.getBrandTypeCode())
+                .setActivityCode(dto.getActivityCode())
+                .setOccupationCode(dto.getOccupationCode())
+                .setSelfDefinedOccupation(dto.getSelfDefinedOccupation());
+        studioBrandSubMapper.insert(brandSub);
+    }
+}
