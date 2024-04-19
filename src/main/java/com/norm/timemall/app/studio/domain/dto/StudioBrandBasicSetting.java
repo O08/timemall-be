@@ -6,6 +6,8 @@ import lombok.Data;
 public class StudioBrandBasicSetting {
     private String occupationCode;
     private String selfDefinedOccupation;
-    private String activityCode;
+    private String industryCode;
     private String brandTypeCode;
+    private String supportFreeCooperation;
+    private String cooperationScope;
 }

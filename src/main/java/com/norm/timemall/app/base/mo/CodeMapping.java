@@ -4,22 +4,23 @@ import java.io.Serializable;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import java.util.Date;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
- * brand 副表(brand_sub)实体类
+ * (code_mapping)实体类
  *
  * @author kancy
- * @since 2024-04-18 11:12:12
+ * @since 2024-04-19 15:48:08
  * @description 由 Mybatisplus Code Generator 创建
  */
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("brand_sub")
-public class BrandSub extends Model<BrandSub> implements Serializable {
+@TableName("code_mapping")
+public class CodeMapping extends Model<CodeMapping> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -28,33 +29,28 @@ public class BrandSub extends Model<BrandSub> implements Serializable {
     @TableId
 	private String id;
     /**
-     * brand.id
+     * codeType
      */
-    private String brandId;
+    private String codeType;
     /**
-     * 职业编码：0:自定义，。。。
+     * codeTypeDesc
      */
-    private String occupationCode;
+    private String codeTypeDesc;
     /**
-     * 自定义职业
+     * itemCode
      */
-    private String selfDefinedOccupation;
+    private String itemCode;
     /**
-     * 用户类型： 0-个人；1-机构
+     * item
      */
-    private String brandTypeCode;
+    private String item;
     /**
-     * 产业
+     * createAt
      */
-    private String industryCode;
+    private Date createAt;
     /**
-     * 支持自由合作： 0-不支持，1-支持
+     * modifiedAt
      */
-    private String supportFreeCooperation;
-    /**
-     * 合作资源
-     */
-    private String cooperationScope;
-
+    private Date modifiedAt;
 
 }

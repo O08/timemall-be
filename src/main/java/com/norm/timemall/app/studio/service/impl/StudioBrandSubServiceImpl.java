@@ -35,9 +35,11 @@ public class StudioBrandSubServiceImpl implements StudioBrandSubService {
         brandSub.setId(IdUtil.simpleUUID())
                 .setBrandId(brandId)
                 .setBrandTypeCode(dto.getBrandTypeCode())
-                .setActivityCode(dto.getActivityCode())
+                .setIndustryCode(dto.getIndustryCode())
                 .setOccupationCode(dto.getOccupationCode())
-                .setSelfDefinedOccupation(dto.getSelfDefinedOccupation());
+                .setSelfDefinedOccupation(dto.getSelfDefinedOccupation())
+                .setSupportFreeCooperation(dto.getSupportFreeCooperation())
+                .setCooperationScope(dto.getCooperationScope());
         studioBrandSubMapper.insert(brandSub);
     }
 }

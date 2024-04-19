@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.base.mapper.BaseCodeMappingMapper">
+
+    <select id="selectItemListByTypeAndCode"  resultType="com.norm.timemall.app.base.pojo.ro.BaseFetchCodeMappingRO">
+        select item_code,item from code_mapping
+        <where>
+            code_type=#{dto.codeType}
+            <if test="dto.itemCode != null and dto.itemCode != ''">
+                AND item_code=#{dto.itemCode}
+            </if>
+        </where>
+    </select>
+
+</mapper>
