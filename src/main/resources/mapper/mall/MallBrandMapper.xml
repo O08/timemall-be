@@ -16,8 +16,11 @@
         <result property="cover" column="cover"/>
         <result property="occupationCode" column="occupation_code"/>
         <result property="occupation" column="occupation"/>
-        <result property="activityCode" column="activity_code"/>
+        <result property="industryCode" column="industry_code"/>
         <result property="brandTypeCode" column="brand_type_code"/>
+        <result property="supportFreeCooperation" column="support_free_cooperation"/>
+        <result property="cooperationScope" column="cooperation_scope"/>
+
 
         <result property="experience"
                 typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
@@ -40,7 +43,7 @@
           when '0' then s.self_defined_occupation
           else c.item
         END as occupation,
-        s.activity_code,s.brand_type_code, b.experience,b.title,b.location,b.skills,b.links,ifnull(b.blue_end_at > now(),0) enableBlue
+        s.industry_code,s.support_free_cooperation,s.cooperation_scope, s.brand_type_code, b.experience,b.title,b.location,b.skills,b.links,ifnull(b.blue_end_at > now(),0) enableBlue
         from brand b
         left join brand_sub s
           on b.id=s.brand_id

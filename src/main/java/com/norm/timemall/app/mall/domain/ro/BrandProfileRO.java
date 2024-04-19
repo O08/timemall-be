@@ -15,8 +15,11 @@ public class BrandProfileRO {
     private String cover;
     private String occupationCode;
     private String occupation;
-    private String activityCode;
+    private String industryCode;
     private String brandTypeCode;
+    private String supportFreeCooperation;
+    private String cooperationScope;
+
     private ArrayList<MallBrandExperience> experience;
     // Brand Title or other Info. maybe your Occuption Title
     private String title;
