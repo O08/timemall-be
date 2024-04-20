@@ -10,6 +10,7 @@
                 AND item_code=#{dto.itemCode}
             </if>
         </where>
+        order by item_code
     </select>
 
 </mapper>
