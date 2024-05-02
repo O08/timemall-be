@@ -21,7 +21,7 @@ import org.apache.ibatis.annotations.Update;
 @Mapper
 public interface StudioCellMapper extends BaseMapper<Cell> {
     IPage<CellInfoRO> selectCellPage(IPage<CellInfoRO> page, @Param("brand_id") String brandId);
-    void updatTitleAndCanProvideInvoiceById(@Param("id") String cellId,@Param("user_id") String userId, @Param("dto") StudioCellOverView dto );
+    void updateTitleInvoiceTagById(@Param("id") String cellId, @Param("user_id") String userId, @Param("dto") StudioCellOverView dto );
     @Update(value = "update cell set cover = #{uri} where id = #{id}")
     void updateCoverById(@Param("id") String cellId, @Param("uri") String uri);
 

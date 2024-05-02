@@ -9,26 +9,28 @@
         id,brand_name,title,cover,avator,customer_id,wechat,phone,email,cardholder,cardno,alipay,wechatpay,experience,skills,location
     </sql>
 
-    <resultMap id="selectPageByQResultMap" type="com.norm.timemall.app.team.domain.ro.TeamTalentRO">
-        <result property="id" column="id"/>
-        <result property="avator" column="avator"/>
-        <result property="title" column="title"/>
-        <result property="skill"
-                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
-                column="skills"/>
 
-    </resultMap>
 
-    <select id="selectPageByQ" resultMap="selectPageByQResultMap">
-        select brand_name,avator avatar,title,skills ,id
-        from brand
+    <select id="selectPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamTalentRO">
+        select b.brand_name,b.avator avatar,b.title ,b.id,
+        CASE s.occupation_code
+        when '0' then s.self_defined_occupation
+        else c.item
+        END as occupation,
+        s.support_free_cooperation,s.brand_type_code, s.available_for_work,s.hiring,s.type_of_business
+        from brand b
+        left join brand_sub s
+          on b.id=s.brand_id
+        left join code_mapping c
+          on c.code_type='occupation'
+          and c.item_code=s.occupation_code
         where
-        1 = 1
-        and mark='1'
-        and title is not null
+            1 = 1
+            and b.mark='1'
+            and b.title is not null
         <if test="q != null and q != ''">
-            AND (locate(#{q}, title)>0
-            or locate(#{q}, brand_name)>0)
+            AND (locate(#{q}, b.title)>0
+            or locate(#{q}, b.brand_name)>0)
         </if>
 
     </select>

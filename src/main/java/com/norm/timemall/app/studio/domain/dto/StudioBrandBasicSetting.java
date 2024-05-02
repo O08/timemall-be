@@ -10,4 +10,7 @@ public class StudioBrandBasicSetting {
     private String brandTypeCode;
     private String supportFreeCooperation;
     private String cooperationScope;
+    private String availableForWork;
+    private String hiring;
+    private String typeOfBusiness;
 }

@@ -38,5 +38,7 @@ public class CellPageDTO {
     @EnumCheck(enumClass = SbuEnum.class,message = "field: sbu, incorrect paramter value ,option: year quarter month week day hour minute second")
     private String sbu;
 
+    private String location;
+
 
 }

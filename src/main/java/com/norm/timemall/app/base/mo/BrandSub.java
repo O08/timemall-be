@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
  * brand 副表(brand_sub)实体类
  *
  * @author kancy
- * @since 2024-04-18 11:12:12
+ * @since 2024-05-02 09:29:52
  * @description 由 Mybatisplus Code Generator 创建
  */
 @Data
@@ -44,7 +44,7 @@ public class BrandSub extends Model<BrandSub> implements Serializable {
      */
     private String brandTypeCode;
     /**
-     * 产业
+     * 行业
      */
     private String industryCode;
     /**
@@ -55,6 +55,17 @@ public class BrandSub extends Model<BrandSub> implements Serializable {
      * 合作资源
      */
     private String cooperationScope;
-
+    /**
+     * 空闲，可以接受工作机会：0-不接受，1-接受
+     */
+    private String availableForWork;
+    /**
+     * 聘用，招聘中：0-无招聘，1-有招聘
+     */
+    private String hiring;
+    /**
+     * 法定的企业结构，账号类型为组织时候生效
+     */
+    private String typeOfBusiness;
 
 }

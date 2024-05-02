@@ -23,7 +23,12 @@ public class StudioBrandSubServiceImpl implements StudioBrandSubService {
         String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         // validate if occupationCode is '0',need to check selfDefinedOccupation
         String selfDefinedOccupationCode = "0";
+        String orgTypeCode="1";
         if(selfDefinedOccupationCode.equals(dto.getOccupationCode()) && dto.getSelfDefinedOccupation().isEmpty()){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        // validate if brand type is org,need to check type of business
+        if(orgTypeCode.equals(dto.getBrandTypeCode()) && dto.getTypeOfBusiness().isEmpty()){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
         // delete data
@@ -39,7 +44,10 @@ public class StudioBrandSubServiceImpl implements StudioBrandSubService {
                 .setOccupationCode(dto.getOccupationCode())
                 .setSelfDefinedOccupation(dto.getSelfDefinedOccupation())
                 .setSupportFreeCooperation(dto.getSupportFreeCooperation())
-                .setCooperationScope(dto.getCooperationScope());
+                .setCooperationScope(dto.getCooperationScope())
+                .setAvailableForWork(dto.getAvailableForWork())
+                .setHiring(dto.getHiring())
+                .setTypeOfBusiness(dto.getTypeOfBusiness());
         studioBrandSubMapper.insert(brandSub);
     }
 }

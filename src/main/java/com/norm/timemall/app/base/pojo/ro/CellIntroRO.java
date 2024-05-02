@@ -36,5 +36,8 @@ public class CellIntroRO {
     // The pricing for cell
     private ArrayList<Fee> fee;
 
+    // The Tags for cell
+    private ArrayList<String> tags;
+
 
 }

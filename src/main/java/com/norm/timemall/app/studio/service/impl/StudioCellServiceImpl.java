@@ -1,6 +1,8 @@
 package com.norm.timemall.app.studio.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONException;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -9,6 +11,7 @@ import com.google.gson.Gson;
 import com.norm.timemall.app.base.entity.PageDTO;
 import com.norm.timemall.app.base.enums.CellMarkEnum;
 import com.norm.timemall.app.base.enums.CodeEnum;
+import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.mo.Cell;
 import com.norm.timemall.app.base.pojo.ro.CellIntroRO;
 import com.norm.timemall.app.base.pojo.vo.CellIntroVO;
@@ -38,7 +41,14 @@ public class StudioCellServiceImpl implements StudioCellService {
 
     @Override
     public void modifyTitleAndCanProvideInvoice(String cellId,String userId, StudioCellOverViewDTO dto) {
-        studioCellMapper.updatTitleAndCanProvideInvoiceById(cellId,userId,dto.getOverview());
+        // validate tags to json  arr
+        try {
+            new JSONArray(dto.getOverview().getTags());
+        } catch (JSONException ne) {
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+
+        studioCellMapper.updateTitleInvoiceTagById(cellId,userId,dto.getOverview());
     }
 
     @Override

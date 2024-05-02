@@ -12,8 +12,14 @@ public class TeamTalentRO {
     private String avatar;
     // brand tile
     private String title;
-    // brand skill
-    private ArrayList<ExperienceEntry> skill;
+
     // brand id
     private String id;
+
+    private String occupation;
+    private String brandTypeCode;
+    private String supportFreeCooperation;
+    private String availableForWork;
+    private String hiring;
+    private String typeOfBusiness;
 }

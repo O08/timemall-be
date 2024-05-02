@@ -29,6 +29,9 @@
             <if test="dto.sbu != null and dto.sbu != ''">
                 AND p.sbu = #{dto.sbu}
             </if>
+            <if test="dto.location != null and dto.location != ''">
+                AND locate(#{dto.location}, b.location)>0
+            </if>
         </where>
         <if test="dto.sort != null and dto.sort != ''">
             <choose>

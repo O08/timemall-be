@@ -6,4 +6,5 @@ import lombok.Data;
 public class StudioCellOverView {
     private String title;
     private boolean canProvideInvoice;
+    private String tags;
 }
