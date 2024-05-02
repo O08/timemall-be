@@ -67,5 +67,9 @@ public class BrandSub extends Model<BrandSub> implements Serializable {
      * 法定的企业结构，账号类型为组织时候生效
      */
     private String typeOfBusiness;
+    /**
+     * 行业 text
+     */
+    private String industry;
 
 }

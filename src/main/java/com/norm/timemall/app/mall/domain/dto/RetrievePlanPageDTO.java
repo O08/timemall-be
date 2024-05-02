@@ -22,4 +22,6 @@ public class RetrievePlanPageDTO extends PageDTO {
     // 排序方式
     private String sort;
 
+    private String location;
+
 }

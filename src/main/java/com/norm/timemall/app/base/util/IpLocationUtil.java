@@ -119,7 +119,7 @@ public class IpLocationUtil {
     public static String getIpLocationFromHeader(HttpServletRequest request) {
 
         String ipAddress = getIpAddress(request);
-        return getIpPossession(ipAddress);
+        return getCityInfo(ipAddress);
 
     }
 }

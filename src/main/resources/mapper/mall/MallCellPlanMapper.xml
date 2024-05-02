@@ -27,6 +27,9 @@
             <if test="dto.budgetMax > 0">
                 AND p.price  &lt;= #{dto.budgetMax}
             </if>
+            <if test="dto.location != null and dto.location != ''">
+                AND locate(#{dto.location}, b.location)>0
+            </if>
         </where>
         <if test="dto.sort != null and dto.sort != ''">
             <choose>

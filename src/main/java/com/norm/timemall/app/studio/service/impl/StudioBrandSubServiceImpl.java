@@ -47,7 +47,8 @@ public class StudioBrandSubServiceImpl implements StudioBrandSubService {
                 .setCooperationScope(dto.getCooperationScope())
                 .setAvailableForWork(dto.getAvailableForWork())
                 .setHiring(dto.getHiring())
-                .setTypeOfBusiness(dto.getTypeOfBusiness());
+                .setTypeOfBusiness(dto.getTypeOfBusiness())
+                .setIndustry(dto.getIndustry());
         studioBrandSubMapper.insert(brandSub);
     }
 }

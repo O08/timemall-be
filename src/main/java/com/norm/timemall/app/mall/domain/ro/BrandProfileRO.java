@@ -16,6 +16,7 @@ public class BrandProfileRO {
     private String occupationCode;
     private String occupation;
     private String industryCode;
+    private String industry;
     private String brandTypeCode;
     private String supportFreeCooperation;
     private String cooperationScope;
