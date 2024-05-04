@@ -19,7 +19,7 @@
             AND c.mark = '2'
             AND p.plan_type = 'bird'
             <if test="dto.q != null and dto.q != ''">
-                AND (locate(#{dto.q}, b.brand_name)>0  or  locate(#{dto.q}, c.title)>0)
+                AND (locate(#{dto.q}, b.brand_name)>0  or  locate(#{dto.q}, c.title)>0 or locate(#{dto.q}, c.tags)>0)
             </if>
             <if test="dto.budgetMin > 0">
                 AND p.price  &gt;= #{dto.budgetMin}
