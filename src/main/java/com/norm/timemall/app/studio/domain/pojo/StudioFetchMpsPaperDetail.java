@@ -2,6 +2,8 @@ package com.norm.timemall.app.studio.domain.pojo;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class StudioFetchMpsPaperDetail {
     private String title;
@@ -14,4 +16,7 @@ public class StudioFetchMpsPaperDetail {
     private String tag;
     private String mpsId;
     private String paperId;
+    private String deliveryCycle;
+    private String contractValidityPeriod;
+    private String createAt;
 }

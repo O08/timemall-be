@@ -58,6 +58,14 @@ public class MpsTemplate extends Model<MpsTemplate> implements Serializable {
      */
     private Integer duration;
     /**
+     * 交付周期
+     */
+    private Integer deliveryCycle;
+    /**
+     * 合约有效期
+     */
+    private Integer contractValidityPeriod;
+    /**
      * createAt
      */
     private Date createAt;

@@ -1,5 +1,6 @@
 package com.norm.timemall.app.studio.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -97,6 +98,13 @@ public class StudioCommercialPaperServiceImpl implements StudioCommercialPaperSe
     @Override
     public void mpsPaperOrderReceiving(StudioMpsOrderReceivingDTO dto) {
         String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        // check paper is validate
+        CommercialPaper commercialPaper = studioCommercialPaperMapper.selectById(dto.getPaperId());
+        Date deadLineDate=DateUtil.offsetDay(commercialPaper.getCreateAt(),commercialPaper.getContractValidityPeriod());
+        boolean paperAlreadyInvalid = DateUtil.compare(new Date(),deadLineDate)>1;
+        if(paperAlreadyInvalid){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
         studioCommercialPaperMapper.updateTagAndSupplierById(dto.getPaperId(),CommercialPaperTagEnum.DELIVERING.getMark(),brandId);
     }
 
@@ -135,6 +143,8 @@ public class StudioCommercialPaperServiceImpl implements StudioCommercialPaperSe
                     .setMpsId(mpsId)
                     .setSupplier(e.getFirstSupplier())
                     .setDuration(e.getDuration())
+                    .setDeliveryCycle(e.getDeliveryCycle())
+                    .setContractValidityPeriod(e.getContractValidityPeriod())
                     .setTag(CommercialPaperTagEnum.CREATED.getMark())
                     .setTemplateId(e.getId())
                     .setCreateAt(new Date())

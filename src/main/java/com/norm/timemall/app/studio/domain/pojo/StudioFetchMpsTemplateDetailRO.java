@@ -11,5 +11,7 @@ public class StudioFetchMpsTemplateDetailRO {
     private String firstSupplier;
     private String firstSupplierName;
     private String duration;
+    private String deliveryCycle;
+    private String contractValidityPeriod;
     private String id;
 }

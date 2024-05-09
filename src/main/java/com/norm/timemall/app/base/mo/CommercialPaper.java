@@ -72,6 +72,14 @@ public class CommercialPaper extends Model<CommercialPaper> implements Serializa
      */
     private Integer duration;
     /**
+     * 交付周期
+     */
+    private Integer deliveryCycle;
+    /**
+     * 合约有效期
+     */
+    private Integer contractValidityPeriod;
+    /**
      * createAt
      */
     private Date createAt;

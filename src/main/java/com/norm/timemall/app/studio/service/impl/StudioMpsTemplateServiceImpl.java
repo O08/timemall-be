@@ -51,6 +51,8 @@ public class StudioMpsTemplateServiceImpl implements StudioMpsTemplateService {
                 .setFirstSupplier(dto.getFirstSupplier())
                 .setDuration(dto.getDuration())
                 .setChainId(dto.getChainId())
+                .setDeliveryCycle(dto.getDeliveryCycle())
+                .setContractValidityPeriod(dto.getContractValidityPeriod())
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
 
@@ -70,6 +72,8 @@ public class StudioMpsTemplateServiceImpl implements StudioMpsTemplateService {
                 .setFirstSupplier(dto.getFirstSupplier())
                 .setDuration(dto.getDuration())
                 .setChainId(dto.getChainId())
+                .setDeliveryCycle(dto.getDeliveryCycle())
+                .setContractValidityPeriod(dto.getContractValidityPeriod())
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
 

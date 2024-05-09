@@ -10,5 +10,6 @@ public class StudioDiscoverMpsPaperPageRO {
     private String id;
     private String avatar;
     private String brandName;
+    private String deliveryCycle;
 
 }

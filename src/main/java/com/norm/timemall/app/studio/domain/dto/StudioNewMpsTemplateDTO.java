@@ -24,6 +24,10 @@ public class StudioNewMpsTemplateDTO {
     private String firstSupplier;
     @Positive(message = "duration must be positive")
     private Integer duration;
+    @Positive(message = "deliveryCycle must be positive")
+    private Integer deliveryCycle;
+    @Positive(message = "contractValidityPeriod must be positive")
+    private Integer contractValidityPeriod;
     @NotBlank(message = "chainId required")
     private String chainId;
 }
