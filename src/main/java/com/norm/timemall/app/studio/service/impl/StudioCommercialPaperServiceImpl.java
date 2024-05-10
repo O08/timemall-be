@@ -102,7 +102,7 @@ public class StudioCommercialPaperServiceImpl implements StudioCommercialPaperSe
         CommercialPaper commercialPaper = studioCommercialPaperMapper.selectById(dto.getPaperId());
         Date deadLineDate=DateUtil.offsetDay(commercialPaper.getModifiedAt(),commercialPaper.getContractValidityPeriod());
         boolean paperAlreadyInvalid = DateUtil.compare(new Date(),deadLineDate)>1;
-        if(paperAlreadyInvalid){
+        if(paperAlreadyInvalid || !CommercialPaperTagEnum.PUBLISH.getMark().equals(commercialPaper.getTag())){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
         studioCommercialPaperMapper.updateTagAndSupplierById(dto.getPaperId(),CommercialPaperTagEnum.DELIVERING.getMark(),brandId);
