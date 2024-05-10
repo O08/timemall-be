@@ -100,7 +100,7 @@ public class StudioCommercialPaperServiceImpl implements StudioCommercialPaperSe
         String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         // check paper is validate
         CommercialPaper commercialPaper = studioCommercialPaperMapper.selectById(dto.getPaperId());
-        Date deadLineDate=DateUtil.offsetDay(commercialPaper.getCreateAt(),commercialPaper.getContractValidityPeriod());
+        Date deadLineDate=DateUtil.offsetDay(commercialPaper.getModifiedAt(),commercialPaper.getContractValidityPeriod());
         boolean paperAlreadyInvalid = DateUtil.compare(new Date(),deadLineDate)>1;
         if(paperAlreadyInvalid){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);

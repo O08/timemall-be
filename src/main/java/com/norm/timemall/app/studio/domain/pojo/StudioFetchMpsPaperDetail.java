@@ -2,7 +2,7 @@ package com.norm.timemall.app.studio.domain.pojo;
 
 import lombok.Data;
 
-import java.util.Date;
+
 
 @Data
 public class StudioFetchMpsPaperDetail {
@@ -19,4 +19,5 @@ public class StudioFetchMpsPaperDetail {
     private String deliveryCycle;
     private String contractValidityPeriod;
     private String createAt;
+    private String modifiedAt;
 }
