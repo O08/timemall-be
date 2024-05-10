@@ -2,7 +2,10 @@ package com.norm.timemall.app.base.enums;
 
 public enum BrandMarkEnum {
     CREATED("1","创建"),
-    CLOSED("2","废弃");
+    CLOSED("2","废弃"),
+    ONLINE("3","在线"),
+    OFFLINE("4","离线")
+    ;
     private String mark;
     private String desc;
 

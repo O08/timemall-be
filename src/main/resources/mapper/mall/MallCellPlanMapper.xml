@@ -10,7 +10,7 @@
     </select>
 
     <select id="selectCellPlanPage" resultType="com.norm.timemall.app.mall.domain.ro.RetrievePlanRO">
-        select b.id brandId,b.brand_name brand,b.avator,c.cover preview,c.title,p.price,c.id,ifnull(b.blue_end_at > now(),0) enableBlue
+        select b.id brandId,b.brand_name brand,b.avator,c.cover preview,c.title,p.price,c.id,ifnull(b.blue_end_at > now(),0) enableBlue,b.mark brandMark
         from cell c
         inner join brand b on c.brand_id = b.id
         inner join cell_plan p on c.id = p.cell_id
@@ -29,6 +29,9 @@
             </if>
             <if test="dto.location != null and dto.location != ''">
                 AND locate(#{dto.location}, b.location)>0
+            </if>
+            <if test='dto.online == "1"'>
+                AND b.mark='3'
             </if>
         </where>
         <if test="dto.sort != null and dto.sort != ''">

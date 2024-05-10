@@ -3,6 +3,7 @@ package com.norm.timemall.app.base.service.impl;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.norm.timemall.app.base.enums.BrandMarkEnum;
 import com.norm.timemall.app.base.enums.CodeEnum;
@@ -108,6 +109,14 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Brand findBrandInfoByBrandId(String brandId) {
         return baseBrandMapper.selectById(brandId);
+    }
+
+    @Override
+    public void modifyAccountMark(String mark, String brandId) {
+        LambdaUpdateWrapper<Brand> wrapper = Wrappers.lambdaUpdate();
+        wrapper.set(Brand::getMark,mark);
+        wrapper.eq(Brand::getId,brandId);
+        baseBrandMapper.update(null,wrapper);
     }
 
     private void newBrandWhenUserRegister(String userId,String brandName){

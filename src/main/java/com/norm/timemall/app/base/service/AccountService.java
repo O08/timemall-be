@@ -15,4 +15,5 @@ public interface AccountService {
 
     Brand findBrandInfoByUserId(String userId);
     Brand findBrandInfoByBrandId(String brandId);
+    void modifyAccountMark(String mark,String brandId);
 }
