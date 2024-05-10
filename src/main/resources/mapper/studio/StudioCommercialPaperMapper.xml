@@ -44,7 +44,7 @@
             <if test="q != null and q != ''">
                 AND ( locate(#{q}, p.title) > 0  or  locate(#{q}, p.piece) > 0 )
             </if>
-            and ( DATE_ADD( p.create_at,  INTERVAL p.contract_validity_period DAY) > now() )
+            and ( DATE_ADD( p.modified_at,  INTERVAL p.contract_validity_period DAY) > now() )
             and ( p.duration is null or (now() > DATE_ADD( p.create_at,  INTERVAL p.duration DAY)))
         </where>
     </select>

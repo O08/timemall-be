@@ -1,6 +1,8 @@
 package com.norm.timemall.app.studio.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.norm.timemall.app.base.mo.MpsTemplate;
 import com.norm.timemall.app.studio.domain.dto.StudioNewMpsTemplateDTO;
@@ -63,6 +65,14 @@ public class StudioMpsTemplateServiceImpl implements StudioMpsTemplateService {
     @Override
     public void modifyMpsTemplate(StudioPutMpsTemplateDTO dto) {
 
+
+        LambdaUpdateWrapper<MpsTemplate> updateWrapper = Wrappers.lambdaUpdate();
+        // fix duration null value
+        if(ObjectUtil.isNull(dto.getDuration())){
+            updateWrapper.set(MpsTemplate::getDuration,null);
+        }
+
+        updateWrapper.eq(MpsTemplate::getId,dto.getId());
         MpsTemplate template = new MpsTemplate();
         template.setId(dto.getId())
                 .setTitle(dto.getTitle())
@@ -76,8 +86,7 @@ public class StudioMpsTemplateServiceImpl implements StudioMpsTemplateService {
                 .setContractValidityPeriod(dto.getContractValidityPeriod())
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
-
-        studioMpsTemplateMapper.updateById(template);
+        studioMpsTemplateMapper.update(template, updateWrapper);
     }
 
     @Override
