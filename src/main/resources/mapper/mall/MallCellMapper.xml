@@ -58,16 +58,12 @@
         <result property="introCover" column="intro_cover"/>
         <result property="brandId" column="brandId"/>
         <result property="brand" column="brand"/>
+        <result property="brandMark" column="brandMark"/>
         <result property="avator" column="avator"/>
 <!--        <result property="content" column="content"/>-->
         <result property="content"
                 typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
                 column="content"/>
-<!--        <association property="brandContact" javaType="com.norm.timemall.app.mall.domain.pojo.BrandContact" >-->
-<!--            <result property="wechat" column="wechat"/>-->
-<!--            <result property="phone" column="phone"/>-->
-<!--            <result property="email" column="email"/>-->
-<!--        </association>-->
         <collection property="fee" ofType="com.norm.timemall.app.mall.domain.pojo.Fee" javaType="ArrayList">
             <result property="price" column="price"/>
             <result property="sbu" column="sbu"/>
@@ -75,7 +71,7 @@
     </resultMap>
 
     <select id="selectCellIntro" resultMap="cellIntroResultMap">
-        select c.title, c.id, c.cover, c.provide_invoice, c.intro_cover,b.id brandId,b.brand_name brand,b.avator,b.wechat,b.phone,b.email,c.content,p.price,p.sbu
+        select c.title, c.id, c.cover, c.provide_invoice, c.intro_cover,b.id brandId,b.brand_name brand,b.avator,b.wechat,b.phone,b.email,c.content,p.price,p.sbu,b.mark brandMark
         from cell c
         inner join brand b on c.brand_id = b.id
         inner join pricing p on c.id = p.cell_id

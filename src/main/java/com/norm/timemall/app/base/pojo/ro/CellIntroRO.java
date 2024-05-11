@@ -27,6 +27,8 @@ public class CellIntroRO {
     //The brand of providing cell
     private String brand;
 
+    private String brandMark;
+
     // The avator url for brand
     private String avator;
 

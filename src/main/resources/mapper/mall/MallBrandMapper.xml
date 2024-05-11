@@ -11,6 +11,7 @@
 
     <resultMap id="brandProfileResultMap" type="com.norm.timemall.app.mall.domain.ro.BrandProfileRO">
         <result property="brand" column="brand"/>
+        <result property="brandMark" column="brandMark"/>
         <result property="brandUserId" column="customer_id"/>
         <result property="avator" column="avator"/>
         <result property="cover" column="cover"/>
@@ -42,7 +43,7 @@
     </resultMap>
 
     <select id="selectProileByBrandId" resultMap="brandProfileResultMap">
-        select b.brand_name brand,b.customer_id ,b.avator,b.cover,s.occupation_code,
+        select b.brand_name brand,b.customer_id ,b.avator,b.cover,s.occupation_code,b.mark brandMark,
         CASE s.occupation_code
           when '0' then s.self_defined_occupation
           else c.item
