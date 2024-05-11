@@ -32,7 +32,7 @@
             <if test="dto.location != null and dto.location != ''">
                 AND locate(#{dto.location}, b.location)>0
             </if>
-            <if test='dto.online == "1"'>
+            <if test="dto.online">
                 AND b.mark='3'
             </if>
         </where>

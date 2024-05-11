@@ -39,8 +39,7 @@ public class CellPageDTO {
     private String sbu;
 
     private String location;
-    // 0: offline, 1: online
-    private String online;
+    private boolean online;
 
 
 }

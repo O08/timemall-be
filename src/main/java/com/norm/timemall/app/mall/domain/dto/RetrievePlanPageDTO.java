@@ -23,7 +23,6 @@ public class RetrievePlanPageDTO extends PageDTO {
     private String sort;
 
     private String location;
-    // 0: offline, 1: online
-    private String online;
+    private boolean online;
 
 }
