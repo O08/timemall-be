@@ -14,4 +14,5 @@ public class StudioBrandBasicSetting {
     private String hiring;
     private String typeOfBusiness;
     private String industry;
+    private String freeNightCounsellor;
 }

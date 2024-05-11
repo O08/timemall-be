@@ -25,6 +25,7 @@
         <result property="availableForWork" column="available_for_work"/>
         <result property="hiring" column="hiring"/>
         <result property="typeOfBusiness" column="type_of_business"/>
+        <result property="freeNightCounsellor" column="free_night_counsellor"/>
 
 
         <result property="experience"
@@ -48,6 +49,7 @@
           when '0' then s.self_defined_occupation
           else c.item
         END as occupation,
+        s.free_night_counsellor,
         s.industry_code,s.industry,s.support_free_cooperation,s.cooperation_scope, s.brand_type_code, s.available_for_work,s.hiring,s.type_of_business, b.experience,b.title,b.location,b.skills,b.links,ifnull(b.blue_end_at > now(),0) enableBlue
         from brand b
         left join brand_sub s

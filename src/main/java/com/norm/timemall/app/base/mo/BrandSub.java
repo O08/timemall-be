@@ -71,5 +71,9 @@ public class BrandSub extends Model<BrandSub> implements Serializable {
      * 行业 text
      */
     private String industry;
+    /**
+     * 志愿夜间咨询师
+     */
+    private String freeNightCounsellor;
 
 }

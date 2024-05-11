@@ -23,6 +23,7 @@ public class BrandProfileRO {
     private String availableForWork;
     private String hiring;
     private String typeOfBusiness;
+    private String freeNightCounsellor;
 
     private ArrayList<MallBrandExperience> experience;
     // Brand Title or other Info. maybe your Occuption Title
