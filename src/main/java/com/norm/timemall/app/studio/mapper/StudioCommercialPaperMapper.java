@@ -36,7 +36,7 @@ public interface StudioCommercialPaperMapper extends BaseMapper<CommercialPaper>
     IPage<StudioDiscoverMpsPaperPageRO> selectPaperPageForPublic(IPage<StudioDiscoverMpsPaperPageRO> page, @Param("q") String dto);
 
     StudioFetchMpsPaperDetail selectPaperDetailById(@Param("id") String id);
-@Select("select id ,piece,title from commercial_paper where mps_id=#{mpsId}")
+@Select("select id ,piece,title,tag from commercial_paper where mps_id=#{mpsId}")
     ArrayList<StudioFetchMpsPaperListRO> selectPaperListByMpsId(@Param("mpsId") String mpsId);
 @Update("update commercial_paper set tag=#{dto.tag} where id=#{dto.paperId}")
     void updateTagById(@Param("dto") StudioPutMpsPaperTagDTO dto);

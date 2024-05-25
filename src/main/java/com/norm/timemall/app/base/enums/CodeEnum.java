@@ -44,6 +44,7 @@ public enum CodeEnum implements Code{
     USER_ACCOUNT_USE_BY_OTHERS(2009, "账号下线"),
 
     USER_ACCOUNT_DISABLE(2005, "账号不可用"),
+    USER_ACCOUNT_NAME_EXIST(2010, "名字已被使用"),
 
     // file 3...
     FILE_IS_EMPTY(3001,"空文件"),

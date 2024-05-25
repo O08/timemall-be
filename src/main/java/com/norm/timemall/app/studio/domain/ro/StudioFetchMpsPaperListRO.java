@@ -7,4 +7,6 @@ public class StudioFetchMpsPaperListRO {
     private String id;
     private String piece;
     private String title;
+    private String tag;
+
 }
