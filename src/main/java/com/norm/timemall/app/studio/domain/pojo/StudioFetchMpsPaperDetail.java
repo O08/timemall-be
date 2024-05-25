@@ -20,4 +20,5 @@ public class StudioFetchMpsPaperDetail {
     private String contractValidityPeriod;
     private String createAt;
     private String modifiedAt;
+    private String purchaserUserId;
 }
