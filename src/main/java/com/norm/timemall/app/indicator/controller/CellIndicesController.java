@@ -10,16 +10,21 @@ import com.norm.timemall.app.indicator.domain.dto.IndDataLayerCellIndicesDTO;
 import com.norm.timemall.app.indicator.domain.ro.IndCellIndicesRO;
 import com.norm.timemall.app.indicator.domain.vo.IndCellIndicesPageVO;
 import com.norm.timemall.app.indicator.service.CellIndicesService;
+import com.norm.timemall.app.indicator.service.IndAffiliateAccessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 public class CellIndicesController {
 
     @Autowired
     private CellIndicesService cellIndicesService;
+    @Autowired
+    private IndAffiliateAccessService indAffiliateAccessService;
     /*
      * 分页查询服务指标： 曝光、点击。。。。
      */
@@ -36,9 +41,11 @@ public class CellIndicesController {
 
     @ResponseBody
     @PutMapping("/api/v1/data_layer/cell/indices")
-    public SuccessVO dataLayerCellIndices(@Validated @RequestBody IndDataLayerCellIndicesDTO dto){
+    public SuccessVO dataLayerCellIndices(@Validated @RequestBody IndDataLayerCellIndicesDTO dto,
+                                          HttpServletRequest request){
 
         cellIndicesService.modifyCellIndices(dto);
+        indAffiliateAccessService.newAccess(dto,request);
         return new SuccessVO(CodeEnum.SUCCESS);
 
     }

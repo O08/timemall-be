@@ -34,6 +34,10 @@ public class RichTextConfig {
      * 内容
      */
     private String content;
+    /**
+     * 内容
+     */
+    private String contact;
 
     /**
      * 创建时间

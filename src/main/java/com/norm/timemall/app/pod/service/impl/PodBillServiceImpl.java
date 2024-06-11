@@ -1,17 +1,16 @@
 package com.norm.timemall.app.pod.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.gson.Gson;
-import com.norm.timemall.app.base.enums.BillMarkEnum;
-import com.norm.timemall.app.base.enums.CodeEnum;
-import com.norm.timemall.app.base.enums.FidTypeEnum;
-import com.norm.timemall.app.base.enums.TransTypeEnum;
+import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
+import com.norm.timemall.app.base.mo.AffiliateOrder;
 import com.norm.timemall.app.base.mo.Bill;
 import com.norm.timemall.app.base.mo.Millstone;
 import com.norm.timemall.app.base.mo.OrderDetails;
@@ -22,9 +21,11 @@ import com.norm.timemall.app.pod.domain.dto.PodBillPageDTO;
 import com.norm.timemall.app.pod.domain.pojo.PodMillStoneNode;
 import com.norm.timemall.app.pod.domain.pojo.PodWorkFlowNode;
 import com.norm.timemall.app.pod.domain.ro.PodBillsRO;
+import com.norm.timemall.app.pod.mapper.PodAffiliateOrderMapper;
 import com.norm.timemall.app.pod.mapper.PodBillMapper;
 import com.norm.timemall.app.pod.mapper.PodMillstoneMapper;
 import com.norm.timemall.app.pod.mapper.PodOrderDetailsMapper;
+import com.norm.timemall.app.pod.service.PodAffiliatePayService;
 import com.norm.timemall.app.pod.service.PodBillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,11 @@ public class PodBillServiceImpl implements PodBillService {
 
     @Autowired
     private DefaultPayService defaultPayService;
+    @Autowired
+    private PodAffiliatePayService podAffiliatePayService;
+
+    @Autowired
+    private PodAffiliateOrderMapper podAffiliateOrderMapper;
 
     @Override
     public Bill findBillByIdAndCustomer(String billId, String customerId) {
@@ -78,16 +84,30 @@ public class PodBillServiceImpl implements PodBillService {
         if(!SecurityUserHelper.getCurrentPrincipal().getUserId().equals(orderDetails.getConsumerId())){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
+       //cal commission and netIncome
+        LambdaQueryWrapper<AffiliateOrder> affiliateOrderLambdaQueryWrapper= Wrappers.lambdaQuery();
+        affiliateOrderLambdaQueryWrapper.eq(AffiliateOrder::getOrderId,orderDetails.getId())
+                .eq(AffiliateOrder::getOrderType, AffiliateOrderTypeEnum.CELL.getMark());
+        AffiliateOrder affiliateOrder = podAffiliateOrderMapper.selectOne(affiliateOrderLambdaQueryWrapper);
+        BigDecimal commission=BigDecimal.ZERO;
+        if(ObjectUtil.isNotNull(affiliateOrder)){
+            commission=affiliateOrder.getRevshare().multiply(bill.getAmount()).divide(new BigDecimal(100),2,RoundingMode.HALF_UP);
+        }
+        BigDecimal netIncome=bill.getAmount().subtract(commission);
 
         // pay
-        TransferBO bo = generateTransferBO(bill.getAmount(),orderDetails.getBrandId(),billId);
+        TransferBO bo = generateTransferBO(netIncome,orderDetails.getBrandId(),billId);
         defaultPayService.transfer(new Gson().toJson(bo));
         // update bill mark as paid
-        podBillMapper.updateBillMarkById(billId,BillMarkEnum.PAID.getMark());
+        podBillMapper.updateBillInfoById(netIncome,commission,billId,BillMarkEnum.PAID.getMark());
 
         // 支付完成后，生成下一条账单
         generateNextBill(billId);
 
+        // pay affiliate if order belong to affiliate order
+        if(ObjectUtil.isNotNull(affiliateOrder)){
+            podAffiliatePayService.cellBillRevshare(affiliateOrder.getInfluencer(), commission, billId, orderDetails.getBrandId());
+        }
 
     }
 

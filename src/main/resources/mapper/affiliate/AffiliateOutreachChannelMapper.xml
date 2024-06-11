@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.affiliate.mapper.AffiliateOutreachChannelMapper">
+
+    <select id="selectPageByDTO" resultType="com.norm.timemall.app.affiliate.domain.ro.FetchOutreachChannelPageRO">
+        select
+          chn.id outreachChannelId,chn.channel_name,chn.cell_sale_volume,chn.plan_sale_volume,chn.sales,chn.refund_orders,chn.views
+        from affiliate_outreach_channel chn
+        <where>
+            1=1
+            <if test="dto.q != null and dto.q != ''">
+                AND locate(#{dto.q}, chn.channel_name)>0
+            </if>
+            <if test="dto.viewsLeft > 0">
+                AND chn.views  &gt;= #{dto.viewsLeft}
+            </if>
+            <if test="dto.viewsRight > 0">
+                AND  chn.views  &lt;= #{dto.viewsRight}
+            </if>
+            <if test="dto.salesLeft > 0">
+                AND chn.sales  &gt;= #{dto.salesLeft}
+            </if>
+            <if test="dto.salesRight > 0">
+                AND  chn.sales  &lt;= #{dto.salesRight}
+            </if>
+            <if test="dto.saleVolumeLeft > 0">
+                AND chn.plan_sale_volume  &gt;= #{dto.saleVolumeLeft}
+            </if>
+            <if test="dto.saleVolumeRight > 0">
+                AND  chn.plan_sale_volume  &lt;= #{dto.saleVolumeRight}
+            </if>
+
+        </where>
+    </select>
+
+</mapper>

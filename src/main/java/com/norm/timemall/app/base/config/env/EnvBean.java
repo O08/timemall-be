@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 public class EnvBean {
     @Value("${env.website}")
     private String website;
+    @Value("${env.short-link-site}")
+    private String shortSite;
     /**
      * 密码重置有效区
      */

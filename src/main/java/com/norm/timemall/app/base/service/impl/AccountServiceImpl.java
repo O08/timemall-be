@@ -116,6 +116,7 @@ public class AccountServiceImpl implements AccountService {
         LambdaUpdateWrapper<Brand> wrapper = Wrappers.lambdaUpdate();
         wrapper.set(Brand::getMark,mark);
         wrapper.eq(Brand::getId,brandId);
+        wrapper.eq(Brand::getModifiedAt,new Date());
         baseBrandMapper.update(null,wrapper);
     }
 
@@ -124,7 +125,9 @@ public class AccountServiceImpl implements AccountService {
         brand.setId(IdUtil.simpleUUID())
                 .setMark(BrandMarkEnum.CREATED.getMark())
                 .setBrandName(brandName)
-                .setCustomerId(userId);
+                .setCustomerId(userId)
+                .setCreateAt(new Date())
+                .setModifiedAt(new Date());
         baseBrandMapper.insert(brand);
         newFinAccountWhenBrandRegister(brand.getId());
     }

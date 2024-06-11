@@ -12,4 +12,5 @@ public interface PodCellPlanOrderDeliverService {
     void leaveMessage(DeliverLeaveMsgDTO dto);
 
     void modifyDeliverTag(PodPutCellPlanDeliverTagDTO dto);
+    void pay(String orderId);
 }

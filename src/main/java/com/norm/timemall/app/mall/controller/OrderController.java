@@ -5,6 +5,7 @@ import com.norm.timemall.app.base.enums.TransTypeEnum;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.base.service.OrderFlowService;
+import com.norm.timemall.app.mall.domain.dto.AffiliateDTO;
 import com.norm.timemall.app.mall.domain.dto.OrderDTO;
 import com.norm.timemall.app.mall.domain.vo.OrderCellPlanVO;
 import com.norm.timemall.app.mall.domain.vo.OrderCellVO;
@@ -43,13 +44,13 @@ public class OrderController {
 
     @ResponseBody
     @PostMapping(value = "/api/v1/web_mall/services/plan/{id}/order")
-    public OrderCellPlanVO retrieveCellIntro(@PathVariable("id") String planId) {
+    public OrderCellPlanVO retrieveCellIntro(@PathVariable("id") String planId, @RequestBody AffiliateDTO dto) {
         OrderCellPlanVO vo = new OrderCellPlanVO();
 
         try {
             orderFlowService.insertOrderFlow(SecurityUserHelper.getCurrentPrincipal().getUserId(),
                     TransTypeEnum.PLAN_ORDER_PAY.getMark());
-            String planOrderId = cellPlanOrderService.newOrder(planId);
+            String planOrderId = cellPlanOrderService.newOrder(planId,dto);
             vo.setPlanOrderId(planOrderId);
 
         }finally {

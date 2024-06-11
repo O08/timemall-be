@@ -76,6 +76,7 @@ rsa:
 
 env:
   website: ${website}
+  short-link-site: ${short_link_site}
 
 aliyun:
   oss:

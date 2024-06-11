@@ -56,6 +56,14 @@ public class Bill extends Model<Bill> implements Serializable {
      */
     private String orderId;
     /**
+     * 扣除佣金收入
+     */
+    private BigDecimal netIncome;
+    /**
+     * 佣金
+     */
+    private BigDecimal commission;
+    /**
      * createAt
      */
     private Date createAt;

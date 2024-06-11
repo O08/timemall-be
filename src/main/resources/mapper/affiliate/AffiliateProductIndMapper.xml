@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.affiliate.mapper.AffiliateProductIndMapper">
+    <sql id="tableName">
+        affiliate_product_ind
+    </sql>
+
+    <select id="selectPageByDTO" resultType="com.norm.timemall.app.affiliate.domain.ro.FetchProductGalleryRO">
+        select
+          pi.cell_id,pi.supplier_brand_id,pi.product_name,pi.revshare,pi.plan_price,pi.cell_sale_volume,pi.plan_sale_volume,
+          pi.sales,pi.views,pi.refund_orders,pi.influencers,ifnull(pi.cell_id = inf.cell_id,0) inChoice
+        from affiliate_product_ind pi
+        left join affiliate_influencer_product inf
+          on pi.cell_id=inf.cell_id
+        <where>
+          1=1  AND pi.cell_mark = '2'
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, pi.supplier_brand_name)>0  or  locate(#{dto.q}, pi.product_name)>0)
+            </if>
+            <if test="dto.supplierAccountAgeLeft > 0">
+                AND TIMESTAMPDIFF(MONTH,pi.supplier_create_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S')) &gt;= #{dto.supplierAccountAgeLeft}
+            </if>
+            <if test="dto.supplierAccountAgeRight > 0">
+                AND TIMESTAMPDIFF(MONTH,pi.supplier_create_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S')) &lt;= #{dto.supplierAccountAgeRight}
+            </if>
+            <if test="dto.heartbeat != null and dto.heartbeat != ''">
+                <choose>
+                    <when test='dto.heartbeat == "1"'>
+                        AND TIMESTAMPDIFF(WEEK,pi.supplier_modified_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S'))  &lt;= 1
+                    </when>
+                    <when test='dto.heartbeat == "2"'>
+                        AND  TIMESTAMPDIFF(MONTH,pi.supplier_modified_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S'))  &lt;= 1
+                    </when>
+                    <when test='dto.heartbeat == "3"'>
+                        AND TIMESTAMPDIFF(MONTH,pi.supplier_modified_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S'))  &lt;= 3
+                    </when>
+                </choose>
+            </if>
+            <if test="dto.blue != null and dto.blue != ''">
+                AND pi.supplier_blue_end_at > now()
+            </if>
+            <if test="dto.planPriceLeft > 0">
+                 AND pi.plan_price  &gt;= #{dto.planPriceLeft}
+            </if>
+            <if test="dto.planPriceRight > 0">
+                AND  pi.plan_price  &lt;= #{dto.planPriceRight}
+            </if>
+            <if test="dto.provideInvoice != null and dto.provideInvoice != ''">
+                AND pi.provide_invoice > #{dto.provideInvoice}
+            </if>
+            <if test="dto.revshareLeft > 0">
+                AND pi.revshare  &gt;= #{dto.revshareLeft}
+            </if>
+            <if test="dto.revshareRight > 0">
+                AND  pi.revshare  &lt;= #{dto.revshareRight}
+            </if>
+            <if test="dto.viewsLeft > 0">
+                AND pi.views  &gt;= #{dto.viewsLeft}
+            </if>
+            <if test="dto.viewsRight > 0">
+                AND  pi.views  &lt;= #{dto.viewsRight}
+            </if>
+            <if test="dto.saleVolumeLeft > 0">
+                AND pi.sales  &gt;= #{dto.saleVolumeLeft}
+            </if>
+            <if test="dto.saleVolumeRight > 0">
+                AND  pi.sales  &lt;= #{dto.saleVolumeRight}
+            </if>
+            <if test="dto.influencersLeft > 0">
+                AND pi.influencers  &gt;= #{dto.influencersLeft}
+            </if>
+            <if test="dto.influencersRight > 0">
+                AND  pi.influencers  &lt;= #{dto.influencersRight}
+            </if>
+
+        </where>
+    </select>
+
+</mapper>

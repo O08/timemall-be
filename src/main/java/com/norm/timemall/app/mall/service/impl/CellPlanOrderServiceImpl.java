@@ -10,11 +10,13 @@ import com.norm.timemall.app.base.mo.CellPlan;
 import com.norm.timemall.app.base.mo.CellPlanOrder;
 import com.norm.timemall.app.base.mo.CommonOrderPayment;
 import com.norm.timemall.app.base.pojo.TransferBO;
+import com.norm.timemall.app.mall.domain.dto.AffiliateDTO;
 import com.norm.timemall.app.mall.domain.ro.CellPlanOrderRO;
 import com.norm.timemall.app.mall.mapper.CellPlanMapper;
 import com.norm.timemall.app.mall.mapper.CellPlanOrderMapper;
 import com.norm.timemall.app.mall.mapper.CommonOrderPaymentMapper;
 import com.norm.timemall.app.mall.service.CellPlanOrderService;
+import com.norm.timemall.app.mall.service.MallAffiliateOrderService;
 import com.norm.timemall.app.pay.service.DefaultPayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,8 +34,10 @@ public class CellPlanOrderServiceImpl implements CellPlanOrderService {
     private DefaultPayService defaultPayService;
     @Autowired
     private CommonOrderPaymentMapper commonOrderPaymentMapper;
+    @Autowired
+    private MallAffiliateOrderService mallAffiliateOrderService;
     @Override
-    public String newOrder(String planId) {
+    public String newOrder(String planId, AffiliateDTO dto) {
 
         CellPlan plan = cellPlanMapper.selectById(planId);
         if(plan==null){
@@ -64,6 +68,9 @@ public class CellPlanOrderServiceImpl implements CellPlanOrderService {
         newOrderPayment(orderId,transNo,plan.getPrice());
         // update order tag as paid
         cellPlanOrderMapper.updateTagById(CellPlanOrderTagEnum.PAID.ordinal(),orderId);
+        // affiliate order
+        mallAffiliateOrderService.newAffiliateOrder(plan.getCellId(),orderId,AffiliateOrderTypeEnum.PLAN.getMark(),
+                plan.getPrice(),dto.getInfluencer(),dto.getChn(),dto.getMarket());
         return orderId;
 
     }

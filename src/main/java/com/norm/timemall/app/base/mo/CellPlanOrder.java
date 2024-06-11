@@ -72,6 +72,15 @@ public class CellPlanOrder extends Model<CellPlanOrder> implements Serializable 
     private String consumerId;
 
     /**
+     * 扣除佣金收入
+     */
+    private BigDecimal netIncome;
+    /**
+     * 佣金
+     */
+    private BigDecimal commission;
+
+    /**
      * createAt
      */
     private Date createAt;

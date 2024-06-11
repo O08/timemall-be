@@ -12,6 +12,8 @@ public enum RichTextConfigEnum {
     EMAIL_PASSWORD_UPDATED("emailHtml","password_updated"),
 
     EMAIL_CELL_ORDER_RECEIVING("emailHtml", "cell_order_receiving_notice"),
+    EMAIL_RISK_AUDIT("emailHtml", "risk_audit"),
+
     EMAIL_CELL_PLAN_ORDER_RECEIVING("emailHtml", "cell_plan_order_receiving_notice");
     ;
     // template type : email or html or sms

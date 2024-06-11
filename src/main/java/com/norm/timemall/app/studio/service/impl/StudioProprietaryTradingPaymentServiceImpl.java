@@ -22,6 +22,7 @@ public class StudioProprietaryTradingPaymentServiceImpl extends ServiceImpl<Stud
                 .setPayType(tradingPayment.getPayType())
                 .setPayTypeDesc(tradingPayment.getPayTypeDesc())
                 .setMessage(tradingPayment.getMessage())
+                .setTotalAmount(tradingPayment.getTotalAmount())
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
         this.save(proprietaryTradingPayment);

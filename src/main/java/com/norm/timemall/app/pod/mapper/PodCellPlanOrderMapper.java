@@ -11,6 +11,8 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.math.BigDecimal;
+
 /**
  * (cell_plan_order)数据Mapper
  *
@@ -21,8 +23,9 @@ import org.apache.ibatis.annotations.Update;
 */
 @Mapper
 public interface PodCellPlanOrderMapper extends BaseMapper<CellPlanOrder> {
-@Update("update cell_plan_order set tag=#{tag} where id=#{id} and consumer_id=#{consumerId}")
-    void updateTagByConsumerIdAndId(@Param("id") String orderId, @Param("consumerId") String userId,@Param("tag") int tag);
+@Update("update cell_plan_order set tag=#{tag},net_income=#{netIncome},commission=#{commission} where id=#{id} and consumer_id=#{consumerId}")
+    void updatePlanInfoByConsumerIdAndId(@Param("netIncome") BigDecimal netIncome, @Param("commission") BigDecimal commission,
+                                         @Param("id") String orderId, @Param("consumerId") String userId, @Param("tag") int tag);
 @Select("select o.plan_price amount,c.brand_id from cell_plan_order o,cell c where o.id=#{orderId} and o.cell_id=c.id")
     PodBrandAndPriceBO selectBrandAndAmountById(@Param("orderId") String orderId);
 
