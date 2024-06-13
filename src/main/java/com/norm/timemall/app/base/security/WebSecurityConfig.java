@@ -50,6 +50,7 @@ public class WebSecurityConfig {
 
         http.csrf().disable().cors().disable().authorizeHttpRequests()
                 .antMatchers("/api/v1/web_mall/**",
+                        "/open_api/**",
                         "/api/payment/alipay",
                         "/api/v1/marketing/puzzle","/api/v1/marketing/puzzle/dreams",
                         "/api/v1/data_layer/cell/indices")

@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class DashboardRO {
     private String cellSaleVolume;
-    private String clicks;
+    private String views;
     private String planSaleVolume;
     private String refundOrders;
     private String sales;

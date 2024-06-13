@@ -3,7 +3,7 @@
 <mapper namespace="com.norm.timemall.app.affiliate.mapper.AffiliateLinkMarketingMapper">
 
     <select id="selectPageByDTO" resultType="com.norm.timemall.app.affiliate.domain.ro.FetchLinkMarketingPageRO">
-        select chn.channel_name,lm.supplier_brand_id,lm.cell_id,bs.product_name,ip.revshare,lm.cell_sale_volume,lm.plan_sale_volume,lm.sales,lm.views,
+        select lm.brand_id,chn.channel_name,lm.supplier_brand_id,lm.cell_id,bs.product_name,ip.revshare,lm.cell_sale_volume,lm.plan_sale_volume,lm.sales,lm.views,
         lm.refund_orders,lm.settled_payment,lm.unsettled_payment,lm.shortLink,lm.id linkMarketingId
         from affiliate_link_marketing lm
         inner join affiliate_outreach_channel chn
