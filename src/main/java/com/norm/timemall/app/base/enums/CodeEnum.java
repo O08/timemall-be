@@ -67,7 +67,7 @@ public enum CodeEnum implements Code{
     MARKETING_END(40018,"活动已结束" ),
     MARKETING_OPEN_FAIL(40019,"开箱失败" ),
     MARKETING_NOT_RIGHT_TIME(40020,"还没到开箱时间" ), AFFILIATE_LINKS_EXIST(40021, "存在带货链接"),
-    AFFILIATE_CHANNEL_EXISTS(40022, "渠道名称已存在");
+    AFFILIATE_CHANNEL_EXISTS(40022, "渠道名称已存在"), AFFILIATE_CHANNEL_NOT_EXISTS(40023, "渠道未配置");
 
     private int code;
     private String desc;

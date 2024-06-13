@@ -16,7 +16,7 @@ public class OpenAffiliateController {
     @Autowired
     private OpenAffiliateService openAffiliateService;
     @ResponseBody
-    @GetMapping("/open_api/affiliate/choice_product")
+    @GetMapping("/api/open/affiliate/choice_product")
     public OpenFetchChoiceProductVO fetchChoiceProductList(OpenFetchChoiceProductPageDTO dto){
 
         IPage<OpenFetchChoiceProductRO> product=openAffiliateService.findChoiceProduct(dto);
