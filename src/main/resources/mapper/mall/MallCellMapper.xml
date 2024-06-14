@@ -52,6 +52,7 @@
     </select>
     <resultMap id="cellIntroResultMap" type="com.norm.timemall.app.base.pojo.ro.CellIntroRO">
         <id property="id" column="id"/>
+        <result property="cellMark" column="cellMark"/>
         <result property="title" column="title"/>
         <result property="cover" column="cover"/>
         <result property="provideInvoice" column="provide_invoice"/>
@@ -71,7 +72,7 @@
     </resultMap>
 
     <select id="selectCellIntro" resultMap="cellIntroResultMap">
-        select c.title, c.id, c.cover, c.provide_invoice, c.intro_cover,b.id brandId,b.brand_name brand,b.avator,b.wechat,b.phone,b.email,c.content,p.price,p.sbu,b.mark brandMark
+        select c.mark cellMark, c.title, c.id, c.cover, c.provide_invoice, c.intro_cover,b.id brandId,b.brand_name brand,b.avator,b.wechat,b.phone,b.email,c.content,p.price,p.sbu,b.mark brandMark
         from cell c
         inner join brand b on c.brand_id = b.id
         inner join pricing p on c.id = p.cell_id
