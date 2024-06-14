@@ -31,7 +31,7 @@ public class OrderController {
      */
     @ResponseBody
     @PostMapping(value = "/api/v1/web_mall/services/{cell_id}/order")
-    public OrderCellVO retrieveCellIntro(@AuthenticationPrincipal CustomizeUser userDetails,
+    public OrderCellVO orderCell(@AuthenticationPrincipal CustomizeUser userDetails,
                                          @PathVariable("cell_id") String cellId, @Validated @RequestBody OrderDTO orderDTO) {
 
         String orderId = orderDetailService.newOrder(userDetails, cellId, orderDTO);
@@ -44,7 +44,7 @@ public class OrderController {
 
     @ResponseBody
     @PostMapping(value = "/api/v1/web_mall/services/plan/{id}/order")
-    public OrderCellPlanVO retrieveCellIntro(@PathVariable("id") String planId, @RequestBody AffiliateDTO dto) {
+    public OrderCellPlanVO orderPlan(@PathVariable("id") String planId, @RequestBody AffiliateDTO dto) {
         OrderCellPlanVO vo = new OrderCellPlanVO();
 
         try {

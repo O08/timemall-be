@@ -1,12 +1,12 @@
 package com.norm.timemall.app.mall.service.impl;
 
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.norm.timemall.app.base.enums.AffiliateOrderMarketEnum;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
-import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.AffiliateInfluencerProduct;
 import com.norm.timemall.app.base.mo.AffiliateLinkMarketing;
 import com.norm.timemall.app.base.mo.AffiliateOrder;
@@ -34,14 +34,17 @@ public class MallAffiliateOrderServiceImpl implements MallAffiliateOrderService 
     @Async
     @Override
     public void newAffiliateOrder(String cellId, String orderId, String orderType, BigDecimal price, String influencer, String chn, String market) {
+        // is valid param
+        if(CharSequenceUtil.isBlank(influencer) || CharSequenceUtil.isBlank(chn) || CharSequenceUtil.isBlank(market)){
+            return;
+        }
         // access block
         if(!(AffiliateOrderMarketEnum.API.getMark().equals(market) || AffiliateOrderMarketEnum.LINK.getMark().equals(market))){
             return;
         }
         // validate cellId
-        String brandId= SecurityUserHelper.getCurrentPrincipal().getBrandId();
         LambdaQueryWrapper<AffiliateInfluencerProduct> influencerProductLambdaQueryWrapper= Wrappers.lambdaQuery();
-        influencerProductLambdaQueryWrapper.eq(AffiliateInfluencerProduct::getBrandId,brandId)
+        influencerProductLambdaQueryWrapper.eq(AffiliateInfluencerProduct::getBrandId,influencer)
                 .eq(AffiliateInfluencerProduct::getCellId,cellId);
         AffiliateInfluencerProduct product = mallAffiliateInfluencerProductMapper.selectOne(influencerProductLambdaQueryWrapper);
         if(product==null){
@@ -51,7 +54,7 @@ public class MallAffiliateOrderServiceImpl implements MallAffiliateOrderService 
         AffiliateLinkMarketing linkMarketing=null;
         if(AffiliateOrderMarketEnum.LINK.getMark().equals(market)){
             LambdaQueryWrapper<AffiliateLinkMarketing> affiliateLinkMarketingLambdaQueryWrapper=Wrappers.lambdaQuery();
-            affiliateLinkMarketingLambdaQueryWrapper.eq(AffiliateLinkMarketing::getBrandId,brandId)
+            affiliateLinkMarketingLambdaQueryWrapper.eq(AffiliateLinkMarketing::getBrandId,influencer)
                     .eq(AffiliateLinkMarketing::getCellId,cellId)
                     .eq(AffiliateLinkMarketing::getOutreachChannelId,chn);
                linkMarketing = mallAffiliateLinkMarketingMapper.selectOne(affiliateLinkMarketingLambdaQueryWrapper);
