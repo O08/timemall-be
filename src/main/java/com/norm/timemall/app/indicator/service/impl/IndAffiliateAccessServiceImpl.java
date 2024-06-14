@@ -1,6 +1,7 @@
 package com.norm.timemall.app.indicator.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.norm.timemall.app.base.enums.IndDataLayerCellIndicesEventEnum;
@@ -21,10 +22,15 @@ public class IndAffiliateAccessServiceImpl implements IndAffiliateAccessService 
     private IndAffiliateAccessMapper affiliateAccessMapper;
     @Override
     public void newAccess(IndDataLayerCellIndicesDTO dto, HttpServletRequest request) {
-        // validate
-        if(!(IndDataLayerCellIndicesEventEnum.CLICKS.getMark().equals(dto.getEvent())
-                && CollUtil.isNotEmpty(dto.getCell().getClicks())
-                && ObjectUtil.isNotNull(dto.getAffiliateDTO()))){
+
+        // is valid param
+        if(    (!IndDataLayerCellIndicesEventEnum.CLICKS.getMark().equals(dto.getEvent()))
+                || CollUtil.isEmpty(dto.getCell().getClicks())
+                || ObjectUtil.isNull(dto.getAffiliate())
+                ||  CharSequenceUtil.isBlank(dto.getAffiliate().getInfluencer())
+                || CharSequenceUtil.isBlank(dto.getAffiliate().getChn())
+                || CharSequenceUtil.isBlank(dto.getAffiliate().getMarket())
+        ){
             return;
         }
         // get ip location
@@ -36,10 +42,10 @@ public class IndAffiliateAccessServiceImpl implements IndAffiliateAccessService 
         affiliateAccess.setId(IdUtil.simpleUUID())
                 .setIp(ip)
                 .setIpLocation(ipLocation)
-                .setInfluencer(dto.getAffiliateDTO().getInfluencer())
-                .setOutreachChannelId(dto.getAffiliateDTO().getChn())
+                .setInfluencer(dto.getAffiliate().getInfluencer())
+                .setOutreachChannelId(dto.getAffiliate().getChn())
                 .setCellId(cellId)
-                .setMarket(dto.getAffiliateDTO().getMarket())
+                .setMarket(dto.getAffiliate().getMarket())
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
         affiliateAccessMapper.insert(affiliateAccess);

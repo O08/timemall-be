@@ -34,7 +34,7 @@ public class MallAffiliateOrderServiceImpl implements MallAffiliateOrderService 
     @Async
     @Override
     public void newAffiliateOrder(String cellId, String orderId, String orderType, BigDecimal price, String influencer, String chn, String market) {
-        // is valid param
+        // is affiliate order param
         if(CharSequenceUtil.isBlank(influencer) || CharSequenceUtil.isBlank(chn) || CharSequenceUtil.isBlank(market)){
             return;
         }

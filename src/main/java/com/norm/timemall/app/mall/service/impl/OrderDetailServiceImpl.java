@@ -3,10 +3,7 @@ package com.norm.timemall.app.mall.service.impl;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.norm.timemall.app.base.enums.AffiliateOrderTypeEnum;
-import com.norm.timemall.app.base.enums.CodeEnum;
-import com.norm.timemall.app.base.enums.OrderTypeEnum;
-import com.norm.timemall.app.base.enums.WorkflowMarkEnum;
+import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.Cell;
@@ -46,7 +43,10 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     public String newOrder(CustomizeUser userDetails, String cellId, OrderDTO orderDTO) {
         //
         Cell cell = cellMapper.selectById(cellId);
-        if(cell==null || SecurityUserHelper.getCurrentPrincipal().getBrandId().equals(cell.getBrandId())){
+        if(cell==null || !CellMarkEnum.ONLINE.getMark().equals(cell.getMark()) ){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        if(SecurityUserHelper.getCurrentPrincipal().getBrandId().equals(cell.getBrandId())){
             throw new ErrorCodeException(CodeEnum.FALSE_SHOPPING);
         }
         // 增加新订单

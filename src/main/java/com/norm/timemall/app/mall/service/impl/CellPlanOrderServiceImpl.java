@@ -49,7 +49,10 @@ public class CellPlanOrderServiceImpl implements CellPlanOrderService {
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
         Cell cell = cellMapper.selectById(plan.getCellId());
-        if(cell==null || SecurityUserHelper.getCurrentPrincipal().getBrandId().equals(cell.getBrandId())){
+        if(cell==null || !CellMarkEnum.ONLINE.getMark().equals(cell.getMark()) ){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        if(SecurityUserHelper.getCurrentPrincipal().getBrandId().equals(cell.getBrandId())){
             throw new ErrorCodeException(CodeEnum.FALSE_SHOPPING);
         }
         String orderId=IdUtil.simpleUUID();
