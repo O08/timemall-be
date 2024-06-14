@@ -43,6 +43,9 @@ public class AffiliateInfluencerProductSercieImpl implements AffiliateInfluencer
         if(baseProduct==null){
             throw  new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
+        if(SecurityUserHelper.getCurrentPrincipal().getBrandId().equals(baseProduct.getSupplierBrandId())){
+            throw  new ErrorCodeException(CodeEnum.AFFILIATE_BRAND_SELF_PRODUCT);
+        }
 
         AffiliateInfluencerProduct product=new AffiliateInfluencerProduct();
         product.setId(IdUtil.simpleUUID())

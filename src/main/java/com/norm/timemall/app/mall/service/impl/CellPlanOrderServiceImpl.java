@@ -6,12 +6,14 @@ import com.norm.timemall.app.base.config.OperatorConfig;
 import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
+import com.norm.timemall.app.base.mo.Cell;
 import com.norm.timemall.app.base.mo.CellPlan;
 import com.norm.timemall.app.base.mo.CellPlanOrder;
 import com.norm.timemall.app.base.mo.CommonOrderPayment;
 import com.norm.timemall.app.base.pojo.TransferBO;
 import com.norm.timemall.app.mall.domain.dto.AffiliateDTO;
 import com.norm.timemall.app.mall.domain.ro.CellPlanOrderRO;
+import com.norm.timemall.app.mall.mapper.CellMapper;
 import com.norm.timemall.app.mall.mapper.CellPlanMapper;
 import com.norm.timemall.app.mall.mapper.CellPlanOrderMapper;
 import com.norm.timemall.app.mall.mapper.CommonOrderPaymentMapper;
@@ -28,6 +30,9 @@ import java.util.Date;
 public class CellPlanOrderServiceImpl implements CellPlanOrderService {
     @Autowired
     private CellPlanOrderMapper cellPlanOrderMapper;
+
+    @Autowired
+    private CellMapper cellMapper;
     @Autowired
     private CellPlanMapper cellPlanMapper;
     @Autowired
@@ -42,6 +47,10 @@ public class CellPlanOrderServiceImpl implements CellPlanOrderService {
         CellPlan plan = cellPlanMapper.selectById(planId);
         if(plan==null){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        Cell cell = cellMapper.selectById(plan.getCellId());
+        if(cell==null || SecurityUserHelper.getCurrentPrincipal().getBrandId().equals(cell.getBrandId())){
+            throw new ErrorCodeException(CodeEnum.FALSE_SHOPPING);
         }
         String orderId=IdUtil.simpleUUID();
         CellPlanOrder order =new CellPlanOrder();

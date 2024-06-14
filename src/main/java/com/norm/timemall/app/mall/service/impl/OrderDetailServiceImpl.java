@@ -4,14 +4,19 @@ import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.norm.timemall.app.base.enums.AffiliateOrderTypeEnum;
+import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.OrderTypeEnum;
 import com.norm.timemall.app.base.enums.WorkflowMarkEnum;
+import com.norm.timemall.app.base.exception.ErrorCodeException;
+import com.norm.timemall.app.base.helper.SecurityUserHelper;
+import com.norm.timemall.app.base.mo.Cell;
 import com.norm.timemall.app.base.mo.Millstone;
 import com.norm.timemall.app.base.mo.OrderDetails;
 import com.norm.timemall.app.base.mo.Pricing;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.mall.domain.dto.OrderDTO;
 import com.norm.timemall.app.mall.domain.pojo.InsertOrderParameter;
+import com.norm.timemall.app.mall.mapper.CellMapper;
 import com.norm.timemall.app.mall.mapper.MillstoneMapper;
 import com.norm.timemall.app.mall.mapper.OrderDetailsMapper;
 import com.norm.timemall.app.mall.mapper.PricingMapper;
@@ -35,9 +40,15 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     private MallAffiliateOrderService mallAffiliateOrderService;
     @Autowired
     private PricingMapper pricingMapper;
+    @Autowired
+    private CellMapper cellMapper;
     @Override
     public String newOrder(CustomizeUser userDetails, String cellId, OrderDTO orderDTO) {
         //
+        Cell cell = cellMapper.selectById(cellId);
+        if(cell==null || SecurityUserHelper.getCurrentPrincipal().getBrandId().equals(cell.getBrandId())){
+            throw new ErrorCodeException(CodeEnum.FALSE_SHOPPING);
+        }
         // 增加新订单
         String orderId = IdUtil.simpleUUID();
         InsertOrderParameter parameter = new InsertOrderParameter()
