@@ -81,7 +81,6 @@ public class AffiliateInfluencerProduct extends Model<AffiliateInfluencerProduct
      * 修改时间
      */
     private Date modifiedAt;
-    private String supplierAvatar;
-    private String cellCover;
+
 
 }

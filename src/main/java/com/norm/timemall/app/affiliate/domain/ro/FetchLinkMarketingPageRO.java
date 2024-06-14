@@ -19,4 +19,5 @@ public class FetchLinkMarketingPageRO {
     private String unsettledPayment;
     private String views;
     private String brandId;
+    private String outreachChannelId;
 }
