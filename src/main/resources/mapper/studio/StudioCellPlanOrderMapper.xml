@@ -3,7 +3,7 @@
 <mapper namespace="com.norm.timemall.app.studio.mapper.StudioCellPlanOrderMapper">
 
     <select id="selectCellPlanOrderPage" resultType="com.norm.timemall.app.studio.domain.ro.StudioCellPlanOrderPageRO">
-        select o.id orderId,c.title cellTitle,o.plan_type_desc,o.plan_price price,o.tag,o.create_at,o.plan_type
+        select o.commission,o.net_income,o.id orderId,c.title cellTitle,o.plan_type_desc,o.plan_price price,o.tag,o.create_at,o.plan_type
         from cell_plan_order o
         inner join cell c
            on c.id=o.cell_id
