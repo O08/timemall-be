@@ -35,6 +35,8 @@
         <result property="brandId" column="brandId"/>
         <result property="brand" column="brand"/>
         <result property="avator" column="avator"/>
+        <result property="revshare" column="revshare"/>
+
         <!--        <result property="content" column="content"/>-->
         <result property="content"
                 typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
@@ -52,7 +54,7 @@
     </resultMap>
 
     <select id="selectCellProfileInfo" resultMap="cellIntroResultMap">
-        select c.title, c.id, c.provide_invoice, c.cover, c.intro_cover,c.tags,b.id brandId,b.brand_name brand,b.avator,c.content,p.price,p.sbu
+        select c.revshare,c.title, c.id, c.provide_invoice, c.cover, c.intro_cover,c.tags,b.id brandId,b.brand_name brand,b.avator,c.content,p.price,p.sbu
         from cell c
         inner join brand b on c.brand_id = b.id
         left join pricing p on c.id = p.cell_id

@@ -41,6 +41,7 @@ public class CellIntroRO {
     // The Tags for cell
     private ArrayList<String> tags;
     private String cellMark;
+    private String revshare;
 
 
 }
