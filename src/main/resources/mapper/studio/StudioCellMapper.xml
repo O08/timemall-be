@@ -18,7 +18,7 @@
         and p.sbu = 'day'
     </select>
     <update id="updateTitleInvoiceTagById">
-        update cell c set c.title = #{dto.title},c.provide_invoice=#{dto.canProvideInvoice},c.tags=#{dto.tags} where c.id = #{id}
+        update cell c set c.title = #{dto.title},c.provide_invoice=#{dto.canProvideInvoice},c.tags=#{dto.tags},c.revshare=#{dto.revshare} where c.id = #{id}
         and  exists(
             select 1
             from brand d

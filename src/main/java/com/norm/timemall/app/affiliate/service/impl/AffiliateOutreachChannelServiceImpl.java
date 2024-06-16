@@ -32,7 +32,16 @@ public class AffiliateOutreachChannelServiceImpl implements AffiliateOutreachCha
 
     @Override
     public void modifyChannelName(RenameChannelNameDTO dto) {
-        String brandId= SecurityUserHelper.getCurrentPrincipal().getBrandId();
+
+        String brandId=SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        // validate
+        LambdaQueryWrapper<AffiliateOutreachChannel> wrapper= Wrappers.lambdaQuery();
+        wrapper.eq(AffiliateOutreachChannel::getChannelName,dto.getOutreachName())
+                .eq(AffiliateOutreachChannel::getBrandId,brandId);
+        boolean exists = affiliateOutreachChannelMapper.exists(wrapper);
+        if(exists){
+            throw new ErrorCodeException(CodeEnum.AFFILIATE_CHANNEL_EXISTS);
+        }
         affiliateOutreachChannelMapper.updateChannelNameByIdAndBrand(brandId,dto);
     }
 

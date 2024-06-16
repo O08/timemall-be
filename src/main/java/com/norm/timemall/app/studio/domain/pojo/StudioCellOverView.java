@@ -7,4 +7,5 @@ public class StudioCellOverView {
     private String title;
     private boolean canProvideInvoice;
     private String tags;
+    private Integer revshare;
 }

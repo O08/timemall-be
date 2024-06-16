@@ -56,6 +56,12 @@ public class Cell extends Model<Cell> implements Serializable {
      * 标签
      */
     private Object tags;
+
+    /**
+     * 佣金比例
+     */
+    private Object revshare;
+
     /**
      * mark
      */
