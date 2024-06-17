@@ -12,10 +12,10 @@
                 AND locate(#{dto.q}, chn.channel_name)>0
             </if>
             <if test="dto.viewsLeft > 0">
-                AND chn.views  &gt;= #{dto.viewsLeft}
+                AND chn.views  &gt;= #{dto.viewsLeft} * 1000
             </if>
             <if test="dto.viewsRight > 0">
-                AND  chn.views  &lt;= #{dto.viewsRight}
+                AND  chn.views  &lt;= #{dto.viewsRight} * 1000
             </if>
             <if test="dto.salesLeft > 0">
                 AND chn.sales  &gt;= #{dto.salesLeft}

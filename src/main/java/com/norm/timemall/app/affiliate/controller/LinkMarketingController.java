@@ -41,7 +41,7 @@ public class LinkMarketingController {
         return new SuccessVO(CodeEnum.SUCCESS);
     }
 
-    @GetMapping(value = "/api/v1/web/affiliate/short_link/{shortUrl}")
+    @GetMapping(value = "/api/v1/web_mall/affiliate/short_link/{shortUrl}")
     public ResponseEntity<Void> getAndRedirect(@PathVariable String shortUrl) {
         String url = affiliateLinkMarketingService.getOriginalUrl(shortUrl);
         return ResponseEntity.status(HttpStatus.FOUND)

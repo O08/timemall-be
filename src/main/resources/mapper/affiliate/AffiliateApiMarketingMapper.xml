@@ -59,10 +59,10 @@
                 AND  ip.revshare  &lt;= #{dto.revshareRight}
             </if>
             <if test="dto.viewsLeft > 0">
-                AND am.views  &gt;= #{dto.viewsLeft}
+                AND am.views  &gt;= #{dto.viewsLeft} * 1000
             </if>
             <if test="dto.viewsRight > 0">
-                AND  am.views  &lt;= #{dto.viewsRight}
+                AND  am.views  &lt;= #{dto.viewsRight} * 1000
             </if>
             <if test="dto.salesLeft > 0">
                 AND am.sales  &gt;= #{dto.salesLeft}
