@@ -40,7 +40,11 @@
                 </choose>
             </if>
             <if test="dto.blue != null and dto.blue != ''">
-                AND bs.supplier_blue_end_at > now()
+                <choose>
+                    <when test='dto.blue == "1"'>
+                        AND bs.supplier_blue_end_at > now()
+                    </when>
+                </choose>
             </if>
             <if test="dto.planPriceLeft > 0">
                 AND ip.plan_price  &gt;= #{dto.planPriceLeft}

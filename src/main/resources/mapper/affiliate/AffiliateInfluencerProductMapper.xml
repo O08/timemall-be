@@ -37,7 +37,11 @@
                 </choose>
             </if>
             <if test="dto.blue != null and dto.blue != ''">
-                AND pi.supplier_blue_end_at > now()
+                <choose>
+                    <when test='dto.blue == "1"'>
+                        AND pi.supplier_blue_end_at > now()
+                    </when>
+                </choose>
             </if>
             <if test="dto.planPriceLeft > 0">
                 AND ip.plan_price  &gt;= #{dto.planPriceLeft}
@@ -58,9 +62,6 @@
                 AND  ip.views  &lt;= #{dto.viewsRight}
             </if>
             <if test="dto.saleVolumeLeft > 0">
-                AND ip.sales  &gt;= #{dto.saleVolumeLeft}
-            </if>
-            <if test="dto.saleVolumeRight > 0">
                 AND  ip.plan_sale_volume  &lt;= #{dto.saleVolumeRight}
             </if>
             <if test="dto.saleVolumeRight > 0">

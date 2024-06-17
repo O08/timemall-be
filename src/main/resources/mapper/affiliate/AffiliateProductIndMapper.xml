@@ -37,7 +37,11 @@
                 </choose>
             </if>
             <if test="dto.blue != null and dto.blue != ''">
-                AND pi.supplier_blue_end_at > now()
+                <choose>
+                    <when test='dto.blue == "1"'>
+                        AND pi.supplier_blue_end_at > now()
+                    </when>
+                </choose>
             </if>
             <if test="dto.planPriceLeft > 0">
                  AND pi.plan_price  &gt;= #{dto.planPriceLeft}
@@ -46,7 +50,7 @@
                 AND  pi.plan_price  &lt;= #{dto.planPriceRight}
             </if>
             <if test="dto.provideInvoice != null and dto.provideInvoice != ''">
-                AND pi.provide_invoice > #{dto.provideInvoice}
+                AND pi.provide_invoice = #{dto.provideInvoice}
             </if>
             <if test="dto.revshareLeft > 0">
                 AND pi.revshare  &gt;= #{dto.revshareLeft}
@@ -55,16 +59,16 @@
                 AND  pi.revshare  &lt;= #{dto.revshareRight}
             </if>
             <if test="dto.viewsLeft > 0">
-                AND pi.views  &gt;= #{dto.viewsLeft}
+                AND pi.views  &gt;= #{dto.viewsLeft} * 1000
             </if>
             <if test="dto.viewsRight > 0">
-                AND  pi.views  &lt;= #{dto.viewsRight}
+                AND  pi.views  &lt;= #{dto.viewsRight} * 1000
             </if>
             <if test="dto.saleVolumeLeft > 0">
-                AND pi.sales  &gt;= #{dto.saleVolumeLeft}
+                AND pi.plan_sale_volume  &gt;= #{dto.saleVolumeLeft}
             </if>
             <if test="dto.saleVolumeRight > 0">
-                AND  pi.sales  &lt;= #{dto.saleVolumeRight}
+                AND  pi.plan_sale_volume  &lt;= #{dto.saleVolumeRight}
             </if>
             <if test="dto.influencersLeft > 0">
                 AND pi.influencers  &gt;= #{dto.influencersLeft}
