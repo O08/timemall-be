@@ -75,7 +75,7 @@ public class PodCellPlanOrderDeliverServiceImpl implements PodCellPlanOrderDeliv
         //cal commission and netIncome
         LambdaQueryWrapper<AffiliateOrder> affiliateOrderLambdaQueryWrapper= Wrappers.lambdaQuery();
         affiliateOrderLambdaQueryWrapper.eq(AffiliateOrder::getOrderId,orderId)
-                .eq(AffiliateOrder::getOrderType, AffiliateOrderTypeEnum.CELL.getMark());
+                .eq(AffiliateOrder::getOrderType, AffiliateOrderTypeEnum.PLAN.getMark());
         AffiliateOrder affiliateOrder = podAffiliateOrderMapper.selectOne(affiliateOrderLambdaQueryWrapper);
         BigDecimal commission=BigDecimal.ZERO;
         if(ObjectUtil.isNotNull(affiliateOrder)){

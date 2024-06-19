@@ -3,11 +3,11 @@
 <mapper namespace="com.norm.timemall.app.affiliate.mapper.AffiliateOutreachChannelMapper">
 
     <select id="selectPageByDTO" resultType="com.norm.timemall.app.affiliate.domain.ro.FetchOutreachChannelPageRO">
-        select
-          chn.id outreachChannelId,chn.channel_name,chn.cell_sale_volume,chn.plan_sale_volume,chn.sales,chn.refund_orders,chn.views
+        select chn.id outreachChannelId,chn.channel_name,chn.cell_sale_volume,chn.plan_sale_volume,chn.sales,chn.refund_orders,chn.views
         from affiliate_outreach_channel chn
         <where>
             1=1
+            AND chn.brand_id=#{dto.brandId}
             <if test="dto.q != null and dto.q != ''">
                 AND locate(#{dto.q}, chn.channel_name)>0
             </if>

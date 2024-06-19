@@ -12,6 +12,7 @@
         from affiliate_product_ind pi
         left join affiliate_influencer_product inf
           on pi.cell_id=inf.cell_id
+          AND inf.brand_id=#{dto.brandId}
         <where>
           1=1  AND pi.cell_mark = '2'
             <if test="dto.q != null and dto.q != ''">

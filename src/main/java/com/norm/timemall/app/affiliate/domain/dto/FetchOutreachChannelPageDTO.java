@@ -12,4 +12,5 @@ public class FetchOutreachChannelPageDTO extends PageDTO {
     private Integer saleVolumeRight;
     private Integer salesLeft;
     private Integer salesRight;
+    private String brandId;
 }

@@ -94,6 +94,8 @@ public class AffiliateOutreachChannelServiceImpl implements AffiliateOutreachCha
         IPage<FetchOutreachChannelPageRO> page  = new Page<>();
         page.setSize(dto.getSize());
         page.setCurrent(dto.getCurrent());
+        String brandId=SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        dto.setBrandId(brandId);
        return affiliateOutreachChannelMapper.selectPageByDTO(page,dto);
     }
 }

@@ -19,4 +19,5 @@ public class FetchInfluencerProductPageDTO extends PageDTO {
     private Integer saleVolumeLeft;
     private Integer saleVolumeRight;
     private String offline;
+    private String brandId;
 }

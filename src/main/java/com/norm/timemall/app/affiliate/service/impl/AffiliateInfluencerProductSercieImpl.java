@@ -71,6 +71,8 @@ public class AffiliateInfluencerProductSercieImpl implements AffiliateInfluencer
         IPage<FetchInfluencerProductRO> page  = new Page<>();
         page.setSize(dto.getSize());
         page.setCurrent(dto.getCurrent());
+        String brandId=SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        dto.setBrandId(brandId);
         return affiliateInfluencerProductMapper.selectPageByDTO(page,dto);
 
     }

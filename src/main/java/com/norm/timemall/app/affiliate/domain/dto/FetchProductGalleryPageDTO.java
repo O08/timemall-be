@@ -21,5 +21,6 @@ public class FetchProductGalleryPageDTO extends PageDTO {
     private Integer saleVolumeRight;
     private Integer influencersLeft;
     private Integer influencersRight;
+    private String brandId;
 
 }

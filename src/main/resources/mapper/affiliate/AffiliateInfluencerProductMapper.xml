@@ -14,6 +14,7 @@
 
         <where>
             1=1
+            AND ip.brand_id=#{dto.brandId}
             <if test="dto.q != null and dto.q != ''">
                 AND (locate(#{dto.q}, ip.supplier_brand_name)>0  or  locate(#{dto.q}, ip.product_name)>0)
             </if>

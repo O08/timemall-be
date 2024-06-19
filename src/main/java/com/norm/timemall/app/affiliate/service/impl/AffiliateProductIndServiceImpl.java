@@ -6,6 +6,7 @@ import com.norm.timemall.app.affiliate.domain.dto.FetchProductGalleryPageDTO;
 import com.norm.timemall.app.affiliate.domain.ro.FetchProductGalleryRO;
 import com.norm.timemall.app.affiliate.mapper.AffiliateProductIndMapper;
 import com.norm.timemall.app.affiliate.service.AffiliateProductIndService;
+import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,8 @@ public class AffiliateProductIndServiceImpl implements AffiliateProductIndServic
         IPage<FetchProductGalleryRO> page  = new Page<>();
         page.setSize(dto.getSize());
         page.setCurrent(dto.getCurrent());
+        String brandId= SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        dto.setBrandId(brandId);
         return affiliateProductIndMapper.selectPageByDTO(page,dto);
     }
 }
