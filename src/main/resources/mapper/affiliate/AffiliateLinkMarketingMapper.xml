@@ -7,11 +7,12 @@
         lm.refund_orders,lm.settled_payment,lm.unsettled_payment,lm.shortLink,lm.id linkMarketingId,chn.id outreachChannelId
         from affiliate_link_marketing lm
         inner join affiliate_outreach_channel chn
-        on lm.outreach_channel_id=chn.id
+          on lm.outreach_channel_id=chn.id
         inner join affiliate_product_ind bs
-        on bs.cell_id=lm.cell_id
+          on bs.cell_id=lm.cell_id
         inner join affiliate_influencer_product ip
-        on lm.cell_id=ip.cell_id
+          on lm.cell_id=ip.cell_id
+          and lm.brand_id=ip.brand_id
         and ip.brand_id=#{brandId}
 
 
