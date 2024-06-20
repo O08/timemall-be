@@ -9,8 +9,9 @@
         inner join affiliate_product_ind bs
           on p.cell_id=bs.cell_id
         where
-        p.brand_id=#{brandId}
-        and p.timespan=#{timespan}
+          p.brand_id=#{brandId}
+          and p.timespan=#{timespan}
+        order by p.sales desc
     </select>
 
 </mapper>

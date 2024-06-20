@@ -13,6 +13,7 @@
         where
         o.brand_id=#{brandId}
         and o.timespan=#{timespan}
+        order by o.sales desc
     </select>
 
 </mapper>
