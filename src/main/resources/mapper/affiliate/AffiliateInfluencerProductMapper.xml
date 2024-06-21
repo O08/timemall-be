@@ -16,7 +16,7 @@
             1=1
             AND ip.brand_id=#{dto.brandId}
             <if test="dto.q != null and dto.q != ''">
-                AND (locate(#{dto.q}, ip.supplier_brand_name)>0  or  locate(#{dto.q}, ip.product_name)>0)
+                AND (locate(#{dto.q}, pi.supplier_brand_name)>0  or  locate(#{dto.q}, pi.product_name)>0)
             </if>
             <if test="dto.supplierAccountAgeLeft > 0">
                 AND TIMESTAMPDIFF(MONTH,pi.supplier_create_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S')) &gt;= #{dto.supplierAccountAgeLeft}

@@ -4,7 +4,7 @@
 
     <select id="selectPageByDTO" resultType="com.norm.timemall.app.affiliate.domain.ro.FetchLinkMarketingPageRO">
         select lm.brand_id,chn.channel_name,lm.supplier_brand_id,lm.cell_id,bs.product_name,ip.revshare,lm.cell_sale_volume,lm.plan_sale_volume,lm.sales,lm.views,
-        lm.refund_orders,lm.settled_payment,lm.unsettled_payment,lm.shortLink,lm.id linkMarketingId,chn.id outreachChannelId
+        lm.refund_orders,lm.settled_payment,lm.unsettled_payment,lm.shortlink,lm.id linkMarketingId,chn.id outreachChannelId
         from affiliate_link_marketing lm
         inner join affiliate_outreach_channel chn
           on lm.outreach_channel_id=chn.id
@@ -19,7 +19,7 @@
         <where>
             1=1
             <if test="dto.q != null and dto.q != ''">
-                AND (locate(#{dto.q}, bs.supplier_brand_name)>0  or  locate(#{dto.q}, bs.product_name)>0 or  locate(#{dto.q}, lm.shortLink)>0)
+                AND (locate(#{dto.q}, bs.supplier_brand_name)>0  or  locate(#{dto.q}, bs.product_name)>0 or  locate(#{dto.q}, chn.channel_name)>0  or  locate(#{dto.q}, lm.shortlink)>0)
             </if>
             <if test="dto.supplierAccountAgeLeft > 0">
                 AND TIMESTAMPDIFF(MONTH,bs.supplier_create_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S')) &gt;= #{dto.supplierAccountAgeLeft}
