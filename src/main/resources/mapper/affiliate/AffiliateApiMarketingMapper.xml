@@ -12,7 +12,7 @@
           on bs.cell_id=am.cell_id
         inner join affiliate_influencer_product ip
           on am.cell_id=ip.cell_id
-            and lm.brand_id=ip.brand_id
+            and am.brand_id=ip.brand_id
         and ip.brand_id=#{brandId}
 
 
