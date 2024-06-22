@@ -30,13 +30,13 @@
             <if test="dto.heartbeat != null and dto.heartbeat != ''">
                 <choose>
                     <when test='dto.heartbeat == "1"'>
-                        AND   TIMESTAMPDIFF(WEEK,bs.supplier_modified_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S'))  &lt;= 1
+                        AND   TIMESTAMPDIFF(WEEK,bs.supplier_modified_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S'))  &lt;= 0
                     </when>
                     <when test='dto.heartbeat == "2"'>
-                        AND  TIMESTAMPDIFF(MONTH,bs.supplier_modified_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S'))  &lt;= 1
+                        AND  TIMESTAMPDIFF(MONTH,bs.supplier_modified_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S'))  &lt;= 0
                     </when>
                     <when test='dto.heartbeat == "3"'>
-                        AND  TIMESTAMPDIFF(MONTH,bs.supplier_modified_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S'))  &lt;= 3
+                        AND  TIMESTAMPDIFF(MONTH,bs.supplier_modified_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S'))  &lt;= 2
                     </when>
                 </choose>
             </if>
@@ -79,6 +79,25 @@
             </if>
             <if test="dto.offline != null and dto.offline != ''">
                 AND bs.cell_mark = #{dto.offline}
+            </if>
+            <if test="dto.sort != null and dto.sort != ''">
+                <choose>
+                    <when test='dto.sort == "1"'>
+                        Order by lm.plan_sale_volume desc
+                    </when>
+                    <when test='dto.sort == "2"'>
+                        Order by lm.sales desc
+                    </when>
+                    <when test='dto.sort == "3"'>
+                        Order by lm.views desc
+                    </when>
+                    <when test='dto.sort == "4"'>
+                        Order by chn.channel_name desc
+                    </when>
+                    <when test='dto.sort == "5"'>
+                        Order by bs.product_name desc
+                    </when>
+                </choose>
             </if>
 
         </where>

@@ -115,8 +115,8 @@ public class AccountServiceImpl implements AccountService {
     public void modifyAccountMark(String mark, String brandId) {
         LambdaUpdateWrapper<Brand> wrapper = Wrappers.lambdaUpdate();
         wrapper.set(Brand::getMark,mark);
+        wrapper.set(Brand::getModifiedAt,new Date());
         wrapper.eq(Brand::getId,brandId);
-        wrapper.eq(Brand::getModifiedAt,new Date());
         baseBrandMapper.update(null,wrapper);
     }
 

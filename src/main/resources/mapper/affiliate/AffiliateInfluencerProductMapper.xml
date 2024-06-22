@@ -16,7 +16,7 @@
             1=1
             AND ip.brand_id=#{dto.brandId}
             <if test="dto.q != null and dto.q != ''">
-                AND (locate(#{dto.q}, pi.supplier_brand_name)>0  or  locate(#{dto.q}, pi.product_name)>0)
+                AND (locate(#{dto.q}, pi.supplier_brand_name)>0  or  locate(#{dto.q}, pi.product_name)>0 or  locate(#{dto.q}, pi.cell_tags)>0)
             </if>
             <if test="dto.supplierAccountAgeLeft > 0">
                 AND TIMESTAMPDIFF(MONTH,pi.supplier_create_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S')) &gt;= #{dto.supplierAccountAgeLeft}
@@ -27,13 +27,13 @@
             <if test="dto.heartbeat != null and dto.heartbeat != ''">
                 <choose>
                     <when test='dto.heartbeat == "1"'>
-                        AND TIMESTAMPDIFF(WEEK,pi.supplier_modified_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S'))  &lt;= 1
+                        AND TIMESTAMPDIFF(WEEK,pi.supplier_modified_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S'))  &lt;= 0
                     </when>
                     <when test='dto.heartbeat == "2"'>
-                        AND  TIMESTAMPDIFF(MONTH,pi.supplier_modified_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S'))  &lt;= 1
+                        AND  TIMESTAMPDIFF(MONTH,pi.supplier_modified_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S'))  &lt;= 0
                     </when>
                     <when test='dto.heartbeat == "3"'>
-                        AND  TIMESTAMPDIFF(MONTH,pi.supplier_modified_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S'))  &lt;= 3
+                        AND  TIMESTAMPDIFF(MONTH,pi.supplier_modified_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S'))  &lt;= 2
                     </when>
                 </choose>
             </if>
@@ -63,13 +63,35 @@
                 AND  ip.views  &lt;= #{dto.viewsRight} * 1000
             </if>
             <if test="dto.saleVolumeLeft > 0">
-                AND  ip.plan_sale_volume  &lt;= #{dto.saleVolumeRight}
+                AND  ip.plan_sale_volume  &gt;= #{dto.saleVolumeLeft}
             </if>
             <if test="dto.saleVolumeRight > 0">
                 AND  ip.plan_sale_volume  &lt;= #{dto.saleVolumeRight}
             </if>
             <if test="dto.offline != null and dto.offline != ''">
                 AND pi.cell_mark = #{dto.offline}
+            </if>
+            <if test="dto.sort != null and dto.sort != ''">
+                <choose>
+                    <when test='dto.sort == "1"'>
+                        Order by ip.plan_price desc
+                    </when>
+                    <when test='dto.sort == "2"'>
+                        Order by ip.revshare desc
+                    </when>
+                    <when test='dto.sort == "3"'>
+                        Order by ip.plan_sale_volume desc
+                    </when>
+                    <when test='dto.sort == "4"'>
+                        Order by ip.sales desc
+                    </when>
+                    <when test='dto.sort == "5"'>
+                        Order by ip.views desc
+                    </when>
+                    <when test='dto.sort == "6"'>
+                        Order by ip.create_at desc
+                    </when>
+                </choose>
             </if>
 
         </where>

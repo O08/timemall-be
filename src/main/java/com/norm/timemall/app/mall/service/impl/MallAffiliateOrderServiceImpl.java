@@ -14,13 +14,14 @@ import com.norm.timemall.app.mall.mapper.MallAffiliateInfluencerProductMapper;
 import com.norm.timemall.app.mall.mapper.MallAffiliateLinkMarketingMapper;
 import com.norm.timemall.app.mall.mapper.MallAffiliateOrderMapper;
 import com.norm.timemall.app.mall.service.MallAffiliateOrderService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Date;
-
+@Slf4j
 @Service
 public class MallAffiliateOrderServiceImpl implements MallAffiliateOrderService {
 

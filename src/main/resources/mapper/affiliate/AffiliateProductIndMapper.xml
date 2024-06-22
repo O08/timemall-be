@@ -16,7 +16,7 @@
         <where>
           1=1  AND pi.cell_mark = '2' AND pi.revshare > 0
             <if test="dto.q != null and dto.q != ''">
-                AND (locate(#{dto.q}, pi.supplier_brand_name)>0  or  locate(#{dto.q}, pi.product_name)>0)
+                AND (locate(#{dto.q}, pi.supplier_brand_name)>0  or  locate(#{dto.q}, pi.product_name)>0 or  locate(#{dto.q}, pi.cell_tags)>0)
             </if>
             <if test="dto.supplierAccountAgeLeft > 0">
                 AND TIMESTAMPDIFF(MONTH,pi.supplier_create_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S')) &gt;= #{dto.supplierAccountAgeLeft}
@@ -27,13 +27,13 @@
             <if test="dto.heartbeat != null and dto.heartbeat != ''">
                 <choose>
                     <when test='dto.heartbeat == "1"'>
-                        AND TIMESTAMPDIFF(WEEK,pi.supplier_modified_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S'))  &lt;= 1
+                        AND TIMESTAMPDIFF(WEEK,pi.supplier_modified_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S'))  &lt;= 0
                     </when>
                     <when test='dto.heartbeat == "2"'>
-                        AND  TIMESTAMPDIFF(MONTH,pi.supplier_modified_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S'))  &lt;= 1
+                        AND  TIMESTAMPDIFF(MONTH,pi.supplier_modified_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S'))  &lt;= 0
                     </when>
                     <when test='dto.heartbeat == "3"'>
-                        AND TIMESTAMPDIFF(MONTH,pi.supplier_modified_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S'))  &lt;= 3
+                        AND TIMESTAMPDIFF(MONTH,pi.supplier_modified_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S'))  &lt;= 2
                     </when>
                 </choose>
             </if>
@@ -76,6 +76,28 @@
             </if>
             <if test="dto.influencersRight > 0">
                 AND  pi.influencers  &lt;= #{dto.influencersRight}
+            </if>
+            <if test="dto.sort != null and dto.sort != ''">
+                <choose>
+                    <when test='dto.sort == "1"'>
+                        Order by pi.plan_price desc
+                    </when>
+                    <when test='dto.sort == "2"'>
+                        Order by pi.revshare desc
+                    </when>
+                    <when test='dto.sort == "3"'>
+                        Order by pi.plan_sale_volume desc
+                    </when>
+                    <when test='dto.sort == "4"'>
+                        Order by pi.sales desc
+                    </when>
+                    <when test='dto.sort == "5"'>
+                        Order by pi.views desc
+                    </when>
+                    <when test='dto.sort == "6"'>
+                        Order by pi.influencers desc
+                    </when>
+                </choose>
             </if>
 
         </where>

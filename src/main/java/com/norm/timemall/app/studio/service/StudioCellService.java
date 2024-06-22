@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public interface StudioCellService {
     IPage<CellInfoRO> findCells(String brandId, PageDTO cellPageDTO);
 
-    void modifyTitleAndCanProvideInvoice(String cellId, String userId,StudioCellOverViewDTO dto);
+    void modifyCellOverView(String cellId, String userId, StudioCellOverViewDTO dto);
 
     Cell findSingleCell(String cellId);
 

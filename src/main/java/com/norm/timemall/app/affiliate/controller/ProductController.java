@@ -7,6 +7,7 @@ import com.norm.timemall.app.affiliate.domain.vo.FetchProductGalleryVO;
 import com.norm.timemall.app.affiliate.service.AffiliateProductIndService;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +19,7 @@ public class ProductController {
 
     @ResponseBody
     @GetMapping("/api/v1/web/affiliate/product")
-    public FetchProductGalleryVO fetchProductGallery(FetchProductGalleryPageDTO dto){
+    public FetchProductGalleryVO fetchProductGallery(@Validated FetchProductGalleryPageDTO dto){
         IPage<FetchProductGalleryRO> product=affiliateProductIndService.findProductGallery(dto);
         FetchProductGalleryVO vo = new FetchProductGalleryVO();
         vo.setProduct(product);

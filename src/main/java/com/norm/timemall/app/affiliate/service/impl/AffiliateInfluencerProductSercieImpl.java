@@ -35,22 +35,31 @@ public class AffiliateInfluencerProductSercieImpl implements AffiliateInfluencer
     private AffiliateLinkMarketingMapper affiliateLinkMarketingMapper;
     @Override
     public void newChoice(String cellId) {
+        String brandId=SecurityUserHelper.getCurrentPrincipal().getBrandId();
         // query raw data
         LambdaQueryWrapper<AffiliateProductInd> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.eq(AffiliateProductInd::getCellId,cellId);
         queryWrapper.eq(AffiliateProductInd::getCellMark, CellMarkEnum.ONLINE.getMark());
         AffiliateProductInd baseProduct = affiliateProductIndMapper.selectOne(queryWrapper);
-        if(baseProduct==null){
+        if(baseProduct==null || BigDecimal.ZERO.compareTo(baseProduct.getRevshare())>=0){
             throw  new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
         if(SecurityUserHelper.getCurrentPrincipal().getBrandId().equals(baseProduct.getSupplierBrandId())){
             throw  new ErrorCodeException(CodeEnum.AFFILIATE_BRAND_SELF_PRODUCT);
         }
 
+        LambdaQueryWrapper<AffiliateInfluencerProduct> existsWrapper=Wrappers.lambdaQuery();
+        existsWrapper.eq(AffiliateInfluencerProduct::getCellId,cellId)
+                        .eq(AffiliateInfluencerProduct::getBrandId,brandId);
+        boolean exists = affiliateInfluencerProductMapper.exists(existsWrapper);
+        if(exists){
+            throw new ErrorCodeException(CodeEnum.AFFILIATE_CHOICE_CELL_EXIST);
+        }
+
         AffiliateInfluencerProduct product=new AffiliateInfluencerProduct();
         product.setId(IdUtil.simpleUUID())
                 .setCellId(cellId)
-                .setBrandId(SecurityUserHelper.getCurrentPrincipal().getBrandId())
+                .setBrandId(brandId)
                 .setPlanId(baseProduct.getPlanId())
                 .setRevshare(baseProduct.getRevshare())
                 .setSales(BigDecimal.ZERO)
@@ -80,14 +89,17 @@ public class AffiliateInfluencerProductSercieImpl implements AffiliateInfluencer
     @Override
     public void delChoiceRecord(String cellId) {
         // validate
+        String brandId=SecurityUserHelper.getCurrentPrincipal().getBrandId();
         LambdaQueryWrapper<AffiliateLinkMarketing> wrapper=Wrappers.lambdaQuery();
-        wrapper.eq(AffiliateLinkMarketing::getCellId,cellId);
-        Long l = affiliateLinkMarketingMapper.selectCount(wrapper);
-        if(l>0L){
+        wrapper.eq(AffiliateLinkMarketing::getCellId,cellId)
+                .eq(AffiliateLinkMarketing::getBrandId,brandId);
+        boolean exists = affiliateLinkMarketingMapper.exists(wrapper);
+        if(exists){
             throw new ErrorCodeException(CodeEnum.AFFILIATE_LINKS_EXIST);
         }
         LambdaQueryWrapper<AffiliateInfluencerProduct> delWrapper=Wrappers.lambdaQuery();
-        delWrapper.eq(AffiliateInfluencerProduct::getCellId,cellId);
+        delWrapper.eq(AffiliateInfluencerProduct::getCellId,cellId)
+                .eq(AffiliateInfluencerProduct::getBrandId,brandId);
         affiliateInfluencerProductMapper.delete(delWrapper);
 
     }

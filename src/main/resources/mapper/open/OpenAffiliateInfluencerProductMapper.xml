@@ -14,6 +14,28 @@
           on ip.cell_id=pi.cell_id
         where pi.cell_mark='2'
           And brand_id=#{dto.influencer}
+        <if test="dto.sort != null and dto.sort != ''">
+            <choose>
+                <when test='dto.sort == "plan_price"'>
+                    Order by ip.plan_price desc
+                </when>
+                <when test='dto.sort == "revshare"'>
+                    Order by ip.revshare desc
+                </when>
+                <when test='dto.sort == "plan_sale_volume"'>
+                    Order by ip.plan_sale_volume desc
+                </when>
+                <when test='dto.sort == "sales"'>
+                    Order by ip.sales desc
+                </when>
+                <when test='dto.sort == "views"'>
+                    Order by ip.views desc
+                </when>
+                <when test='dto.sort == "add_time"'>
+                    Order by ip.create_at desc
+                </when>
+            </choose>
+        </if>
     </select>
 
 </mapper>

@@ -10,6 +10,7 @@ import com.norm.timemall.app.affiliate.service.AffiliateOutreachChannelService;
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import com.norm.timemall.app.affiliate.domain.dto.DelChannelDTO;
 
@@ -18,23 +19,23 @@ public class OutreachController {
     @Autowired
     private AffiliateOutreachChannelService affiliateOutreachChannelService;
     @PutMapping("/api/v1/web/affiliate/rename_outreach_channel")
-    public SuccessVO renameChannelName(@RequestBody RenameChannelNameDTO dto){
+    public SuccessVO renameChannelName(@RequestBody @Validated RenameChannelNameDTO dto){
         affiliateOutreachChannelService.modifyChannelName(dto);
         return new SuccessVO(CodeEnum.SUCCESS);
     }
     @DeleteMapping("/api/v1/web/affiliate/del_outreach_channel")
-    public SuccessVO delOutreachChannel(@RequestBody DelChannelDTO dto){
+    public SuccessVO delOutreachChannel(@RequestBody @Validated DelChannelDTO dto){
         affiliateOutreachChannelService.removeChannel(dto.getOutreachChannelId());
         return new SuccessVO(CodeEnum.SUCCESS);
     }
     @PostMapping("/api/v1/web/affiliate/new_outreach_channel")
-    public SuccessVO newChannel(@RequestBody NewChannelDTO dto) {
+    public SuccessVO newChannel(@RequestBody @Validated NewChannelDTO dto) {
         affiliateOutreachChannelService.addOneChannel(dto.getOutreachName());
         return new SuccessVO(CodeEnum.SUCCESS);
     }
 
     @GetMapping("/api/v1/web/affiliate/outreach")
-    public FetchOutreachChannelPageVO fetchOutreachChannel(FetchOutreachChannelPageDTO dto){
+    public FetchOutreachChannelPageVO fetchOutreachChannel( @Validated FetchOutreachChannelPageDTO dto){
         IPage<FetchOutreachChannelPageRO> outreach=affiliateOutreachChannelService.findOutreachChannelRecord(dto);
         FetchOutreachChannelPageVO vo=new FetchOutreachChannelPageVO();
         vo.setOutreach(outreach);

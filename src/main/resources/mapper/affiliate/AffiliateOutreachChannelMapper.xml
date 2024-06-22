@@ -29,6 +29,19 @@
             <if test="dto.saleVolumeRight > 0">
                 AND  chn.plan_sale_volume  &lt;= #{dto.saleVolumeRight}
             </if>
+            <if test="dto.sort != null and dto.sort != ''">
+                <choose>
+                    <when test='dto.sort == "1"'>
+                        Order by chn.plan_sale_volume desc
+                    </when>
+                    <when test='dto.sort == "2"'>
+                        Order by chn.sales desc
+                    </when>
+                    <when test='dto.sort == "3"'>
+                        Order by chn.views desc
+                    </when>
+                </choose>
+            </if>
 
         </where>
     </select>

@@ -1,6 +1,7 @@
 package com.norm.timemall.app.studio.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONException;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -40,11 +41,15 @@ public class StudioCellServiceImpl implements StudioCellService {
     }
 
     @Override
-    public void modifyTitleAndCanProvideInvoice(String cellId,String userId, StudioCellOverViewDTO dto) {
+    public void modifyCellOverView(String cellId, String userId, StudioCellOverViewDTO dto) {
         // validate tags to json  arr
         try {
             new JSONArray(dto.getOverview().getTags());
         } catch (JSONException ne) {
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+
+        if(ObjectUtil.isNotNull(dto.getOverview().getRevshare()) && dto.getOverview().getRevshare()<=0){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
 

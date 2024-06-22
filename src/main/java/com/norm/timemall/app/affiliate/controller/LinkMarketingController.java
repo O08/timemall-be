@@ -12,6 +12,7 @@ import com.norm.timemall.app.base.enums.CodeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -21,12 +22,12 @@ public class LinkMarketingController {
     @Autowired
     private AffiliateLinkMarketingService affiliateLinkMarketingService;
     @DeleteMapping("/api/v1/web/affiliate/del_link_marketing")
-    public SuccessVO delLink(@RequestBody DelLinkDTO dto){
+    public SuccessVO delLink(@RequestBody @Validated DelLinkDTO dto){
         affiliateLinkMarketingService.deleteLinkRecord(dto.getLinkMarketingId());
         return new SuccessVO(CodeEnum.SUCCESS);
     }
     @GetMapping("/api/v1/web/affiliate/outreach_link_ind")
-    public FetchLinkMarketingPageVO fetchLinkMarketing(FetchLinkMarketingPageDTO dto){
+    public FetchLinkMarketingPageVO fetchLinkMarketing(@Validated FetchLinkMarketingPageDTO dto){
 
         IPage<FetchLinkMarketingPageRO> ind=affiliateLinkMarketingService.findLinkMarketingRecord(dto);
         FetchLinkMarketingPageVO vo= new FetchLinkMarketingPageVO();
@@ -36,7 +37,7 @@ public class LinkMarketingController {
 
     }
     @PostMapping("/api/v1/web/affiliate/new_product_marketing")
-    public SuccessVO newLinkMarketing(@RequestBody NewLinkMarketingDTO dto){
+    public SuccessVO newLinkMarketing(@RequestBody @Validated NewLinkMarketingDTO dto){
         affiliateLinkMarketingService.addOneLinkMarketingRecord(dto);
         return new SuccessVO(CodeEnum.SUCCESS);
     }

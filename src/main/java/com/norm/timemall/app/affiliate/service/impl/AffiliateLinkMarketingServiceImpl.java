@@ -36,7 +36,6 @@ public class AffiliateLinkMarketingServiceImpl implements AffiliateLinkMarketing
     private EnvBean envBean;
     @Override
     public void deleteLinkRecord(String linkMarketingId) {
-        // todo short link
         LambdaQueryWrapper<AffiliateLinkMarketing> wrapper= Wrappers.lambdaQuery();
         wrapper.eq(AffiliateLinkMarketing::getId,linkMarketingId)
                         .eq(AffiliateLinkMarketing::getBrandId, SecurityUserHelper.getCurrentPrincipal().getBrandId());
@@ -60,6 +59,7 @@ public class AffiliateLinkMarketingServiceImpl implements AffiliateLinkMarketing
         // validate product and channel
         LambdaQueryWrapper<AffiliateLinkMarketing> afQueryWrapper=Wrappers.lambdaQuery();
         afQueryWrapper.eq(AffiliateLinkMarketing::getCellId,dto.getCellId())
+                .eq(AffiliateLinkMarketing::getBrandId,brandId)
                 .eq(AffiliateLinkMarketing::getOutreachChannelId,dto.getOutreachChannelId());
         boolean exists = affiliateLinkMarketingMapper.exists(afQueryWrapper);
         if(exists){
@@ -78,7 +78,7 @@ public class AffiliateLinkMarketingServiceImpl implements AffiliateLinkMarketing
         // product detail example: https://www.bluvarri.com/mall/cell-detail?cell_id=ceb877196cd141d5901e4fd18103357a&brand_id=73fb64fc5116408eb5d4e0afd045e105
         String longUrl= envBean.getWebsite() + "mall/cell-detail?cell_id=" + product.getCellId() + "&brand_id=" + product.getBrandId()
                 + "&influencer=" + brandId+ "&chn="+dto.getOutreachChannelId()+"&market=link";
-        String shortLik= envBean.getShortSite() + ShortLinkUtil.shortUrl(longUrl)[0] + RandomUtil.randomStringUpper(1);
+        String shortLink= envBean.getShortSite() + ShortLinkUtil.shortUrl(longUrl)[0] + RandomUtil.randomStringUpper(1);
 
         AffiliateLinkMarketing linkMarketing = new AffiliateLinkMarketing();
         linkMarketing.setId(IdUtil.simpleUUID())
@@ -93,7 +93,7 @@ public class AffiliateLinkMarketingServiceImpl implements AffiliateLinkMarketing
                 .setRefundOrders(0)
                 .setUnsettledPayment(BigDecimal.ZERO)
                 .setSettledPayment(BigDecimal.ZERO)
-                .setShortlink(shortLik)
+                .setShortlink(shortLink)
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
 
@@ -107,7 +107,7 @@ public class AffiliateLinkMarketingServiceImpl implements AffiliateLinkMarketing
         wrapper.eq(AffiliateLinkMarketing::getShortlink,envBean.getShortSite()+shortUrl);
         AffiliateLinkMarketing linkMarketing = affiliateLinkMarketingMapper.selectOne(wrapper);
         if(linkMarketing==null){
-            return "/404.html";
+            return envBean.getWebsite() + "404.html";
         }
         return envBean.getWebsite() + "mall/cell-detail?cell_id=" + linkMarketing.getCellId() + "&brand_id=" + linkMarketing.getSupplierBrandId()
                 + "&influencer=" + linkMarketing.getBrandId()+ "&chn="+linkMarketing.getOutreachChannelId()+"&market=link";

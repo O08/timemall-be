@@ -33,7 +33,7 @@ public class OpenAffiliateServiceImpl implements OpenAffiliateService {
                 .eq(AffiliateOutreachChannel::getId,dto.getChn());
         boolean validated = openAffiliateOutreachChannelMapper.exists(lambdaQueryWrapper);
         if(!validated){
-            throw new ErrorCodeException(CodeEnum.AFFILIATE_CHANNEL_NOT_EXISTS);
+            throw new ErrorCodeException(CodeEnum.AFFILIATE_INFLUENCER_OR_CHANNEL_NOT_EXISTS);
         }
         IPage<OpenFetchChoiceProductRO>  page  = new Page<>();
         page.setSize(dto.getSize());
