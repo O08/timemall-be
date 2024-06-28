@@ -29,6 +29,9 @@
             <if test="dto.saleVolumeRight > 0">
                 AND  chn.plan_sale_volume  &lt;= #{dto.saleVolumeRight}
             </if>
+            <if test="dto.sort == null or dto.sort == ''">
+                Order by chn.modified_at desc
+            </if>
             <if test="dto.sort != null and dto.sort != ''">
                 <choose>
                     <when test='dto.sort == "1"'>

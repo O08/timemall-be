@@ -71,6 +71,9 @@
             <if test="dto.offline != null and dto.offline != ''">
                 AND pi.cell_mark = #{dto.offline}
             </if>
+            <if test="dto.sort == null or dto.sort == ''">
+                Order by ip.create_at desc
+            </if>
             <if test="dto.sort != null and dto.sort != ''">
                 <choose>
                     <when test='dto.sort == "1"'>

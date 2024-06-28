@@ -19,7 +19,7 @@ import org.apache.ibatis.annotations.Update;
 */
 @Mapper
 public interface AffiliateOutreachChannelMapper extends BaseMapper<AffiliateOutreachChannel> {
-@Update("update affiliate_outreach_channel set channel_name=#{dto.outreachName} where id=#{dto.outreachChannelId} and brand_id=#{brandId}")
+@Update("update affiliate_outreach_channel set channel_name=#{dto.outreachName},modified_at=now() where id=#{dto.outreachChannelId} and brand_id=#{brandId}")
     void updateChannelNameByIdAndBrand(@Param("brandId") String brandId,@Param("dto") RenameChannelNameDTO dto);
 
     IPage<FetchOutreachChannelPageRO> selectPageByDTO(IPage<FetchOutreachChannelPageRO> page, @Param("dto") FetchOutreachChannelPageDTO dto);

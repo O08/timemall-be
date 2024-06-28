@@ -80,6 +80,9 @@
             <if test="dto.offline != null and dto.offline != ''">
                 AND bs.cell_mark = #{dto.offline}
             </if>
+            <if test="dto.sort == null or dto.sort == ''">
+                Order by am.create_at desc
+            </if>
             <if test="dto.sort != null and dto.sort != ''">
                 <choose>
                     <when test='dto.sort == "1"'>

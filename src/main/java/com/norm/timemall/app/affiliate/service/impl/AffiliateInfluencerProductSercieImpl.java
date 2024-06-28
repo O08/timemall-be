@@ -67,6 +67,7 @@ public class AffiliateInfluencerProductSercieImpl implements AffiliateInfluencer
                 .setViews(0)
                 .setRefundOrders(0)
                 .setPlanSaleVolume(0)
+                .setCellSaleVolume(0)
                 .setPlanPrice(baseProduct.getPlanPrice())
                 .setRefundOrders(0)
                 .setCreateAt(new Date())

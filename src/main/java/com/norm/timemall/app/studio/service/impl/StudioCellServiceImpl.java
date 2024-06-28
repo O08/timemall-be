@@ -49,7 +49,8 @@ public class StudioCellServiceImpl implements StudioCellService {
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
 
-        if(ObjectUtil.isNotNull(dto.getOverview().getRevshare()) && dto.getOverview().getRevshare()<=0){
+        if(ObjectUtil.isNotNull(dto.getOverview().getRevshare())
+                && (dto.getOverview().getRevshare()<=0 || dto.getOverview().getRevshare()>100)){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
 
