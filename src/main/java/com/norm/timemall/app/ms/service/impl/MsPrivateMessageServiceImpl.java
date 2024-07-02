@@ -11,13 +11,16 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.gson.Gson;
 import com.norm.timemall.app.base.entity.PageDTO;
 import com.norm.timemall.app.base.enums.CodeEnum;
+import com.norm.timemall.app.base.enums.MsgTypeEnum;
 import com.norm.timemall.app.base.enums.SseEventBusSceneEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.PrivateMsg;
 import com.norm.timemall.app.base.mo.PrivateRel;
+import com.norm.timemall.app.base.service.FileStoreService;
 import com.norm.timemall.app.ms.domain.dto.MsStoreDefaultTextMessageDTO;
 import com.norm.timemall.app.ms.domain.pojo.MsDefaultEventCard;
+import com.norm.timemall.app.ms.domain.pojo.MsDefaultFileMessage;
 import com.norm.timemall.app.ms.domain.pojo.MsDefaultTextMessage;
 import com.norm.timemall.app.ms.domain.pojo.SseEventMessage;
 import com.norm.timemall.app.ms.helper.SseHelper;
@@ -38,7 +41,8 @@ public class MsPrivateMessageServiceImpl implements MsPrivateMessageService {
     @Autowired
     private MsPrivateRelMapper msPrivateRelMapper;
 
-
+    @Autowired
+    private FileStoreService fileStoreService;
     @Override
     public void storeTextMessage(String friend, MsStoreDefaultTextMessageDTO dto) {
 
@@ -73,7 +77,8 @@ public class MsPrivateMessageServiceImpl implements MsPrivateMessageService {
         privateMsgList.add(friendMsgRecord);
         msPrivateMsgMapper.insertBatchSomeColumn(privateMsgList);
         // friend will be msg receiver, currentUser will be the friend of receiver
-        ssePushOneMessageHandler(friend,currentUserId);
+        String latestContent=getPrivateRelLatestContentWhenSendMsg(MsgTypeEnum.TEXT,dto.getMsg());
+        ssePushOneMessageHandler(friend,currentUserId,latestContent);
 
     }
 
@@ -108,7 +113,8 @@ public class MsPrivateMessageServiceImpl implements MsPrivateMessageService {
         privateMsgList.add(friendMsgRecord);
         msPrivateMsgMapper.insertBatchSomeColumn(privateMsgList);
         // friend will be msg receiver, currentUser will be the friend of receiver
-        ssePushOneMessageHandler(friend,currentUserId);
+        String latestContent=getPrivateRelLatestContentWhenSendMsg(MsgTypeEnum.IMAGE,"");
+        ssePushOneMessageHandler(friend,currentUserId,latestContent);
 
     }
 
@@ -142,7 +148,9 @@ public class MsPrivateMessageServiceImpl implements MsPrivateMessageService {
         privateMsgList.add(friendMsgRecord);
         msPrivateMsgMapper.insertBatchSomeColumn(privateMsgList);
         // friend will be msg receiver, currentUser will be the friend of receiver
-        ssePushOneMessageHandler(friend,currentUserId);
+        MsDefaultFileMessage msDefaultFileMessage = new Gson().fromJson(msgJson, MsDefaultFileMessage.class);
+        String latestContent=getPrivateRelLatestContentWhenSendMsg(MsgTypeEnum.ATTACHMENT,msDefaultFileMessage.getFileName());
+        ssePushOneMessageHandler(friend,currentUserId,latestContent);
 
     }
 
@@ -170,6 +178,8 @@ public class MsPrivateMessageServiceImpl implements MsPrivateMessageService {
 
         msPrivateMsgMapper.deleteById(messageId);
 
+        modifyPrivateRelLatestContent(currentUserId,toDeleteMsgOne.getToId(),"你移除了一条消息.");
+
     }
 
     @Override
@@ -186,6 +196,17 @@ public class MsPrivateMessageServiceImpl implements MsPrivateMessageService {
         wrapper.eq(PrivateMsg::getMsgNo,toDeleteMsgOne.getMsgNo());
         msPrivateMsgMapper.delete(wrapper);
 
+        // delete image and file
+        Gson gson =new Gson();
+        if( MsgTypeEnum.IMAGE.getMark().equals(toDeleteMsgOne.getMsgType()) ||
+            MsgTypeEnum.ATTACHMENT.getMark().equals(toDeleteMsgOne.getMsgType())){
+            MsDefaultFileMessage msDefaultFileMessage = gson.fromJson(toDeleteMsgOne.getMsg(), MsDefaultFileMessage.class);
+            fileStoreService.deleteFile(msDefaultFileMessage.getUri());
+        }
+        modifyPrivateRelLatestContent(currentUserId,toDeleteMsgOne.getToId(),"你撤回了一条消息.");
+        modifyPrivateRelLatestContent(toDeleteMsgOne.getToId(),currentUserId,"对方撤回了一条消息.");
+
+
     }
 
     @Override
@@ -200,7 +221,7 @@ public class MsPrivateMessageServiceImpl implements MsPrivateMessageService {
 
     }
 
-    private void ssePushOneMessageHandler(String msgReceiver,String friendOfReceiver){
+    private void ssePushOneMessageHandler(String msgReceiver,String friendOfReceiver,String latestContent){
 
         LambdaQueryWrapper<PrivateRel> wrapper= Wrappers.lambdaQuery();
         wrapper.eq(PrivateRel::getUserId,msgReceiver)
@@ -210,11 +231,12 @@ public class MsPrivateMessageServiceImpl implements MsPrivateMessageService {
 
         if(dbPrivateRel==null){
             // add friend rel records
-            newPrivateRel(msgReceiver,friendOfReceiver,1L);
+            newPrivateRel(msgReceiver,friendOfReceiver,1L,latestContent);
         }
         if(ObjectUtil.isNotNull(dbPrivateRel)){
             dbPrivateRel.setUnread(dbPrivateRel.getUnread()+1L);
             dbPrivateRel.setModifiedAt(new Date());
+            dbPrivateRel.setLatestContent(latestContent);
             msPrivateRelMapper.updateById(dbPrivateRel);
         }
 
@@ -224,20 +246,26 @@ public class MsPrivateMessageServiceImpl implements MsPrivateMessageService {
         PrivateRel currentUserDbPrivateRel = msPrivateRelMapper.selectOne(currentUserRelWrapper);
         if(currentUserDbPrivateRel==null){
             // add friend rel records
-            newPrivateRel(friendOfReceiver,msgReceiver,0L);
+            newPrivateRel(friendOfReceiver,msgReceiver,0L,latestContent);
+        }
+        if(ObjectUtil.isNotNull(currentUserDbPrivateRel)){
+            currentUserDbPrivateRel.setModifiedAt(new Date());
+            currentUserDbPrivateRel.setLatestContent(latestContent);
+            msPrivateRelMapper.updateById(currentUserDbPrivateRel);
         }
 
         doPushOneMessageToFriend(msgReceiver,friendOfReceiver);
 
     }
 
-        private void newPrivateRel(String msgReceiver,String friendOfReceiver,Long unread){
+        private void newPrivateRel(String msgReceiver,String friendOfReceiver,Long unread,String latestContent){
 
         PrivateRel privateRel = new PrivateRel();
         privateRel.setId(IdUtil.simpleUUID())
                 .setUserId(msgReceiver)
                 .setFriendId(friendOfReceiver)
                 .setUnread(unread)
+                .setLatestContent(latestContent)
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
         msPrivateRelMapper.insert(privateRel);
@@ -252,5 +280,33 @@ public class MsPrivateMessageServiceImpl implements MsPrivateMessageService {
         msg.setFrom(from);
         SseHelper.sendMessage(msgReceiver,new Gson().toJson(msg));
 
+    }
+    private String getPrivateRelLatestContentWhenSendMsg( MsgTypeEnum msgType, String remark){
+
+        String latestContent;
+        switch (msgType){
+            case TEXT:
+                latestContent=remark;
+                break;
+            case IMAGE:
+                latestContent="[图片]";
+                break;
+            case ATTACHMENT:
+                latestContent="[文件] " + remark;
+                break;
+            default:
+                latestContent="未知内容";
+        }
+        return  latestContent;
+
+    }
+
+    private void modifyPrivateRelLatestContent(String friendOfReceiver,String msgReceiver, String latestContent){
+        LambdaQueryWrapper<PrivateRel> currentUserRelWrapper= Wrappers.lambdaQuery();
+        currentUserRelWrapper.eq(PrivateRel::getUserId,friendOfReceiver)
+                .eq(PrivateRel::getFriendId,msgReceiver);
+
+        msPrivateRelMapper.update(new PrivateRel().setLatestContent(latestContent).setModifiedAt(new Date()),
+                currentUserRelWrapper);
     }
 }

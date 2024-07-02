@@ -40,6 +40,11 @@ public class PrivateRel extends Model<PrivateRel> implements Serializable {
      * 未读
      */
     private Long unread;
+
+    /**
+     * 未读
+     */
+    private String latestContent;
     /**
      * createAt
      */
