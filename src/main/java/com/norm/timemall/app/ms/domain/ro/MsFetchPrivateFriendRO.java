@@ -10,4 +10,5 @@ public class MsFetchPrivateFriendRO {
     private String unread;
     private String latestContent;
     private String modifiedAt;
+    private String brandMark;
 }
