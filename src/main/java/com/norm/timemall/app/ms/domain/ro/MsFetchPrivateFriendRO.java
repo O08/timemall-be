@@ -9,4 +9,5 @@ public class MsFetchPrivateFriendRO {
     private String id;
     private String unread;
     private String latestContent;
+    private String modifiedAt;
 }
