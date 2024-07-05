@@ -11,5 +11,6 @@ public class PodWorkFlowNode {
     @Valid
     private PodMillStoneNode[] millstones;
     private PodWorkflowServiceInfo serviceInfo;
+    private String doneStageNo;
 
 }

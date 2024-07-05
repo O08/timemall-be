@@ -12,4 +12,6 @@ public class PodWorkflowServiceInfo {
     private String avatar;
     private String supplierUserId;
     private String consumerUserId;
+    private String cellId;
+    private String brandId;
 }

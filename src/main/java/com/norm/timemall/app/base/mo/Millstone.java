@@ -43,4 +43,6 @@ public class Millstone extends Model<Millstone> implements Serializable {
      */
     private Date modifiedAt;
 
+    private String doneStageNo;
+
 }

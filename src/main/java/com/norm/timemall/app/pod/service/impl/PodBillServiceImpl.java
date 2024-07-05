@@ -102,7 +102,7 @@ public class PodBillServiceImpl implements PodBillService {
         podBillMapper.updateBillInfoById(netIncome,commission,billId,BillMarkEnum.PAID.getMark());
 
         // 支付完成后，生成下一条账单
-        generateNextBill(billId);
+        generateNextBill(billId,bill.getStageNo());
 
         // pay affiliate if order belong to affiliate order
         if(ObjectUtil.isNotNull(affiliateOrder)){
@@ -123,12 +123,16 @@ public class PodBillServiceImpl implements PodBillService {
         return  bo;
     }
 
-    private void generateNextBill(String billId){
+    private void generateNextBill(String billId,String doneStageNo){
         // find bill
         Bill bill = findBillByIdAndCustomer(billId, SecurityUserHelper.getCurrentPrincipal().getUserId());
         LambdaQueryWrapper<Millstone> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(Millstone::getOrderId,bill.getOrderId());
         Millstone millstone = podMillstoneMapper.selectOne(wrapper);
+        millstone.setDoneStageNo(doneStageNo);
+        // update millstone workflow doneStageNo
+        podMillstoneMapper.update(millstone,wrapper);
+
         Gson gson = new Gson();
         if(millstone.getStageList() == null){
             return;
