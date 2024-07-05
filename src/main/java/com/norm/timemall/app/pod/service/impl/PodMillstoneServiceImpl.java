@@ -69,7 +69,6 @@ public class PodMillstoneServiceImpl implements PodMillstoneService {
         Gson gson = new Gson();
         // todo empty stagelist
         PodWorkFlowNode workflow = new PodWorkFlowNode();
-        workflow.setDoneStageNo(millstone.getDoneStageNo());
         if(millstone.getStageList() == null){
             PodWorkflowServiceInfo info = podMillstoneMapper.selectWorkflowServiceInfoById(workflwoId);
             workflow.setServiceInfo(info);
@@ -77,6 +76,7 @@ public class PodMillstoneServiceImpl implements PodMillstoneService {
         if(millstone.getStageList() != null){
             workflow = gson.fromJson(millstone.getStageList().toString(), PodWorkFlowNode.class);
         }
+        workflow.setDoneStageNo(millstone.getDoneStageNo());
         return workflow;
     }
 
