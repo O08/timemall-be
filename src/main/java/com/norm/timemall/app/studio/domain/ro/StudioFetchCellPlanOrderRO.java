@@ -14,4 +14,7 @@ public class StudioFetchCellPlanOrderRO {
     private String tag;
     private String price;
     private String planType;
+    private String cellId;
+    private String supplierBrandId;
+    private String supplierUserId;
 }
