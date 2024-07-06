@@ -22,7 +22,7 @@
     </select>
 
     <select id="selectCellPlanOrderById" resultType="com.norm.timemall.app.studio.domain.ro.StudioFetchCellPlanOrderRO">
-        select b.customer_id supplierUserId , c.id cellId,c.brand_id supplierBrandId,c.title cellTitle,b.avator supplierAvatar,b.brand_name supplierName,
+        select b.mark supplierBrandMark, b.customer_id supplierUserId , c.id cellId,c.brand_id supplierBrandId,c.title cellTitle,b.avator supplierAvatar,b.brand_name supplierName,
                o.plan_type_desc, o.plan_title planTitle,o.plan_content,o.plan_feature feature, o.tag, o.plan_price price,o.plan_type
         from cell_plan_order o
         inner join cell c

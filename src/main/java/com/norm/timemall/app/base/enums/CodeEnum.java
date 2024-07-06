@@ -70,7 +70,8 @@ public enum CodeEnum implements Code{
     AFFILIATE_CHANNEL_EXISTS(40022, "渠道名称已存在"), AFFILIATE_INFLUENCER_OR_CHANNEL_NOT_EXISTS(40023, "达人或渠道未配置正确"),
     FALSE_SHOPPING(40024,"恶意刷单" ),
     AFFILIATE_BRAND_SELF_PRODUCT(40025, "品牌自有产品"),
-    AFFILIATE_CHOICE_CELL_EXIST(40026,"产品已添加到橱窗" );
+    AFFILIATE_CHOICE_CELL_EXIST(40026,"产品已添加到橱窗" ),
+    PLAN_DELIVER_PENDING(40027, "客户审核中，禁止新的交付");
 
     private int code;
     private String desc;

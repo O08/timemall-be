@@ -17,4 +17,5 @@ public class StudioFetchCellPlanOrderRO {
     private String cellId;
     private String supplierBrandId;
     private String supplierUserId;
+    private String supplierBrandMark;
 }

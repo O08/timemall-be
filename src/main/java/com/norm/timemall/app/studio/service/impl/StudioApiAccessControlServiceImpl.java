@@ -5,15 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.norm.timemall.app.base.enums.CellMarkEnum;
 import com.norm.timemall.app.base.enums.CommercialPaperTagEnum;
+import com.norm.timemall.app.base.enums.DeliverTagEnum;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
-import com.norm.timemall.app.base.mo.Cell;
-import com.norm.timemall.app.base.mo.CommercialPaper;
-import com.norm.timemall.app.base.mo.CommercialPaperDeliver;
-import com.norm.timemall.app.base.mo.MpsChain;
-import com.norm.timemall.app.studio.mapper.StudioCellMapper;
-import com.norm.timemall.app.studio.mapper.StudioCommercialPaperDeliverMapper;
-import com.norm.timemall.app.studio.mapper.StudioCommercialPaperMapper;
-import com.norm.timemall.app.studio.mapper.StudioMpsChainMapper;
+import com.norm.timemall.app.base.mo.*;
+import com.norm.timemall.app.studio.mapper.*;
 import com.norm.timemall.app.studio.service.StudioApiAccessControlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +23,8 @@ public class StudioApiAccessControlServiceImpl implements StudioApiAccessControl
     private StudioCommercialPaperDeliverMapper studioCommercialPaperDeliverMapper;
     @Autowired
     private StudioCellMapper studioCellMapper;
+    @Autowired
+    private StudioCellPlanDeliverMapper studioCellPlanDeliverMapper;
     @Override
     public boolean isMpsChainFounder(String chainId) {
         String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
@@ -92,5 +89,17 @@ public class StudioApiAccessControlServiceImpl implements StudioApiAccessControl
 
         Cell cell = studioCellMapper.selectCellByCellPlanOrderIdAndTag(orderId,tag);
         return cell!=null && brandId.equals(cell.getBrandId());
+    }
+
+    @Override
+    public boolean alreadySubmitOnePendingDeliver(String orderId) {
+
+        LambdaQueryWrapper<CellPlanDeliver> wrapper= Wrappers.lambdaQuery();
+        wrapper.eq(CellPlanDeliver::getPlanOrderId,orderId)
+                .eq(CellPlanDeliver::getTag, DeliverTagEnum.CREATED.getMark());
+
+        return        studioCellPlanDeliverMapper.exists(wrapper);
+
+
     }
 }
