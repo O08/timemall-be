@@ -11,5 +11,6 @@ public class FetchCellPlanOrderDeliverRO {
     private String msg;
     private String tag;
     private String deliverId;
+    private String createAt;
 
 }

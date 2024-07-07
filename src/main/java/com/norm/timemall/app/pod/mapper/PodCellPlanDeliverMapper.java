@@ -22,7 +22,7 @@ import java.util.ArrayList;
 @Mapper
 public interface PodCellPlanDeliverMapper extends BaseMapper<CellPlanDeliver> {
 
-    @Select("select id deliverId ,preview,preview_name,if(tag='3',deliver,'') deliver,if(tag='3',deliver_name,'') deliverName,msg,tag  from cell_plan_deliver where plan_order_id=#{orderId} order  by create_at desc")
+    @Select("select create_at, id deliverId ,preview,preview_name,if(tag='3',deliver,'') deliver,if(tag='3',deliver_name,'') deliverName,msg,tag  from cell_plan_deliver where plan_order_id=#{orderId} order  by create_at desc")
     ArrayList<FetchCellPlanOrderDeliverRO> selectCellPlanOrderDeliverByOrderId(@Param("orderId") String id);
 
 

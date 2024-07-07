@@ -16,7 +16,7 @@ import org.apache.ibatis.annotations.Update;
 */
 @Mapper
 public interface PodMillstoneMapper extends BaseMapper<Millstone> {
-    @Update(value = "update millstone set mark = #{code} where order_id=#{id}")
+    @Update(value = "update millstone set mark = #{code} where order_id=#{id} and stage_list is not null")
     void updateWorkflowByIdAndCode(@Param("id") String workflwoId, @Param("code") String code);
 
     @Select("select o.brand_id, o.cell_id, o.cell_title title,b.brand_name brand,b.avator avatar,o.consumer_id consumerUserId,b.customer_id supplierUserId from order_details o , brand b where o.brand_id = b.id and o.id=#{id} ")
