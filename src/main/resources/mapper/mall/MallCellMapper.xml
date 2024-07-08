@@ -116,7 +116,7 @@
         left join pricing p on c.id = p.cell_id and p.sbu = 'hour'
         where b.id = #{id}
         and c.mark ='2'
-        order by modified_at desc limit 10
+        order by c.modified_at desc limit 10
 
     </select>
 
