@@ -7,7 +7,7 @@
 
 
     <select id="selectPlanOrderDeliverByOrderIdAndBrandId" resultType="com.norm.timemall.app.base.pojo.ro.FetchCellPlanOrderDeliverRO">
-        select d.id deliverId, d.preview,d.preview_name,d.deliver,d.deliver_name,d.msg,d.tag
+        select d.id deliverId, d.preview,d.preview_name,d.deliver,d.deliver_name,d.msg,d.tag,d.create_at
         from cell_plan_deliver d
         inner join cell_plan_order  o
           on d.plan_order_id=o.id

@@ -12,4 +12,5 @@ public class StudioFetchMpsPaperDeliverRO {
     private String tag;
     private String deliverId;
     private String paperId;
+    private String createAt;
 }

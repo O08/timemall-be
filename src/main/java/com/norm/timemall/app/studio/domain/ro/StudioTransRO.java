@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 public class StudioTransRO {
     private String service;
     private String customer;
-    private BigDecimal fee;
+    private String fee;
     private String added;
     private String id;
     private String customerUserId;

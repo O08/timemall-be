@@ -13,6 +13,6 @@ public class StudioBillRO {
     private String billId;
     private String voucher;
     private String added;
-    private BigDecimal netIncome;
-    private BigDecimal commission;
+    private String netIncome;
+    private String commission;
 }
