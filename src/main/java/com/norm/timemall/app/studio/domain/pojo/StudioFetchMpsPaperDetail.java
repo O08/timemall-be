@@ -21,4 +21,5 @@ public class StudioFetchMpsPaperDetail {
     private String createAt;
     private String modifiedAt;
     private String purchaserUserId;
+    private String supplierUserId;
 }

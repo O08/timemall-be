@@ -49,6 +49,10 @@ public class StudioMpsPaperDeliverController {
         if(!isSupplier){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
+        boolean needWaiting= studioApiAccessControlService.alreadySubmitOnePendingDeliverForMps(paperId);
+        if(needWaiting){
+            throw new ErrorCodeException(CodeEnum.DELIVER_PENDING);
+        }
         // store file in classified
         String deliverUri = fileStoreService.storeWithLimitedAccess(deliver, FileStoreDir.MPS_DELIVER);
         String previewUri = fileStoreService.storeWithLimitedAccess(preview, FileStoreDir.MPS_PREVIEW);

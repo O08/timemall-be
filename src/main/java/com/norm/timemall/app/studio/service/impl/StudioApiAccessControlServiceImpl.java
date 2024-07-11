@@ -92,7 +92,7 @@ public class StudioApiAccessControlServiceImpl implements StudioApiAccessControl
     }
 
     @Override
-    public boolean alreadySubmitOnePendingDeliver(String orderId) {
+    public boolean alreadySubmitOnePendingDeliverForPlan(String orderId) {
 
         LambdaQueryWrapper<CellPlanDeliver> wrapper= Wrappers.lambdaQuery();
         wrapper.eq(CellPlanDeliver::getPlanOrderId,orderId)
@@ -101,5 +101,13 @@ public class StudioApiAccessControlServiceImpl implements StudioApiAccessControl
         return        studioCellPlanDeliverMapper.exists(wrapper);
 
 
+    }
+
+    @Override
+    public boolean alreadySubmitOnePendingDeliverForMps(String paperId) {
+        LambdaQueryWrapper<CommercialPaperDeliver> wrapper=Wrappers.lambdaQuery();
+        wrapper.eq(CommercialPaperDeliver::getPaperId,paperId)
+                .eq(CommercialPaperDeliver::getTag, DeliverTagEnum.CREATED.getMark());
+        return studioCommercialPaperDeliverMapper.exists(wrapper);
     }
 }

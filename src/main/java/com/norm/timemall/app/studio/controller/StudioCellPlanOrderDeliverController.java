@@ -37,9 +37,9 @@ public class StudioCellPlanOrderDeliverController {
         if(!checked){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
-        boolean needWaiting= studioApiAccessControlService.alreadySubmitOnePendingDeliver(orderId);
+        boolean needWaiting= studioApiAccessControlService.alreadySubmitOnePendingDeliverForPlan(orderId);
         if(needWaiting){
-            throw new ErrorCodeException(CodeEnum.PLAN_DELIVER_PENDING);
+            throw new ErrorCodeException(CodeEnum.DELIVER_PENDING);
         }
         // store file in classified
         String deliverUri = fileStoreService.storeWithLimitedAccess(deliver, FileStoreDir.CELL_PLAN_DELIVER);

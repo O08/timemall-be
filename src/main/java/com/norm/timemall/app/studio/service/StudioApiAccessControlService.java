@@ -18,5 +18,7 @@ public interface StudioApiAccessControlService {
 
     boolean isCellPlanOrderSupplierAndCheckOrderTag(String id, String tag);
 
-    boolean alreadySubmitOnePendingDeliver(String orderId);
+    boolean alreadySubmitOnePendingDeliverForPlan(String orderId);
+
+    boolean alreadySubmitOnePendingDeliverForMps(String paperId);
 }
