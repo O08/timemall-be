@@ -12,6 +12,6 @@ public interface MsMpsMessageService {
 
     void addMessage(String room, MsStoreMpsTextMessageDTO dto);
 
-    MsDefaultEvent findMillstoneEvent(String room);
+    MsDefaultEvent findMpsEvent(String room);
 
 }

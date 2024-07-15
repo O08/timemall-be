@@ -61,7 +61,7 @@ public class MsMpsMessageServiceImpl implements MsMpsMessageService {
     }
 
     @Override
-    public MsDefaultEvent findMillstoneEvent(String room) {
+    public MsDefaultEvent findMpsEvent(String room) {
         return msMpsMsgMapper.selectMpsEventByTargetId(room);
     }
 

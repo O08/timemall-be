@@ -27,7 +27,7 @@ public class MsMpsController {
     @ResponseBody
     @GetMapping(value = "/api/v1/ms/mps/{room}/event")
     public MsDefaultEventVO retrieveMillstoneEvent(@PathVariable("room") String room){
-        MsDefaultEvent event = msMpsMessageService.findMillstoneEvent(room);
+        MsDefaultEvent event = msMpsMessageService.findMpsEvent(room);
         MsDefaultEventVO vo = new MsDefaultEventVO();
         vo.setEvent(event==null? new MsDefaultEvent(): event);
         vo.setResponseCode(CodeEnum.SUCCESS);
