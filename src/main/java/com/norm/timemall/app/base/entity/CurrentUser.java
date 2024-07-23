@@ -11,4 +11,5 @@ public class CurrentUser {
     private String userId;
     private String username;
     private String brandId;
+    private String avatar;
 }
