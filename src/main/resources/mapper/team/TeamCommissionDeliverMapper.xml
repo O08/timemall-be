@@ -5,7 +5,7 @@
         commission_deliver
     </sql>
     <select id="selectDeliverByCommissionIdAndBrandId" resultType="com.norm.timemall.app.team.domain.ro.TeamFetchCommissionDeliverRO">
-        select d.id deliverId, d.preview,d.preview_name,d.deliver,d.deliver_name,d.msg,d.tag,d.commission_id
+        select d.id deliverId, d.preview,d.preview_name,d.deliver,d.deliver_name,d.msg,d.tag,d.commission_id,d.create_at
         from commission_deliver d
         inner join commission p
          on d.commission_id=p.id

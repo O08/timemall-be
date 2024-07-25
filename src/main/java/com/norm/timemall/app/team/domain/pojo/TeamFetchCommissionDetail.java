@@ -11,4 +11,5 @@ public class TeamFetchCommissionDetail {
     private String supplierAvatar;
     private String tag;
     private String commissionId;
+    private String oasisId;
 }

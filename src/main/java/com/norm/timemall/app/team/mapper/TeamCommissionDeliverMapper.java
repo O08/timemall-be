@@ -26,7 +26,7 @@ public interface TeamCommissionDeliverMapper extends BaseMapper<CommissionDelive
 
     @Update("update commission_deliver set tag=#{dto.tag} where id=#{dto.deliverId} and commission_id=#{dto.commissionId}")
     void updateTagById(@Param("dto") TeamPutCommissionDeliverTagDTO dto);
-    @Select("select id deliverId ,preview,preview_name,if(tag='3',deliver,'') deliver,if(tag='3',deliver_name,'') deliverName,msg,tag,commission_id  from commission_deliver where commission_id=#{commission_id} order  by create_at desc")
+    @Select("select id deliverId ,preview,preview_name,if(tag='3',deliver,'') deliver,if(tag='3',deliver_name,'') deliverName,msg,tag,commission_id,create_at  from commission_deliver where commission_id=#{commission_id} order  by create_at desc")
     ArrayList<TeamFetchCommissionDeliverRO> selectDeliverByCommissionId(@Param("commission_id") String commissionId);
     ArrayList<TeamFetchCommissionDeliverRO> selectDeliverByCommissionIdAndBrandId(@Param("commission_id") String commissionId, @Param("brandId") String brandId);
 }
