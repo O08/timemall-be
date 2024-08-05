@@ -11,4 +11,6 @@ public class PodCellPlanOrderPageRO {
     private String tag;
     private String createAt;
     private String planType;
+    private String revenue;
+    private String promotionDeduction;
 }

@@ -30,7 +30,7 @@ public class OrderController {
      * 下单
      */
     @ResponseBody
-    @PostMapping(value = "/api/v1/web_mall/services/{cell_id}/order")
+    @PostMapping(value = "/api/v1/mall/services/{cell_id}/order")
     public OrderCellVO orderCell(@AuthenticationPrincipal CustomizeUser userDetails,
                                          @PathVariable("cell_id") String cellId, @Validated @RequestBody OrderDTO orderDTO) {
 
@@ -43,7 +43,7 @@ public class OrderController {
     }
 
     @ResponseBody
-    @PostMapping(value = "/api/v1/web_mall/services/plan/{id}/order")
+    @PostMapping(value = "/api/v1/mall/services/plan/{id}/order")
     public OrderCellPlanVO orderPlan(@PathVariable("id") String planId, @RequestBody AffiliateDTO dto) {
         OrderCellPlanVO vo = new OrderCellPlanVO();
 

@@ -9,12 +9,25 @@
         id,stage,amount,voucher,mark,order_id,create_at,modified_at
     </sql>
     <select id="selectBillPageByUserId" resultType="com.norm.timemall.app.pod.domain.ro.PodBillsRO">
-        select b.stage,d.brand_name brand,d.cell_title service,b.amount,b.id billId,b.voucher,b.create_at added,d.brand_id brandId
+        select b.promotion_deduction,b.stage,d.brand_name brand,d.cell_title service,b.amount,b.id billId,b.voucher,b.create_at added,d.brand_id brandId
         from bill b
         inner join order_details d on b.order_id = d.id
         where d.consumer_id = #{user_id}
           and b.mark = #{mark}
         order by b.create_at desc
+    </select>
+    <select id="selectBillDetailById" resultType="com.norm.timemall.app.pod.domain.ro.FetchBillDetailRO">
+        select b.stage item,b.amount,c.credit_point,o.early_bird_discount,o.repurchase_discount
+        from bill b
+        inner join order_details d
+          on b.order_id = d.id
+        left join credit_coupon  c
+          on c.supplier_brand_id=d.brand_id
+             and c.consumer_brand_id=#{consumerBrandId}
+        left join order_coupon  o
+           on o.order_id=d.id
+             and o.order_type='cell'
+        where b.id=#{id} and d.consumer_id=#{consumerUserId}
     </select>
 
 </mapper>

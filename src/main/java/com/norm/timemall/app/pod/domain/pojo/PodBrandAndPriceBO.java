@@ -7,5 +7,5 @@ import java.math.BigDecimal;
 @Data
 public class PodBrandAndPriceBO {
     private String brandId;
-    private BigDecimal amount;
+    private BigDecimal revenue;
 }

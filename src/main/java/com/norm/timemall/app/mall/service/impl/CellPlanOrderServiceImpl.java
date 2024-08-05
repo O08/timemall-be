@@ -1,29 +1,29 @@
 package com.norm.timemall.app.mall.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.google.gson.Gson;
 import com.norm.timemall.app.base.config.OperatorConfig;
 import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
-import com.norm.timemall.app.base.mo.Cell;
-import com.norm.timemall.app.base.mo.CellPlan;
-import com.norm.timemall.app.base.mo.CellPlanOrder;
-import com.norm.timemall.app.base.mo.CommonOrderPayment;
+import com.norm.timemall.app.base.mo.*;
 import com.norm.timemall.app.base.pojo.TransferBO;
 import com.norm.timemall.app.mall.domain.dto.AffiliateDTO;
+import com.norm.timemall.app.mall.domain.dto.MallFetchPromotionInfoDTO;
 import com.norm.timemall.app.mall.domain.ro.CellPlanOrderRO;
-import com.norm.timemall.app.mall.mapper.CellMapper;
-import com.norm.timemall.app.mall.mapper.CellPlanMapper;
-import com.norm.timemall.app.mall.mapper.CellPlanOrderMapper;
-import com.norm.timemall.app.mall.mapper.CommonOrderPaymentMapper;
+import com.norm.timemall.app.mall.domain.ro.MallFetchPromotionBenefitRO;
+import com.norm.timemall.app.mall.domain.ro.MallFetchPromotionInfoRO;
+import com.norm.timemall.app.mall.mapper.*;
 import com.norm.timemall.app.mall.service.CellPlanOrderService;
 import com.norm.timemall.app.mall.service.MallAffiliateOrderService;
+import com.norm.timemall.app.mall.service.MallBrandPromotionService;
 import com.norm.timemall.app.pay.service.DefaultPayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 
 @Service
@@ -41,6 +41,14 @@ public class CellPlanOrderServiceImpl implements CellPlanOrderService {
     private CommonOrderPaymentMapper commonOrderPaymentMapper;
     @Autowired
     private MallAffiliateOrderService mallAffiliateOrderService;
+    @Autowired
+    private MallBrandPromotionService mallBrandPromotionService;
+    @Autowired
+    private MallOrderCouponMapper mallOrderCouponMapper;
+
+    @Autowired
+    private MallCreditCouponMapper mallCreditCouponMapper;
+
     @Override
     public String newOrder(String planId, AffiliateDTO dto) {
 
@@ -56,6 +64,8 @@ public class CellPlanOrderServiceImpl implements CellPlanOrderService {
             throw new ErrorCodeException(CodeEnum.FALSE_SHOPPING);
         }
         String orderId=IdUtil.simpleUUID();
+        BigDecimal promotionDeduction=calPromotionDeduction(cell.getId(),cell.getBrandId(),plan.getPrice(),orderId);
+        BigDecimal revenue=plan.getPrice().subtract(promotionDeduction);
         CellPlanOrder order =new CellPlanOrder();
         order.setId(orderId)
                 .setCellId(plan.getCellId())
@@ -66,18 +76,23 @@ public class CellPlanOrderServiceImpl implements CellPlanOrderService {
                 .setPlanType(plan.getPlanType())
                 .setPlanTypeDesc(plan.getPlanTypeDesc())
                 .setPlanPrice(plan.getPrice())
+                .setRevenue(revenue)
+                .setPromotionDeduction(promotionDeduction)
                 .setTag(""+CellPlanOrderTagEnum.WAITING_PAY.ordinal())
+                .setBrandId(cell.getBrandId())
                 .setConsumerId(SecurityUserHelper.getCurrentPrincipal().getUserId())
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
         cellPlanOrderMapper.insert(order);
 
         // pay
-        TransferBO bo = generateTransferBO(plan.getPrice(),orderId);
-        String transNo=defaultPayService.transfer(new Gson().toJson(bo));
+        if(revenue.compareTo(BigDecimal.ZERO)>0){
+            TransferBO bo = generateTransferBO(revenue,orderId);
+            String transNo=defaultPayService.transfer(new Gson().toJson(bo));
+            // insert order payment
+            newOrderPayment(orderId,transNo,revenue);
+        }
 
-        // insert order payment
-        newOrderPayment(orderId,transNo,plan.getPrice());
         // update order tag as paid
         cellPlanOrderMapper.updateTagById(CellPlanOrderTagEnum.PAID.ordinal(),orderId);
         // affiliate order
@@ -121,4 +136,93 @@ public class CellPlanOrderServiceImpl implements CellPlanOrderService {
         commonOrderPaymentMapper.insert(payment);
 
     }
+    private BigDecimal calPromotionDeduction(String cellId,String supplierBrandId,BigDecimal total,String orderId){
+        String canUseDiscount="1";
+        String consumerBrandId= SecurityUserHelper.getCurrentPrincipal().getBrandId();
+
+        // get promotion info
+        MallFetchPromotionInfoDTO mallFetchPromotionInfoDTO= new MallFetchPromotionInfoDTO();
+        mallFetchPromotionInfoDTO.setBrandId(supplierBrandId);
+        MallFetchPromotionInfoRO promotionInfo = mallBrandPromotionService.findPromotionInfo(mallFetchPromotionInfoDTO);
+        // get promotion benefit
+        MallFetchPromotionBenefitRO promotionBenefit = mallBrandPromotionService.findPromotionBenefit(cellId,supplierBrandId);
+
+        if(ObjectUtil.isNull(promotionInfo)){
+            return BigDecimal.ZERO;
+        }
+        // get credit point
+        String alreadyGetCreditPoint="1";
+        if(!alreadyGetCreditPoint.equals(promotionBenefit.getAlreadyGetCreditPoint())){
+            CreditCoupon creditCoupon=new CreditCoupon();
+            creditCoupon.setId(IdUtil.simpleUUID())
+                    .setCreditPoint(promotionBenefit.getCreditPoint())
+                    .setSupplierBrandId(supplierBrandId)
+                    .setConsumerBrandId(consumerBrandId)
+                    .setCreateAt(new Date())
+                    .setModifiedAt(new Date());
+            mallCreditCouponMapper.insert(creditCoupon);
+        }
+
+        BigDecimal promotionCreditPointDeductionDifference=BigDecimal.ZERO;
+
+        if(promotionBenefit.getCreditPoint().compareTo(total)>=0){
+            promotionCreditPointDeductionDifference=total;
+        }
+
+        if(promotionBenefit.getCreditPoint().compareTo(total)<0){
+            promotionCreditPointDeductionDifference = promotionBenefit.getCreditPoint();
+        }
+        BigDecimal earlyBirdDiscountDifference=BigDecimal.ZERO;
+
+        if(canUseDiscount.equals(promotionBenefit.getCanUseEarlyBirdCoupon()) &&
+             BrandPromotionTagEnum.OPEN.getMark().equals(promotionInfo.getEarlyBirdDiscountTag()) ){
+
+            BigDecimal c= BigDecimal.valueOf (100 - Integer.parseInt(promotionInfo.getEarlyBirdDiscount()));
+            earlyBirdDiscountDifference= total.multiply(c).divide(BigDecimal.valueOf(100),20, RoundingMode.HALF_UP);
+
+        }
+        BigDecimal repurchaseDiscountDifference=BigDecimal.ZERO;
+        if(canUseDiscount.equals(promotionBenefit.getCanUseRepurchaseCoupon()) &&
+           BrandPromotionTagEnum.OPEN.getMark().equals(promotionInfo.getRepurchaseDiscountTag())){
+            BigDecimal d= BigDecimal.valueOf(100-Integer.parseInt(promotionInfo.getRepurchaseDiscount()));
+            repurchaseDiscountDifference=total.multiply(d).divide(BigDecimal.valueOf(100),20, RoundingMode.HALF_UP);
+        }
+
+        BigDecimal totalPromotionDeduction=promotionCreditPointDeductionDifference
+                .add(earlyBirdDiscountDifference).add(repurchaseDiscountDifference);
+
+        BigDecimal promotionDeduction= BigDecimal.ZERO;
+
+         if(total.compareTo(totalPromotionDeduction)>=0){
+             promotionDeduction=totalPromotionDeduction;
+         }
+         if(total.compareTo(totalPromotionDeduction)<0){
+             promotionDeduction=total;
+         }
+
+         // only promotionDeduction more than 0 , can insert new record
+        if(totalPromotionDeduction.compareTo(BigDecimal.ZERO)>0){
+            OrderCoupon orderCoupon=new OrderCoupon();
+            orderCoupon.setId(IdUtil.simpleUUID())
+                    .setOrderId(orderId)
+                    .setCellId(cellId)
+                    .setConsumerBrandId(SecurityUserHelper.getCurrentPrincipal().getBrandId())
+                    .setOrderType(AffiliateOrderTypeEnum.PLAN.getMark())
+                    .setEarlyBirdDiscount(Integer.parseInt(promotionInfo.getEarlyBirdDiscount()))
+                    .setRepurchaseDiscount(Integer.parseInt(promotionInfo.getEarlyBirdDiscount()))
+                    .setCreditPoint(promotionCreditPointDeductionDifference)
+                    .setCreateAt(new Date())
+                    .setModifiedAt(new Date());
+            mallOrderCouponMapper.insert(orderCoupon);
+        }
+
+        // update credit coupon point
+        if(promotionCreditPointDeductionDifference.compareTo(BigDecimal.ZERO)>0){
+            BigDecimal balancePoint=promotionBenefit.getCreditPoint().subtract(promotionCreditPointDeductionDifference);
+            mallCreditCouponMapper.updatePointBySupplierAndConsumer(balancePoint,supplierBrandId,consumerBrandId);
+        }
+
+        return promotionDeduction;
+    }
+
 }

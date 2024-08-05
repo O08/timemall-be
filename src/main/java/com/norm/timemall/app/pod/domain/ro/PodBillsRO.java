@@ -27,5 +27,6 @@ public class PodBillsRO {
     private String added;
     // ref: brand.id
     private String brandId;
+    private String promotionDeduction;
 
 }

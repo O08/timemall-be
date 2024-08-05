@@ -15,4 +15,6 @@ public class StudioCellPlanOrderPageRO {
     private String planType;
     private BigDecimal netIncome;
     private BigDecimal commission;
+    private BigDecimal revenue;
+    private BigDecimal promotionDeduction;
 }

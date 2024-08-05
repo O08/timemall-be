@@ -10,21 +10,16 @@ import com.google.gson.Gson;
 import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
-import com.norm.timemall.app.base.mo.AffiliateOrder;
-import com.norm.timemall.app.base.mo.Bill;
-import com.norm.timemall.app.base.mo.Millstone;
-import com.norm.timemall.app.base.mo.OrderDetails;
+import com.norm.timemall.app.base.mo.*;
 import com.norm.timemall.app.base.pojo.TransferBO;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.pay.service.DefaultPayService;
 import com.norm.timemall.app.pod.domain.dto.PodBillPageDTO;
 import com.norm.timemall.app.pod.domain.pojo.PodMillStoneNode;
 import com.norm.timemall.app.pod.domain.pojo.PodWorkFlowNode;
+import com.norm.timemall.app.pod.domain.ro.FetchBillDetailRO;
 import com.norm.timemall.app.pod.domain.ro.PodBillsRO;
-import com.norm.timemall.app.pod.mapper.PodAffiliateOrderMapper;
-import com.norm.timemall.app.pod.mapper.PodBillMapper;
-import com.norm.timemall.app.pod.mapper.PodMillstoneMapper;
-import com.norm.timemall.app.pod.mapper.PodOrderDetailsMapper;
+import com.norm.timemall.app.pod.mapper.*;
 import com.norm.timemall.app.pod.service.PodAffiliatePayService;
 import com.norm.timemall.app.pod.service.PodBillService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +47,12 @@ public class PodBillServiceImpl implements PodBillService {
     @Autowired
     private PodAffiliateOrderMapper podAffiliateOrderMapper;
 
+    @Autowired
+    private PodCreditCouponMapper podCreditCouponMapper;
+
+    @Autowired
+    private PodOrderCouponMapper podOrderCouponMapper;
+
     @Override
     public Bill findBillByIdAndCustomer(String billId, String customerId) {
         Bill bill =  podBillMapper.selectByIdAndCustomer( billId,  customerId);
@@ -74,6 +75,11 @@ public class PodBillServiceImpl implements PodBillService {
         doPayMillstoneBill(billId);
     }
 
+    @Override
+    public FetchBillDetailRO findbillDetail(String id) {
+        return podBillMapper.selectBillDetailById(id,SecurityUserHelper.getCurrentPrincipal().getBrandId(),SecurityUserHelper.getCurrentPrincipal().getUserId());
+    }
+
     public void doPayMillstoneBill(String billId){
 
         Bill bill = podBillMapper.selectById(billId);
@@ -84,28 +90,37 @@ public class PodBillServiceImpl implements PodBillService {
         if(!SecurityUserHelper.getCurrentPrincipal().getUserId().equals(orderDetails.getConsumerId())){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
+        // cal promotion discount
+        BigDecimal promotionDeduction=calPromotionDeduction(orderDetails.getBrandId(),orderDetails.getId(),bill.getAmount());
+
        //cal commission and netIncome
         LambdaQueryWrapper<AffiliateOrder> affiliateOrderLambdaQueryWrapper= Wrappers.lambdaQuery();
         affiliateOrderLambdaQueryWrapper.eq(AffiliateOrder::getOrderId,orderDetails.getId())
                 .eq(AffiliateOrder::getOrderType, AffiliateOrderTypeEnum.CELL.getMark());
         AffiliateOrder affiliateOrder = podAffiliateOrderMapper.selectOne(affiliateOrderLambdaQueryWrapper);
         BigDecimal commission=BigDecimal.ZERO;
-        if(ObjectUtil.isNotNull(affiliateOrder)){
-            commission=affiliateOrder.getRevshare().multiply(bill.getAmount()).divide(new BigDecimal(100),2,RoundingMode.HALF_UP);
+        BigDecimal revenue=bill.getAmount().subtract(promotionDeduction);
+
+        if(ObjectUtil.isNotNull(affiliateOrder) && revenue.compareTo(BigDecimal.ZERO)>0){
+            commission=affiliateOrder.getRevshare().multiply(revenue).divide(new BigDecimal(100),2,RoundingMode.HALF_UP);
         }
-        BigDecimal netIncome=bill.getAmount().subtract(commission);
+        BigDecimal netIncome=revenue.subtract(commission);
 
         // pay
-        TransferBO bo = generateTransferBO(netIncome,orderDetails.getBrandId(),billId);
-        defaultPayService.transfer(new Gson().toJson(bo));
+        if(netIncome.compareTo(BigDecimal.ZERO)>0){
+            TransferBO bo = generateTransferBO(netIncome,orderDetails.getBrandId(),billId);
+            defaultPayService.transfer(new Gson().toJson(bo));
+        }
+
         // update bill mark as paid
-        podBillMapper.updateBillInfoById(netIncome,commission,billId,BillMarkEnum.PAID.getMark());
+        podBillMapper.updateBillInfoById(netIncome,commission,promotionDeduction,billId,BillMarkEnum.PAID.getMark());
+
 
         // 支付完成后，生成下一条账单
         generateNextBill(billId,bill.getStageNo());
 
         // pay affiliate if order belong to affiliate order
-        if(ObjectUtil.isNotNull(affiliateOrder)){
+        if(ObjectUtil.isNotNull(affiliateOrder) && commission.compareTo(BigDecimal.ZERO)>0){
             podAffiliatePayService.cellBillRevshare(affiliateOrder.getInfluencer(), commission, billId, orderDetails.getBrandId());
         }
 
@@ -161,8 +176,51 @@ public class PodBillServiceImpl implements PodBillService {
 
         }
 
+    }
+    private BigDecimal calPromotionDeduction(String supplierBrandId,String orderId,BigDecimal total){
+        // query credit point
+       String consumerBrandId=SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        LambdaQueryWrapper<CreditCoupon> creditCouponLambdaQueryWrapper=Wrappers.lambdaQuery();
+        creditCouponLambdaQueryWrapper.eq(CreditCoupon::getSupplierBrandId,supplierBrandId)
+                .eq(CreditCoupon::getConsumerBrandId,consumerBrandId);
 
+        CreditCoupon creditCoupon = podCreditCouponMapper.selectOne(creditCouponLambdaQueryWrapper);
+        // query order discount info
+        LambdaQueryWrapper<OrderCoupon> orderCouponLambdaQueryWrapper=Wrappers.lambdaQuery();
+        orderCouponLambdaQueryWrapper.eq(OrderCoupon::getOrderId,orderId)
+                .eq(OrderCoupon::getOrderType,AffiliateOrderTypeEnum.CELL.getMark());
+        OrderCoupon orderCoupon = podOrderCouponMapper.selectOne(orderCouponLambdaQueryWrapper);
+       BigDecimal promotionCreditPointDeductionDifference=BigDecimal.ZERO;
+       if(  ObjectUtil.isNotNull(creditCoupon)
+           && (creditCoupon.getCreditPoint().compareTo(total)>=0)
+         ){
+           promotionCreditPointDeductionDifference=total;
 
+       }
 
+        if(  ObjectUtil.isNotNull(creditCoupon)
+                && (creditCoupon.getCreditPoint().compareTo(total)<0)
+        ){
+            promotionCreditPointDeductionDifference=creditCoupon.getCreditPoint();
+        }
+        BigDecimal earlyBirdDiscountDifference=BigDecimal.ZERO;
+        BigDecimal repurchaseDiscountDifference=BigDecimal.ZERO;
+
+        if(ObjectUtil.isNotNull(orderCoupon)){
+            BigDecimal c= BigDecimal.valueOf (100- orderCoupon.getEarlyBirdDiscount());
+            earlyBirdDiscountDifference= total.multiply(c).divide(BigDecimal.valueOf(100),20, RoundingMode.HALF_UP);
+            BigDecimal d= BigDecimal.valueOf(100-orderCoupon.getRepurchaseDiscount());
+            repurchaseDiscountDifference=total.multiply(d).divide(BigDecimal.valueOf(100),20, RoundingMode.HALF_UP);
+        }
+        BigDecimal totalPromotionDeduction=promotionCreditPointDeductionDifference
+                .add(earlyBirdDiscountDifference).add(repurchaseDiscountDifference);
+
+        // update credit coupon point
+        if(promotionCreditPointDeductionDifference.compareTo(BigDecimal.ZERO)>0){
+            BigDecimal balancePoint=creditCoupon.getCreditPoint().subtract(promotionCreditPointDeductionDifference);
+            podCreditCouponMapper.updatePointBySupplierAndConsumer(balancePoint,supplierBrandId,SecurityUserHelper.getCurrentPrincipal().getBrandId());
+        }
+
+        return  totalPromotionDeduction;
     }
 }

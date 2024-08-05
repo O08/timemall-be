@@ -9,7 +9,9 @@ import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.base.service.DataPolicyService;
 import com.norm.timemall.app.base.service.OrderFlowService;
 import com.norm.timemall.app.pod.domain.dto.PodBillPageDTO;
+import com.norm.timemall.app.pod.domain.ro.FetchBillDetailRO;
 import com.norm.timemall.app.pod.domain.ro.PodBillsRO;
+import com.norm.timemall.app.pod.domain.vo.FetchBillDetailVO;
 import com.norm.timemall.app.pod.domain.vo.PodBillsPageVO;
 import com.norm.timemall.app.base.service.FileStoreService;
 import com.norm.timemall.app.pod.service.PodBillService;
@@ -72,6 +74,16 @@ public class PodBillController {
                     TransTypeEnum.MILLSTONE_BILL_PAY.getMark());
         }
         return new SuccessVO(CodeEnum.SUCCESS);
+
+    }
+    @GetMapping("/api/v1/web_epod/bill/{id}/detail")
+    public FetchBillDetailVO fetchBillDetail(@PathVariable("id") String id){
+
+        FetchBillDetailRO detailRO = podBillService.findbillDetail(id);
+        FetchBillDetailVO vo=new FetchBillDetailVO();
+        vo.setDetail(detailRO);
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        return vo;
 
     }
 

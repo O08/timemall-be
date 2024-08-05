@@ -12,17 +12,17 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
- * (bill)实体类
+ * (credit_coupon)实体类
  *
  * @author kancy
- * @since 2022-10-27 11:26:23
+ * @since 2024-08-03 10:31:53
  * @description 由 Mybatisplus Code Generator 创建
  */
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("bill")
-public class Bill extends Model<Bill> implements Serializable {
+@TableName("credit_coupon")
+public class CreditCoupon extends Model<CreditCoupon> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -31,48 +31,23 @@ public class Bill extends Model<Bill> implements Serializable {
     @TableId
 	private String id;
     /**
-     * 收费项目
+     * 优惠券发放者品牌id
      */
-    private String stage;
-
+    private String supplierBrandId;
     /**
-     * 收费序列
+     * 消费者品牌id
      */
-    private String stageNo;
+    private String consumerBrandId;
     /**
-     * amount
+     * 可用体验金
      */
-    private BigDecimal amount;
+    private BigDecimal creditPoint;
     /**
-     * voucher
-     */
-    private String voucher;
-    /**
-     * 账单状态标记
-     */
-    private String mark;
-    /**
-     * orderId
-     */
-    private String orderId;
-    /**
-     * 扣除减免、佣金收入
-     */
-    private BigDecimal netIncome;
-    /**
-     * 佣金
-     */
-    private BigDecimal commission;
-    /**
-     * 优惠减免
-     */
-    private BigDecimal promotionDeduction;
-    /**
-     * createAt
+     * 创建时间
      */
     private Date createAt;
     /**
-     * modifiedAt
+     * 修改时间
      */
     private Date modifiedAt;
 

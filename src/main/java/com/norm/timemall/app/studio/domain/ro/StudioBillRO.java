@@ -2,7 +2,6 @@ package com.norm.timemall.app.studio.domain.ro;
 
 import lombok.Data;
 
-import java.math.BigDecimal;
 
 @Data
 public class StudioBillRO {
@@ -15,4 +14,5 @@ public class StudioBillRO {
     private String added;
     private String netIncome;
     private String commission;
+    private String promotionDeduction;
 }

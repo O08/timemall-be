@@ -79,9 +79,9 @@ public class PodCellPlanOrderDeliverServiceImpl implements PodCellPlanOrderDeliv
         AffiliateOrder affiliateOrder = podAffiliateOrderMapper.selectOne(affiliateOrderLambdaQueryWrapper);
         BigDecimal commission=BigDecimal.ZERO;
         if(ObjectUtil.isNotNull(affiliateOrder)){
-            commission=affiliateOrder.getRevshare().multiply(planInfo.getAmount()).divide(new BigDecimal(100),2, RoundingMode.HALF_UP);
+            commission=affiliateOrder.getRevshare().multiply(planInfo.getRevenue()).divide(new BigDecimal(100),2, RoundingMode.HALF_UP);
         }
-        BigDecimal netIncome=planInfo.getAmount().subtract(commission);
+        BigDecimal netIncome=planInfo.getRevenue().subtract(commission);
 
         TransferBO bo=generateTransferBO(netIncome,planInfo.getBrandId(),orderId);
         defaultPayService.transfer(new Gson().toJson(bo));

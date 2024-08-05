@@ -67,6 +67,11 @@ public class CellPlanOrder extends Model<CellPlanOrder> implements Serializable 
     private String tag;
 
     /**
+     * 服务商
+     */
+    private String brandId;
+
+    /**
      * 客户id
      */
     private String consumerId;
@@ -79,6 +84,14 @@ public class CellPlanOrder extends Model<CellPlanOrder> implements Serializable 
      * 佣金
      */
     private BigDecimal commission;
+    /**
+     * 促销抵扣
+     */
+    private BigDecimal promotionDeduction;
+    /**
+     * 实际收款
+     */
+    private BigDecimal revenue;
 
     /**
      * createAt
