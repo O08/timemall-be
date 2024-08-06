@@ -46,6 +46,9 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
     @Autowired
     private MallCreditCouponMapper mallCreditCouponMapper;
+
+    @Autowired
+    private MallBrandPromotionMapper mallBrandPromotionMapper;
     @Override
     public String newOrder(CustomizeUser userDetails, String cellId, OrderDTO orderDTO) {
         //
@@ -110,14 +113,34 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         MallFetchPromotionBenefitRO promotionBenefit = mallBrandPromotionService.findPromotionBenefit(cellId,supplierBrandId);
         Integer earlyBirdDiscount=100;
         Integer repurchaseDiscount=100;
+        // get credit point
+        String alreadyGetCreditPoint="1";
+        if( (!alreadyGetCreditPoint.equals(promotionBenefit.getAlreadyGetCreditPoint()))
+                &&  BrandPromotionTagEnum.OPEN.getMark().equals(promotionInfo.getCreditPointTag())){
+            CreditCoupon creditCoupon=new CreditCoupon();
+            creditCoupon.setId(IdUtil.simpleUUID())
+                    .setCreditPoint(promotionBenefit.getCreditPoint())
+                    .setSupplierBrandId(supplierBrandId)
+                    .setConsumerBrandId(consumerBrandId)
+                    .setCreateAt(new Date())
+                    .setModifiedAt(new Date());
+            mallCreditCouponMapper.insert(creditCoupon);
+
+            // credit point cnt +1
+            mallBrandPromotionMapper.incrementCreditPointCnt(supplierBrandId);
+        }
 
         if(canUseDiscount.equals(promotionBenefit.getCanUseEarlyBirdCoupon()) &&
                 BrandPromotionTagEnum.OPEN.getMark().equals(promotionInfo.getEarlyBirdDiscountTag()) ){
             earlyBirdDiscount=Integer.parseInt(promotionInfo.getEarlyBirdDiscount());
+            // cnt +1
+            mallBrandPromotionMapper.incrementEarlyBirdDiscountCnt(supplierBrandId);
         }
         if(canUseDiscount.equals(promotionBenefit.getCanUseRepurchaseCoupon()) &&
                 BrandPromotionTagEnum.OPEN.getMark().equals(promotionInfo.getRepurchaseDiscountTag())){
             repurchaseDiscount=Integer.parseInt(promotionInfo.getRepurchaseDiscount());
+            // cnt +1
+            mallBrandPromotionMapper.incrementRepurchaseDiscountCnt(supplierBrandId);
         }
         if(earlyBirdDiscount<100 || repurchaseDiscount<100){
 
@@ -135,17 +158,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
             mallOrderCouponMapper.insert(orderCoupon);
 
         }
-        String alreadyGetCreditPoint="1";
-        if(!alreadyGetCreditPoint.equals(promotionBenefit.getAlreadyGetCreditPoint())){
-            CreditCoupon creditCoupon=new CreditCoupon();
-            creditCoupon.setId(IdUtil.simpleUUID())
-                    .setCreditPoint(promotionBenefit.getCreditPoint())
-                    .setSupplierBrandId(supplierBrandId)
-                    .setConsumerBrandId(consumerBrandId)
-                    .setCreateAt(new Date())
-                    .setModifiedAt(new Date());
-            mallCreditCouponMapper.insert(creditCoupon);
-        }
+
 
 
 

@@ -16,7 +16,7 @@ public class MallPromotionController {
     @Autowired
     private MallBrandPromotionService mallBrandPromotionService;
     @GetMapping("/api/v1/web_mall/cell/promotion")
-    public MallFetchPromotionInfoVO fetchPromotionInfo(@Validated @RequestBody MallFetchPromotionInfoDTO dto){
+    public MallFetchPromotionInfoVO fetchPromotionInfo(@Validated MallFetchPromotionInfoDTO dto){
 
         MallFetchPromotionInfoRO ro = mallBrandPromotionService.findPromotionInfo(dto);
         MallFetchPromotionInfoVO vo= new MallFetchPromotionInfoVO();

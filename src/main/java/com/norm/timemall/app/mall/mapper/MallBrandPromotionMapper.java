@@ -7,6 +7,7 @@ import com.norm.timemall.app.mall.domain.ro.MallFetchPromotionInfoRO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.math.BigDecimal;
 
@@ -25,4 +26,12 @@ public interface MallBrandPromotionMapper extends BaseMapper<BrandPromotion> {
 
     CouponCreditPointBenefitRO selectCouponCreditPointBenefit(@Param("supplierBrandId") String supplierBrandId,
                                                               @Param("consumerBrandId")String consumerBrandId);
+    @Update("update brand_promotion set credit_point_cnt=credit_point_cnt+1 where brand_id=#{brandId}")
+    void incrementCreditPointCnt(@Param("brandId") String brandId);
+
+    @Update("update brand_promotion set early_bird_discount_cnt=early_bird_discount_cnt+1 where brand_id=#{brandId}")
+    void incrementEarlyBirdDiscountCnt(@Param("brandId") String brandId);
+
+    @Update("update  brand_promotion set repurchase_discount_cnt=repurchase_discount_cnt+1 where brand_id=#{brandId}")
+    void incrementRepurchaseDiscountCnt(@Param("brandId") String brandId);
 }

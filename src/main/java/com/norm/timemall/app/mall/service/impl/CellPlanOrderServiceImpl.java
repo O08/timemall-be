@@ -49,6 +49,9 @@ public class CellPlanOrderServiceImpl implements CellPlanOrderService {
     @Autowired
     private MallCreditCouponMapper mallCreditCouponMapper;
 
+    @Autowired
+    private MallBrandPromotionMapper mallBrandPromotionMapper;
+
     @Override
     public String newOrder(String planId, AffiliateDTO dto) {
 
@@ -136,6 +139,15 @@ public class CellPlanOrderServiceImpl implements CellPlanOrderService {
         commonOrderPaymentMapper.insert(payment);
 
     }
+
+    /***
+     * note：cnt 在并发大大时候可能不准
+     * @param cellId
+     * @param supplierBrandId
+     * @param total
+     * @param orderId
+     * @return
+     */
     private BigDecimal calPromotionDeduction(String cellId,String supplierBrandId,BigDecimal total,String orderId){
         String canUseDiscount="1";
         String consumerBrandId= SecurityUserHelper.getCurrentPrincipal().getBrandId();
@@ -152,7 +164,8 @@ public class CellPlanOrderServiceImpl implements CellPlanOrderService {
         }
         // get credit point
         String alreadyGetCreditPoint="1";
-        if(!alreadyGetCreditPoint.equals(promotionBenefit.getAlreadyGetCreditPoint())){
+        if( (!alreadyGetCreditPoint.equals(promotionBenefit.getAlreadyGetCreditPoint()))
+           &&  BrandPromotionTagEnum.OPEN.getMark().equals(promotionInfo.getCreditPointTag())){
             CreditCoupon creditCoupon=new CreditCoupon();
             creditCoupon.setId(IdUtil.simpleUUID())
                     .setCreditPoint(promotionBenefit.getCreditPoint())
@@ -161,6 +174,8 @@ public class CellPlanOrderServiceImpl implements CellPlanOrderService {
                     .setCreateAt(new Date())
                     .setModifiedAt(new Date());
             mallCreditCouponMapper.insert(creditCoupon);
+            // credit point cnt +1
+            mallBrandPromotionMapper.incrementCreditPointCnt(supplierBrandId);
         }
 
         BigDecimal promotionCreditPointDeductionDifference=BigDecimal.ZERO;
@@ -179,13 +194,16 @@ public class CellPlanOrderServiceImpl implements CellPlanOrderService {
 
             BigDecimal c= BigDecimal.valueOf (100 - Integer.parseInt(promotionInfo.getEarlyBirdDiscount()));
             earlyBirdDiscountDifference= total.multiply(c).divide(BigDecimal.valueOf(100),20, RoundingMode.HALF_UP);
-
+            // cnt +1
+            mallBrandPromotionMapper.incrementEarlyBirdDiscountCnt(supplierBrandId);
         }
         BigDecimal repurchaseDiscountDifference=BigDecimal.ZERO;
         if(canUseDiscount.equals(promotionBenefit.getCanUseRepurchaseCoupon()) &&
            BrandPromotionTagEnum.OPEN.getMark().equals(promotionInfo.getRepurchaseDiscountTag())){
             BigDecimal d= BigDecimal.valueOf(100-Integer.parseInt(promotionInfo.getRepurchaseDiscount()));
             repurchaseDiscountDifference=total.multiply(d).divide(BigDecimal.valueOf(100),20, RoundingMode.HALF_UP);
+           // cnt +1
+            mallBrandPromotionMapper.incrementRepurchaseDiscountCnt(supplierBrandId);
         }
 
         BigDecimal totalPromotionDeduction=promotionCreditPointDeductionDifference

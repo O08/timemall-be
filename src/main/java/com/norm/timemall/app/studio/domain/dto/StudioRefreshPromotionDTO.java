@@ -20,7 +20,7 @@ public class StudioRefreshPromotionDTO {
     private String creditPointTag;
 
     @NotNull(message = "earlyBirdDiscount is required")
-    @Range(min = 1L,max = 100L,message = "earlyBirdDiscount range in {min} - {max}")
+    @Range(min = 1L,max = 99L,message = "earlyBirdDiscount range in {min} - {max}")
     private Integer earlyBirdDiscount;
 
     @NotBlank(message = "earlyBirdDiscountTag required")
@@ -28,7 +28,7 @@ public class StudioRefreshPromotionDTO {
     private String earlyBirdDiscountTag;
 
     @NotNull(message = "repurchaseDiscount is required")
-    @Range(min = 1L,max = 100L,message = "repurchaseDiscount range in {min} - {max}")
+    @Range(min = 1L,max = 99L,message = "repurchaseDiscount range in {min} - {max}")
     private Integer repurchaseDiscount;
 
     @NotBlank(message = "repurchaseDiscountTag required")
