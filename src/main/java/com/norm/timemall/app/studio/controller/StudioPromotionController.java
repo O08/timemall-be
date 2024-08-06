@@ -39,7 +39,7 @@ public class StudioPromotionController {
         return new SuccessVO(CodeEnum.SUCCESS);
     }
     @GetMapping("/api/v1/web_estudio/coupon_benefit")
-    public FetchCellCouponBenefitVO fetchCellCouponBenefit(@Validated @RequestBody  FetchCellCouponBenefitDTO dto){
+    public FetchCellCouponBenefitVO fetchCellCouponBenefit(@Validated  FetchCellCouponBenefitDTO dto){
 
         FetchCellCouponBenefitRO ro = studioBrandPromotionService.findCouponBenefit(dto.getCellId(), dto.getSupplierBrandId());
         FetchCellCouponBenefitVO vo = new FetchCellCouponBenefitVO();
