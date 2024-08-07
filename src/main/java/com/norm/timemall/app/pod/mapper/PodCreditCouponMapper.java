@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 */
 @Mapper
 public interface PodCreditCouponMapper extends BaseMapper<CreditCoupon> {
-@Update("update credit_point=#{balancePoint},modified_at=now() where supplier_brand_id=#{supplierBrandId} and consumer_brand_id=#{consumerBrandId}")
+@Update("update credit_coupon set credit_point=#{balancePoint},modified_at=now() where supplier_brand_id=#{supplierBrandId} and consumer_brand_id=#{consumerBrandId}")
     void updatePointBySupplierAndConsumer(@Param("balancePoint") BigDecimal balancePoint,
                                           @Param("supplierBrandId") String supplierBrandId,
                                           @Param("consumerBrandId") String consumerBrandId);

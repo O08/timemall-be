@@ -221,6 +221,15 @@ public class PodBillServiceImpl implements PodBillService {
             podCreditCouponMapper.updatePointBySupplierAndConsumer(balancePoint,supplierBrandId,SecurityUserHelper.getCurrentPrincipal().getBrandId());
         }
 
-        return  totalPromotionDeduction;
+        BigDecimal promotionDeduction= BigDecimal.ZERO;
+
+        if(total.compareTo(totalPromotionDeduction)>=0){
+            promotionDeduction=totalPromotionDeduction;
+        }
+        if(total.compareTo(totalPromotionDeduction)<0){
+            promotionDeduction=total;
+        }
+
+        return  promotionDeduction;
     }
 }
