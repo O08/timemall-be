@@ -19,6 +19,7 @@ import com.norm.timemall.app.pod.mapper.PodCommonOrderPaymentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Component
@@ -34,6 +35,18 @@ public class PodCellPlanOrderRefundHandler {
         PodCellPlanOrderRefundHandlerParam handlerParam = new Gson().fromJson(param, PodCellPlanOrderRefundHandlerParam.class);
         CellPlanOrder order = podCellPlanOrderMapper.selectById(handlerParam.getOrderId());
 
+        String userId= SecurityUserHelper.getCurrentPrincipal().getUserId();
+
+        if(order==null || !order.getConsumerId().equals(userId) || (order.getTag().equals(""+ CellPlanOrderTagEnum.COMPLETED.ordinal()))
+                || (order.getTag().equals(""+ CellPlanOrderTagEnum.REFUNDED.ordinal()))
+        ){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        if(order.getRevenue().compareTo(BigDecimal.ZERO)==0){
+            throw new ErrorCodeException(CodeEnum.PLAN_UN_SUPPORT_REFUND_ZERO);
+        }
+
+
         LambdaQueryWrapper<CommonOrderPayment> wrapper= Wrappers.lambdaQuery();
         wrapper.eq(CommonOrderPayment::getTradingOrderId,handlerParam.getOrderId())
                 .eq(CommonOrderPayment::getTradingOrderType,PaymentOrderTypeEnum.CELL_PLAN_ORDER.name())
@@ -42,9 +55,7 @@ public class PodCellPlanOrderRefundHandler {
 
         CommonOrderPayment payment = podCommonOrderPaymentMapper.selectOne(wrapper);
         // validate
-        String userId= SecurityUserHelper.getCurrentPrincipal().getUserId();
-        if(order==null || payment==null || !order.getConsumerId().equals(userId) || (order.getTag().equals(""+ CellPlanOrderTagEnum.COMPLETED.ordinal()))
-            || (order.getTag().equals(""+ CellPlanOrderTagEnum.REFUNDED.ordinal()))
+        if(payment==null
         ){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
