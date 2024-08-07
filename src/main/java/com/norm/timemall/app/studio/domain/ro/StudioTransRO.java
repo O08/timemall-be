@@ -12,4 +12,6 @@ public class StudioTransRO {
     private String added;
     private String id;
     private String customerUserId;
+    private String sbu;
+    private String quantity;
 }

@@ -18,4 +18,6 @@ public class PodWorkflowRO {
     private String added;
     // The id for workflow, ref: order_details.id
     private String id;
+    private String sbu;
+    private String quantity;
 }
