@@ -59,8 +59,10 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         if(SecurityUserHelper.getCurrentPrincipal().getBrandId().equals(cell.getBrandId())){
             throw new ErrorCodeException(CodeEnum.FALSE_SHOPPING);
         }
-        // 增加新订单
         String orderId = IdUtil.simpleUUID();
+        // 优惠领取
+        getDiscount(cell.getBrandId(),orderId,cell.getId());
+        // 增加新订单
         InsertOrderParameter parameter = new InsertOrderParameter()
                 .setId(orderId)
                 .setUserId(userDetails.getUserId())
@@ -79,8 +81,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
                 .setModifiedAt(new Date());
         millstoneMapper.insert(millstone);
 
-        // 优惠领取
-        getDiscount(cell.getBrandId(),orderId,cell.getId());
+
 
         // 佣金单
         LambdaQueryWrapper<Pricing> pricingLambdaQueryWrapper= Wrappers.lambdaQuery();
