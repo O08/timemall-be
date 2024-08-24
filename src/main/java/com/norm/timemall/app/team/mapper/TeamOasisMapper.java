@@ -24,20 +24,20 @@ import java.util.ArrayList;
 @Mapper
 public interface TeamOasisMapper extends BaseMapper<Oasis> {
     IPage<TeamOasisRO> selectPageByQ(IPage<TeamOasisRO> page, @Param("q") String q);
-@Update("update oasis set announce = #{uri} where id=#{id}")
-    void updateAnnounceById(@Param("id") String oasisId, @Param("uri") String uri);
-    @Update("update oasis set risk = #{risk} where id=#{id}")
-    void updateRiskById(@Param("id") String oasisId,@Param("risk") String risk);
+@Update("update oasis set announce = #{uri} where id=#{id} and initiator_id=#{initiatorBrandId}")
+    void updateAnnounceById(@Param("id") String oasisId, @Param("uri") String uri,@Param("initiatorBrandId") String initiatorBrandId);
+    @Update("update oasis set risk = #{risk} where id=#{id} and initiator_id=#{initiatorBrandId}")
+    void updateRiskById(@Param("id") String oasisId,@Param("risk") String risk,@Param("initiatorBrandId") String initiatorBrandId);
 
     TeamOasisAnnounce selectAnnounceById(@Param("id") String oasisId);
 @Select("select item,val from oasis_ind where oasis_id=#{oasis_id}")
     ArrayList<TeamOasisIndexEntry> selectOasisValByOasisId(@Param("oasis_id") String oasisId);
-    @Update("update oasis set avatar = #{uri} where id=#{id}")
-    void updateAvatarById(@Param("id") String oasisId, @Param("uri") String uri);
-@Update("update oasis set mark=#{mark} where id=#{id}")
-    void updateMarkById(@Param("id") String oasisId, @Param("mark") String mark);
-    @Update("update oasis set title=#{dto.title},subtitle=#{dto.subTitle} where id=#{dto.oasisId}")
-    void updateTitleAndSubTitleById(@Param("dto") TeamOasisGeneralDTO dto);
+    @Update("update oasis set avatar = #{uri} where id=#{id} and initiator_id=#{initiatorBrandId}")
+    void updateAvatarById(@Param("id") String oasisId, @Param("uri") String uri,@Param("initiatorBrandId") String initiatorBrandId);
+@Update("update oasis set mark=#{mark} where id=#{id} and initiator_id=#{initiatorBrandId}")
+    void updateMarkById(@Param("id") String oasisId, @Param("mark") String mark,@Param("initiatorBrandId") String initiatorBrandId);
+    @Update("update oasis set title=#{dto.title},subtitle=#{dto.subTitle} where id=#{dto.oasisId} and initiator_id=#{initiatorBrandId}")
+    void updateTitleAndSubTitleById(@Param("dto") TeamOasisGeneralDTO dto,@Param("initiatorBrandId") String initiatorBrandId);
     @Update("update oasis set membership=membership-1 where id=#{oasis_id}")
     void subtractOneMembershipById(@Param("oasis_id") String oasisId);
 }

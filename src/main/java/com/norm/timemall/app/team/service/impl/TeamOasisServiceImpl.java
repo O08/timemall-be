@@ -2,15 +2,15 @@ package com.norm.timemall.app.team.service.impl;
 
 
 import cn.hutool.core.util.IdUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.google.gson.Gson;
 import com.norm.timemall.app.base.enums.*;
+import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mapper.FinAccountMapper;
 import com.norm.timemall.app.base.mo.*;
-import com.norm.timemall.app.base.security.CustomizeUser;
-import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.team.constant.OasisConstant;
 import com.norm.timemall.app.team.domain.dto.TeamNewOasisDTO;
 import com.norm.timemall.app.team.domain.dto.TeamOasisGeneralDTO;
@@ -61,17 +61,29 @@ public class TeamOasisServiceImpl implements TeamOasisService {
 
     @Override
     public void modifyOasisAnnounce(String oasisId, String uri) {
-        teamOasisMapper.updateAnnounceById(oasisId,uri);
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+
+        teamOasisMapper.updateAnnounceById(oasisId,uri,brandId);
     }
 
     @Override
     public void modifyOasisRisk(TeamOasisRiskDTO dto) {
-        teamOasisMapper.updateRiskById(dto.getOasisId(),dto.getRisk());
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        teamOasisMapper.updateRiskById(dto.getOasisId(),dto.getRisk(),brandId);
     }
 
     @Override
     public String newOasis(TeamNewOasisDTO dto) {
         String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+
+        // check title exist
+        LambdaQueryWrapper<Oasis> oasisWrappers=Wrappers.lambdaQuery();
+        oasisWrappers.eq(Oasis::getTitle,dto.getTitle())
+                .eq(Oasis::getMark,OasisMarkEnum.PUBLISH.getMark());
+        boolean titleExists = teamOasisMapper.exists(oasisWrappers);
+        if(titleExists){
+            throw new ErrorCodeException(CodeEnum.USER_ACCOUNT_NAME_EXIST);
+        }
 
         Oasis oasis = new Oasis();
         oasis.setId(IdUtil.simpleUUID())
@@ -122,6 +134,14 @@ public class TeamOasisServiceImpl implements TeamOasisService {
 
     }
     private void newFinAccountWhenOasisCreate(String oasisId){
+        // check exist oasis
+        LambdaQueryWrapper<FinAccount> finAccountLambdaQueryWrapper=Wrappers.lambdaQuery();
+        finAccountLambdaQueryWrapper.eq(FinAccount::getFid,oasisId)
+                .eq(FinAccount::getFidType,FidTypeEnum.OASIS.getMark());
+        boolean existsAccount = finAccountMapper.exists(finAccountLambdaQueryWrapper);
+        if(existsAccount){
+            return;
+        }
         FinAccount finAccount = new FinAccount();
         finAccount.setId(IdUtil.simpleUUID())
                 .setFid(oasisId)
@@ -147,13 +167,16 @@ public class TeamOasisServiceImpl implements TeamOasisService {
 
     @Override
     public void modifyOasisAvatar(String oasisId, String uri) {
-        teamOasisMapper.updateAvatarById(oasisId,uri);
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        teamOasisMapper.updateAvatarById(oasisId,uri,brandId);
 
     }
 
     @Override
     public void tagOasisTag(String oasisId, String mark) {
-        teamOasisMapper.updateMarkById(oasisId,mark);
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+
+        teamOasisMapper.updateMarkById(oasisId,mark,brandId);
         // open new fin_account for oasis when oasis publish
         if(mark.equals(OasisMarkEnum.PUBLISH.getMark())){
             newFinAccountWhenOasisCreate(oasisId);
@@ -162,6 +185,16 @@ public class TeamOasisServiceImpl implements TeamOasisService {
 
     @Override
     public void modifyOasisBaseInfo(TeamOasisGeneralDTO dto) {
-        teamOasisMapper.updateTitleAndSubTitleById(dto);
+        // check title exist
+        LambdaQueryWrapper<Oasis> oasisWrappers=Wrappers.lambdaQuery();
+        oasisWrappers.eq(Oasis::getTitle,dto.getTitle());
+        boolean titleExists = teamOasisMapper.exists(oasisWrappers);
+        if(titleExists){
+            throw new ErrorCodeException(CodeEnum.USER_ACCOUNT_NAME_EXIST);
+        }
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+
+
+        teamOasisMapper.updateTitleAndSubTitleById(dto,brandId);
     }
 }
