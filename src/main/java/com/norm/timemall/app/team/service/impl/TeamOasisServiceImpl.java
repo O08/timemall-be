@@ -2,6 +2,7 @@ package com.norm.timemall.app.team.service.impl;
 
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -185,14 +186,20 @@ public class TeamOasisServiceImpl implements TeamOasisService {
 
     @Override
     public void modifyOasisBaseInfo(TeamOasisGeneralDTO dto) {
-        // check title exist
+        // check title already been use for another people
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         LambdaQueryWrapper<Oasis> oasisWrappers=Wrappers.lambdaQuery();
-        oasisWrappers.eq(Oasis::getTitle,dto.getTitle());
-        boolean titleExists = teamOasisMapper.exists(oasisWrappers);
-        if(titleExists){
+        oasisWrappers.eq(Oasis::getTitle,dto.getTitle())
+                .eq(Oasis::getMark,OasisMarkEnum.PUBLISH.getMark());
+
+        Oasis oasis = teamOasisMapper.selectOne(oasisWrappers);
+        if(ObjectUtil.isNotNull(oasis) && !brandId.equals(oasis.getInitiatorId())){
             throw new ErrorCodeException(CodeEnum.USER_ACCOUNT_NAME_EXIST);
         }
-        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        // check title is current oasis use
+        if(ObjectUtil.isNotNull(oasis) && !dto.getOasisId().equals(oasis.getId())){
+            throw new ErrorCodeException(CodeEnum.USER_ACCOUNT_NAME_EXIST);
+        }
 
 
         teamOasisMapper.updateTitleAndSubTitleById(dto,brandId);
