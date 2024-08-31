@@ -1,6 +1,8 @@
 package com.norm.timemall.app.team.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.OasisChannelTagEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
@@ -18,7 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class TeamMiniAppLibraryServiceImpl implements TeamMiniAppLibraryService {
@@ -45,9 +49,9 @@ public class TeamMiniAppLibraryServiceImpl implements TeamMiniAppLibraryService 
         if(miniApp==null){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
-
+        String och=IdUtil.simpleUUID();
         OasisChannel channel=new OasisChannel();
-        channel.setId(IdUtil.simpleUUID())
+        channel.setId(och)
                 .setAppId(dto.getAppId())
                 .setOasisId(dto.getOasisId())
                 .setChannelName(miniApp.getAppName())
@@ -56,6 +60,12 @@ public class TeamMiniAppLibraryServiceImpl implements TeamMiniAppLibraryService 
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
         teamOasisChannelMapper.insert(channel);
+
+        ArrayList<String> sortArr = oasis.getChannelSort() == null ? new ArrayList<>() : new ArrayList<>(Arrays.asList(new GsonBuilder().create().fromJson(oasis.getChannelSort().toString(), String[].class)));
+        sortArr.add(och);
+        oasis.setChannelSort(new Gson().toJson(sortArr));
+
+        teamOasisMapper.updateById(oasis);
 
     }
 }

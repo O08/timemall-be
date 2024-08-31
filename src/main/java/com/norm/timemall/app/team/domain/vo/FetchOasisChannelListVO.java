@@ -11,4 +11,5 @@ import java.util.ArrayList;
 @Data
 public class FetchOasisChannelListVO  extends CodeVO {
     private ArrayList<FetchOasisChannelListRO> channel;
+    private ArrayList<String> sort;
 }

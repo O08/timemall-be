@@ -3,8 +3,10 @@ package com.norm.timemall.app.team.mapper;
 import com.norm.timemall.app.base.mo.OasisChannel;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.norm.timemall.app.team.domain.ro.FetchOasisChannelListRO;
+import com.norm.timemall.app.team.domain.ro.FetchOneOasisChannelGeneralInfoRO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.ArrayList;
 
@@ -21,4 +23,6 @@ public interface TeamOasisChannelMapper extends BaseMapper<OasisChannel> {
     ArrayList<FetchOasisChannelListRO> selectChannelListByOasisId(@Param("oasisId") String oasisId);
 
     boolean validateAdminRole(@Param("oasisChannelId") String oasisChannelId, @Param("founderBrandId") String founderBrandId);
+@Select("select channel_name,channel_desc from oasis_channel where id=#{id}")
+    FetchOneOasisChannelGeneralInfoRO selectGeneralById(@Param("id") String och);
 }

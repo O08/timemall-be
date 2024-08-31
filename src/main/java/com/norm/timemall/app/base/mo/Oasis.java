@@ -4,6 +4,7 @@ import java.io.Serializable;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+
 import java.util.Date;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -71,5 +72,9 @@ public class Oasis extends Model<Oasis> implements Serializable {
      * modifiedAt
      */
     private Date modifiedAt;
+    /**
+     * 频道顺序
+     */
+    private Object channelSort;
 
 }
