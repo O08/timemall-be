@@ -49,7 +49,7 @@ public class TeamOasisChannelController {
 
     }
     @ResponseBody
-    @GetMapping("/api/v1/team/oasis/channel/{oasis_channel_id}/general")
+    @GetMapping("/api/public/team/oasis/channel/{oasis_channel_id}/general")
     public FetchOneOasisChannelGeneralInfoVO fetchOasisOneChannelGeneralInfo(@PathVariable("oasis_channel_id") String och){
 
         FetchOneOasisChannelGeneralInfoRO ro = teamOasisChannelService.findOasisOneChannelGeneralInfo(och);

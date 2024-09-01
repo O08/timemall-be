@@ -14,7 +14,7 @@ public class TeamHtmlChannelController {
     @Autowired
     public TeamOasisHtmlAppService teamOasisHtmlAppService;
     @ResponseBody
-    @GetMapping(value = "/api/v1/team/app/html/{oasis_channel_id}/info")
+    @GetMapping(value = "/api/public/team/app/html/{oasis_channel_id}/info")
     public FetchHtmlChannelInfoVO fetchHtmlChannelInfo(@PathVariable("oasis_channel_id") String oasisChannelId){
         String htmlCode=teamOasisHtmlAppService.findHtmlCode(oasisChannelId);
         FetchHtmlChannelInfoVO vo = new FetchHtmlChannelInfoVO();

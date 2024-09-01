@@ -29,6 +29,10 @@ public class TeamOasisHtmlAppServiceImpl implements TeamOasisHtmlAppService {
         wrapper.eq(OasisHtmlApp::getOasisChannelId,oasisChannelId);
         OasisHtmlApp oasisHtmlApp = teamOasisHtmlAppMapper.selectOne(wrapper);
 
+        if(!SecurityUserHelper.alreadyLogin()){
+            return oasisHtmlApp==null? "" : oasisHtmlApp.getHtmlCode();
+        }
+
         String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         if(oasisHtmlApp==null && teamOasisChannelMapper.validateAdminRole(oasisChannelId,brandId)){
             initHtmlAppChannel(oasisChannelId);
