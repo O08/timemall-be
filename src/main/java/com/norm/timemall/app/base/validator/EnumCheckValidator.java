@@ -1,6 +1,6 @@
 package com.norm.timemall.app.base.validator;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import java.lang.reflect.Method;
 
 public class EnumCheckValidator implements ConstraintValidator<EnumCheck, Object> {

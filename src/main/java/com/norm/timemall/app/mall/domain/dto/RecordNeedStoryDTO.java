@@ -3,8 +3,8 @@ package com.norm.timemall.app.mall.domain.dto;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 
 @Data
 public class RecordNeedStoryDTO {

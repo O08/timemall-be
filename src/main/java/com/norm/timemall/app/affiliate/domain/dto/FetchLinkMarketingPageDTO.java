@@ -3,7 +3,7 @@ package com.norm.timemall.app.affiliate.domain.dto;
 import com.norm.timemall.app.base.entity.PageDTO;
 import lombok.Data;
 
-import javax.validation.constraints.Positive;
+import jakarta.validation.constraints.Positive;
 
 @Data
 public class FetchLinkMarketingPageDTO extends PageDTO {

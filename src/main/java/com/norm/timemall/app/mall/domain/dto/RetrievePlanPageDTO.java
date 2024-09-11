@@ -4,7 +4,7 @@ import com.norm.timemall.app.base.entity.PageDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.validation.constraints.Positive;
+import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 @EqualsAndHashCode(callSuper = true)

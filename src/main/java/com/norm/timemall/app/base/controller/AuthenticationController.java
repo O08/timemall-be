@@ -1,5 +1,6 @@
 package com.norm.timemall.app.base.controller;
 
+import com.norm.timemall.app.base.entity.ErrorVO;
 import com.norm.timemall.app.base.entity.PasswordResetDTO;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.handlers.DelAccountHandler;
@@ -9,8 +10,12 @@ import com.norm.timemall.app.base.entity.EmailJoinDTO;
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.security.CustomizeUser;
+import com.norm.timemall.app.base.security.WechatQrCodeAuthenticationToken;
 import com.norm.timemall.app.base.service.AccountService;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
  * user related action
  */
 @RestController
+
 public class AuthenticationController {
 
     @Autowired
@@ -34,6 +40,9 @@ public class AuthenticationController {
 
     @Autowired
     private DelAccountHandler delAccountHandler;
+
+    @Resource
+    private AuthenticationManager authenticationManager;
 
     /*
       *通过邮箱进行注册
@@ -94,5 +103,18 @@ public class AuthenticationController {
         passwordResetHandler.doPasswordReset(dto);
         return new SuccessVO(CodeEnum.SUCCESS);
     }
+//    @GetMapping("/api/v1/web_mall/do_wechat_qrCode_sign_in")
+//    public SuccessVO wechatQrcodeSignIn(String code, String state){
+//        WechatQrCodeAuthenticationToken token= new WechatQrCodeAuthenticationToken(code,state);
+//        Authentication authenticate;
+//        try {
+//            authenticate = authenticationManager.authenticate(token);
+//        } catch (Exception e) {
+//            throw  new ErrorCodeException(CodeEnum.FAILED);
+//        }
+//
+//        return new SuccessVO(CodeEnum.SUCCESS);
+//
+//    }
 
 }

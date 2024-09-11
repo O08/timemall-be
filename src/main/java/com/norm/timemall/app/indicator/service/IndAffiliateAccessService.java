@@ -3,7 +3,7 @@ package com.norm.timemall.app.indicator.service;
 import com.norm.timemall.app.indicator.domain.dto.IndDataLayerCellIndicesDTO;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public interface IndAffiliateAccessService {

@@ -6,5 +6,5 @@ import java.math.BigDecimal;
 
 @Service
 public interface MallAffiliateOrderService {
-    public void newAffiliateOrder(String cellId, String orderId, String orderType, BigDecimal price, String influencer, String chn, String market);
+    void newAffiliateOrder(String cellId, String orderId, String orderType, BigDecimal price, String influencer, String chn, String market);
 }

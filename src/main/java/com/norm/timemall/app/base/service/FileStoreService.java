@@ -5,7 +5,7 @@ import com.norm.timemall.app.base.enums.FileStoreDir;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Service
 public interface FileStoreService {

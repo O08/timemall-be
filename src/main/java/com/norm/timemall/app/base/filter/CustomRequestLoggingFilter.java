@@ -5,7 +5,7 @@ import com.norm.timemall.app.base.security.CustomizeUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class CustomRequestLoggingFilter extends CommonsRequestLoggingFilter {
     @Override

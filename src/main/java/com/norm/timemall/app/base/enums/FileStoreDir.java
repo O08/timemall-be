@@ -19,9 +19,9 @@ public enum FileStoreDir {
     DEFAULT_IMAGE_MESSAGE("msg/default/image-msg","default message image dir" ),
     DEFAULT_ATTACHMENT_MESSAGE("msg/default/attachment-msg","default message attachment dir" ), COMMISSION_DELIVER("commission/deliver/deliver","commission ws deliver" ),
     COMMISSION_PREVIEW("commission/deliver/preview","commission ws deliver preview" ), FEEDBACK("feedback", "user feedback attachment");
-    private String dir;
+    private final String dir;
 
-    private String desc;
+    private final String desc;
 
 
     FileStoreDir(String dir, String desc) {

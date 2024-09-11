@@ -15,7 +15,6 @@ public enum RichTextConfigEnum {
     EMAIL_RISK_AUDIT("emailHtml", "risk_audit"),
 
     EMAIL_CELL_PLAN_ORDER_RECEIVING("emailHtml", "cell_plan_order_receiving_notice");
-    ;
     // template type : email or html or sms
     private String type;
     // template no

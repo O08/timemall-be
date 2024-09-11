@@ -2,7 +2,7 @@ package com.norm.timemall.app.studio.domain.pojo;
 
 import lombok.Data;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 @Data
 public class StudioBrandLinksWrapper {

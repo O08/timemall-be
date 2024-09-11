@@ -1,6 +1,7 @@
 package com.norm.timemall.app.base.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -14,6 +15,7 @@ import com.norm.timemall.app.base.mapper.BaseBrandMapper;
 import com.norm.timemall.app.base.mapper.FinAccountMapper;
 import com.norm.timemall.app.base.mo.Brand;
 import com.norm.timemall.app.base.mo.FinAccount;
+import com.norm.timemall.app.base.pojo.FetchWechatUserInfoBO;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.base.entity.Customer;
@@ -21,11 +23,18 @@ import com.norm.timemall.app.base.mapper.CustomerMapper;
 import com.norm.timemall.app.base.entity.Account;
 import com.norm.timemall.app.base.util.mate.MybatisMateEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -40,9 +49,12 @@ public class AccountServiceImpl implements AccountService {
     private MybatisMateEncryptor mybatisMateEncryptor;
     @Override
     public Account findAccountByUserName(String username) {
-        LambdaQueryWrapper<Customer> lambdaQuery = Wrappers.<Customer>lambdaQuery();
+        LambdaQueryWrapper<Customer> lambdaQuery = Wrappers.lambdaQuery();
         lambdaQuery.eq(Customer::getLoginName, mybatisMateEncryptor.defaultEncrypt(username) );
         Customer customer = customerMapper.selectOne(lambdaQuery);
+        if(customer == null){
+            return null;
+        }
         Account account = new Account();
         account.setUserId(customer.getId());
         account.setName(customer.getCustomerName());
@@ -53,7 +65,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public boolean doSignUpWithEmail(String username, String password) {
         // if customer already sign up return
-        LambdaQueryWrapper<Customer> lambdaQuery = Wrappers.<Customer>lambdaQuery();
+        LambdaQueryWrapper<Customer> lambdaQuery = Wrappers.lambdaQuery();
         lambdaQuery.eq(Customer::getLoginName, mybatisMateEncryptor.defaultEncrypt(username) );
         Long cnt = customerMapper.selectCount(lambdaQuery);
         if(cnt > 0){
@@ -81,7 +93,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void deleteAccount(CustomizeUser userDetails) {
         // delete account
-        LambdaQueryWrapper<Customer> lambdaQuery = Wrappers.<Customer>lambdaQuery();
+        LambdaQueryWrapper<Customer> lambdaQuery = Wrappers.lambdaQuery();
         lambdaQuery.eq(Customer::getId, userDetails.getUserId());
         customerMapper.delete(lambdaQuery);
         // todo 数据注销逻辑
@@ -120,11 +132,81 @@ public class AccountServiceImpl implements AccountService {
         baseBrandMapper.update(null,wrapper);
     }
 
+    @Override
+    public void doSignUpWithWechatUserInfo(FetchWechatUserInfoBO wechatUserInfo) {
+        // if customer already sign up return
+        LambdaQueryWrapper<Customer> lambdaQuery = Wrappers.lambdaQuery();
+        lambdaQuery.eq(Customer::getUnionid, wechatUserInfo.getUnionid() );
+        Long cnt = customerMapper.selectCount(lambdaQuery);
+        if(cnt > 0){
+            throw new ErrorCodeException(CodeEnum.USER_ACCOUNT_ALREADY_EXIST);
+        }
+        // register account
+        String encryptedPassword= new BCryptPasswordEncoder().encode(RandomUtil.randomString(6));
+
+        Customer customer = new Customer();
+        customer.setId(IdUtil.simpleUUID())
+                .setCustomerName( wechatUserInfo.getNickname())
+                .setUnionid(wechatUserInfo.getUnionid())
+                .setPassword(encryptedPassword)
+                .setRegistAt(new Date())
+                .setModifiedAt(new Date());
+
+        customerMapper.insert(customer);
+
+        // bind a brand for new user
+        newBrandWhenWechatUserRegister(customer.getId(),wechatUserInfo);
+
+    }
+
+    @Override
+    public Account findAccountByUnionid(String unionid) {
+        LambdaQueryWrapper<Customer> lambdaQuery = Wrappers.lambdaQuery();
+        lambdaQuery.eq(Customer::getUnionid, unionid );
+        Customer customer = customerMapper.selectOne(lambdaQuery);
+        if(customer == null){
+            return null;
+        }
+        Account account = new Account();
+        account.setUserId(customer.getId());
+        account.setName(customer.getCustomerName());
+        account.setPassword(customer.getPassword());
+        return account;
+    }
+
+    @Override
+    public UserDetails loadUserForWechatLogin(String unionid) {
+        Account account = findAccountByUnionid(unionid);
+        if(account==null){
+            return null;
+        }
+        String  brandId = findBrandInfoByUserId(account.getUserId()).getId();
+        //定义权限列表.
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        // 用户可以访问的资源名称（或者说用户所拥有的权限） 注意：必须"ROLE_"开头
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        User userDetails = new CustomizeUser(account.getUserId(),account.getName(),account.getPassword(),brandId,authorities);
+        return userDetails;
+
+    }
+
     private void newBrandWhenUserRegister(String userId,String brandName){
         Brand brand = new Brand();
         brand.setId(IdUtil.simpleUUID())
                 .setMark(BrandMarkEnum.CREATED.getMark())
                 .setBrandName(brandName)
+                .setCustomerId(userId)
+                .setCreateAt(new Date())
+                .setModifiedAt(new Date());
+        baseBrandMapper.insert(brand);
+        newFinAccountWhenBrandRegister(brand.getId());
+    }
+    private void newBrandWhenWechatUserRegister(String userId,FetchWechatUserInfoBO wechatUserInfoBO){
+        Brand brand = new Brand();
+        brand.setId(IdUtil.simpleUUID())
+                .setAvator(wechatUserInfoBO.getHeadimgurl())
+                .setMark(BrandMarkEnum.CREATED.getMark())
+                .setBrandName(wechatUserInfoBO.getNickname())
                 .setCustomerId(userId)
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());

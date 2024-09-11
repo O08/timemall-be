@@ -56,6 +56,12 @@ public class Customer extends Model<Customer> implements Serializable {
      */
     @FieldEncrypt(algorithm = Algorithm.AES)
     private String loginName;
+
+    /**
+     * 微信登录
+     */
+    private String  unionid;
+
     /**
      * registAt
      */

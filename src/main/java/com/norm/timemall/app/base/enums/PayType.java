@@ -4,8 +4,8 @@ public enum PayType  implements Code{
     ALIPAY(1, "支付保网页支付"),
     BALANCE(2, "平台余额支付")
     ;
-    private int code;
-    private String desc;
+    private final int code;
+    private final String desc;
 
     PayType(int code, String desc) {
         this.code = code;

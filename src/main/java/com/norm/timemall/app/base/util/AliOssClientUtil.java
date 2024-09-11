@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.*;
 
 
@@ -24,7 +24,7 @@ import java.io.*;
 @Slf4j
 @Component
 public class AliOssClientUtil {
-    private String avifSuffix="avif";
+    private final String avifSuffix="avif";
 
     @Autowired
     private AliOssConfigureBean aliOssConfigure;

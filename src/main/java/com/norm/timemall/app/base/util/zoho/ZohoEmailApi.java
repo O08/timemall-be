@@ -70,18 +70,18 @@ public class ZohoEmailApi {
             while ((output = br.readLine()) != null) {
                 sb.append(output);
             }
-            System.out.println(sb.toString());
+            System.out.println(sb);
         } catch (Exception e) {
             br = new BufferedReader(new InputStreamReader((conn.getErrorStream())));
             while (true) {
                 try {
-                    if (!((output = br.readLine()) != null)) break;
+                    if ((output = br.readLine()) == null) break;
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
                 sb.append(output);
             }
-            System.out.println(sb.toString());
+            System.out.println(sb);
         } finally {
             try {
                 if (br != null) {

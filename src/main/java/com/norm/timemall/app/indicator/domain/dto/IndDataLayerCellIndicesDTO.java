@@ -4,7 +4,7 @@ import com.norm.timemall.app.indicator.domain.pojo.IndDataLayerCellIndicesBO;
 import com.norm.timemall.app.mall.domain.dto.AffiliateDTO;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 @Data
 public class IndDataLayerCellIndicesDTO {

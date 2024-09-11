@@ -75,8 +75,8 @@ public enum CodeEnum implements Code{
     PLAN_UN_SUPPORT_REFUND_ZERO(40028, "0元购单品不支持退款")
     ;
 
-    private int code;
-    private String desc;
+    private final int code;
+    private final String desc;
 
     CodeEnum(int code, String desc) {
         this.code = code;

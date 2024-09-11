@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -21,7 +21,7 @@ import java.nio.file.Paths;
 @Slf4j
 public class FileStoreServiceImpl implements FileStoreService {
 
-    private String limitedFileAccessPrefix="/api/file/";
+    private final String limitedFileAccessPrefix="/api/file/";
 
     @Autowired
     private AliOssClientUtil aliOssClientUtil;
