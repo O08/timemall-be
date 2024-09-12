@@ -15,6 +15,7 @@ import com.norm.timemall.app.base.pojo.WechatAccessTokenResponse;
 import com.norm.timemall.app.base.service.WechatApiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -52,7 +53,7 @@ public class WechatApiServiceImpl implements WechatApiService {
 
             WechatAccessTokenResponse responseObj = new ObjectMapper().readValue(wechatAccessTokenResponse, WechatAccessTokenResponse.class);
             if(responseObj==null){
-                throw new ErrorCodeException(CodeEnum.FAILED);
+                throw new AuthenticationServiceException("处理失败");
             }
             FetchWechatAccessTokenBO bo = new FetchWechatAccessTokenBO();
             bo.setAccessToken(responseObj.getAccess_token());
@@ -64,7 +65,8 @@ public class WechatApiServiceImpl implements WechatApiService {
             return bo;
 
         } catch (JsonProcessingException e) {
-            throw new ErrorCodeException(CodeEnum.FAILED);
+
+            throw new AuthenticationServiceException("处理失败");
         }
 
     }
