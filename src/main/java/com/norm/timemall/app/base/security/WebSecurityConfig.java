@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 
@@ -110,6 +111,7 @@ public class WebSecurityConfig {
         wechatQrCodeLoginFilter.setAuthenticationFailureHandler(authenticationFailureHandler);
         wechatQrCodeLoginFilter.setAuthenticationManager(authenticationManager(http));
         wechatQrCodeLoginFilter.setSecurityContextRepository(new HttpSessionSecurityContextRepository());
+        wechatQrCodeLoginFilter.setSessionAuthenticationStrategy(http.getSharedObject(SessionAuthenticationStrategy.class));
 
         return wechatQrCodeLoginFilter;
     }

@@ -8,7 +8,6 @@ import com.norm.timemall.app.base.service.WechatApiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
@@ -50,7 +49,7 @@ public class WechatQrAuthenticationProvider implements AuthenticationProvider {
         }
 
 
-        return new UsernamePasswordAuthenticationToken(loadedUser, null,loadedUser.getAuthorities());
+        return new WechatQrCodeAuthenticationToken(loadedUser, null,loadedUser.getAuthorities());
 
     }
 

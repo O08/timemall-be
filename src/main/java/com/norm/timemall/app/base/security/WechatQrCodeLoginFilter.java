@@ -1,6 +1,8 @@
 package com.norm.timemall.app.base.security;
 
 import cn.hutool.core.util.StrUtil;
+import com.norm.timemall.app.base.enums.CodeEnum;
+import com.norm.timemall.app.base.exception.ErrorCodeException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,19 +25,18 @@ public class WechatQrCodeLoginFilter extends AbstractAuthenticationProcessingFil
         if (!request.getMethod().equals("GET")) {
             throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
         }
+
         String code = request.getParameter("code");
         String state = request.getParameter("state");
 
-        // 判断请求格式是否 JSON
-        if (StrUtil.isNotBlank(code) && StrUtil.isNotBlank(state)) {
-            // 获得请求参数
-
-            WechatQrCodeAuthenticationToken token = new WechatQrCodeAuthenticationToken(code,state);
-            setDetails(request, token);
-            Authentication authenticate = this.getAuthenticationManager().authenticate(token);
-            return authenticate;
+        if(StrUtil.isBlank(code) || StrUtil.isBlank(state)){
+            throw new AuthenticationServiceException("INVALID PARAMETERS");
         }
-        return null;
+
+        WechatQrCodeAuthenticationToken token = new WechatQrCodeAuthenticationToken(code,state);
+        setDetails(request, token);
+        Authentication authenticate = this.getAuthenticationManager().authenticate(token);
+        return authenticate;
     }
 
     public void setDetails(HttpServletRequest request , WechatQrCodeAuthenticationToken token){
