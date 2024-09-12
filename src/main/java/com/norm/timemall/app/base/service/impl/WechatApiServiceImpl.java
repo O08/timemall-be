@@ -6,9 +6,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.norm.timemall.app.base.config.WechatConfig;
-import com.norm.timemall.app.base.entity.Account;
-import com.norm.timemall.app.base.enums.CodeEnum;
-import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.pojo.FetchWechatAccessTokenBO;
 import com.norm.timemall.app.base.pojo.FetchWechatUserInfoBO;
 import com.norm.timemall.app.base.pojo.WechatAccessTokenResponse;
@@ -24,8 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
+
 
 @Service
 @Slf4j
