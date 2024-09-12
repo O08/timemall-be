@@ -10,11 +10,16 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.io.IOException;
 
 public class WechatQrCodeLoginFilter extends AbstractAuthenticationProcessingFilter {
+    private SessionAuthenticationStrategy sessionStrategy = new NullAuthenticatedSessionStrategy();
+
+
     public WechatQrCodeLoginFilter() {
         super(new AntPathRequestMatcher("/api/v1/web_mall/do_wechat_qrCode_sign_in","GET"));
     }
@@ -36,6 +41,7 @@ public class WechatQrCodeLoginFilter extends AbstractAuthenticationProcessingFil
         WechatQrCodeAuthenticationToken token = new WechatQrCodeAuthenticationToken(code,state);
         setDetails(request, token);
         Authentication authenticate = this.getAuthenticationManager().authenticate(token);
+        sessionStrategy.onAuthentication(authenticate, request, response);
         return authenticate;
     }
 
