@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 public class WechatQrAuthenticationProvider implements AuthenticationProvider {
 
 
-
     @Autowired
     private WechatApiService wechatApiService;
 
@@ -37,7 +36,7 @@ public class WechatQrAuthenticationProvider implements AuthenticationProvider {
         FetchWechatAccessTokenBO accessTokenBO = wechatApiService.fetchAccessToken(code);
 
 
-        // ，从数据库中读取对应的用户信息
+        // ，从数据库中读取对应的用户信息  ob6e96HRKQ5Y_jcP2lIhtAK1wiUA
         CustomizeUser loadedUser = (CustomizeUser) accountService.loadUserForWechatLogin(accessTokenBO.getUnionid());
 
         if (loadedUser == null) {
@@ -48,7 +47,6 @@ public class WechatQrAuthenticationProvider implements AuthenticationProvider {
             loadedUser = (CustomizeUser) accountService.loadUserForWechatLogin(accessTokenBO.getUnionid());
         }
 
-
         return new WechatQrCodeAuthenticationToken(loadedUser, null,loadedUser.getAuthorities());
 
     }
@@ -57,6 +55,7 @@ public class WechatQrAuthenticationProvider implements AuthenticationProvider {
     public boolean supports(Class<?> authentication) {
         return WechatQrCodeAuthenticationToken.class.isAssignableFrom(authentication);
     }
+
 
 }
 

@@ -10,11 +10,13 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 
 @Configuration
@@ -73,8 +75,7 @@ public class WebSecurityConfig {
                         .logoutSuccessHandler(logoutSuccessHandler) //登出成功处理逻辑
                         .deleteCookies("JSESSIONID") )
                 .exceptionHandling((exceptions) -> exceptions.authenticationEntryPoint(authenticationEntryPoint))
-                .sessionManagement(sessionManagement -> sessionManagement.maximumSessions(1).expiredSessionStrategy(sessionInformationExpiredStrategy));
-
+                .sessionManagement(sessionManagement -> sessionManagement.maximumSessions(1).sessionRegistry(sessionRegistry()).expiredSessionStrategy(sessionInformationExpiredStrategy));
 
         return http.build();
 
@@ -101,7 +102,7 @@ public class WebSecurityConfig {
     /**
      * 加载手机验证码登录
      */
-    @Bean
+@Bean
     WechatQrCodeLoginFilter wechatQrCodeLoginFilter(HttpSecurity http) throws Exception {
         WechatQrCodeLoginFilter wechatQrCodeLoginFilter = new WechatQrCodeLoginFilter();
         //自定义登录url
@@ -110,7 +111,8 @@ public class WebSecurityConfig {
         wechatQrCodeLoginFilter.setAuthenticationFailureHandler(authenticationFailureHandler);
         wechatQrCodeLoginFilter.setAuthenticationManager(authenticationManager(http));
         wechatQrCodeLoginFilter.setSecurityContextRepository(new HttpSessionSecurityContextRepository());
-
+        wechatQrCodeLoginFilter.setSecurityContextHolderStrategyWechat(new HttpSessionSecurityContextRepository());
+        wechatQrCodeLoginFilter.setSessionRegistry(sessionRegistry());
         return wechatQrCodeLoginFilter;
     }
 
@@ -123,5 +125,15 @@ public class WebSecurityConfig {
         authenticationManagerBuilder.authenticationProvider(wechatQrAuthenticationProvider());//自定义的
 
         return authenticationManagerBuilder.build();
+    }
+    @Bean
+    public SessionRegistry sessionRegistry() {
+      return new SessionRegistryImpl();
+    }
+
+
+    @Bean
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
     }
 }
