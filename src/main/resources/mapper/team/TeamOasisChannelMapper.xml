@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamOasisChannelMapper">
+    <sql id="tableName">
+        oasis_channel
+    </sql>
+
+    <select id="selectChannelListByOasisId" resultType="com.norm.timemall.app.team.domain.ro.FetchOasisChannelListRO">
+        select
+            app.app_admin_url,
+            app.app_view_url,
+            chn.channel_desc,
+            chn.channel_name,
+            chn.id oasisChannelId
+        from oasis_channel chn
+        inner join mini_app_library app
+          on chn.app_id=app.id
+        where chn.oasis_id=#{oasisId}
+          and chn.channel_tag='1'
+    </select>
+    <select id="validateAdminRole" resultType="java.lang.Boolean">
+        select count(1)=1 from oasis_channel chn
+        inner join oasis o
+          on chn.oasis_id=o.id and o.initiator_id=#{founderBrandId}
+        where
+           chn.id=#{oasisChannelId}
+    </select>
+
+</mapper>
