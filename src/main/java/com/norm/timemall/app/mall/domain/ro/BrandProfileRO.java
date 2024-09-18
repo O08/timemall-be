@@ -2,7 +2,7 @@ package com.norm.timemall.app.mall.domain.ro;
 
 import com.norm.timemall.app.mall.domain.pojo.BrandLinkEntry;
 import com.norm.timemall.app.mall.domain.pojo.MallBrandExperience;
-import com.norm.timemall.app.base.pojo.ExperienceEntry;
+import com.norm.timemall.app.mall.domain.pojo.MallSkillEntry;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class BrandProfileRO {
     // Brand Title or other Info. maybe your Occuption Title
     private String title;
     private String location;
-    private ArrayList<ExperienceEntry> skills;
+    private ArrayList<MallSkillEntry> skills;
     private ArrayList<BrandLinkEntry> links;
     // 激活蓝标： 0 未激活 1 激活
     private String enableBlue;
