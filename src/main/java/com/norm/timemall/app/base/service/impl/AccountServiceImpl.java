@@ -192,10 +192,12 @@ public class AccountServiceImpl implements AccountService {
 
     private void newBrandWhenUserRegister(String userId,String brandName){
         Brand brand = new Brand();
-        brand.setId(IdUtil.simpleUUID())
+        String brandId=IdUtil.simpleUUID();
+        brand.setId(brandId)
                 .setMark(BrandMarkEnum.CREATED.getMark())
                 .setBrandName(brandName)
                 .setCustomerId(userId)
+                .setHandle(brandId)
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
         baseBrandMapper.insert(brand);
@@ -203,11 +205,13 @@ public class AccountServiceImpl implements AccountService {
     }
     private void newBrandWhenWechatUserRegister(String userId,FetchWechatUserInfoBO wechatUserInfoBO){
         Brand brand = new Brand();
-        brand.setId(IdUtil.simpleUUID())
+        String brandId=IdUtil.simpleUUID();
+        brand.setId(brandId)
                 .setAvator(wechatUserInfoBO.getHeadimgurl())
                 .setMark(BrandMarkEnum.CREATED.getMark())
                 .setBrandName(wechatUserInfoBO.getNickname())
                 .setCustomerId(userId)
+                .setHandle(brandId)
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
         baseBrandMapper.insert(brand);

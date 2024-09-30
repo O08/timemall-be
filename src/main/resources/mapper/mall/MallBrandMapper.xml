@@ -32,6 +32,7 @@
                 typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
                 column="experience"/>
         <result property="title" column="title"/>
+        <result property="handle" column="handle"/>
         <result property="location" column="location"/>
         <result property="skills"
                 typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
@@ -44,7 +45,7 @@
     </resultMap>
 
     <select id="selectProileByBrandId" resultMap="brandProfileResultMap">
-        select b.brand_name brand,b.customer_id ,b.avator,b.cover,s.occupation_code,b.mark brandMark,
+        select b.handle,b.brand_name brand,b.customer_id ,b.avator,b.cover,s.occupation_code,b.mark brandMark,
         CASE s.occupation_code
           when '0' then s.self_defined_occupation
           else c.item

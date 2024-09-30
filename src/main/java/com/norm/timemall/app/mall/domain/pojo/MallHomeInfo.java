@@ -9,6 +9,7 @@ import java.util.ArrayList;
 @Data
 public class MallHomeInfo {
     private String brand;
+    private String browseBrandId;
     private String brandTitle;
     private String avator;
     private String cover;

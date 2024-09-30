@@ -98,30 +98,52 @@
         <result property="price" column="price"></result>
         <result property="sbu" column="sbu"></result>
         <result property="preview" column="preview"></result>
-        <result property="brandId" column="brandId"></result>
+        <result property="brandId" column="cellBrandId"></result>
+
 
     </resultMap>
     <resultMap id="homeInfoResultMap" type="com.norm.timemall.app.mall.domain.pojo.MallHomeInfo">
         <result property="brand" column="brand"/>
+        <result property="browseBrandId" column="brandId"></result>
         <result property="brandTitle" column="brandTitle"/>
         <result property="avator" column="avator"/>
         <result property="cover" column="cover"/>
         <result property="enableBlue" column="enableBlue"/>
         <collection property="cells" ofType="com.norm.timemall.app.mall.domain.ro.MallCellRO" javaType="ArrayList" resultMap="cellsResultMap"/>
     </resultMap>
-    <select id="selectHomeInfoByBrandId" resultMap="homeInfoResultMap">
-        select b.brand_name brand,b.title brandTitle,b.avator,b.cover, c.cover preview,c.title,p.price,c.id,b.id brandId,p.sbu,ifnull(b.blue_end_at > now(),0) enableBlue
+    <select id="selectHomeInfoByBrandIdOrHandle" resultMap="homeInfoResultMap">
+        select
+        CASE
+          WHEN c.id is null THEN null
+          ELSE b.id
+        END AS cellBrandId,
+        b.brand_name brand,b.title brandTitle,b.avator,b.cover, c.cover preview,c.title,p.price,c.id,b.id brandId,p.sbu,ifnull(b.blue_end_at > now(),0) enableBlue
         from brand b
         left join cell c on c.brand_id = b.id  and c.mark = '2'
         left join pricing p on c.id = p.cell_id and p.sbu = 'hour'
-        where b.id = #{id}
-        and c.mark ='2'
-        order by c.modified_at desc limit 24
+        <where>
+            1=1
+            <choose>
+                <when test='dto.accessWay == "1"'>
+                    and b.id = #{dto.param}
+                </when>
+                <when test='dto.accessWay == "2"'>
+                    and b.id = #{dto.param}
+                </when>
+                <when test='dto.accessWay == "3"'>
+                    and b.handle = #{dto.param}
+                </when>
+                <otherwise>
+                    and b.id = #{dto.param}
+                </otherwise>
+            </choose>
+            order by c.modified_at desc limit 24
+        </where>
 
     </select>
 
     <select id="selectMarqueeCell" resultType="com.norm.timemall.app.mall.domain.ro.MallFetchMarqueeCellRO">
-        select c.cover cellCover,b.avator brandAvatar,b.brand_name brandName, b.id brandId,c.id cellId,c.title cellTitle,i.impressions views
+        select b.handle, c.cover cellCover,b.avator brandAvatar,b.brand_name brandName, b.id brandId,c.id cellId,c.title cellTitle,i.impressions views
         from cell c
         inner join brand b on c.brand_id = b.id
         inner join cell_indices i on i.cell_id=c.id

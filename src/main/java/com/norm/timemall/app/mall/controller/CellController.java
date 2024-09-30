@@ -76,19 +76,7 @@ public class CellController {
         return cellPageVO;
     }
 
-    /*
-     * 商家首页数据
-     */
-    @ResponseBody
-    @GetMapping(value = "/api/v1/web_mall/brand/{brand_id}/homeinfo")
-    public HomeInfoVO retrieveHomeInfo(@PathVariable("brand_id") String brandId)
-    {
-        MallHomeInfo data = cellServic.findHomeInfo(brandId);
-        HomeInfoVO vo = new HomeInfoVO();
-                vo.setData(data);
-                vo.setResponseCode(CodeEnum.SUCCESS);
-        return vo;
-    }
+
     /*
      * 服务详情
      */

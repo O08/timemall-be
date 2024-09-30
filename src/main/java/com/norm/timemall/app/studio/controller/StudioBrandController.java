@@ -70,7 +70,7 @@ public class StudioBrandController {
     public SuccessVO modifyBrandBasicInfo(@PathVariable("brand_id") String brandId,
                                         @AuthenticationPrincipal CustomizeUser user,
                                           HttpServletRequest request,
-                                        @RequestBody StudioBrandBasicInfoDTO dto)
+                                         @Validated @RequestBody StudioBrandBasicInfoDTO dto)
     {
         // get ip location
         String ipLocation = IpLocationUtil.getIpLocationFromHeader(request);

@@ -132,6 +132,13 @@ public class StudioBrandServiceImpl implements StudioBrandService {
             throw new ErrorCodeException(CodeEnum.USER_ACCOUNT_NAME_EXIST);
         }
 
+        LambdaQueryWrapper<Brand> wrapperHandle=Wrappers.lambdaQuery();
+        wrapperHandle.eq(Brand::getHandle,dto.getHandle());
+        Brand brandHandle = studioBrandMapper.selectOne(wrapperHandle);
+        if(ObjectUtil.isNotNull(brandHandle) && (!brandId.equals(brandHandle.getId()))  ){
+            throw new ErrorCodeException(CodeEnum.USER_ACCOUNT_HANDLE_EXIST);
+        }
+
         studioBrandMapper.updateBrandBasicInfo(brandId,userId,dto);
     }
 

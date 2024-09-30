@@ -11,4 +11,5 @@ public class MallFetchMarqueeCellRO {
     private String brandId;
     private String cellId;
     private String cellTitle;
+    private String handle;
 }

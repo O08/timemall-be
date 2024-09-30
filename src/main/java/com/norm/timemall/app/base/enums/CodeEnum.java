@@ -45,6 +45,7 @@ public enum CodeEnum implements Code{
 
     USER_ACCOUNT_DISABLE(2005, "账号不可用"),
     USER_ACCOUNT_NAME_EXIST(2010, "名字已被使用"),
+    USER_ACCOUNT_HANDLE_EXIST(2011, "品牌唯一标识已被使用"),
 
     // file 3...
     FILE_IS_EMPTY(3001,"空文件"),

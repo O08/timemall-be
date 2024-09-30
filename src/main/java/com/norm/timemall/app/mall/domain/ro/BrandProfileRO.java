@@ -29,6 +29,7 @@ public class BrandProfileRO {
     // Brand Title or other Info. maybe your Occuption Title
     private String title;
     private String location;
+    private String handle;
     private ArrayList<MallSkillEntry> skills;
     private ArrayList<BrandLinkEntry> links;
     // 激活蓝标： 0 未激活 1 激活
