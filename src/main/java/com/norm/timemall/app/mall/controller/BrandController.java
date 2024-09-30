@@ -49,14 +49,14 @@ public class BrandController {
             brandCellsPageDTO.setBrandId(brandId)
                             .setSbu(SbuEnum.HOUR.getValue())
                                     .setCurrent(1L)
-                                            .setSize(100L);
+                                            .setSize(12L);
 
             IPage<CellRO> brandCells = cellServic.findBrandCells(brandCellsPageDTO);
             responseContext.setCells(brandCells);
         }
         if(homeInfo==null || homeInfo.getCells().isEmpty()){
             Page<CellRO> emptyCellsObj = new Page<>();
-            emptyCellsObj.setSize(100L);
+            emptyCellsObj.setSize(12L);
             emptyCellsObj.setCurrent(1L);
             responseContext.setCells(emptyCellsObj);
         }
