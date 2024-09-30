@@ -15,7 +15,7 @@ public class StudioBrandBasicInfoDTO {
     private String location;
 
     @NotBlank(message = "handle required")
-    @Pattern(regexp="^@[a-zA-Z0-9]+$", message="handle字符不符合要求")
+    @Pattern(regexp="^@\\w+$", message="handle字符不符合要求")
     @Length(message = "handle range in {min}-{max}",min = 1,max = 40)
     private String handle;
 
