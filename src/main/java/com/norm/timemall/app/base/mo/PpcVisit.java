@@ -4,23 +4,24 @@ import java.io.Serializable;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import java.math.BigDecimal;
 import java.util.Date;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
- * 咘噜咓官方代表(bluvarrier)实体类
+ * (ppc_visit)实体类
  *
  * @author kancy
- * @since 2024-07-22 16:36:26
+ * @since 2024-10-03 15:48:46
  * @description 由 Mybatisplus Code Generator 创建
  */
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("bluvarrier")
-public class Bluvarrier extends Model<Bluvarrier> implements Serializable {
+@TableName("ppc_visit")
+public class PpcVisit extends Model<PpcVisit> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -29,19 +30,41 @@ public class Bluvarrier extends Model<Bluvarrier> implements Serializable {
     @TableId
 	private String id;
     /**
-     * 用户id
+     * 监测码
      */
-    private String customerId;
-
-    private String brandId;
+    private String trackCode;
     /**
-     * 职能码值
+     * 链接
      */
-    private String roleCode;
+    private String linkAddress;
     /**
-     * 职能
+     * 来源
      */
-    private String roleName;
+    private String sourceAddress;
+    /**
+     * ip地址
+     */
+    private String ip;
+    /**
+     * 设备信息
+     */
+    private String deviceInfo;
+    /**
+     * 采购价格
+     */
+    private BigDecimal price;
+    /**
+     * 合法标识：1 合法流量，0 灰产流量
+     */
+    private String valid;
+    /**
+     * 结算标识： 1 已结算 ，0 待结算
+     */
+    private String pay;
+    /**
+     * 结算批次
+     */
+    private String batch;
     /**
      * 创建时间
      */

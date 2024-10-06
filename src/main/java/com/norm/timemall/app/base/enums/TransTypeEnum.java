@@ -14,7 +14,9 @@ public enum TransTypeEnum {
     REFUND("10","退款"),
     MILLSTONE_BILL_PAY("11","特约账单支付"),
     MILLSTONE_AFFILIATE_PAY("12","特约账单佣金"),
-    PLAN_ORDER_AFFILIATE_PAY("13", "单品佣金");
+    PLAN_ORDER_AFFILIATE_PAY("13", "单品佣金"),
+    PPC_BILL("15","ppc 打款")
+    ;
     private String mark;
     private String desc;
 

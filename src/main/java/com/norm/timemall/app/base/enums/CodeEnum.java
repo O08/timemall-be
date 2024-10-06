@@ -73,7 +73,8 @@ public enum CodeEnum implements Code{
     AFFILIATE_BRAND_SELF_PRODUCT(40025, "品牌自有产品"),
     AFFILIATE_CHOICE_CELL_EXIST(40026,"产品已添加到橱窗" ),
     DELIVER_PENDING(40027, "客户审核中，禁止新的交付"),
-    PLAN_UN_SUPPORT_REFUND_ZERO(40028, "0元购单品不支持退款")
+    PLAN_UN_SUPPORT_REFUND_ZERO(40028, "0元购单品不支持退款"),
+    AFFILIATE_PPC_LINK_VISIT_EXIST(40029,"链接存在访问记录" )
     ;
 
     private final int code;

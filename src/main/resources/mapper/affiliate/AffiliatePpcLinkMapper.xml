@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.affiliate.mapper.AffiliatePpcLinkMapper">
+
+    <select id="selectPageByDTO" resultType="com.norm.timemall.app.affiliate.domain.ro.PpcLinkPageRO">
+
+        select
+          lk.id,lk.views,lk.link_name,lk.track_code,lk.ips,lk.earning,lk.link_address
+        from ppc_link lk
+
+        <where>
+            1=1
+            And lk.supplier_brand_id=#{supplierBrandId}
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, lk.link_address)>0  or  locate(#{dto.q}, lk.link_name)>0 )
+            </if>
+            <if test="dto.viewsLeft > 0">
+                AND lk.views  &gt;= #{dto.viewsLeft} * 1000
+            </if>
+            <if test="dto.viewsRight > 0">
+                AND  lk.views  &lt;= #{dto.viewsRight} * 1000
+            </if>
+
+            <if test="dto.ipVolumeLeft > 0">
+                AND lk.ips  &gt;= #{dto.ipVolumeLeft}
+            </if>
+            <if test="dto.ipVolumeRight > 0">
+                AND  lk.ips  &lt;= #{dto.ipVolumeRight}
+            </if>
+
+            <if test="dto.earningLeft > 0">
+                AND lk.earning  &gt;= #{dto.earningLeft}
+            </if>
+            <if test="dto.earningRight > 0">
+                AND  lk.earning  &lt;= #{dto.earningRight}
+            </if>
+
+            <if test="dto.sort == null or dto.sort == ''">
+                Order by lk.create_at desc
+            </if>
+
+            <if test="dto.sort != null and dto.sort != ''">
+                <choose>
+                    <when test='dto.sort == "1"'>
+                        Order by lk.earning desc
+                    </when>
+                    <when test='dto.sort == "2"'>
+                        Order by lk.ips desc
+                    </when>
+                    <when test='dto.sort == "3"'>
+                        Order by lk.views desc
+                    </when>
+                </choose>
+            </if>
+
+        </where>
+    </select>
+
+</mapper>
