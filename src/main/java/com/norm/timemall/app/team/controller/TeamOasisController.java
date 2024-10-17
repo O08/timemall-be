@@ -10,10 +10,7 @@ import com.norm.timemall.app.base.service.FileStoreService;
 import com.norm.timemall.app.team.domain.dto.TeamNewOasisDTO;
 import com.norm.timemall.app.team.domain.dto.TeamOasisPageDTO;
 import com.norm.timemall.app.team.domain.dto.TeamOasisRiskDTO;
-import com.norm.timemall.app.team.domain.pojo.TeamInvitedOasis;
-import com.norm.timemall.app.team.domain.pojo.TeamJoinedOasis;
-import com.norm.timemall.app.team.domain.pojo.TeamOasisAnnounce;
-import com.norm.timemall.app.team.domain.pojo.TeamOasisIndex;
+import com.norm.timemall.app.team.domain.pojo.*;
 import com.norm.timemall.app.team.domain.ro.TeamInviteRO;
 import com.norm.timemall.app.team.domain.ro.TeamJoinedRO;
 import com.norm.timemall.app.team.domain.ro.TeamOasisRO;
@@ -147,6 +144,16 @@ public class TeamOasisController {
     public SuccessVO followOasis(@RequestParam @NotBlank(message = "oasisId is required") String oasisId){
         teamOasisJoinService.followOasis(oasisId);
         return new SuccessVO(CodeEnum.SUCCESS);
+    }
+    @GetMapping("/api/v1/team/oasis_list_create_by_current_brand")
+    public FetchOasisCreatedByCurrentBrandVO fetchOasisCreatedByCurrentBrand(){
+
+        OasisCreatedByCurrentBrand oasis = teamOasisService.findOasisCreatedByCurrentBrand();
+        FetchOasisCreatedByCurrentBrandVO vo = new FetchOasisCreatedByCurrentBrandVO();
+        vo.setOasis(oasis);
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        return vo;
+
     }
 
 

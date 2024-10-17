@@ -104,8 +104,9 @@
     </resultMap>
     <resultMap id="homeInfoResultMap" type="com.norm.timemall.app.mall.domain.pojo.MallHomeInfo">
         <result property="brand" column="brand"/>
-        <result property="browseBrandId" column="brandId"></result>
+        <result property="browseBrandId" column="brandId"/>
         <result property="brandTitle" column="brandTitle"/>
+        <result property="pdOasisId" column="pdOasisId"/>
         <result property="avator" column="avator"/>
         <result property="cover" column="cover"/>
         <result property="enableBlue" column="enableBlue"/>
@@ -117,6 +118,7 @@
           WHEN c.id is null THEN null
           ELSE b.id
         END AS cellBrandId,
+        b.pd_oasis_id pdOasisId,
         b.brand_name brand,b.title brandTitle,b.avator,b.cover, c.cover preview,c.title,p.price,c.id,b.id brandId,p.sbu,ifnull(b.blue_end_at > now(),0) enableBlue
         from brand b
         left join cell c on c.brand_id = b.id  and c.mark = '2'

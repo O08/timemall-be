@@ -11,6 +11,7 @@ public class MallHomeInfo {
     private String brand;
     private String browseBrandId;
     private String brandTitle;
+    private String pdOasisId;
     private String avator;
     private String cover;
     // 激活蓝标： 0 未激活 1 激活

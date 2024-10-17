@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.norm.timemall.app.team.domain.dto.TeamOasisGeneralDTO;
 import com.norm.timemall.app.team.domain.pojo.TeamOasisAnnounce;
 import com.norm.timemall.app.team.domain.pojo.TeamOasisIndexEntry;
+import com.norm.timemall.app.team.domain.ro.OasisCreatedByCurrentBrandRO;
 import com.norm.timemall.app.team.domain.ro.TeamOasisRO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -40,4 +41,6 @@ public interface TeamOasisMapper extends BaseMapper<Oasis> {
     void updateTitleAndSubTitleById(@Param("dto") TeamOasisGeneralDTO dto,@Param("initiatorBrandId") String initiatorBrandId);
     @Update("update oasis set membership=membership-1 where id=#{oasis_id}")
     void subtractOneMembershipById(@Param("oasis_id") String oasisId);
+@Select("select o.avatar,o.title,o.id from oasis o where mark='2' and initiator_id=#{initiatorBrandId}")
+    ArrayList<OasisCreatedByCurrentBrandRO> selectOasisByInitiatorId(@Param("initiatorBrandId") String initiatorId);
 }

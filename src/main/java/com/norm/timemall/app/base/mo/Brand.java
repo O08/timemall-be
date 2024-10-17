@@ -111,6 +111,12 @@ public class Brand extends Model<Brand> implements Serializable {
      */
     private String handle;
 
+
+    /**
+     * 私域运营基地
+     */
+    private String pdOasisId;
+
     /**
      * createAt
      */

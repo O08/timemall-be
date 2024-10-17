@@ -26,6 +26,7 @@
         <result property="hiring" column="hiring"/>
         <result property="typeOfBusiness" column="type_of_business"/>
         <result property="freeNightCounsellor" column="free_night_counsellor"/>
+        <result property="pdOasisId" column="pd_oasis_id"/>
 
 
         <result property="experience"
@@ -51,6 +52,7 @@
           else c.item
         END as occupation,
         s.free_night_counsellor,
+        b.pd_oasis_id,
         s.industry_code,s.industry,s.support_free_cooperation,s.cooperation_scope, s.brand_type_code, s.available_for_work,s.hiring,s.type_of_business, b.experience,b.title,b.location,b.skills,b.links,ifnull(b.blue_end_at > now(),0) enableBlue
         from brand b
         left join brand_sub s

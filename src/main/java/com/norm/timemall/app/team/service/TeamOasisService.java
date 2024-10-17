@@ -6,6 +6,7 @@ import com.norm.timemall.app.team.domain.dto.TeamNewOasisDTO;
 import com.norm.timemall.app.team.domain.dto.TeamOasisGeneralDTO;
 import com.norm.timemall.app.team.domain.dto.TeamOasisPageDTO;
 import com.norm.timemall.app.team.domain.dto.TeamOasisRiskDTO;
+import com.norm.timemall.app.team.domain.pojo.OasisCreatedByCurrentBrand;
 import com.norm.timemall.app.team.domain.pojo.TeamOasisAnnounce;
 import com.norm.timemall.app.team.domain.pojo.TeamOasisIndex;
 import com.norm.timemall.app.team.domain.ro.TeamOasisRO;
@@ -32,4 +33,8 @@ public interface TeamOasisService {
     void tagOasisTag(String oasisId, String mark);
 
     void modifyOasisBaseInfo(TeamOasisGeneralDTO dto);
+
+    OasisCreatedByCurrentBrand findOasisCreatedByCurrentBrand();
+
+
 }

@@ -17,9 +17,11 @@ import com.norm.timemall.app.team.domain.dto.TeamNewOasisDTO;
 import com.norm.timemall.app.team.domain.dto.TeamOasisGeneralDTO;
 import com.norm.timemall.app.team.domain.dto.TeamOasisPageDTO;
 import com.norm.timemall.app.team.domain.dto.TeamOasisRiskDTO;
+import com.norm.timemall.app.team.domain.pojo.OasisCreatedByCurrentBrand;
 import com.norm.timemall.app.team.domain.pojo.TeamOasisAnnounce;
 import com.norm.timemall.app.team.domain.pojo.TeamOasisIndex;
 import com.norm.timemall.app.team.domain.pojo.TeamOasisIndexEntry;
+import com.norm.timemall.app.team.domain.ro.OasisCreatedByCurrentBrandRO;
 import com.norm.timemall.app.team.domain.ro.TeamOasisRO;
 import com.norm.timemall.app.team.mapper.*;
 import com.norm.timemall.app.team.service.TeamOasisService;
@@ -203,5 +205,16 @@ public class TeamOasisServiceImpl implements TeamOasisService {
 
 
         teamOasisMapper.updateTitleAndSubTitleById(dto,brandId);
+    }
+
+    @Override
+    public OasisCreatedByCurrentBrand findOasisCreatedByCurrentBrand() {
+
+        String brandId=SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        ArrayList<OasisCreatedByCurrentBrandRO> ros = teamOasisMapper.selectOasisByInitiatorId(brandId);
+        OasisCreatedByCurrentBrand oasis=new OasisCreatedByCurrentBrand();
+        oasis.setRecords(ros);
+        return oasis;
+
     }
 }

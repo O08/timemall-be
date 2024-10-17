@@ -19,4 +19,6 @@ public class StudioBrandBasicInfoDTO {
     @Length(message = "handle range in {min}-{max}",min = 1,max = 40)
     private String handle;
 
+    private String pdOasisId;
+
 }
