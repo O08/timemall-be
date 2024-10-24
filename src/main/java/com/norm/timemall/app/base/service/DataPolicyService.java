@@ -19,4 +19,5 @@ public interface DataPolicyService {
 
     boolean billCanMarkAsPendingForBrand(String billId);
 
+    boolean workflowPermissionCheck(String workflwoId);
 }

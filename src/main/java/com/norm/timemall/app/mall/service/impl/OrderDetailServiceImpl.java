@@ -76,6 +76,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         // 增加该订单对应的空Workflow
         Millstone millstone = new Millstone();
         millstone.setOrderId(orderId)
+                .setAc(MillstoneAcEnum.CLOSED.getMark())
                 .setMark(WorkflowMarkEnum.IN_QUEUE.getMark())
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());

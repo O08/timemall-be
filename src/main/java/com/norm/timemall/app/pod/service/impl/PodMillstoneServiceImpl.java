@@ -6,11 +6,15 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.gson.Gson;
 import com.norm.timemall.app.base.enums.BillMarkEnum;
+import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.OrderTypeEnum;
 import com.norm.timemall.app.base.enums.WorkflowMarkEnum;
+import com.norm.timemall.app.base.exception.ErrorCodeException;
+import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.Bill;
 import com.norm.timemall.app.base.mo.Millstone;
 import com.norm.timemall.app.base.mo.OrderDetails;
+import com.norm.timemall.app.pod.domain.dto.PodMillstonePermissionDTO;
 import com.norm.timemall.app.pod.domain.dto.PodModifyWorkflowDTO;
 import com.norm.timemall.app.pod.domain.pojo.PodMillStoneNode;
 import com.norm.timemall.app.pod.domain.pojo.PodWorkFlowNode;
@@ -77,7 +81,21 @@ public class PodMillstoneServiceImpl implements PodMillstoneService {
             workflow = gson.fromJson(millstone.getStageList().toString(), PodWorkFlowNode.class);
         }
         workflow.setDoneStageNo(millstone.getDoneStageNo());
+        workflow.setAc(millstone.getAc());
+        workflow.setMark(millstone.getMark());
         return workflow;
+    }
+
+    @Override
+    public void millstoneAuth(PodMillstonePermissionDTO dto) {
+        String currentUserId= SecurityUserHelper.getCurrentPrincipal().getUserId();
+
+        OrderDetails orderDetails = podOrderDetailsMapper.selectById(dto.getId());
+        if (orderDetails==null || !currentUserId.equals(orderDetails.getConsumerId())){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        podMillstoneMapper.updateAcById(dto);
+
     }
 
     /**

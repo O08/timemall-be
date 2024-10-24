@@ -6,6 +6,7 @@ import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.base.service.DataPolicyService;
+import com.norm.timemall.app.pod.domain.dto.PodMillstonePermissionDTO;
 import com.norm.timemall.app.pod.domain.dto.PodModifyWorkflowDTO;
 import com.norm.timemall.app.pod.domain.dto.PodWorkflowPageDTO;
 import com.norm.timemall.app.pod.domain.pojo.PodWorkFlowNode;
@@ -43,7 +44,7 @@ public class PodWorkFlowController {
     public SuccessVO modifyWorkflows(@PathVariable("workflow_id") String workflwoId, @Validated @RequestBody PodModifyWorkflowDTO workflow)
     {
         // workflow id 合法性检查
-        boolean checked = dataPolicyService.workflowIdCheck(workflwoId);
+        boolean checked = dataPolicyService.workflowPermissionCheck(workflwoId);
         if(!checked)
         {
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
@@ -92,7 +93,7 @@ public class PodWorkFlowController {
      */
     @ResponseBody
     @GetMapping(value = "/api/v1/web_epod/me/millstone/workflow")
-    public PodWorkflowPageVO retrievWrokflows(
+    public PodWorkflowPageVO retrieveWorkflows(
             @AuthenticationPrincipal CustomizeUser user,
             @Validated PodWorkflowPageDTO dto)
     {
@@ -102,6 +103,20 @@ public class PodWorkFlowController {
         vo.setWorkflows(workflows);
         return vo;
     }
+
+    /**
+     * 工作流协作权限控制
+     * @param dto
+     * @return
+     */
+    @PutMapping(value = "/api/v1/web_epod/millstone/permission")
+    public SuccessVO millstonePermissionControl(@Validated @RequestBody PodMillstonePermissionDTO dto){
+
+        podMillstoneService.millstoneAuth(dto);
+        return new SuccessVO(CodeEnum.SUCCESS);
+
+    }
+
 
 
 }

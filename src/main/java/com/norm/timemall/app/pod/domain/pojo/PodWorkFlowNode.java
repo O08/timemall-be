@@ -12,5 +12,7 @@ public class PodWorkFlowNode {
     private PodMillStoneNode[] millstones;
     private PodWorkflowServiceInfo serviceInfo;
     private String doneStageNo;
+    private String ac;
+    private String mark;
 
 }

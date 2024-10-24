@@ -2,6 +2,7 @@ package com.norm.timemall.app.base.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.norm.timemall.app.base.enums.BillMarkEnum;
+import com.norm.timemall.app.base.enums.MillstoneAcEnum;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mapper.DataPolicyMapper;
 import com.norm.timemall.app.base.mo.Cell;
@@ -65,6 +66,18 @@ public class DataPolicyServiceImpl implements DataPolicyService {
         String  userId = SecurityUserHelper.getCurrentPrincipal().getUserId();
         Integer cnt = dataPolicyMapper.selectCountBillIdForBrandByIdAndCustomerId(billId,userId, BillMarkEnum.CREATED.getMark());
         return cnt>0;
+
+    }
+
+    @Override
+    public boolean workflowPermissionCheck(String workflowId) {
+
+        boolean podUserValidated = workflowIdCheck(workflowId);
+        if(podUserValidated){
+            return true;
+        }
+
+        return dataPolicyMapper.countMillstoneByIdAndAc(workflowId, MillstoneAcEnum.OPEN.getMark())>0;
 
     }
 }

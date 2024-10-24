@@ -1,6 +1,7 @@
 package com.norm.timemall.app.pod.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.norm.timemall.app.base.mo.Millstone;
+import com.norm.timemall.app.pod.domain.dto.PodMillstonePermissionDTO;
 import com.norm.timemall.app.pod.domain.pojo.PodWorkflowServiceInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -21,5 +22,6 @@ public interface PodMillstoneMapper extends BaseMapper<Millstone> {
 
     @Select("select o.brand_id, o.cell_id, o.cell_title title,b.brand_name brand,b.avator avatar,o.consumer_id consumerUserId,b.customer_id supplierUserId from order_details o , brand b where o.brand_id = b.id and o.id=#{id} ")
     PodWorkflowServiceInfo selectWorkflowServiceInfoById(@Param("id") String workflwoId);
-
+    @Update(value = "update millstone set ac = #{dto.ac} where order_id=#{dto.id}")
+    void updateAcById(@Param("dto") PodMillstonePermissionDTO dto);
 }

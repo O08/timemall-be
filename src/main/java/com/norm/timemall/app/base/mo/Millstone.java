@@ -44,5 +44,9 @@ public class Millstone extends Model<Millstone> implements Serializable {
     private Date modifiedAt;
 
     private String doneStageNo;
+    /***
+     * Access control 1 supplier can edit, 0 supplier can't edit
+     */
+    private String ac;
 
 }
