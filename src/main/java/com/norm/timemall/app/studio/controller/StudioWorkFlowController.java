@@ -3,6 +3,7 @@ package com.norm.timemall.app.studio.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
+import com.norm.timemall.app.base.enums.WorkflowMarkEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.base.service.DataPolicyService;
@@ -50,16 +51,16 @@ public class StudioWorkFlowController {
      */
     @ResponseBody
     @PutMapping(value = "/api/v1/web_estudio/millstone/workflow/{workflow_id}/mark")
-    public SuccessVO markWorkflowsForBrand(@PathVariable("workflow_id") String workflwoId, @RequestParam String code)
+    public SuccessVO markWorkflowsForBrand(@PathVariable("workflow_id") String workflowId, @RequestParam String code)
     {
-        // todo code状态校验
         // workflow id 合法性检查
-        boolean checked = dataPolicyService.workflowIdCheckForBrand(workflwoId);
-        if(!checked)
+        boolean checked = dataPolicyService.workflowIdCheckForBrand(workflowId);
+        boolean codeValidated= WorkflowMarkEnum.IN_QUEUE.getMark().equals(code) || WorkflowMarkEnum.AUDITED.getMark().equals(code);
+        if(!checked || !codeValidated)
         {
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
-        studioMillstoneService.markWorkFlowsForBrandByIdAndCode(workflwoId,code);
+        studioMillstoneService.markWorkFlowsForBrandByIdAndCode(workflowId,code);
         return new SuccessVO(CodeEnum.SUCCESS);
     }
 }

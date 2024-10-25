@@ -12,7 +12,7 @@ public class StudioMillstoneServiceImpl implements StudioMillstoneService {
 
 
     @Override
-    public void markWorkFlowsForBrandByIdAndCode(String workflwoId, String code) {
-        studioMillstoneMapper.updateWorkflowForBrandByIdAndCode(workflwoId,code);
+    public void markWorkFlowsForBrandByIdAndCode(String workflowId, String code) {
+        studioMillstoneMapper.updateWorkflowForBrandByIdAndCode(workflowId,code);
     }
 }
