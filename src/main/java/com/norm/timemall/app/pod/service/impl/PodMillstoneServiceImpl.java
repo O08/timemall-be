@@ -51,7 +51,9 @@ public class PodMillstoneServiceImpl implements PodMillstoneService {
                 .setModifiedAt(new Date())
                 .setStageList(gson.toJson(dto.getWorkflow()));
         LambdaUpdateWrapper<Millstone> wrapper = Wrappers.lambdaUpdate();
+        // only can modify mark == 1
         wrapper.eq(Millstone::getOrderId, workflwoId);
+        wrapper.eq(Millstone::getMark,WorkflowMarkEnum.IN_QUEUE.getMark());
         podMillstoneMapper.update(millstone,wrapper);
 
     }

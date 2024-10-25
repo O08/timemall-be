@@ -41,16 +41,16 @@ public class PodWorkFlowController {
      */
     @ResponseBody
     @PutMapping(value = "/api/v1/web_epod/millstone/workflow/{workflow_id}")
-    public SuccessVO modifyWorkflows(@PathVariable("workflow_id") String workflwoId, @Validated @RequestBody PodModifyWorkflowDTO workflow)
+    public SuccessVO modifyWorkflows(@PathVariable("workflow_id") String workflowId, @Validated @RequestBody PodModifyWorkflowDTO workflow)
     {
         // workflow id 合法性检查
-        boolean checked = dataPolicyService.workflowPermissionCheck(workflwoId);
+        boolean checked = dataPolicyService.workflowPermissionCheck(workflowId);
         if(!checked)
         {
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
         // update workflow
-        podMillstoneService.modifyWorkflow(workflwoId, workflow);
+        podMillstoneService.modifyWorkflow(workflowId, workflow);
         return new SuccessVO(CodeEnum.SUCCESS);
     }
 
