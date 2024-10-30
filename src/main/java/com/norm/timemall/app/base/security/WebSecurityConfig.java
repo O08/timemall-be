@@ -59,6 +59,7 @@ public class WebSecurityConfig {
                     authorizeHttpRequests.requestMatchers("/api/v1/web_mall/**",
                                     "/api/open/**",
                                     "/api/public/**",
+                                    "/api/file/{fileName:.+}/**",
                                     "/api/payment/alipay",
                                     "/api/v1/marketing/puzzle","/api/v1/marketing/puzzle/dreams",
                                     "/api/v1/data_layer/cell/indices").permitAll() // 不需要认证和授权

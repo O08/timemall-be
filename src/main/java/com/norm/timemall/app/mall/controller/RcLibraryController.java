@@ -1,6 +1,8 @@
 package com.norm.timemall.app.mall.controller;
 
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONException;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
@@ -34,12 +36,21 @@ public class RcLibraryController {
     public SuccessVO uploadResource(@RequestParam("rc") MultipartFile rc,
                                     @RequestParam("thumbnail") MultipartFile thumbnail,
                                     @RequestParam("title") String title,
+                                    @RequestParam("tags") String tags,
+
                                     @RequestParam("preview") MultipartFile preview){
         // validate
         if(!SecurityUserHelper.alreadyLogin()){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
         if(thumbnail.isEmpty()|| rc.isEmpty()|| CharSequenceUtil.isBlank(title) || title.length()>79){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+
+        // validate tags to json  arr
+        try {
+            new JSONArray(tags);
+        } catch (JSONException ne) {
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
 
@@ -52,7 +63,7 @@ public class RcLibraryController {
         String rcAddress = fileStoreService.storeWithLimitedAccess(rc, FileStoreDir.RC_PPT_ITEM);
         String previewAddress = preview.isEmpty() ? "" : fileStoreService.storeWithLimitedAccess(preview, FileStoreDir.RC_PPT_PREVIEW);
         String thumbnailAddress = fileStoreService.storeWithLimitedAccess(thumbnail,FileStoreDir.RC_PPT_PREVIEW);
-        rcLibraryService.newRc(rcAddress,title,previewAddress,thumbnailAddress);
+        rcLibraryService.newRc(rcAddress,title,previewAddress,thumbnailAddress,tags);
 
         return new SuccessVO(CodeEnum.SUCCESS);
 

@@ -22,7 +22,7 @@ public class RcLibraryServiceImpl implements RcLibraryService {
 
 
     @Override
-    public void newRc(String rcAddress, String title, String previewAddress,String thumbnailAddress) {
+    public void newRc(String rcAddress, String title, String previewAddress,String thumbnailAddress,String tags) {
 
         RcLibrary rc= new RcLibrary();
         rc.setId(IdUtil.simpleUUID());
@@ -31,6 +31,7 @@ public class RcLibraryServiceImpl implements RcLibraryService {
                 .setDownloadUri(rcAddress)
                 .setFileUri(rcAddress)
                 .setTitle(title)
+                .setTags(tags)
                 .setPreviewUri(previewAddress).setCreateAt(new Date())
            .setModifiedAt(new Date());
 

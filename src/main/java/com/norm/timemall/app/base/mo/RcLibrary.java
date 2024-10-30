@@ -37,6 +37,10 @@ public class RcLibrary extends Model<RcLibrary> implements Serializable {
      */
     private String title;
     /**
+     * biao qian
+     */
+    private Object tags;
+    /**
      * 封面
      */
     private String thumbnail;

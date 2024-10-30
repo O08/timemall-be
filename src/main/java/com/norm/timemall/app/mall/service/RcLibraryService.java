@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface RcLibraryService {
-    void newRc(String rcAddress, String title, String previewAddress,String thumbnailAddress);
+    void newRc(String rcAddress, String title, String previewAddress,String thumbnailAddress,String tags);
 
     IPage<MallGetRcListRO> findRcList(FetchRcPageDTO q);
 }

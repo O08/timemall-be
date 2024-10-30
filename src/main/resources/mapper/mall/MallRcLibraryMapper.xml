@@ -3,8 +3,21 @@
 <mapper namespace="com.norm.timemall.app.mall.mapper.MallRcLibraryMapper">
 
 
-    <select id="selectRcPage" resultType="com.norm.timemall.app.mall.domain.ro.MallGetRcListRO">
-        select rc.title,rc.thumbnail,rc.download_uri,rc.preview_uri
+    <resultMap id="selectRcPageResultMap" type="com.norm.timemall.app.mall.domain.ro.MallGetRcListRO">
+        <result property="title" column="title"/>
+        <result property="thumbnail" column="thumbnail"/>
+        <result property="downloadUri" column="download_uri"/>
+        <result property="previewUri" column="preview_uri"/>
+
+        <result property="tags"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
+                column="tags"/>
+
+
+    </resultMap>
+
+    <select id="selectRcPage" resultMap="selectRcPageResultMap">
+        select rc.title,rc.thumbnail,rc.download_uri,rc.preview_uri,rc.tags
         from rc_library rc
         <where>
             1=1
