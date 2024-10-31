@@ -137,8 +137,7 @@ public class AliOssClientUtil {
             }
             BufferedInputStream reader=new BufferedInputStream(ossObject.getObjectContent());
             BufferedOutputStream out=new BufferedOutputStream(response.getOutputStream());
-            response.setContentType("image/jpg");
-
+            response.setContentType(meta.getContentType());
             byte[] buffer=new byte[1024];
             int L=0;
             while((L=reader.read(buffer))!=-1){
