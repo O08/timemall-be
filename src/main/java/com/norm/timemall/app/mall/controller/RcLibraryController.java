@@ -55,7 +55,7 @@ public class RcLibraryController {
         }
 
         String operationUserId = bluvarrierService.findBluvarrier().getCustomerId();
-        if(operationUserId.equals(SecurityUserHelper.getCurrentPrincipal().getUserId())){
+        if(!operationUserId.equals(SecurityUserHelper.getCurrentPrincipal().getUserId())){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
 
