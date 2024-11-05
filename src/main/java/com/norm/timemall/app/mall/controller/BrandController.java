@@ -12,7 +12,7 @@ import com.norm.timemall.app.mall.domain.ro.CellRO;
 import com.norm.timemall.app.mall.domain.vo.BrandGuideVO;
 import com.norm.timemall.app.mall.domain.vo.BrandProfileVO;
 import com.norm.timemall.app.mall.service.BrandService;
-import com.norm.timemall.app.mall.service.CellServic;
+import com.norm.timemall.app.mall.service.CellService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +23,7 @@ public class BrandController {
     @Autowired
     private BrandService brandService;
     @Autowired
-    private CellServic cellServic;
+    private CellService cellService;
     /*
      * 供应商资料
      */
@@ -39,7 +39,7 @@ public class BrandController {
     public BrandGuideVO fetchBrandGuide(@Validated @RequestBody BrandGuideDTO dto){
         BrandGuideResponseContext responseContext = new BrandGuideResponseContext();
          //fetch home info
-        MallHomeInfo homeInfo = cellServic.findHomeInfo(dto);
+        MallHomeInfo homeInfo = cellService.findHomeInfo(dto);
         responseContext.setHomeInfo(homeInfo);
 
         // fetch cells
@@ -51,7 +51,7 @@ public class BrandController {
                                     .setCurrent(1L)
                                             .setSize(12L);
 
-            IPage<CellRO> brandCells = cellServic.findBrandCells(brandCellsPageDTO);
+            IPage<CellRO> brandCells = cellService.findBrandCells(brandCellsPageDTO);
             responseContext.setCells(brandCells);
         }
         if(homeInfo==null || homeInfo.getCells().isEmpty()){

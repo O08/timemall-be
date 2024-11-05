@@ -18,14 +18,14 @@ import com.norm.timemall.app.mall.domain.vo.CellPricingVO;
 import com.norm.timemall.app.mall.mapper.CellMapper;
 import com.norm.timemall.app.mall.domain.ro.CellRO;
 import com.norm.timemall.app.mall.mapper.PricingMapper;
-import com.norm.timemall.app.mall.service.CellServic;
+import com.norm.timemall.app.mall.service.CellService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
 @Service
-public class CellServicImpl implements CellServic {
+public class CellServiceImpl implements CellService {
     @Autowired
     private CellMapper cellMapper;
     @Autowired
@@ -40,7 +40,7 @@ public class CellServicImpl implements CellServic {
     }
 
     @Override
-    public CellIntroVO fidCellIntro(String cellId) {
+    public CellIntroVO findCellIntro(String cellId) {
         CellIntroRO intro = cellMapper.selectCellIntro(cellId);
         CellIntroVO result = new CellIntroVO().setResponseCode(CodeEnum.SUCCESS)
                 .setProfile(intro);

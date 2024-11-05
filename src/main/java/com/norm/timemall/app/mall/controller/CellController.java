@@ -4,15 +4,13 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.mall.domain.dto.BrandCellsPageDTO;
 import com.norm.timemall.app.mall.domain.dto.CellPageDTO;
-import com.norm.timemall.app.mall.domain.pojo.MallHomeInfo;
 import com.norm.timemall.app.mall.domain.ro.CellRO;
 import com.norm.timemall.app.base.pojo.vo.CellIntroVO;
 import com.norm.timemall.app.mall.domain.vo.CellListVO;
 import com.norm.timemall.app.mall.domain.vo.CellPageVO;
 import com.norm.timemall.app.mall.domain.vo.CellPricingVO;
-import com.norm.timemall.app.mall.domain.vo.HomeInfoVO;
 import com.norm.timemall.app.mall.service.CellListService;
-import com.norm.timemall.app.mall.service.CellServic;
+import com.norm.timemall.app.mall.service.CellService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CellController {
     @Autowired
-    private CellServic cellServic;
+    private CellService cellService;
     @Autowired
     private CellListService cellListService;
     /*
@@ -33,7 +31,7 @@ public class CellController {
     @GetMapping(value = "/api/v1/web_mall/cells")
     public CellPageVO retrieveCells(@Validated  CellPageDTO cellPageDTO)
     {
-        IPage<CellRO> cells = cellServic.findCells(cellPageDTO);
+        IPage<CellRO> cells = cellService.findCells(cellPageDTO);
         CellPageVO cellPageVO = new CellPageVO()
                 .setResponseCode(CodeEnum.SUCCESS)
                 .setCells(cells);
@@ -59,7 +57,7 @@ public class CellController {
     @GetMapping(value = "/api/v1/web_mall/services/{cell_id}/intro")
     public CellIntroVO retrieveCellIntro(@PathVariable("cell_id") String cellId)
     {
-        CellIntroVO result = cellServic.fidCellIntro(cellId);
+        CellIntroVO result = cellService.findCellIntro(cellId);
         return result;
     }
     /*
@@ -69,7 +67,7 @@ public class CellController {
     @GetMapping(value = "/api/v1/web_mall/brandCells")
     public CellPageVO retrieveBrandCells(@Validated BrandCellsPageDTO dto)
     {
-        IPage<CellRO> cells = cellServic.findBrandCells(dto);
+        IPage<CellRO> cells = cellService.findBrandCells(dto);
         CellPageVO cellPageVO = new CellPageVO()
                 .setResponseCode(CodeEnum.SUCCESS)
                 .setCells(cells);
@@ -84,7 +82,7 @@ public class CellController {
     @GetMapping(value = "/api/v1/web_estudio/cell/{cell_id}/pricing")
     public CellPricingVO retrieveCellPricing(@PathVariable("cell_id") String cellId)
     {
-        CellPricingVO result = cellServic.findCellPricing(cellId);
+        CellPricingVO result = cellService.findCellPricing(cellId);
         return result;
     }
 }

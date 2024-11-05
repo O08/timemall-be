@@ -12,10 +12,10 @@ import com.norm.timemall.app.mall.domain.vo.CellPricingVO;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface CellServic {
+public interface CellService {
     IPage<CellRO> findCells(CellPageDTO servicePageDTO);
 
-    CellIntroVO fidCellIntro(String cellId);
+    CellIntroVO findCellIntro(String cellId);
 
     IPage<CellRO> findBrandCells(BrandCellsPageDTO dto);
 
