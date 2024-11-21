@@ -75,5 +75,9 @@ public class BrandSub extends Model<BrandSub> implements Serializable {
      * 志愿夜间咨询师
      */
     private String freeNightCounsellor;
+    /**
+     * 经营范围
+     */
+    private String businessScope;
 
 }

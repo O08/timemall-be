@@ -51,6 +51,7 @@
           when '0' then s.self_defined_occupation
           else c.item
         END as occupation,
+        s.business_scope,
         s.free_night_counsellor,
         b.pd_oasis_id,
         s.industry_code,s.industry,s.support_free_cooperation,s.cooperation_scope, s.brand_type_code, s.available_for_work,s.hiring,s.type_of_business, b.experience,b.title,b.location,b.skills,b.links,ifnull(b.blue_end_at > now(),0) enableBlue

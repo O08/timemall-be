@@ -49,6 +49,7 @@ public class StudioBrandSubServiceImpl implements StudioBrandSubService {
                 .setHiring(dto.getHiring())
                 .setTypeOfBusiness(dto.getTypeOfBusiness())
                 .setIndustry(dto.getIndustry())
+                .setBusinessScope(dto.getBusinessScope())
                 .setFreeNightCounsellor(dto.getFreeNightCounsellor());
         studioBrandSubMapper.insert(brandSub);
     }
