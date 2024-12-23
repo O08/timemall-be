@@ -1,7 +1,9 @@
 package com.norm.timemall.app.team.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
@@ -17,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class TeamCommissionServiceImpl implements TeamCommissionService {
@@ -179,6 +183,41 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
         commission.setTag(dto.getTag())
                 .setModifiedAt(new Date());
         teamCommissionMapper.updateById(commission);
+
+    }
+
+    @Override
+    public void delOneCommission(String id) {
+
+        List<String> scopes = Arrays.asList(OasisCommissionTagEnum.CREATED.getMark(),
+                            OasisCommissionTagEnum.ADD_TO_NEED_POOL.getMark(),OasisCommissionTagEnum.ABOLISH.getMark(),
+                            OasisCommissionTagEnum.FIND_NEW_SUPPLIER.getMark());
+
+        LambdaQueryWrapper<Commission> wrapper= Wrappers.lambdaQuery();
+        wrapper.eq(Commission::getId,id)
+                        .in(Commission::getTag,scopes);
+
+        teamCommissionMapper.delete(wrapper);
+
+    }
+
+    @Override
+    public void modifyCommission(TeamOasisChangeTaskDTO dto) {
+
+        Commission commission= new Commission();
+        commission.setId(dto.getId())
+                .setTitle(dto.getTitle())
+                .setBonus(dto.getBonus())
+                .setSow(dto.getSow())
+                .setModifiedAt(new Date());
+
+        List<String> scopes = Arrays.asList(OasisCommissionTagEnum.CREATED.getMark(), OasisCommissionTagEnum.ADD_TO_NEED_POOL.getMark(),
+                OasisCommissionTagEnum.FIND_NEW_SUPPLIER.getMark());
+
+        LambdaQueryWrapper<Commission> wrapper= Wrappers.lambdaQuery();
+        wrapper.eq(Commission::getId,dto.getId())
+                .in(Commission::getTag,scopes);
+        teamCommissionMapper.update(commission,wrapper);
 
     }
 

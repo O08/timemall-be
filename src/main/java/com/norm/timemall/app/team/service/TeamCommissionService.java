@@ -22,4 +22,8 @@ public interface TeamCommissionService {
     Commission findCommissionUsingId(String commissionId);
 
     void examineOasisTask(TeamExamineOasisTaskDTO dto);
+
+    void delOneCommission(String id);
+
+    void modifyCommission(TeamOasisChangeTaskDTO dto);
 }

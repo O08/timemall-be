@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MultipartException;
 
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 /**
  * 异常处理
@@ -35,12 +36,12 @@ public class ExceptionHandle {
         vo.setMessage(e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
         return vo;
     }
-    @ExceptionHandler({HttpMessageNotReadableException.class})
+    @ExceptionHandler(HttpMessageNotReadableException.class)
     public ErrorVO messageExceptionHandler(HttpMessageNotReadableException e) {
-        log.warn("http请求参数转换异常: "+ e.getMessage());
+        log.error("http请求参数转换异常: "+ e.getMessage());
         ErrorVO vo = new ErrorVO();
         vo.setCode(CodeEnum.REQUEST_MESSAGE_NOT_READABLE.getCode());
-        vo.setMessage(CodeEnum.REQUEST_MESSAGE_NOT_READABLE.getDesc());
+        vo.setMessage(e.getMessage());
         return vo;
     }
 
@@ -66,6 +67,14 @@ public class ExceptionHandle {
     }
     @ExceptionHandler(value = ConstraintViolationException.class)
     public ErrorVO constraintViolationExceptionHandler(Exception e) {
+        log.error("error:", e);
+        ErrorVO vo = new ErrorVO();
+        vo.setCode(CodeEnum.INVALID_PARAMETERS.getCode());
+        vo.setMessage(e.getMessage());
+        return vo;
+    }
+    @ExceptionHandler(value = MissingServletRequestPartException.class)
+    public ErrorVO missingServletRequestPartExceptionHandler(MissingServletRequestPartException e) {
         log.error("error:", e);
         ErrorVO vo = new ErrorVO();
         vo.setCode(CodeEnum.INVALID_PARAMETERS.getCode());

@@ -118,4 +118,28 @@ public class TeamCommissionController {
 
     }
 
+    @DeleteMapping(value = "/api/v1/team/commission/{id}/del")
+    public SuccessVO delCommission(@PathVariable(value = "id")  String id){
+        String role=teamApiAccessControlService.findCommissionWsRole(id);
+        if(!CommissionWsRoleEnum.ADMIN.getMark().equals(role)){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        teamCommissionService.delOneCommission(id);
+
+        return new SuccessVO(CodeEnum.SUCCESS);
+    }
+
+    @PutMapping(value = "/api/v1/team/commission/change")
+    public SuccessVO changeCommission(@Validated @RequestBody TeamOasisChangeTaskDTO dto){
+
+        String role=teamApiAccessControlService.findCommissionWsRole(dto.getId());
+        if(!CommissionWsRoleEnum.ADMIN.getMark().equals(role)){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        teamCommissionService.modifyCommission(dto);
+        return new SuccessVO(CodeEnum.SUCCESS);
+
+    }
+
+
 }
