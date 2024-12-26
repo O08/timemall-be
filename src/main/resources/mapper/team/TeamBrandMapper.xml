@@ -28,9 +28,44 @@
             1 = 1
             and b.mark in ('1','3','4')
             and b.title is not null
-        <if test="q != null and q != ''">
-            AND (locate(#{q}, b.title)>0
-            or locate(#{q}, b.brand_name)>0)
+        <if test="dto.q != null and dto.q != ''">
+            AND (locate(#{dto.q}, b.title)>0
+            or locate(#{dto.q}, b.brand_name)>0)
+        </if>
+        <if test="dto.freeNightCounsellor != null and dto.freeNightCounsellor != ''">
+            <choose>
+                <when test='dto.freeNightCounsellor == "1"'>
+                    AND s.free_night_counsellor='1'
+                </when>
+            </choose>
+        </if>
+        <if test="dto.availableForWork != null and dto.availableForWork != ''">
+            <choose>
+                <when test='dto.availableForWork == "1"'>
+                    AND s.available_for_work='1'
+                </when>
+            </choose>
+        </if>
+        <if test="dto.hiring != null and dto.hiring != ''">
+            <choose>
+                <when test='dto.hiring == "1"'>
+                    AND s.hiring='1'
+                </when>
+            </choose>
+        </if>
+        <if test="dto.supportFreeCooperation != null and dto.supportFreeCooperation != ''">
+            <choose>
+                <when test='dto.supportFreeCooperation == "1"'>
+                    AND s.support_free_cooperation='1'
+                </when>
+            </choose>
+        </if>
+        <if test="dto.loginInWeek != null and dto.loginInWeek != ''">
+            <choose>
+                <when test='dto.loginInWeek == "1"'>
+                    AND TIMESTAMPDIFF(WEEK,b.modified_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S'))  &lt;= 0
+                </when>
+            </choose>
         </if>
 
     </select>

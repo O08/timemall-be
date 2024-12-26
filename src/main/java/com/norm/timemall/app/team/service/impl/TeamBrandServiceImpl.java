@@ -44,7 +44,7 @@ public class TeamBrandServiceImpl implements TeamBrandService {
         page.setSize(dto.getSize());
         page.setCurrent(dto.getCurrent());
 
-        return teamBrandMapper.selectPageByQ(page,dto.getQ());
+        return teamBrandMapper.selectPageByQ(page,dto);
     }
 
     @Override

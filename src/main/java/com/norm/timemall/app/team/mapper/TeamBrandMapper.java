@@ -3,6 +3,7 @@ package com.norm.timemall.app.team.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.mo.Brand;
+import com.norm.timemall.app.team.domain.dto.TeamTalentPageDTO;
 import com.norm.timemall.app.team.domain.ro.TeamTalentRO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -19,5 +20,5 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface TeamBrandMapper extends BaseMapper<Brand> {
 
-    IPage<TeamTalentRO> selectPageByQ(IPage<TeamTalentRO> page, @Param("q") String q);
+    IPage<TeamTalentRO> selectPageByQ(IPage<TeamTalentRO> page, @Param("dto") TeamTalentPageDTO dto);
 }

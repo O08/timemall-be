@@ -13,7 +13,7 @@
          1 = 1
         and mark='2'
         <if test="q != null and q != ''">
-            AND locate(#{q}, title)>0
+            AND (locate(#{q}, title)>0 or locate(#{q}, subtitle)>0)
         </if>
 
     </select>

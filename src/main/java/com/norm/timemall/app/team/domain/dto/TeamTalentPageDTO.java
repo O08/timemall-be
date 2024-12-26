@@ -7,4 +7,9 @@ import lombok.Data;
 public class TeamTalentPageDTO extends PageDTO {
     // search keyword
     private String q;
+    private String freeNightCounsellor;
+    private String hiring;
+    private String availableForWork;
+    private String supportFreeCooperation;
+    private String loginInWeek;
 }
