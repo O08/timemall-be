@@ -30,7 +30,10 @@
             and b.title is not null
         <if test="dto.q != null and dto.q != ''">
             AND (locate(#{dto.q}, b.title)>0
-            or locate(#{dto.q}, b.brand_name)>0)
+              or locate(#{dto.q}, b.brand_name)>0
+              or locate(#{dto.q}, c.item)>0
+              or locate(#{dto.q}, s.self_defined_occupation)>0
+            )
         </if>
         <if test="dto.freeNightCounsellor != null and dto.freeNightCounsellor != ''">
             <choose>
