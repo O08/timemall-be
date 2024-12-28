@@ -3,6 +3,7 @@ package com.norm.timemall.app.team.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -13,10 +14,7 @@ import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mapper.FinAccountMapper;
 import com.norm.timemall.app.base.mo.*;
 import com.norm.timemall.app.team.constant.OasisConstant;
-import com.norm.timemall.app.team.domain.dto.TeamNewOasisDTO;
-import com.norm.timemall.app.team.domain.dto.TeamOasisGeneralDTO;
-import com.norm.timemall.app.team.domain.dto.TeamOasisPageDTO;
-import com.norm.timemall.app.team.domain.dto.TeamOasisRiskDTO;
+import com.norm.timemall.app.team.domain.dto.*;
 import com.norm.timemall.app.team.domain.pojo.OasisCreatedByCurrentBrand;
 import com.norm.timemall.app.team.domain.pojo.TeamOasisAnnounce;
 import com.norm.timemall.app.team.domain.pojo.TeamOasisIndex;
@@ -96,6 +94,9 @@ public class TeamOasisServiceImpl implements TeamOasisService {
                 .setMark(OasisMarkEnum.CREATED.getMark())
                 .setMembership(OasisConstant.INIT_MEMBERSHIP) // init
                 .setMaxMembers(OasisConstant.INIT_MAXMEMBERS)
+                .setCanAddMember(SwitchCheckEnum.ENABLE.getMark())
+                .setForPrivate(SwitchCheckEnum.CLOSE.getMark())
+                .setPrivateCode(RandomUtil.randomStringUpper(6))
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
         // insert to oasis
@@ -157,6 +158,11 @@ public class TeamOasisServiceImpl implements TeamOasisService {
     @Override
     public TeamOasisAnnounce findOasisAnnounce(String oasisId) {
         TeamOasisAnnounce announce = teamOasisMapper.selectAnnounceById(oasisId);
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        // private code only provide to admin
+        if(ObjectUtil.isNotNull(announce) && !brandId.equals(announce.getInitiator())){
+            announce.setPrivateCode("");
+        }
         return  announce;
     }
 
@@ -215,6 +221,27 @@ public class TeamOasisServiceImpl implements TeamOasisService {
         OasisCreatedByCurrentBrand oasis=new OasisCreatedByCurrentBrand();
         oasis.setRecords(ros);
         return oasis;
+
+    }
+
+    @Override
+    public void doSetting(TeamOasisSettingDTO dto) {
+
+        String brandId=SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        Oasis oasis = new Oasis();
+        oasis.setId(dto.getId())
+                .setRisk(dto.getRisk())
+                .setCanAddMember(dto.getCanAddMember())
+                .setForPrivate(dto.getForPrivate())
+                .setPrivateCode(dto.getPrivateCode())
+                .setTitle(dto.getTitle())
+                .setSubtitle(dto.getSubTitle());
+
+        LambdaQueryWrapper<Oasis> wrapper=Wrappers.lambdaQuery();
+        wrapper.eq(Oasis::getId,dto.getId())
+                .eq(Oasis::getInitiatorId, brandId);
+
+        teamOasisMapper.update(oasis,wrapper);
 
     }
 }

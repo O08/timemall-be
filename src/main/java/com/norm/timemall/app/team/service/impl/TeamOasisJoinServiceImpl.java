@@ -1,16 +1,13 @@
 package com.norm.timemall.app.team.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.norm.timemall.app.base.enums.ChannelTypeEnum;
-import com.norm.timemall.app.base.enums.CodeEnum;
-import com.norm.timemall.app.base.enums.GroupMemberPolicyRelEnum;
-import com.norm.timemall.app.base.enums.OasisJoinTagEnum;
+import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.*;
-import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.team.domain.dto.TeamInviteToOasisDTO;
 import com.norm.timemall.app.team.domain.ro.TeamInviteRO;
@@ -111,10 +108,26 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
     }
 
     @Override
-    public void followOasis(String oasisId) {
+    public void followOasis(String oasisId,String privateCode) {
         String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
-        // query oasis member info
+        // query oasis member info and validated
         Oasis oasis = teamOasisMapper.selectById(oasisId);
+        if(oasis==null){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        if(SwitchCheckEnum.CLOSE.getMark().equals(oasis.getCanAddMember())){
+            throw new ErrorCodeException(CodeEnum.STOP_INVITATION);
+        }
+        if(SwitchCheckEnum.ENABLE.getMark().equals(oasis.getForPrivate())
+                && ObjectUtil.notEqual(privateCode,oasis.getPrivateCode())){
+            throw new ErrorCodeException(CodeEnum.WRONG_INVITATION_CODE);
+        }
+        // if already join, skip
+        boolean alreadyJoin = alreadyMember(oasisId, brandId);
+
+        if(alreadyJoin){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
 
 
         // if membership < max_members insert oasis_member else deny
@@ -175,5 +188,13 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
         wrapper.eq(OasisJoin::getId,id)
                         .eq(OasisJoin::getTag,OasisJoinTagEnum.CREATED.getMark());
         teamOasisJoinMapper.delete(wrapper);
+    }
+    private boolean alreadyMember(String oasisId,String brandId){
+        LambdaQueryWrapper<OasisMember> wrapper=Wrappers.lambdaQuery();
+        wrapper.eq(OasisMember::getBrandId,brandId)
+                .eq(OasisMember::getOasisId,oasisId);
+
+        return teamOasisMemberMapper.exists(wrapper);
+
     }
 }

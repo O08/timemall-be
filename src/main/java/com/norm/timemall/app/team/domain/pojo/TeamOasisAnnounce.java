@@ -10,4 +10,7 @@ public class TeamOasisAnnounce {
     private String subTitle;
     private String announceUrl;
     private String risk;
+    private String canAddMember;
+    private String forPrivate;
+    private String privateCode;
 }

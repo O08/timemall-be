@@ -10,6 +10,7 @@ import com.norm.timemall.app.base.service.FileStoreService;
 import com.norm.timemall.app.team.domain.dto.TeamNewOasisDTO;
 import com.norm.timemall.app.team.domain.dto.TeamOasisPageDTO;
 import com.norm.timemall.app.team.domain.dto.TeamOasisRiskDTO;
+import com.norm.timemall.app.team.domain.dto.TeamOasisSettingDTO;
 import com.norm.timemall.app.team.domain.pojo.*;
 import com.norm.timemall.app.team.domain.ro.TeamInviteRO;
 import com.norm.timemall.app.team.domain.ro.TeamJoinedRO;
@@ -141,8 +142,9 @@ public class TeamOasisController {
     }
     @ResponseBody
     @PutMapping(value = "/api/v1/team/be_oasis_member")
-    public SuccessVO followOasis(@RequestParam @NotBlank(message = "oasisId is required") String oasisId){
-        teamOasisJoinService.followOasis(oasisId);
+    public SuccessVO followOasis(@RequestParam @NotBlank(message = "oasisId is required") String oasisId,
+                                 @RequestParam String privateCode){
+        teamOasisJoinService.followOasis(oasisId,privateCode);
         return new SuccessVO(CodeEnum.SUCCESS);
     }
     @GetMapping("/api/v1/team/oasis_list_create_by_current_brand")
@@ -153,6 +155,14 @@ public class TeamOasisController {
         vo.setOasis(oasis);
         vo.setResponseCode(CodeEnum.SUCCESS);
         return vo;
+
+    }
+
+    @PutMapping("/api/v1/team/oasis/setting")
+    public SuccessVO adjustSetting(@Validated TeamOasisSettingDTO dto){
+
+        teamOasisService.doSetting(dto);
+        return new SuccessVO(CodeEnum.SUCCESS);
 
     }
 

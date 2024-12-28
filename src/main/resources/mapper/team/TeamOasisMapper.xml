@@ -12,13 +12,14 @@
         where
          1 = 1
         and mark='2'
+        and for_private='0'
         <if test="q != null and q != ''">
             AND (locate(#{q}, title)>0 or locate(#{q}, subtitle)>0)
         </if>
 
     </select>
     <select id="selectAnnounceById" resultType="com.norm.timemall.app.team.domain.pojo.TeamOasisAnnounce">
-        select initiator_id initiator,title,avatar,subTitle,announce announceUrl,risk  from oasis
+        select initiator_id initiator,title,avatar,subTitle,announce announceUrl,risk,can_add_member,for_private,private_code  from oasis
         where
           id=#{id}
     </select>

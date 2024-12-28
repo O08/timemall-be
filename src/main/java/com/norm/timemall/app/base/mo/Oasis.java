@@ -77,4 +77,17 @@ public class Oasis extends Model<Oasis> implements Serializable {
      */
     private Object channelSort;
 
+    /**
+     * 暂停邀请: 1 enable, 0 close
+     */
+    private String canAddMember;
+    /**
+     * 私密基地: 1 enable, 0 close
+     */
+    private String forPrivate;
+    /**
+     * 私密基地邀请码
+     */
+    private String privateCode;
+
 }
