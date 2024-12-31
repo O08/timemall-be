@@ -159,7 +159,7 @@ public class TeamOasisController {
     }
 
     @PutMapping("/api/v1/team/oasis/setting")
-    public SuccessVO adjustSetting(@Validated TeamOasisSettingDTO dto){
+    public SuccessVO adjustSetting(@RequestBody @Validated TeamOasisSettingDTO dto){
 
         teamOasisService.doSetting(dto);
         return new SuccessVO(CodeEnum.SUCCESS);
