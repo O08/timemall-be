@@ -1,6 +1,8 @@
 package com.norm.timemall.app.team.service;
 
+import com.norm.timemall.app.team.domain.dto.TeamFetchFriendListDTO;
 import com.norm.timemall.app.team.domain.dto.TeamInviteToOasisDTO;
+import com.norm.timemall.app.team.domain.pojo.TeamFetchFriendList;
 import com.norm.timemall.app.team.domain.ro.TeamInviteRO;
 import com.norm.timemall.app.team.domain.ro.TeamJoinedRO;
 import org.springframework.stereotype.Service;
@@ -22,4 +24,6 @@ public interface TeamOasisJoinService {
     void unfollowOasis(String oasisId,String brandId);
 
     void removeOasisInvitation(String id);
+
+    TeamFetchFriendList findFriendThatNotInOasis(TeamFetchFriendListDTO dto);
 }

@@ -75,7 +75,8 @@ public enum CodeEnum implements Code{
     DELIVER_PENDING(40027, "客户审核中，禁止新的交付"),
     PLAN_UN_SUPPORT_REFUND_ZERO(40028, "0元购单品不支持退款"),
     AFFILIATE_PPC_LINK_VISIT_EXIST(40029,"链接存在访问记录" ),
-    STOP_INVITATION(40030, "暂停邀请"), WRONG_INVITATION_CODE(40031, "邀请码校验失败");
+    STOP_INVITATION(40030, "暂停邀请"), WRONG_INVITATION_CODE(40031, "邀请码校验失败"), PRIVATE_OASIS(40032, "私密基地"),
+    ALREADY_JOIN_OASIS(40033,"已加入基地" );
 
     private final int code;
     private final String desc;

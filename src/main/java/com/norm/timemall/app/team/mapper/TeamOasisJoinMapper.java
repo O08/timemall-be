@@ -2,6 +2,8 @@ package com.norm.timemall.app.team.mapper;
 
 import com.norm.timemall.app.base.mo.OasisJoin;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.norm.timemall.app.team.domain.dto.TeamFetchFriendListDTO;
+import com.norm.timemall.app.team.domain.ro.TeamFetchFriendRO;
 import com.norm.timemall.app.team.domain.ro.TeamInviteRO;
 import com.norm.timemall.app.team.domain.ro.TeamJoinedRO;
 import org.apache.ibatis.annotations.Mapper;
@@ -29,4 +31,6 @@ public interface TeamOasisJoinMapper extends BaseMapper<OasisJoin> {
     ArrayList<TeamJoinedRO> selectJoinedOasesByUser(@Param("brand_id") String userId);
     @Update("update oasis_join j set modified_at = now() where oasis_id = #{oasis_id} and brand_id =#{brand_id}")
     void updateModifiedAtByBrandIdAndOasisId(@Param("oasis_id") String oasisId, @Param("brand_id") String brandId);
+
+    ArrayList<TeamFetchFriendRO> selectFriendNotInOasis(@Param("dto") TeamFetchFriendListDTO dto, @Param("user_id") String userId);
 }

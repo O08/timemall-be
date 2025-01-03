@@ -36,6 +36,8 @@ public class OasisJoin extends Model<OasisJoin> implements Serializable {
      * brandId
      */
     private String brandId;
+
+    private String inviterBrandId;
     /**
      * 标签
      */

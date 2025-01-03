@@ -2,8 +2,11 @@ package com.norm.timemall.app.team.controller;
 
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
+import com.norm.timemall.app.team.domain.dto.TeamFetchFriendListDTO;
+import com.norm.timemall.app.team.domain.pojo.TeamFetchFriendList;
 import com.norm.timemall.app.team.domain.pojo.TeamInvitedOasis;
 import com.norm.timemall.app.team.domain.ro.TeamInviteRO;
+import com.norm.timemall.app.team.domain.vo.TeamFetchFriendListVO;
 import com.norm.timemall.app.team.domain.vo.TeamInviteVO;
 import com.norm.timemall.app.team.service.TeamOasisJoinService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,5 +47,14 @@ public class TeamOasisInvitationController {
     public SuccessVO delOasisJoinInvitation(@PathVariable("id") String id){
         teamOasisJoinService.removeOasisInvitation(id);
         return new SuccessVO(CodeEnum.SUCCESS);
+    }
+    @GetMapping("/api/v1/team/oasis/friends")
+    public TeamFetchFriendListVO fetchFriendList(@Validated TeamFetchFriendListDTO dto ){
+
+        TeamFetchFriendList friend= teamOasisJoinService.findFriendThatNotInOasis(dto);
+        TeamFetchFriendListVO vo = new TeamFetchFriendListVO();
+        vo.setFriend(friend);
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        return vo;
     }
 }
