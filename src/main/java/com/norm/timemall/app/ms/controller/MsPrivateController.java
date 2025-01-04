@@ -154,9 +154,9 @@ public class MsPrivateController {
     }
     @ResponseBody
     @GetMapping("/api/v1/ms/private/me/event/friend/list")
-    public MsFetchPrivateFriendVO fetchPrivateFriend(){
+    public MsFetchPrivateFriendVO fetchPrivateFriend(String q){
 
-        MsFetchPrivateFriend friend = msPrivateRelService.findFriend();
+        MsFetchPrivateFriend friend = msPrivateRelService.findFriend(q);
         MsFetchPrivateFriendVO vo = new MsFetchPrivateFriendVO();
         vo.setFriend(friend);
         vo.setResponseCode(CodeEnum.SUCCESS);

@@ -20,10 +20,10 @@ public class MsPrivateRelServiceImpl implements MsPrivateRelService {
     private MsBrandMapper msBrandMapper;
 
     @Override
-    public MsFetchPrivateFriend findFriend() {
+    public MsFetchPrivateFriend findFriend(String q) {
 
         String userId= SecurityUserHelper.getCurrentPrincipal().getUserId();
-        ArrayList<MsFetchPrivateFriendRO> records = msPrivateRelMapper.selectPrivateFriendByUserId(userId);
+        ArrayList<MsFetchPrivateFriendRO> records = msPrivateRelMapper.selectPrivateFriendByUserId(userId,q);
         MsFetchPrivateFriend friend = new MsFetchPrivateFriend();
         friend.setRecords(records);
         return friend;

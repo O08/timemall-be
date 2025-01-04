@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface MsPrivateRelService {
-    MsFetchPrivateFriend findFriend();
+    MsFetchPrivateFriend findFriend(String q);
 
 
     void markAllMsgAsRead(String friend);

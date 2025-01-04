@@ -5,8 +5,16 @@
         private_rel
     </sql>
 
-    <sql id="baseColumn">
-        id,user_id,friend_id,unread,create_at,modified_at
-    </sql>
+    <select id="selectPrivateFriendByUserId" resultType="com.norm.timemall.app.ms.domain.ro.MsFetchPrivateFriendRO">
+        select b.mark brandMark,r.latest_content,r.modified_at, r.friend_id id,b.avator avatar,b.brand_name title,r.unread
+        from private_rel r
+        left join brand b on r.friend_id=b.customer_id
+        where r.user_id=#{user_id}
+        <if test="q != null and q != ''">
+            And locate(#{q}, b.brand_name)>0
+        </if>
+        order by r.modified_at desc
+
+    </select>
 
 </mapper>
