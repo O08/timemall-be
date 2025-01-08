@@ -8,7 +8,7 @@ public enum TransTypeEnum {
     TOPUP_OASIS("4","充值Oasis"),
     OASIS_COLLECT_IN("5","oasis 收账"),
     TOPUP_MPS_FUND("6","转帐到MPS fund"),
-    MPS_FUND_TRANSFER("7","产链基金支付转账"),
+    MPS_FUND_TRANSFER("7","合约基金支付转账"),
     PLAN_ORDER_TRANSFER_TO_BRAND("8","平台单品打款"),
     PLAN_ORDER_PAY("9","单品付款"),
     REFUND("10","退款"),
