@@ -121,6 +121,29 @@ public class StudioCommercialPaperServiceImpl implements StudioCommercialPaperSe
 
     }
 
+    @Override
+    public void generateFastMpsPaper(StudioNewFastMpsDTO dto, String brandId, String mpsId) {
+
+        CommercialPaper paper = new CommercialPaper();
+        paper.setId(IdUtil.simpleUUID())
+                .setTitle(dto.getTitle())
+                .setSow(dto.getSow())
+                .setPiece(dto.getPiece())
+                .setBonus(dto.getBonus())
+                .setPurchaser(brandId)
+                .setMpsId(mpsId)
+                .setSupplier(dto.getFirstSupplier())
+                .setDuration(dto.getDuration())
+                .setDeliveryCycle(dto.getDeliveryCycle())
+                .setContractValidityPeriod(dto.getContractValidityPeriod())
+                .setTag(CommercialPaperTagEnum.CREATED.getMark())
+                .setCreateAt(new Date())
+                .setModifiedAt(new Date());
+
+        studioCommercialPaperMapper.insert(paper);
+
+    }
+
     private List<CommercialPaper> getPaperList(String chainId,String brandId,String mpsId){
 
         LambdaQueryWrapper<MpsTemplate> wrapper = Wrappers.lambdaQuery();

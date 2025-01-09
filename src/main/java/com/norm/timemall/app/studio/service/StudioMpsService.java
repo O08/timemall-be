@@ -3,6 +3,7 @@ package com.norm.timemall.app.studio.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.mo.Mps;
 import com.norm.timemall.app.studio.domain.dto.StudioFetchMpsListPageDTO;
+import com.norm.timemall.app.studio.domain.dto.StudioNewFastMpsDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioNewMpsDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioTaggingMpsDTO;
 import com.norm.timemall.app.studio.domain.ro.StudioFetchMpsListRO;
@@ -17,4 +18,6 @@ public interface StudioMpsService {
     void taggingMps(StudioTaggingMpsDTO dto);
 
     Mps findMps(String mpsId);
+
+    Mps newFastMps(StudioNewFastMpsDTO dto);
 }

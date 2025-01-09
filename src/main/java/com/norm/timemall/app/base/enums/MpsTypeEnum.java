@@ -2,7 +2,9 @@ package com.norm.timemall.app.base.enums;
 
 public enum MpsTypeEnum {
     FROM_MILLSTONE("1","millstone order"),
-    FROM_PLAN("2","自建");
+    FROM_TEMPLATE("2","由模版创建商单"),
+    FAST("3","快捷商单")
+    ;
     private String mark;
     private String desc;
 

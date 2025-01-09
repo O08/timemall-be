@@ -7,9 +7,9 @@ import com.norm.timemall.app.base.enums.MpsTagEnum;
 import com.norm.timemall.app.base.enums.MpsTypeEnum;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.Mps;
-import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.studio.domain.dto.StudioFetchMpsListPageDTO;
+import com.norm.timemall.app.studio.domain.dto.StudioNewFastMpsDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioNewMpsDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioTaggingMpsDTO;
 import com.norm.timemall.app.studio.domain.ro.StudioFetchMpsListRO;
@@ -43,7 +43,7 @@ public class StudioMpsServiceImpl implements StudioMpsService {
         String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         Mps mps = new Mps();
         mps.setId(IdUtil.simpleUUID())
-                .setMpsType(MpsTypeEnum.FROM_PLAN.getMark())
+                .setMpsType(MpsTypeEnum.FROM_TEMPLATE.getMark())
                 .setBrandId(brandId)
                 .setTag(MpsTagEnum.CREATED.getMark())
                 .setChainId(dto.getChainId())
@@ -64,5 +64,20 @@ public class StudioMpsServiceImpl implements StudioMpsService {
     public Mps findMps(String mpsId) {
 
         return  studioMpsMapper.selectById(mpsId);
+    }
+
+    @Override
+    public Mps newFastMps(StudioNewFastMpsDTO dto) {
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        Mps mps = new Mps();
+        mps.setId(IdUtil.simpleUUID())
+                .setMpsType(MpsTypeEnum.FAST.getMark())
+                .setBrandId(brandId)
+                .setTag(MpsTagEnum.CREATED.getMark())
+                .setTitle(dto.getTitle())
+                .setCreateAt(new Date())
+                .setModifiedAt(new Date());
+        studioMpsMapper.insert(mps);
+        return mps;
     }
 }
