@@ -74,7 +74,7 @@ public class StudioMpsServiceImpl implements StudioMpsService {
                 .setMpsType(MpsTypeEnum.FAST.getMark())
                 .setBrandId(brandId)
                 .setTag(MpsTagEnum.CREATED.getMark())
-                .setTitle(dto.getTitle())
+                .setTitle(dto.getMpsTitle())
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
         studioMpsMapper.insert(mps);
