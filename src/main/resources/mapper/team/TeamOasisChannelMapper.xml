@@ -7,6 +7,7 @@
 
     <select id="selectChannelListByOasisId" resultType="com.norm.timemall.app.team.domain.ro.FetchOasisChannelListRO">
         select
+            app.app_logo,
             app.app_admin_url,
             app.app_view_url,
             chn.channel_desc,

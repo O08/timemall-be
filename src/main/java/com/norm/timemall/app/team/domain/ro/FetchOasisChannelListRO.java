@@ -9,4 +9,5 @@ public class FetchOasisChannelListRO {
     private String channelDesc;
     private String channelName;
     private String oasisChannelId;
+    private String appLogo;
 }
