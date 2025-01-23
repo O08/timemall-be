@@ -8,4 +8,5 @@ public class FetchOasisAppListRO {
     private String appDesc;
     private String appId;
     private String appName;
+    private String appLogo;
 }

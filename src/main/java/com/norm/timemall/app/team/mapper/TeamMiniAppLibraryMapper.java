@@ -17,6 +17,6 @@ import java.util.ArrayList;
 */
 @Mapper
 public interface TeamMiniAppLibraryMapper extends BaseMapper<MiniAppLibrary> {
-@Select("select lib.app_cover,lib.app_desc,lib.app_name,lib.id appId from mini_app_library lib where lib.app_tag='1' ")
+@Select("select lib.app_logo, lib.app_cover,lib.app_desc,lib.app_name,lib.id appId from mini_app_library lib where lib.app_tag='1' ")
     ArrayList<FetchOasisAppListRO> selectAppList();
 }
