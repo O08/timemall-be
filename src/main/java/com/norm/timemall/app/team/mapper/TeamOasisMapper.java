@@ -43,4 +43,11 @@ public interface TeamOasisMapper extends BaseMapper<Oasis> {
     void subtractOneMembershipById(@Param("oasis_id") String oasisId);
 @Select("select o.avatar,o.title,o.id from oasis o where mark='2' and initiator_id=#{initiatorBrandId}")
     ArrayList<OasisCreatedByCurrentBrandRO> selectOasisByInitiatorId(@Param("initiatorBrandId") String initiatorId);
+@Select("select count(1) from oasis_channel c ,oasis_member m where c.id=#{channel} and m.brand_id=#{brandId} and c.oasis_id=m.oasis_id ")
+    int selectCountChannel(@Param("channel") String channel,@Param("brandId") String brandId);
+@Select("select count(1) from app_fb_feed f inner join oasis_channel c on f.oasis_channel_id=c.id inner join oasis o on c.oasis_id=o.id where f.id=#{feedId} and o.initiator_id=#{initiatorBrandId}")
+int selectCountByFeedIdAndInitiator(@Param("feedId") String feedId,@Param("initiatorBrandId") String initiatorBrandId);
+    @Select("select count(1) from  oasis_channel c inner join oasis o on c.oasis_id=o.id where c.id=#{channelId} and o.initiator_id=#{initiatorBrandId}")
+    boolean selectCountByChannelIdAndInitiator(@Param("channelId") String channelId, @Param("initiatorBrandId") String initiatorBrandId);
+
 }

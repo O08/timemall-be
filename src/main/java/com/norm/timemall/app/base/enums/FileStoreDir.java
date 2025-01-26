@@ -19,7 +19,9 @@ public enum FileStoreDir {
     DEFAULT_IMAGE_MESSAGE("msg/default/image-msg","default message image dir" ),
     DEFAULT_ATTACHMENT_MESSAGE("msg/default/attachment-msg","default message attachment dir" ), COMMISSION_DELIVER("commission/deliver/deliver","commission ws deliver" ),
     COMMISSION_PREVIEW("commission/deliver/preview","commission ws deliver preview" ), FEEDBACK("feedback", "user feedback attachment"),
-    RC_PPT_ITEM("rc/ppt/item","resource ppt dir" ), RC_PPT_PREVIEW("rc/ppt/preview","resource ppt preview dir" );
+    RC_PPT_ITEM("rc/ppt/item","resource ppt dir" ), RC_PPT_PREVIEW("rc/ppt/preview","resource ppt preview dir" ),
+    FEED_COVER("app/feed/cover","app feed store" )
+    ;
     private final String dir;
 
     private final String desc;

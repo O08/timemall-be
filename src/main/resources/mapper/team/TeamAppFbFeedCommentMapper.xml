@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamAppFbFeedCommentMapper">
+    <sql id="tableName">
+        app_fb_feed_comment
+    </sql>
+
+    <sql id="baseColumn">
+        id,feed_id,author_brand_id,content,create_at,modified_at
+    </sql>
+
+    <select id="selectPageByFeedId" resultType="com.norm.timemall.app.team.domain.ro.TeamAppFbFetchCommentRO">
+        select
+          b.brand_name author,
+          c.author_brand_id,
+          b.avator authorAvatar,
+          c.create_at,
+          c.id,
+          c.content
+        from app_fb_feed_comment c
+        inner join brand b on c.author_brand_id= b.id
+        where 1=1
+        and c.feed_id=#{dto.feedId}
+
+    </select>
+
+</mapper>

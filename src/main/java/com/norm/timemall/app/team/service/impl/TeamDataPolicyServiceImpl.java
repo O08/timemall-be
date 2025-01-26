@@ -23,4 +23,31 @@ public class TeamDataPolicyServiceImpl implements TeamDataPolicyService {
 
         return oasis !=null && oasis.getInitiatorId().equals(brandId);
     }
+
+    @Override
+    public boolean alreadyOasisMember(String channel) {
+
+        String brandId=SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        return  teamOasisMapper.selectCountChannel(channel,brandId)>0;
+
+
+    }
+
+    @Override
+    public boolean validateChannelAdminRoleUseFeedId(String feedId) {
+
+        String initiatorBrandId=SecurityUserHelper.getCurrentPrincipal().getBrandId();
+
+        return teamOasisMapper.selectCountByFeedIdAndInitiator(feedId,initiatorBrandId)>0;
+
+    }
+
+    @Override
+    public boolean validateChannelAdminRoleUseChannelId(String channelId) {
+
+        String initiatorBrandId=SecurityUserHelper.getCurrentPrincipal().getBrandId();
+
+        return teamOasisMapper.selectCountByChannelIdAndInitiator(channelId,initiatorBrandId);
+
+    }
 }
