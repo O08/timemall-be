@@ -22,7 +22,7 @@ import org.apache.ibatis.annotations.Update;
 public interface TeamAppFbFeedMapper extends BaseMapper<AppFbFeed> {
 
     IPage<TeamAppFbFetchFeedsPageRO> selectPageByQ(IPage<TeamAppFbFetchFeedsPageRO> page, @Param("dto") TeamAppFbFetchFeedsPageDTO dto);
-    @Select("select b.handle authorBrandHandle, b.avator authorAvatar, b.brand_name author,f.author_brand_id,f.comment_tag,f.title,f.preface,f.rich_media_content,f.cta_primary_label,f.cta_primary_url,f.cta_secondary_label,f.cta_secondary_url,f.cover_url,f.highlight,f.create_at,f.modified_at from app_fb_feed f inner join brand b on f.author_brand_id=b.id where f.id=#{id}")
+    @Select("select f.pin, b.handle authorBrandHandle, b.avator authorAvatar, b.brand_name author,f.author_brand_id,f.comment_tag,f.title,f.preface,f.rich_media_content,f.cta_primary_label,f.cta_primary_url,f.cta_secondary_label,f.cta_secondary_url,f.cover_url,f.highlight,f.create_at,f.modified_at from app_fb_feed f inner join brand b on f.author_brand_id=b.id where f.id=#{id}")
     TeamAppFbFetchFeedRO selectFeedInfoById(@Param("id") String id);
 
     @Update("update app_fb_feed set cover_url=#{coverUrl} where id=#{feedId}")
