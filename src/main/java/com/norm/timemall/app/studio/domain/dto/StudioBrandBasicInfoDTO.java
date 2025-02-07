@@ -9,6 +9,7 @@ import org.hibernate.validator.constraints.Length;
 public class StudioBrandBasicInfoDTO {
     // 品牌
     @NotBlank(message = "brand required")
+    @Length(message = "brand length must in range {min}-{max}",min = 1,max = 16)
     private String brand;
     // 品牌描述
     private String title;
