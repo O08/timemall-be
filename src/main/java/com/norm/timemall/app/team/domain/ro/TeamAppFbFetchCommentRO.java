@@ -11,5 +11,6 @@ public class TeamAppFbFetchCommentRO {
     private String content;
     private String createAt;
     private String id;
+    private String authorBrandHandle;
 
 }

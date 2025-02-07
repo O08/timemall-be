@@ -19,4 +19,5 @@ public class TeamAppFbFetchFeedRO {
     private String title;
     private String coverUrl;
     private String authorAvatar;
+    private String authorBrandHandle;
 }

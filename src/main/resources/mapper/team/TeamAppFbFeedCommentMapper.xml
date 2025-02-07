@@ -14,6 +14,7 @@
           b.brand_name author,
           c.author_brand_id,
           b.avator authorAvatar,
+          b.handle authorBrandHandle,
           c.create_at,
           c.id,
           c.content
@@ -21,7 +22,7 @@
         inner join brand b on c.author_brand_id= b.id
         where 1=1
         and c.feed_id=#{dto.feedId}
-
+        order by c.create_at desc
     </select>
 
 </mapper>

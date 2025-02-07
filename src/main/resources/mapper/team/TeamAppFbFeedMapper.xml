@@ -45,10 +45,10 @@
         <if test="dto.sort != null and dto.sort != ''">
             <choose>
                 <when test='dto.sort == "1"'>
-                    order by f.modified_at
+                    order by f.modified_at desc
                 </when>
                 <when test='dto.sort == "2"'>
-                    order by f.create_at
+                    order by f.create_at desc
                 </when>
             </choose>
         </if>
