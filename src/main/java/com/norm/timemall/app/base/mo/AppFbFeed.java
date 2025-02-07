@@ -73,6 +73,10 @@ public class AppFbFeed extends Model<AppFbFeed> implements Serializable {
      */
     private String highlight;
     /**
+     * 置顶
+     */
+    private String pin;
+    /**
      * 帖子状态： 0 - 关闭评论 1 - 开启评论
      */
     private String commentTag;

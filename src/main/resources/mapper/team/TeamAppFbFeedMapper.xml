@@ -11,6 +11,7 @@
 
     <select id="selectPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamAppFbFetchFeedsPageRO">
         select
+          f.pin,
           f.id,
           f.title,
           f.preface,

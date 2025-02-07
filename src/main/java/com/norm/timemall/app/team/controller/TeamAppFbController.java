@@ -167,6 +167,19 @@ public class TeamAppFbController {
         return new SuccessVO(CodeEnum.SUCCESS);
 
     }
+    @PutMapping("/api/v1/app/feed/toggle_pin")
+    public SuccessVO pinFeed(@RequestBody @Validated TeamAppFbPinFeedDTO dto){
+
+        // only admin can execute highlight operation
+        boolean validated = teamDataPolicyService.validateChannelAdminRoleUseFeedId(dto.getFeedId());
+        if(!validated){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        teamAppFbService.doPinFeed(dto);
+        return new SuccessVO(CodeEnum.SUCCESS);
+
+    }
+
 
     @DeleteMapping("/api/v1/app/feed/{id}")
     public SuccessVO removeFeed(@PathVariable("id") String id){

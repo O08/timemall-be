@@ -5,10 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.norm.timemall.app.base.enums.AppFbFeedCommentFeatureTagEnum;
-import com.norm.timemall.app.base.enums.AppFbFeedHighlightEnum;
-import com.norm.timemall.app.base.enums.AppFbGuideLayoutEnum;
-import com.norm.timemall.app.base.enums.CodeEnum;
+import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.AppFbFeed;
@@ -69,6 +66,7 @@ public class TeamAppFbServiceImpl implements TeamAppFbService {
                 .setCtaSecondaryUrl(dto.getCtaSecondaryUrl())
                 .setCommentTag(AppFbFeedCommentFeatureTagEnum.ON.getMark())
                 .setHighlight(AppFbFeedHighlightEnum.OFF.getMark())
+                .setPin(AppFbFeedPinEnum.OFF.getMark())
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
 
@@ -241,5 +239,37 @@ public class TeamAppFbServiceImpl implements TeamAppFbService {
 
         teamAppFbFeedCommentMapper.insert(comment);
 
+    }
+
+    @Override
+    public void doPinFeed(TeamAppFbPinFeedDTO dto) {
+        // if pin on ,need to pin off other feed
+        AppFbFeed targetFeed = teamAppFbFeedMapper.selectById(dto.getFeedId());
+        if(targetFeed==null){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+
+        if(AppFbFeedPinEnum.ON.getMark().equals(dto.getTag())){
+
+            LambdaQueryWrapper<AppFbFeed> pinOffWrapper= Wrappers.lambdaQuery();
+            pinOffWrapper.eq(AppFbFeed::getPin,AppFbFeedPinEnum.ON.getMark());
+            pinOffWrapper.eq(AppFbFeed::getOasisChannelId,targetFeed.getOasisChannelId());
+            AppFbFeed offFeed = new AppFbFeed();
+            offFeed.setOasisChannelId(targetFeed.getOasisChannelId());
+            offFeed.setModifiedAt(new Date());
+            offFeed.setPin(AppFbFeedPinEnum.OFF.getMark());
+            teamAppFbFeedMapper.update(offFeed,pinOffWrapper);
+
+        }
+
+        // toggle pin  feed
+        LambdaQueryWrapper<AppFbFeed> wrapper= Wrappers.lambdaQuery();
+        wrapper.eq(AppFbFeed::getId,dto.getFeedId());
+        AppFbFeed feed = new AppFbFeed();
+        feed.setId(dto.getFeedId());
+        feed.setModifiedAt(new Date());
+        feed.setPin(dto.getTag());
+
+        teamAppFbFeedMapper.update(feed,wrapper);
     }
 }

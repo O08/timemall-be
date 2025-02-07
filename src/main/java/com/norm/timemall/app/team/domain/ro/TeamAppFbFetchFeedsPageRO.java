@@ -17,4 +17,5 @@ public class TeamAppFbFetchFeedsPageRO {
     private String richMediaContent;
     private String title;
     private String id; // feed id
+    private String pin;
 }

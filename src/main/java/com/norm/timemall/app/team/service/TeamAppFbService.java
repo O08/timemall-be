@@ -37,4 +37,6 @@ public interface TeamAppFbService {
     void doRemoveComment(String id);
 
     void doPostComment(TeamAppFbPostCommentDTO dto);
+
+    void doPinFeed(TeamAppFbPinFeedDTO dto);
 }
