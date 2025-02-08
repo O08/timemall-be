@@ -272,4 +272,19 @@ public class TeamAppFbServiceImpl implements TeamAppFbService {
 
         teamAppFbFeedMapper.update(feed,wrapper);
     }
+
+    @Override
+    public void resetFeedCover(String id) {
+
+        LambdaQueryWrapper<AppFbFeed> wrapper= Wrappers.lambdaQuery();
+        wrapper.eq(AppFbFeed::getId,id);
+
+        AppFbFeed feed = new AppFbFeed();
+        feed.setId(id);
+        feed.setModifiedAt(new Date());
+        feed.setCoverUrl("");
+
+        teamAppFbFeedMapper.update(feed,wrapper);
+
+    }
 }

@@ -39,4 +39,6 @@ public interface TeamAppFbService {
     void doPostComment(TeamAppFbPostCommentDTO dto);
 
     void doPinFeed(TeamAppFbPinFeedDTO dto);
+
+    void resetFeedCover(String id);
 }

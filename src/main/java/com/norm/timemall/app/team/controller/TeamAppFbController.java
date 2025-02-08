@@ -180,7 +180,22 @@ public class TeamAppFbController {
 
     }
 
+    @DeleteMapping("/api/v1/app/feed/{id}/cover")
+    public SuccessVO removeFeedCover(@PathVariable("id") String id){
 
+        String currentUserBrandId= SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        TeamAppFbFetchFeedRO feed = teamAppFbService.retrieveOneFeedInfo(id);
+        boolean notAuthor  = !currentUserBrandId.equals(feed.getAuthorBrandId());
+        if(notAuthor){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        // remove feed cover file from oss  service if exist
+        fileStoreService.deleteFile(feed.getCoverUrl());
+        // update feed cover url as empty
+        teamAppFbService.resetFeedCover(id);
+        return new SuccessVO(CodeEnum.SUCCESS);
+
+    }
     @DeleteMapping("/api/v1/app/feed/{id}")
     public SuccessVO removeFeed(@PathVariable("id") String id){
 
