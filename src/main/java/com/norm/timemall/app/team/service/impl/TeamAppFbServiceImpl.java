@@ -233,6 +233,7 @@ public class TeamAppFbServiceImpl implements TeamAppFbService {
         comment.setId(IdUtil.simpleUUID())
                 .setFeedId(dto.getFeedId())
                 .setContent(dto.getContent())
+                .setSafeMode(dto.getSafeMode())
                 .setCreateAt(new Date())
                 .setAuthorBrandId(authorBrandId)
                 .setModifiedAt(new Date());

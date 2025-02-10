@@ -40,6 +40,8 @@ public class AppFbFeedComment extends Model<AppFbFeedComment> implements Seriali
      * 评论
      */
     private String content;
+
+    private String safeMode;
     /**
      * createAt
      */

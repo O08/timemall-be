@@ -11,13 +11,22 @@
 
     <select id="selectPageByFeedId" resultType="com.norm.timemall.app.team.domain.ro.TeamAppFbFetchCommentRO">
         select
-          b.brand_name author,
-          c.author_brand_id,
-          b.avator authorAvatar,
-          b.handle authorBrandHandle,
+         (case when c.safe_mode = '1' then ''
+               else b.brand_name
+          end)  as author,
+        (case when c.safe_mode = '1' then ''
+              else c.author_brand_id
+          end)  as authorBrandId,
+        (case when c.safe_mode = '1' then ''
+              else b.avator
+          end) as authorAvatar,
+        (case when c.safe_mode = '1' then ''
+              else b.handle
+          end) as authorBrandHandle,
           c.create_at,
           c.id,
-          c.content
+          c.content,
+          c.safe_mode
         from app_fb_feed_comment c
         inner join brand b on c.author_brand_id= b.id
         where 1=1

@@ -12,5 +12,6 @@ public class TeamAppFbFetchCommentRO {
     private String createAt;
     private String id;
     private String authorBrandHandle;
+    private String safeMode;
 
 }
