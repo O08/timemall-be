@@ -103,4 +103,16 @@ public class FileStoreServiceImpl implements FileStoreService {
         }
         return  true;
     }
+
+    @Override
+    public boolean deleteImageAndAvifFile(String uri) {
+        if(StrUtil.isEmpty(uri)){
+            return true;
+        }
+        deleteFile(uri); // delete avif file
+
+        String imageUrl= uri.substring(0,uri.length()-5);// remove .avif suffix from url
+        return deleteFile(imageUrl); // delete image file
+
+    }
 }

@@ -35,5 +35,6 @@ public interface FileStoreService {
      * @return true : delete success ,false: delete fail
      */
     boolean deleteFile(String url);
+    boolean deleteImageAndAvifFile(String url);
 
 }

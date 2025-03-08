@@ -97,11 +97,12 @@ public class TeamOasisFastLinkController {
         if(!passed){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
-        // remove file
-        fileStoreService.deleteFile(fastLink.getLogo());
-
         // remove record
         fastLinkService.removeOneFastLink(id);
+        // remove file
+        fileStoreService.deleteImageAndAvifFile(fastLink.getLogo());
+
+
         return  new SuccessVO(CodeEnum.SUCCESS);
 
 

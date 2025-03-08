@@ -18,6 +18,6 @@ import java.util.ArrayList;
 */
 @Mapper
 public interface TeamOasisFastLinkMapper extends BaseMapper<OasisFastLink> {
-    @Select("select id,title,link_url,link_detail,logo,create_at from oasis_fast_link where oasis_id=#{oasis_id}")
+    @Select("select id,title,link_url,link_detail,logo,create_at from oasis_fast_link where oasis_id=#{oasis_id} order by create_at desc")
     ArrayList<FetchFastLinkRO> selectListByOasisId(@Param("oasis_id") String id);
 }
