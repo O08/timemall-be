@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class TeamAppCardFetchFeedPageRO {
+    private String authorBrandId;
     private String authorAvatar;
     private String authorName;
     private String coverUrl;

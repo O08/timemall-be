@@ -15,6 +15,7 @@
             f.available,
             f.create_at,
             f.views,
+            b.id authorBrandId,
             b.brand_name authorName,
             b.avator authorAvatar
         from app_card_feed f
