@@ -21,8 +21,8 @@ public enum FileStoreDir {
     COMMISSION_PREVIEW("commission/deliver/preview","commission ws deliver preview" ), FEEDBACK("feedback", "user feedback attachment"),
     RC_PPT_ITEM("rc/ppt/item","resource ppt dir" ), RC_PPT_PREVIEW("rc/ppt/preview","resource ppt preview dir" ),
     FEED_COVER("app/feed/cover","app feed store" ),
-    FAST_LINK_LOGO("fast-link/logo", "oasis fast link logo dir")
-    ;
+    FAST_LINK_LOGO("fast-link/logo", "oasis fast link logo dir"),
+    CARD_FEED_COVER("app/card/cover", "app card store");
     private final String dir;
 
     private final String desc;
