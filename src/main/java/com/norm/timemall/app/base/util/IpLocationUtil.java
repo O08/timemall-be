@@ -115,6 +115,10 @@ public class IpLocationUtil {
         }
         return "未知";
     }
+    public static String getIpCity(HttpServletRequest request) {
+        String ipAddress = getIpAddress(request);
+        return getIpPossession(ipAddress);
+    }
 
     public static String getIpLocationFromHeader(HttpServletRequest request) {
 

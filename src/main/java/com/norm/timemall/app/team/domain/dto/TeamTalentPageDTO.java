@@ -12,4 +12,6 @@ public class TeamTalentPageDTO extends PageDTO {
     private String availableForWork;
     private String supportFreeCooperation;
     private String loginInWeek;
+    private String nearby;
+    private String location;
 }

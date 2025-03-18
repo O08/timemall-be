@@ -33,7 +33,11 @@
               or locate(#{dto.q}, b.brand_name)>0
               or locate(#{dto.q}, c.item)>0
               or locate(#{dto.q}, s.self_defined_occupation)>0
+              or locate(#{dto.q}, b.location)>0
             )
+        </if>
+        <if test="dto.location != null and dto.location != ''">
+            AND locate(#{dto.location}, b.location)>0
         </if>
         <if test="dto.freeNightCounsellor != null and dto.freeNightCounsellor != ''">
             <choose>

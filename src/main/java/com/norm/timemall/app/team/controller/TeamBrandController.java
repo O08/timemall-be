@@ -1,8 +1,11 @@
 package com.norm.timemall.app.team.controller;
 
+import cn.hutool.core.text.CharSequenceUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
+import com.norm.timemall.app.base.enums.SwitchCheckEnum;
+import com.norm.timemall.app.base.util.IpLocationUtil;
 import com.norm.timemall.app.team.domain.dto.TeamAddBrandAlipayDTO;
 import com.norm.timemall.app.team.domain.dto.TeamAddBrandBankDTO;
 import com.norm.timemall.app.team.domain.dto.TeamTalentPageDTO;
@@ -13,6 +16,7 @@ import com.norm.timemall.app.team.domain.vo.TeamBrandAlipayAccountVO;
 import com.norm.timemall.app.team.domain.vo.TeamBrandBankVO;
 import com.norm.timemall.app.team.domain.vo.TeamTalentPageVO;
 import com.norm.timemall.app.team.service.TeamBrandService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +31,13 @@ public class TeamBrandController {
      */
     @ResponseBody
     @GetMapping(value = "/api/v1/team/talent")
-    public TeamTalentPageVO retrieveTalents(@Validated TeamTalentPageDTO dto){
+    public TeamTalentPageVO retrieveTalents(@Validated TeamTalentPageDTO dto, HttpServletRequest request){
+
+        if(CharSequenceUtil.isNotBlank(dto.getNearby()) && SwitchCheckEnum.ENABLE.getMark().equals(dto.getNearby())){
+            String city = IpLocationUtil.getIpCity(request);
+            dto.setLocation(city);
+        }
+
         IPage<TeamTalentRO>  talent = teamBrandService.findTalents(dto);
         TeamTalentPageVO vo = new TeamTalentPageVO();
         vo.setTalent(talent);
