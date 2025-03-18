@@ -90,6 +90,21 @@ public class TeamOasisController {
         return vo;
     }
 
+    /**
+     * 获取可分享的oasis列表
+     */
+    @ResponseBody
+    @GetMapping(value = "/api/v1/team/shareOasis")
+    public TeamJoinedVO retrieveShareOasis(String brandId){
+        ArrayList<TeamJoinedRO> joinedRO = teamOasisJoinService.findShareOasis(brandId);
+        TeamJoinedOasis joinedOases = new TeamJoinedOasis();
+        joinedOases.setRecords(joinedRO);
+        TeamJoinedVO vo = new TeamJoinedVO();
+        vo.setJoined(joinedOases);
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        return vo;
+    }
+
 
     @ResponseBody
     @PutMapping(value = "/api/v1/team/oasis/{oasis_id}/announce")

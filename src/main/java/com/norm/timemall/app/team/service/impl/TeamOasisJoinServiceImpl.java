@@ -221,6 +221,11 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
 
     }
 
+    @Override
+    public ArrayList<TeamJoinedRO> findShareOasis(String brandId) {
+        return teamOasisJoinMapper.selectShareOasisByUser(brandId);
+    }
+
     private boolean alreadyMember(String oasisId,String brandId){
         LambdaQueryWrapper<OasisMember> wrapper=Wrappers.lambdaQuery();
         wrapper.eq(OasisMember::getBrandId,brandId)
