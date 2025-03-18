@@ -17,6 +17,6 @@ import org.apache.ibatis.annotations.Select;
 */
 @Mapper
 public interface MsBrandMapper extends BaseMapper<Brand> {
-    @Select("select b.customer_id id,b.brand_name username,b.avator avatar from brand b where b.customer_id=#{friend_id}")
+    @Select("select b.id brandId, b.customer_id id,b.brand_name username,b.avator avatar from brand b where b.customer_id=#{friend_id}")
     MsFetchPrivateFriendProfile selectOneFriendProfile(@Param("friend_id") String friend);
 }
