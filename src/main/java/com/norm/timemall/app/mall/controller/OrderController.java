@@ -1,5 +1,6 @@
 package com.norm.timemall.app.mall.controller;
 
+import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.TransTypeEnum;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
@@ -61,4 +62,21 @@ public class OrderController {
         return vo;
 
     }
+
+    @PostMapping(value = "/api/v1/mall/plan/order/{id}/repay")
+    public SuccessVO repayPlanOrder(@PathVariable("id") String orderId){
+
+        try {
+            orderFlowService.insertOrderFlow(SecurityUserHelper.getCurrentPrincipal().getUserId(),
+                    TransTypeEnum.PLAN_ORDER_PAY.getMark());
+
+            cellPlanOrderService.repayOrder(orderId);
+        }finally {
+            orderFlowService.deleteOrderFlow(SecurityUserHelper.getCurrentPrincipal().getUserId(),
+                    TransTypeEnum.PLAN_ORDER_PAY.getMark());
+        }
+        return  new SuccessVO(CodeEnum.SUCCESS);
+
+    }
+
 }

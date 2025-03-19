@@ -40,7 +40,7 @@ public class PodCellPlanOrderRefundHandler {
         if(order==null || !order.getConsumerId().equals(userId) || (order.getTag().equals(""+ CellPlanOrderTagEnum.COMPLETED.ordinal()))
                 || (order.getTag().equals(""+ CellPlanOrderTagEnum.REFUNDED.ordinal()))
         ){
-            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+            throw new ErrorCodeException(CodeEnum.UN_SUPPORT_REFUND_ACTION);
         }
         if(order.getRevenue().compareTo(BigDecimal.ZERO)==0){
             throw new ErrorCodeException(CodeEnum.PLAN_UN_SUPPORT_REFUND_ZERO);
@@ -57,7 +57,7 @@ public class PodCellPlanOrderRefundHandler {
         // validate
         if(payment==null
         ){
-            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+            throw new ErrorCodeException(CodeEnum.UN_SUPPORT_REFUND_ACTION);
         }
         RefundBO bo = new RefundBO();
         bo.setOutNo(handlerParam.getOrderId())

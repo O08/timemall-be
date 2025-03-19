@@ -88,6 +88,18 @@ public class CellPlanOrderServiceImpl implements CellPlanOrderService {
                 .setModifiedAt(new Date());
         cellPlanOrderMapper.insert(order);
 
+        // affiliate order
+        mallAffiliateOrderService.newAffiliateOrder(plan.getCellId(),orderId,AffiliateOrderTypeEnum.PLAN.getMark(),
+                plan.getPrice(),dto.getInfluencer(),dto.getChn(),dto.getMarket());
+
+        // pay process
+        doPayCellPlanOrder(revenue,orderId);
+
+        return orderId;
+
+    }
+
+    private void doPayCellPlanOrder(BigDecimal revenue,String orderId){
         // pay
         if(revenue.compareTo(BigDecimal.ZERO)>0){
             TransferBO bo = generateTransferBO(revenue,orderId);
@@ -98,16 +110,28 @@ public class CellPlanOrderServiceImpl implements CellPlanOrderService {
 
         // update order tag as paid
         cellPlanOrderMapper.updateTagById(CellPlanOrderTagEnum.PAID.ordinal(),orderId);
-        // affiliate order
-        mallAffiliateOrderService.newAffiliateOrder(plan.getCellId(),orderId,AffiliateOrderTypeEnum.PLAN.getMark(),
-                plan.getPrice(),dto.getInfluencer(),dto.getChn(),dto.getMarket());
-        return orderId;
-
     }
 
     @Override
     public CellPlanOrderRO findOrder(String orderId) {
         return cellPlanOrderMapper.selectCellPlanOrderROById(orderId);
+    }
+
+    @Override
+    public void repayOrder(String orderId) {
+
+        CellPlanOrder cellPlanOrder = cellPlanOrderMapper.selectById(orderId);
+
+        if(cellPlanOrder == null
+                || !(""+CellPlanOrderTagEnum.WAITING_PAY.ordinal()).equals(cellPlanOrder.getTag())
+                || !SecurityUserHelper.getCurrentPrincipal().getUserId().equals(cellPlanOrder.getConsumerId())
+        ){
+            throw  new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        // pay process
+        doPayCellPlanOrder(cellPlanOrder.getRevenue(),orderId);
+
+
     }
 
     private TransferBO generateTransferBO(BigDecimal amount,String outNo){

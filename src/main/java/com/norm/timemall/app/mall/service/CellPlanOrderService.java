@@ -9,4 +9,6 @@ public interface CellPlanOrderService {
     String newOrder(String planId, AffiliateDTO dto);
 
     CellPlanOrderRO findOrder(String orderId);
+
+    void repayOrder(String orderId);
 }
