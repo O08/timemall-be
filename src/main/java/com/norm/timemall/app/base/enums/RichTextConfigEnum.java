@@ -14,7 +14,9 @@ public enum RichTextConfigEnum {
     EMAIL_CELL_ORDER_RECEIVING("emailHtml", "cell_order_receiving_notice"),
     EMAIL_RISK_AUDIT("emailHtml", "risk_audit"),
 
-    EMAIL_CELL_PLAN_ORDER_RECEIVING("emailHtml", "cell_plan_order_receiving_notice");
+    EMAIL_CELL_PLAN_ORDER_RECEIVING("emailHtml", "cell_plan_order_receiving_notice"),
+    PHONE_VERIFICATION_CODE("phoneSms","phone_signup_verification_code" ),
+    PHONE_PASSWORD_RESET_VERIFICATION_CODE("phoneSms","phone_password_reset_verification_code" );
     // template type : email or html or sms
     private String type;
     // template no

@@ -1,5 +1,6 @@
 package com.norm.timemall.app.base.service.impl;
 
+import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
@@ -190,6 +191,36 @@ public class AccountServiceImpl implements AccountService {
 
     }
 
+    @Override
+    public UserDetails loadUserForPhoneOrEmailLogin(String username) {
+        Account account = findAccountByUserName(username);
+        if(account==null){
+            return null;
+        }
+        String  brandId = findBrandInfoByUserId(account.getUserId()).getId();
+        //定义权限列表.
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        // 用户可以访问的资源名称（或者说用户所拥有的权限） 注意：必须"ROLE_"开头
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        User userDetails = new CustomizeUser(account.getUserId(),account.getName(),account.getPassword(),brandId,authorities);
+        return userDetails;
+    }
+
+    @Override
+    public void doUniSignUp(String emailOrPhone, String password) {
+        boolean isMobile = Validator.isMobile(emailOrPhone);
+        boolean isEmail = Validator.isEmail(emailOrPhone);
+        if(!(isEmail || isMobile)){
+            throw new ErrorCodeException(CodeEnum.USER_ACCOUNT_DISABLE);
+        }
+        if(isEmail){
+            doSignUpWithEmail(emailOrPhone,password);
+        }
+        if(isMobile){
+            doSignUpWithPhone(emailOrPhone,password);
+        }
+    }
+
     private void newBrandWhenUserRegister(String userId,String brandName){
         Brand brand = new Brand();
         String brandId=IdUtil.simpleUUID();
@@ -225,6 +256,35 @@ public class AccountServiceImpl implements AccountService {
                 .setAmount(BigDecimal.ZERO)
                 .setDrawable(BigDecimal.ZERO);
         finAccountMapper.insert(finAccount);
+    }
+
+    public boolean doSignUpWithPhone(String emailOrPhone, String password){
+
+       // if customer already sign up return
+        LambdaQueryWrapper<Customer> lambdaQuery = Wrappers.lambdaQuery();
+        lambdaQuery.eq(Customer::getLoginName, mybatisMateEncryptor.defaultEncrypt(emailOrPhone) );
+        Long cnt = customerMapper.selectCount(lambdaQuery);
+        if(cnt > 0){
+            throw new ErrorCodeException(CodeEnum.USER_ACCOUNT_ALREADY_EXIST);
+        }
+        // register account
+        String encryptedPassword= new BCryptPasswordEncoder().encode(password);
+
+        Customer customer = new Customer();
+        customer.setId(IdUtil.simpleUUID())
+                .setNotifyPhone(emailOrPhone)
+                .setCustomerName( emailOrPhone )
+                .setPassword(encryptedPassword)
+                .setLoginName(emailOrPhone)
+                .setRegistAt(new Date())
+                .setModifiedAt(new Date());
+
+        customerMapper.insert(customer);
+
+       // bind a brand for new user
+        newBrandWhenUserRegister(customer.getId(),emailOrPhone);
+        return true;
+
     }
 
 }

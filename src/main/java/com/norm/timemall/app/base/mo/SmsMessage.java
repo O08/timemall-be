@@ -1,4 +1,4 @@
-package com.norm.timemall.app.base.entity;
+package com.norm.timemall.app.base.mo;
 
 import java.io.Serializable;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -12,17 +12,17 @@ import mybatis.mate.annotation.Algorithm;
 import mybatis.mate.annotation.FieldEncrypt;
 
 /**
- * (customer)实体类
+ * (sms_message)实体类
  *
  * @author kancy
- * @since 2022-10-24 19:38:28
+ * @since 2025-03-20 16:34:09
  * @description 由 Mybatisplus Code Generator 创建
  */
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("customer")
-public class Customer extends Model<Customer> implements Serializable {
+@TableName("sms_message")
+public class SmsMessage extends Model<SmsMessage> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -30,50 +30,35 @@ public class Customer extends Model<Customer> implements Serializable {
      */
     @TableId
 	private String id;
-    /**
-     * socialLogin
-     */
-    private Integer socialLogin;
-    /**
-     * socialAccounts
-     */
-    private String socialAccounts;
-    /**
-     * customerName
-     */
-    private String customerName;
-    /**
-     * notifyEmail
-     */
-    @FieldEncrypt(algorithm = Algorithm.AES)
-    private String notifyEmail;
-    /**
-     * notifyPhone
-     */
-    @FieldEncrypt(algorithm = Algorithm.AES)
-    private String notifyPhone;
-    /**
-     * 登录时使用的手机号或者邮箱
-     */
-    @FieldEncrypt(algorithm = Algorithm.AES)
-    private String loginName;
 
     /**
-     * 微信登录
+     * 模版
      */
-    private String  unionid;
-
+    private String topic;
     /**
-     * registAt
+     * 电话号码
      */
-    private Date registAt;
+    @FieldEncrypt(algorithm = Algorithm.AES)
+    private String phone;
+    /**
+     * ip
+     */
+    @FieldEncrypt(algorithm = Algorithm.AES)
+    private String ip;
+    /**
+     * 消息
+     */
+    @FieldEncrypt(algorithm = Algorithm.AES)
+    private String body;
+
+    private String sendResponse;
+    /**
+     * createAt
+     */
+    private Date createAt;
     /**
      * modifiedAt
      */
     private Date modifiedAt;
-    /**
-     * password
-     */
-    private String password;
 
 }

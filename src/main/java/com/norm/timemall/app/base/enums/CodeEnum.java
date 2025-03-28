@@ -31,7 +31,7 @@ public enum CodeEnum implements Code{
 
     USER_ACCOUNT_EXPIRED(2002, "账号已过期"),
 
-    USER_CREDENTIALS_ERROR(2003, "密码错误"),
+    USER_CREDENTIALS_ERROR(2003, "账号或密码错误"),
 
     USER_CREDENTIALS_EXPIRED(2004, "密码过期"),
 
@@ -77,7 +77,9 @@ public enum CodeEnum implements Code{
     AFFILIATE_PPC_LINK_VISIT_EXIST(40029,"链接存在访问记录" ),
     STOP_INVITATION(40030, "暂停邀请"), WRONG_INVITATION_CODE(40031, "邀请码校验失败"), PRIVATE_OASIS(40032, "私密基地"),
     ALREADY_JOIN_OASIS(40033,"已加入基地" ), MAX_LIMIT(40034, "配额超限"),
-    UN_SUPPORT_REFUND_ACTION(40035,"不支持退款操作" );
+    UN_SUPPORT_REFUND_ACTION(40035,"不支持退款操作" ),
+    PHONE_LIMIT(40036,"短信业务已达最大配额，请明日再来" ),
+    PHONE_TEMPLATE_NOT_CONFIG(40037,"短信模版未配置" );
 
     private final int code;
     private final String desc;

@@ -50,6 +50,7 @@ public class WebSecurityConfig {
 
 
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -66,12 +67,6 @@ public class WebSecurityConfig {
                             .anyRequest().authenticated(); // 其他请求都需要授权后才能使用
 
                     })
-                .formLogin(form ->
-                        form.loginProcessingUrl("/api/v1/web_mall/email_sign_in")
-                            .permitAll().//允许所有用户
-                            successHandler(authenticationSuccessHandler).
-                            failureHandler(authenticationFailureHandler)
-                )
                 .logout(logout-> logout.logoutUrl("/api/v1/web_mall/logout").permitAll()
                         .logoutSuccessHandler(logoutSuccessHandler) //登出成功处理逻辑
                         .deleteCookies("JSESSIONID") )
@@ -90,6 +85,11 @@ public class WebSecurityConfig {
     }
 
     @Bean
+    public PhoneOrEmailAuthenticationProvider phoneOrEmailAuthenticationProvider() {
+        return new PhoneOrEmailAuthenticationProvider();
+    }
+
+    @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
@@ -101,7 +101,7 @@ public class WebSecurityConfig {
 
 
     /**
-     * 加载手机验证码登录
+     * 加载微信验证码登录
      */
 @Bean
     WechatQrCodeLoginFilter wechatQrCodeLoginFilter(HttpSecurity http) throws Exception {
@@ -117,6 +117,25 @@ public class WebSecurityConfig {
         return wechatQrCodeLoginFilter;
     }
 
+    /**
+     * 加载手机、邮箱用户登录
+     */
+    @Bean
+    PhoneOrEmailLoginFilter phoneOrEmailLoginFilter(HttpSecurity http) throws Exception {
+
+        PhoneOrEmailLoginFilter phoneOrEmailLoginFilter = new PhoneOrEmailLoginFilter();
+        //自定义登录url
+        phoneOrEmailLoginFilter.setFilterProcessesUrl("/api/v1/web_mall/email_or_phone_sign_in");
+        phoneOrEmailLoginFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler);
+        phoneOrEmailLoginFilter.setAuthenticationFailureHandler(authenticationFailureHandler);
+        phoneOrEmailLoginFilter.setAuthenticationManager(authenticationManager(http));
+        phoneOrEmailLoginFilter.setSecurityContextRepository(new HttpSessionSecurityContextRepository());
+        phoneOrEmailLoginFilter.setSecurityContextHolderStrategyWechat(new HttpSessionSecurityContextRepository());
+        phoneOrEmailLoginFilter.setSessionRegistry(sessionRegistry());
+        return phoneOrEmailLoginFilter;
+
+    }
+
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception{
 
@@ -124,6 +143,7 @@ public class WebSecurityConfig {
                 http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.authenticationProvider(daoAuthenticationProvider());//原来默认的
         authenticationManagerBuilder.authenticationProvider(wechatQrAuthenticationProvider());//自定义的
+        authenticationManagerBuilder.authenticationProvider(phoneOrEmailAuthenticationProvider());
 
         return authenticationManagerBuilder.build();
     }

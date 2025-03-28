@@ -24,4 +24,8 @@ public interface AccountService {
     Account findAccountByUnionid(String unionid);
 
     UserDetails loadUserForWechatLogin(String unionid);
+
+    UserDetails loadUserForPhoneOrEmailLogin(String username);
+
+    void doUniSignUp(String emailOrPhone, String password);
 }
