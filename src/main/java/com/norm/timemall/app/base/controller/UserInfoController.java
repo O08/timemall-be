@@ -37,6 +37,7 @@ public class UserInfoController {
             CurrentUser currentUser = new CurrentUser();
             currentUser.setUserId(rawUser.getUserId())
                     .setUsername(rawUser.getUsername())
+                    .setBrandName(brand==null ? "" : brand.getBrandName())
                     .setBrandId(brand == null ? "" :brand.getId())
                     .setAvatar(brand==null ? "" : brand.getAvator());
             user.setUser(currentUser);
