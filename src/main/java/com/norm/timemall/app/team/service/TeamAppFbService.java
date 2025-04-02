@@ -41,4 +41,7 @@ public interface TeamAppFbService {
     void doPinFeed(TeamAppFbPinFeedDTO dto);
 
     void resetFeedCover(String id);
+
+
+    void removeChannelData(String id);
 }

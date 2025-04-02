@@ -288,4 +288,15 @@ public class TeamAppFbServiceImpl implements TeamAppFbService {
         teamAppFbFeedMapper.update(feed,wrapper);
 
     }
+
+    @Override
+    public void removeChannelData(String id) {
+
+        LambdaQueryWrapper<AppFbGuide> wrapper =Wrappers.lambdaQuery();
+        wrapper.eq(AppFbGuide::getOasisChannelId,id);
+        teamAppFbGuideMapper.delete(wrapper);
+
+    }
+
+
 }

@@ -28,4 +28,6 @@ public interface TeamAppCardService {
     void doMarkCardAccessibility(TeamAppCardMarkCardAccessibilityDTO dto);
 
     void storeFeedStatisticsData(String id);
+
+    void removeChannelData(String id);
 }

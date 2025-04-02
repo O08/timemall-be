@@ -16,6 +16,7 @@ import com.norm.timemall.app.team.domain.dto.PutChannelGeneralDTO;
 import com.norm.timemall.app.team.domain.dto.RefreshOasisChannelSortDTO;
 import com.norm.timemall.app.team.domain.ro.FetchOasisChannelListRO;
 import com.norm.timemall.app.team.domain.ro.FetchOneOasisChannelGeneralInfoRO;
+import com.norm.timemall.app.team.helper.TeamAppChannelDelHelper;
 import com.norm.timemall.app.team.mapper.TeamOasisChannelMapper;
 import com.norm.timemall.app.team.mapper.TeamOasisHtmlAppMapper;
 import com.norm.timemall.app.team.mapper.TeamOasisMapper;
@@ -36,6 +37,10 @@ public class TeamOasisChannelServiceImpl implements TeamOasisChannelService {
 
     @Autowired
     private TeamOasisMapper teamOasisMapper;
+
+    @Autowired
+    private TeamAppChannelDelHelper teamAppChannelDelHelper;
+
 
     @Override
     public ArrayList<FetchOasisChannelListRO> findOasisChannelList(String oasisId) {
@@ -58,10 +63,10 @@ public class TeamOasisChannelServiceImpl implements TeamOasisChannelService {
 
         // remove from oasis channel
         teamOasisChannelMapper.deleteById(oasisChannelId);
-        // remove from html app content record
-        LambdaQueryWrapper<OasisHtmlApp> wrapper= Wrappers.lambdaQuery();
-        wrapper.eq(OasisHtmlApp::getOasisChannelId,oasisChannelId);
-        teamOasisHtmlAppMapper.delete(wrapper);
+
+        // remove oasis app data
+        teamAppChannelDelHelper.doRemoveOasisChannelData(oasisChannel);
+
 
         // update channel sort
         ArrayList<String> sortArr = oasis.getChannelSort() == null ? new ArrayList<>() : new ArrayList<>(Arrays.asList(new GsonBuilder().create().fromJson(oasis.getChannelSort().toString(), String[].class)));

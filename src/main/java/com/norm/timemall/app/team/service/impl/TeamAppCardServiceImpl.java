@@ -144,4 +144,20 @@ public class TeamAppCardServiceImpl implements TeamAppCardService {
         teamAppCardFeedMapper.autoIncrementViewsById(id);
 
     }
+
+    @Override
+    public void removeChannelData(String channel) {
+
+        // remove guide data
+        LambdaQueryWrapper<AppCardGuide> guideLambdaQueryWrapper =Wrappers.lambdaQuery();
+        guideLambdaQueryWrapper.eq(AppCardGuide::getOasisChannelId,channel);
+        teamAppCardGuideMapper.delete(guideLambdaQueryWrapper);
+
+        // remove card data
+        LambdaQueryWrapper<AppCardFeed> cardFeedLambdaQueryWrapper=Wrappers.lambdaQuery();
+        cardFeedLambdaQueryWrapper.eq(AppCardFeed::getOasisChannelId,channel);
+        teamAppCardFeedMapper.delete(cardFeedLambdaQueryWrapper);
+
+
+    }
 }

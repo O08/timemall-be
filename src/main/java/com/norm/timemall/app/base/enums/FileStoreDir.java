@@ -22,7 +22,8 @@ public enum FileStoreDir {
     RC_PPT_ITEM("rc/ppt/item","resource ppt dir" ), RC_PPT_PREVIEW("rc/ppt/preview","resource ppt preview dir" ),
     FEED_COVER("app/feed/cover","app feed store" ),
     FAST_LINK_LOGO("fast-link/logo", "oasis fast link logo dir"),
-    CARD_FEED_COVER("app/card/cover", "app card store");
+    CARD_FEED_COVER("app/card/cover", "app card store"),
+    LINKSHOPPING_FEED_COVER("app/link-shopping/cover", "app link shopping dir");
     private final String dir;
 
     private final String desc;

@@ -57,6 +57,16 @@ public class TeamOasisHtmlAppServiceImpl implements TeamOasisHtmlAppService {
         teamOasisHtmlAppMapper.update(oasisHtmlApp,wrapper);
 
     }
+
+    @Override
+    public void removeChannelData(String id) {
+
+        LambdaQueryWrapper<OasisHtmlApp> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(OasisHtmlApp::getOasisChannelId,id);
+        teamOasisHtmlAppMapper.delete(wrapper);
+
+    }
+
     private void initHtmlAppChannel(String oasisChannelId){
 
         OasisHtmlApp oasisHtmlApp= new OasisHtmlApp();

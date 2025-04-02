@@ -8,4 +8,6 @@ public interface TeamOasisHtmlAppService {
     String findHtmlCode(String oasisChannelId);
 
     void modifyHtmlContent(EditHtmlContentDTO dto);
+
+    void removeChannelData(String id);
 }
