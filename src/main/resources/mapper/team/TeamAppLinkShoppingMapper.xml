@@ -36,6 +36,9 @@
                 <when test='dto.sort == "3"'>
                     order by s.price desc
                 </when>
+                <when test='dto.sort == "4"'>
+                    order by s.modified_at desc
+                </when>
             </choose>
         </if>
 
