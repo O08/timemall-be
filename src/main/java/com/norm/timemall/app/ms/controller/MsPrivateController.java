@@ -12,6 +12,7 @@ import com.norm.timemall.app.base.enums.FileStoreDir;
 import com.norm.timemall.app.base.enums.MsgTypeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.mo.Brand;
+import com.norm.timemall.app.base.pojo.DefaultFileMessage;
 import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.base.service.FileStoreService;
 import com.norm.timemall.app.ms.constant.ChatSupportUploadImageFormat;
@@ -91,7 +92,7 @@ public class MsPrivateController {
         }
         // store file
         String uri = fileStoreService.storeWithUnlimitedAccess(file, FileStoreDir.DEFAULT_IMAGE_MESSAGE);
-        MsDefaultFileMessage msg = new MsDefaultFileMessage();
+        DefaultFileMessage msg = new DefaultFileMessage();
         msg.setUri(uri);
         msg.setFileName(file.getOriginalFilename());
         Gson gson = new Gson();
@@ -119,7 +120,7 @@ public class MsPrivateController {
         }
         // store file
         String uri = fileStoreService.storeWithUnlimitedAccess(file, FileStoreDir.DEFAULT_ATTACHMENT_MESSAGE);
-        MsDefaultFileMessage msg = new MsDefaultFileMessage();
+        DefaultFileMessage msg = new DefaultFileMessage();
         msg.setUri(uri);
         msg.setFileName(file.getOriginalFilename());
         Gson gson = new Gson();

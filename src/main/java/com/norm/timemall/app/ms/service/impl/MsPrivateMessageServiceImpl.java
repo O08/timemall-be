@@ -20,8 +20,8 @@ import com.norm.timemall.app.base.mo.PrivateRel;
 import com.norm.timemall.app.base.service.FileStoreService;
 import com.norm.timemall.app.ms.domain.dto.MsStoreDefaultTextMessageDTO;
 import com.norm.timemall.app.ms.domain.pojo.MsDefaultEventCard;
-import com.norm.timemall.app.ms.domain.pojo.MsDefaultFileMessage;
-import com.norm.timemall.app.ms.domain.pojo.MsDefaultTextMessage;
+import com.norm.timemall.app.base.pojo.DefaultFileMessage;
+import com.norm.timemall.app.base.pojo.DefaultTextMessage;
 import com.norm.timemall.app.ms.domain.pojo.SseEventMessage;
 import com.norm.timemall.app.ms.helper.SseHelper;
 import com.norm.timemall.app.ms.mapper.MsPrivateMsgMapper;
@@ -48,7 +48,7 @@ public class MsPrivateMessageServiceImpl implements MsPrivateMessageService {
 
         String currentUserId= SecurityUserHelper.getCurrentPrincipal().getUserId();
         String msgNo=IdUtil.simpleUUID();
-        MsDefaultTextMessage textMessage = new MsDefaultTextMessage();
+        DefaultTextMessage textMessage = new DefaultTextMessage();
         textMessage.setContent(dto.getMsg());
         Gson gson = new Gson();
         PrivateMsg meMsgRecord = new PrivateMsg();
@@ -148,7 +148,7 @@ public class MsPrivateMessageServiceImpl implements MsPrivateMessageService {
         privateMsgList.add(friendMsgRecord);
         msPrivateMsgMapper.insertBatchSomeColumn(privateMsgList);
         // friend will be msg receiver, currentUser will be the friend of receiver
-        MsDefaultFileMessage msDefaultFileMessage = new Gson().fromJson(msgJson, MsDefaultFileMessage.class);
+        DefaultFileMessage msDefaultFileMessage = new Gson().fromJson(msgJson, DefaultFileMessage.class);
         String latestContent=getPrivateRelLatestContentWhenSendMsg(MsgTypeEnum.ATTACHMENT,msDefaultFileMessage.getFileName());
         ssePushOneMessageHandler(friend,currentUserId,latestContent);
 
@@ -200,7 +200,7 @@ public class MsPrivateMessageServiceImpl implements MsPrivateMessageService {
         Gson gson =new Gson();
         if( MsgTypeEnum.IMAGE.getMark().equals(toDeleteMsgOne.getMsgType()) ||
             MsgTypeEnum.ATTACHMENT.getMark().equals(toDeleteMsgOne.getMsgType())){
-            MsDefaultFileMessage msDefaultFileMessage = gson.fromJson(toDeleteMsgOne.getMsg(), MsDefaultFileMessage.class);
+            DefaultFileMessage msDefaultFileMessage = gson.fromJson(toDeleteMsgOne.getMsg(), DefaultFileMessage.class);
             fileStoreService.deleteFile(msDefaultFileMessage.getUri());
         }
         modifyPrivateRelLatestContent(currentUserId,toDeleteMsgOne.getToId(),"你撤回了一条消息.");

@@ -79,7 +79,9 @@ public enum CodeEnum implements Code{
     ALREADY_JOIN_OASIS(40033,"已加入基地" ), MAX_LIMIT(40034, "配额超限"),
     UN_SUPPORT_REFUND_ACTION(40035,"不支持退款操作" ),
     PHONE_LIMIT(40036,"短信业务已达最大配额，请明日再来" ),
-    PHONE_TEMPLATE_NOT_CONFIG(40037,"短信模版未配置" );
+    PHONE_TEMPLATE_NOT_CONFIG(40037,"短信模版未配置" ),
+    ONLY_FOR_MEMBER(40038,"仅对已加入的成员开放" )
+    ;
 
     private final int code;
     private final String desc;

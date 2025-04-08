@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 import com.norm.timemall.app.base.mo.MpsMsg;
 import com.norm.timemall.app.ms.controller.MsStoreMpsTextMessageDTO;
 import com.norm.timemall.app.ms.domain.pojo.MsDefaultEvent;
-import com.norm.timemall.app.ms.domain.pojo.MsDefaultTextMessage;
+import com.norm.timemall.app.base.pojo.DefaultTextMessage;
 import com.norm.timemall.app.ms.mapper.MsMpsMsgMapper;
 import com.norm.timemall.app.ms.service.MsMpsMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ public class MsMpsMessageServiceImpl implements MsMpsMessageService {
 
     @Override
     public void addMessage(String room, MsStoreMpsTextMessageDTO dto) {
-        MsDefaultTextMessage textMessage = new MsDefaultTextMessage();
+        DefaultTextMessage textMessage = new DefaultTextMessage();
         textMessage.setContent(dto.getMsg());
         Gson gson = new Gson();
         MpsMsg msg = new MpsMsg();

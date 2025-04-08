@@ -12,7 +12,7 @@ import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.GroupMsg;
 import com.norm.timemall.app.ms.domain.dto.MsStoreDefaultTextMessageDTO;
 import com.norm.timemall.app.ms.domain.pojo.MsDefaultEventCard;
-import com.norm.timemall.app.ms.domain.pojo.MsDefaultTextMessage;
+import com.norm.timemall.app.base.pojo.DefaultTextMessage;
 import com.norm.timemall.app.ms.mapper.MsGroupMsgMapper;
 import com.norm.timemall.app.ms.service.MsGroupMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class MsGroupMessageServiceImpl implements MsGroupMessageService {
     @Override
     public void storeTextMessage(String channel, MsStoreDefaultTextMessageDTO dto) {
 
-        MsDefaultTextMessage textMessage = new MsDefaultTextMessage();
+        DefaultTextMessage textMessage = new DefaultTextMessage();
         textMessage.setContent(dto.getMsg());
         Gson gson = new Gson();
         GroupMsg msg =new GroupMsg();

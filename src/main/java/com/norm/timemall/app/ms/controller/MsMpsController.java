@@ -8,7 +8,7 @@ import com.norm.timemall.app.base.enums.FileStoreDir;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.service.FileStoreService;
 import com.norm.timemall.app.ms.domain.pojo.MsDefaultEvent;
-import com.norm.timemall.app.ms.domain.pojo.MsDefaultFileMessage;
+import com.norm.timemall.app.base.pojo.DefaultFileMessage;
 import com.norm.timemall.app.ms.domain.vo.MsDefaultEventVO;
 import com.norm.timemall.app.ms.service.MsMpsMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +54,7 @@ public class MsMpsController {
         }
         // store file
         String uri = fileStoreService.storeWithUnlimitedAccess(file, FileStoreDir.MPS_IMAGE_MESSAGE);
-        MsDefaultFileMessage msg = new MsDefaultFileMessage();
+        DefaultFileMessage msg = new DefaultFileMessage();
         msg.setUri(uri);
         msg.setFileName(file.getOriginalFilename());
         Gson gson = new Gson();
@@ -74,7 +74,7 @@ public class MsMpsController {
         }
         // store file
         String uri = fileStoreService.storeWithUnlimitedAccess(file, FileStoreDir.MPS_ATTACHMENT_MESSAGE);
-        MsDefaultFileMessage msg = new MsDefaultFileMessage();
+        DefaultFileMessage msg = new DefaultFileMessage();
         msg.setUri(uri);
         msg.setFileName(file.getOriginalFilename());
         Gson gson = new Gson();

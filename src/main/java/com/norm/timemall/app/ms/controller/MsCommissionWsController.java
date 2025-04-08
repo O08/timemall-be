@@ -12,7 +12,7 @@ import com.norm.timemall.app.base.service.FileStoreService;
 import com.norm.timemall.app.ms.constant.ChatSupportUploadImageFormat;
 import com.norm.timemall.app.ms.domain.dto.MsStoreDefaultTextMessageDTO;
 import com.norm.timemall.app.ms.domain.pojo.MsDefaultEvent;
-import com.norm.timemall.app.ms.domain.pojo.MsDefaultFileMessage;
+import com.norm.timemall.app.base.pojo.DefaultFileMessage;
 import com.norm.timemall.app.ms.domain.vo.MsDefaultEventVO;
 import com.norm.timemall.app.ms.service.MsCommissionMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +76,7 @@ public class MsCommissionWsController {
         }
         // store file
         String uri = fileStoreService.storeWithUnlimitedAccess(file, FileStoreDir.DEFAULT_IMAGE_MESSAGE);
-        MsDefaultFileMessage msg = new MsDefaultFileMessage();
+        DefaultFileMessage msg = new DefaultFileMessage();
         msg.setUri(uri);
         msg.setFileName(file.getOriginalFilename());
         Gson gson = new Gson();
@@ -101,7 +101,7 @@ public class MsCommissionWsController {
         }
         // store file
         String uri = fileStoreService.storeWithUnlimitedAccess(file, FileStoreDir.DEFAULT_ATTACHMENT_MESSAGE);
-        MsDefaultFileMessage msg = new MsDefaultFileMessage();
+        DefaultFileMessage msg = new DefaultFileMessage();
         msg.setUri(uri);
         msg.setFileName(file.getOriginalFilename());
         Gson gson = new Gson();

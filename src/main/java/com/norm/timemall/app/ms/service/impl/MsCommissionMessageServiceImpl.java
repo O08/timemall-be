@@ -9,7 +9,7 @@ import com.norm.timemall.app.base.mo.Commission;
 import com.norm.timemall.app.base.mo.CommissionWsMsg;
 import com.norm.timemall.app.ms.domain.dto.MsStoreDefaultTextMessageDTO;
 import com.norm.timemall.app.ms.domain.pojo.MsDefaultEvent;
-import com.norm.timemall.app.ms.domain.pojo.MsDefaultTextMessage;
+import com.norm.timemall.app.base.pojo.DefaultTextMessage;
 import com.norm.timemall.app.ms.mapper.MsCommissionMapper;
 import com.norm.timemall.app.ms.mapper.MsCommissionWsMsgMapper;
 import com.norm.timemall.app.ms.service.MsCommissionMessageService;
@@ -35,7 +35,7 @@ public class MsCommissionMessageServiceImpl implements MsCommissionMessageServic
     @Override
     public void storeTextMessage(String channel, MsStoreDefaultTextMessageDTO dto) {
 
-        MsDefaultTextMessage textMessage = new MsDefaultTextMessage();
+        DefaultTextMessage textMessage = new DefaultTextMessage();
         textMessage.setContent(dto.getMsg());
         Gson gson = new Gson();
         CommissionWsMsg msg = new CommissionWsMsg();

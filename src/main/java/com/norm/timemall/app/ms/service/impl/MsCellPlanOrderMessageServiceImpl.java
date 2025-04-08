@@ -3,10 +3,9 @@ package com.norm.timemall.app.ms.service.impl;
 import cn.hutool.core.util.IdUtil;
 import com.google.gson.Gson;
 import com.norm.timemall.app.base.mo.CellPlanMsg;
-import com.norm.timemall.app.base.mo.MpsMsg;
 import com.norm.timemall.app.ms.controller.MsStoreMpsTextMessageDTO;
 import com.norm.timemall.app.ms.domain.pojo.MsDefaultEvent;
-import com.norm.timemall.app.ms.domain.pojo.MsDefaultTextMessage;
+import com.norm.timemall.app.base.pojo.DefaultTextMessage;
 import com.norm.timemall.app.ms.mapper.MsCellPlanMsgMapper;
 import com.norm.timemall.app.ms.service.MsCellPlanOrderMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ public class MsCellPlanOrderMessageServiceImpl implements MsCellPlanOrderMessage
 
     @Override
     public void addMessage(String room, MsStoreMpsTextMessageDTO dto) {
-        MsDefaultTextMessage textMessage = new MsDefaultTextMessage();
+        DefaultTextMessage textMessage = new DefaultTextMessage();
         textMessage.setContent(dto.getMsg());
         Gson gson = new Gson();
         CellPlanMsg msg = new CellPlanMsg();

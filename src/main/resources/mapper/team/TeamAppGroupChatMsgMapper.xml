@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamAppGroupChatMsgMapper">
+    <sql id="tableName">
+        app_group_chat_msg
+    </sql>
+
+    <sql id="baseColumn">
+        id,oasis_channel_id,author_id,quote_msg_id,msg_type,msg,create_at,modified_at
+    </sql>
+
+    <select id="selectFeedPage" resultType="com.norm.timemall.app.team.domain.ro.TeamAppGroupChatFeedPageRO">
+
+        select
+          m.id ,
+          b.brand_name author,
+          b.avator authorIcon,
+          m.author_id authorUserId,
+          m.create_at,
+          m.msg_type,
+          m.msg,
+          q.id quoteMsgId,
+          q.msg quoteMsg,
+          b1.brand_name quoteAuthor,
+          q.msg_type quoteMsgType
+        from app_group_chat_msg m
+        left join brand b
+          on b.customer_id = m.author_id
+        left join app_group_chat_msg q
+          on  q.id = m.quote_msg_id
+        left join brand b1
+          on b1.customer_id = q.author_id
+        where m.oasis_channel_id = #{channel}
+        order by m.create_at desc
+
+    </select>
+
+</mapper>

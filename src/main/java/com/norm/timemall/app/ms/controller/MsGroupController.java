@@ -15,7 +15,7 @@ import com.norm.timemall.app.base.service.FileStoreService;
 import com.norm.timemall.app.ms.constant.ChatSupportUploadImageFormat;
 import com.norm.timemall.app.ms.domain.dto.MsStoreDefaultTextMessageDTO;
 import com.norm.timemall.app.ms.domain.pojo.MsDefaultEventCard;
-import com.norm.timemall.app.ms.domain.pojo.MsDefaultFileMessage;
+import com.norm.timemall.app.base.pojo.DefaultFileMessage;
 import com.norm.timemall.app.ms.domain.pojo.MsFetchGroupMemberProfile;
 import com.norm.timemall.app.ms.domain.vo.MsDefaultEventPageVO;
 import com.norm.timemall.app.ms.domain.vo.MsFetchGroupMemberProfileVO;
@@ -94,7 +94,7 @@ public class MsGroupController {
 
         // store file
         String uri = fileStoreService.storeWithUnlimitedAccess(file, FileStoreDir.DEFAULT_IMAGE_MESSAGE);
-        MsDefaultFileMessage msg = new MsDefaultFileMessage();
+        DefaultFileMessage msg = new DefaultFileMessage();
         msg.setUri(uri);
         msg.setFileName(file.getOriginalFilename());
         Gson gson = new Gson();
@@ -119,7 +119,7 @@ public class MsGroupController {
         }
         // store file
         String uri = fileStoreService.storeWithUnlimitedAccess(file, FileStoreDir.DEFAULT_ATTACHMENT_MESSAGE);
-        MsDefaultFileMessage msg = new MsDefaultFileMessage();
+        DefaultFileMessage msg = new DefaultFileMessage();
         msg.setUri(uri);
         msg.setFileName(file.getOriginalFilename());
         Gson gson = new Gson();
