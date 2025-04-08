@@ -42,9 +42,9 @@ public class TeamAppGroupChatController {
     @GetMapping(value = "/api/v1/app/group_chat/{channel}/feed")
     public TeamAppGroupChatFeedPageVO retrieveFeed(@PathVariable("channel") String channel, @Validated PageDTO dto ){
 
-        IPage<TeamAppGroupChatFeedPageRO> feed = teamAppGroupChatService.findFeeds(channel,dto);
+        IPage<TeamAppGroupChatFeedPageRO> event = teamAppGroupChatService.findFeeds(channel,dto);
         TeamAppGroupChatFeedPageVO vo = new TeamAppGroupChatFeedPageVO();
-        vo.setFeed(feed);
+        vo.setEvent(event);
         vo.setResponseCode(CodeEnum.SUCCESS);
         return vo;
 

@@ -7,6 +7,6 @@ import lombok.Data;
 
 @Data
 public class TeamAppGroupChatFeedPageVO  extends CodeVO {
-    private IPage<TeamAppGroupChatFeedPageRO> feed;
+    private IPage<TeamAppGroupChatFeedPageRO> event;
 
 }
