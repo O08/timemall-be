@@ -15,8 +15,10 @@ import com.norm.timemall.app.base.service.FileStoreService;
 import com.norm.timemall.app.ms.constant.ChatSupportUploadImageFormat;
 import com.norm.timemall.app.base.pojo.DefaultFileMessage;
 import com.norm.timemall.app.team.domain.dto.TeamAppGroupChatStoreTextMessageDTO;
+import com.norm.timemall.app.team.domain.pojo.TeamAppGroupChatFetchMember;
 import com.norm.timemall.app.team.domain.ro.TeamAppGroupChatFeedPageRO;
 import com.norm.timemall.app.team.domain.vo.TeamAppGroupChatFeedPageVO;
+import com.norm.timemall.app.team.domain.vo.TeamAppGroupChatFetchMemberVO;
 import com.norm.timemall.app.team.service.TeamAppGroupChatService;
 import com.norm.timemall.app.team.service.TeamDataPolicyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,16 @@ public class TeamAppGroupChatController {
         IPage<TeamAppGroupChatFeedPageRO> event = teamAppGroupChatService.findFeeds(channel,dto);
         TeamAppGroupChatFeedPageVO vo = new TeamAppGroupChatFeedPageVO();
         vo.setEvent(event);
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        return vo;
+
+    }
+    @GetMapping("/api/v1/app/group_chat/channel/{id}/member")
+    public TeamAppGroupChatFetchMemberVO retrieveMember(@PathVariable("id") String id){
+
+        TeamAppGroupChatFetchMember member = teamAppGroupChatService.findMember(id);
+        TeamAppGroupChatFetchMemberVO vo = new TeamAppGroupChatFetchMemberVO();
+        vo.setMember(member);
         vo.setResponseCode(CodeEnum.SUCCESS);
         return vo;
 

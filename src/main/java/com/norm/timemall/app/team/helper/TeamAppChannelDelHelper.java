@@ -2,10 +2,7 @@ package com.norm.timemall.app.team.helper;
 
 
 import com.norm.timemall.app.base.mo.OasisChannel;
-import com.norm.timemall.app.team.service.TeamAppCardService;
-import com.norm.timemall.app.team.service.TeamAppFbService;
-import com.norm.timemall.app.team.service.TeamAppLinkShoppingService;
-import com.norm.timemall.app.team.service.TeamOasisHtmlAppService;
+import com.norm.timemall.app.team.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +20,9 @@ public class TeamAppChannelDelHelper {
     @Autowired
     private TeamAppFbService teamAppFbService;
 
+    @Autowired
+    private TeamAppGroupChatService teamAppGroupChatService;
+
     public void doRemoveOasisChannelData(OasisChannel oasisChannel){
         switch (oasisChannel.getAppId()){
             case "1":
@@ -39,6 +39,9 @@ public class TeamAppChannelDelHelper {
 
             case "4":
                 teamAppLinkShoppingService.removeChannelData(oasisChannel.getId());
+                break;
+            case "5":
+                teamAppGroupChatService.removeChannelData(oasisChannel.getId());
                 break;
             default:
                 break;

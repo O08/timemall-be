@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.entity.PageDTO;
 import com.norm.timemall.app.base.mo.AppGroupChatMsg;
 import com.norm.timemall.app.team.domain.dto.TeamAppGroupChatStoreTextMessageDTO;
+import com.norm.timemall.app.team.domain.pojo.TeamAppGroupChatFetchMember;
 import com.norm.timemall.app.team.domain.ro.TeamAppGroupChatFeedPageRO;
 import org.springframework.stereotype.Service;
 
@@ -20,4 +21,8 @@ public interface TeamAppGroupChatService {
     AppGroupChatMsg findOneFeed(String id);
 
     void doRemoveMessage(String id);
+
+    TeamAppGroupChatFetchMember findMember(String channel);
+
+    void removeChannelData(String id);
 }
