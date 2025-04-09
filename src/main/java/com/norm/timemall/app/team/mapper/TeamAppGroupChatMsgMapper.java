@@ -22,6 +22,6 @@ import java.util.ArrayList;
 public interface TeamAppGroupChatMsgMapper extends BaseMapper<AppGroupChatMsg> {
 
     IPage<TeamAppGroupChatFeedPageRO> selectFeedPage(IPage<TeamAppGroupChatFeedPageRO> page, @Param("channel") String channel);
-    @Select("select b.avator avatar, b.brand_name ,b.id brandId from oasis_channel chn inner join oasis_member m on m.oasis_id=chn.oasis_id inner join brand b on b.id =  m.brand_id  where chn.id=#{channel} order by m.modified_at desc limit 100")
-    ArrayList<TeamAppGroupChatFetchMemberRO> selectListByChannel(@Param("channel") String channel);
+    @Select("select b.avator avatar, b.brand_name ,b.id brandId from oasis_channel chn inner join oasis_member m on m.oasis_id=chn.oasis_id inner join brand b on b.id =  m.brand_id  where chn.id=#{channel} and locate(#{q}, b.brand_name)>0  order by m.modified_at desc limit 100")
+    ArrayList<TeamAppGroupChatFetchMemberRO> selectListByChannel(@Param("channel") String channel,@Param("q") String q);
 }

@@ -52,9 +52,9 @@ public class TeamAppGroupChatController {
 
     }
     @GetMapping("/api/v1/app/group_chat/channel/{id}/member")
-    public TeamAppGroupChatFetchMemberVO retrieveMember(@PathVariable("id") String id){
+    public TeamAppGroupChatFetchMemberVO retrieveMember(@PathVariable("id") String id,String q){
 
-        TeamAppGroupChatFetchMember member = teamAppGroupChatService.findMember(id);
+        TeamAppGroupChatFetchMember member = teamAppGroupChatService.findMember(id,q);
         TeamAppGroupChatFetchMemberVO vo = new TeamAppGroupChatFetchMemberVO();
         vo.setMember(member);
         vo.setResponseCode(CodeEnum.SUCCESS);

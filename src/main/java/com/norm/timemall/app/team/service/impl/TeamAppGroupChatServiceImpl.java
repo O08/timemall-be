@@ -101,9 +101,9 @@ public class TeamAppGroupChatServiceImpl implements TeamAppGroupChatService {
     }
 
     @Override
-    public TeamAppGroupChatFetchMember findMember(String channel) {
+    public TeamAppGroupChatFetchMember findMember(String channel,String q) {
 
-        ArrayList<TeamAppGroupChatFetchMemberRO> records = teamAppGroupChatMsgMapper.selectListByChannel(channel);
+        ArrayList<TeamAppGroupChatFetchMemberRO> records = teamAppGroupChatMsgMapper.selectListByChannel(channel,q);
         TeamAppGroupChatFetchMember member = new TeamAppGroupChatFetchMember();
         member.setRecords(records);
         return member;

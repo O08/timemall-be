@@ -22,7 +22,7 @@ public interface TeamAppGroupChatService {
 
     void doRemoveMessage(String id);
 
-    TeamAppGroupChatFetchMember findMember(String channel);
+    TeamAppGroupChatFetchMember findMember(String channel,String q);
 
     void removeChannelData(String id);
 }
