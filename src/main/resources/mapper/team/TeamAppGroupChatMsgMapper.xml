@@ -19,7 +19,7 @@
           m.create_at,
           m.msg_type,
           m.msg,
-          q.id quoteMsgId,
+          m.quote_msg_id quoteMsgId,
           q.msg quoteMsg,
           b1.brand_name quoteAuthor,
           q.msg_type quoteMsgType
