@@ -5,6 +5,7 @@ import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.TransTypeEnum;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.service.OrderFlowService;
+import com.norm.timemall.app.team.domain.dto.TeamOasisAdminWithdrawDTO;
 import com.norm.timemall.app.team.domain.dto.TeamOasisCollectAccountDTO;
 import com.norm.timemall.app.team.domain.dto.TeamTopUpOasisDTO;
 import com.norm.timemall.app.team.service.TeamOasisCollectAccountService;
@@ -51,6 +52,18 @@ public class TeamOasisPayController {
 
         return new SuccessVO(CodeEnum.SUCCESS);
 
+    }
+
+    @PutMapping("/api/v1/team/oasis/admin_withdraw")
+    public SuccessVO adminWithdrawFromOasis(@Validated @RequestBody TeamOasisAdminWithdrawDTO dto){
+        try {
+            orderFlowService.insertOrderFlow(SecurityUserHelper.getCurrentPrincipal().getUserId(), TransTypeEnum.OASIS_ADMIN_WITHDRAW.getMark());
+            teamOasisCollectAccountService.adminWithdrawFromOasis(dto);
+        }finally {
+            orderFlowService.deleteOrderFlow(SecurityUserHelper.getCurrentPrincipal().getUserId(), TransTypeEnum.OASIS_ADMIN_WITHDRAW.getMark());
+        }
+
+        return new SuccessVO(CodeEnum.SUCCESS);
     }
     
 

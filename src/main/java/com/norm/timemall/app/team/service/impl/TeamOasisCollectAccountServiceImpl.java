@@ -1,6 +1,7 @@
 package com.norm.timemall.app.team.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import com.google.gson.Gson;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.FidTypeEnum;
 import com.norm.timemall.app.base.enums.TransDirectionEnum;
@@ -9,11 +10,16 @@ import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.FinAccount;
 import com.norm.timemall.app.base.mo.FinDistribute;
+import com.norm.timemall.app.base.mo.Oasis;
 import com.norm.timemall.app.base.mo.Transactions;
+import com.norm.timemall.app.base.pojo.TransferBO;
 import com.norm.timemall.app.base.service.AccountService;
+import com.norm.timemall.app.pay.service.DefaultPayService;
+import com.norm.timemall.app.team.domain.dto.TeamOasisAdminWithdrawDTO;
 import com.norm.timemall.app.team.domain.dto.TeamOasisCollectAccountDTO;
 import com.norm.timemall.app.team.mapper.TeamAccountMapper;
 import com.norm.timemall.app.team.mapper.TeamFinDistributeMapper;
+import com.norm.timemall.app.team.mapper.TeamOasisMapper;
 import com.norm.timemall.app.team.mapper.TeamTransactionsMapper;
 import com.norm.timemall.app.team.service.TeamOasisCollectAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +39,13 @@ public class TeamOasisCollectAccountServiceImpl implements TeamOasisCollectAccou
     private TeamTransactionsMapper teamTransactionsMapper;
     @Autowired
     private TeamFinDistributeMapper teamFinDistributeMapper;
+
+    @Autowired
+    private TeamOasisMapper teamOasisMapper;
+
+    @Autowired
+    private DefaultPayService defaultPayService;
+
     @Transactional
     @Override
     public void collectAccountFromOasis(TeamOasisCollectAccountDTO dto)
@@ -109,5 +122,44 @@ public class TeamOasisCollectAccountServiceImpl implements TeamOasisCollectAccou
         BigDecimal distributeBalance= finDistribute.getAmount().subtract(dto.getAmount());
         finDistribute.setAmount(distributeBalance);
         teamFinDistributeMapper.updateById(finDistribute);
+    }
+
+    @Override
+    public void adminWithdrawFromOasis(TeamOasisAdminWithdrawDTO dto) {
+
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+
+        // query oasis info , only for admin
+        Oasis oasis = teamOasisMapper.selectById(dto.getOasisId());
+        if(oasis==null || !brandId.equals(oasis.getInitiatorId())){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+
+        // query Oasis account, then check amount
+        FinAccount oasisFinAccount = teamAccountMapper.selectOneByFidForUpdate(dto.getOasisId(),FidTypeEnum.OASIS.getMark());
+        if(oasisFinAccount==null){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        if(dto.getAmount().compareTo(oasisFinAccount.getDrawable())>0){
+            throw new ErrorCodeException(CodeEnum.NO_SUFFICIENT_FUNDS);
+        }
+
+        // transfer money to admin account
+        TransferBO bo = generateTransferBOForAdminWithdraw(dto.getAmount(), dto.getOasisId(), dto.getOasisId(), brandId);
+        defaultPayService.transfer(new Gson().toJson(bo));
+
+
+    }
+
+    private TransferBO generateTransferBOForAdminWithdraw(BigDecimal amount, String outNo,String payer,String payee){
+        TransferBO bo = new TransferBO();
+        bo.setAmount(amount)
+                .setOutNo(outNo)
+                .setPayeeType(FidTypeEnum.BRAND.getMark())
+                .setPayeeAccount(payee)
+                .setPayerAccount(payer)
+                .setPayerType(FidTypeEnum.OASIS.getMark())
+                .setTransType(TransTypeEnum.OASIS_ADMIN_WITHDRAW.getMark());
+        return  bo;
     }
 }

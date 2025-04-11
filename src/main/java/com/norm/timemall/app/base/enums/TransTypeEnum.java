@@ -15,7 +15,8 @@ public enum TransTypeEnum {
     MILLSTONE_BILL_PAY("11","特约账单支付"),
     MILLSTONE_AFFILIATE_PAY("12","特约账单佣金"),
     PLAN_ORDER_AFFILIATE_PAY("13", "单品佣金"),
-    PPC_BILL("15","ppc 打款")
+    PPC_BILL("15","ppc 打款"),
+    OASIS_ADMIN_WITHDRAW("16","oasis 管理员取出资金"),
     ;
     private String mark;
     private String desc;
