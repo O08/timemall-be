@@ -32,7 +32,7 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
     @Autowired
     private TeamTransactionsMapper teamTransactionsMapper;
     @Autowired
-    private TeamAccountMapper teamAccountMapper;
+    private TeamFinAccountMapper teamFinAccountMapper;
     @Autowired
     private TeamOasisJoinMapper teamOasisJoinMapper;
     @Autowired
@@ -138,10 +138,10 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
         // 2. update or insert fin_distribute
         teamCommissionHelper.UpdateFinDistribute(commission.getOasisId(), commission.getWorker(), commission.getBonus());
         // 3. update finAccount amount
-        FinAccount brandFinAccount = teamAccountMapper.selectOneByFidForUpdate(commission.getWorker(),FidTypeEnum.BRAND.getMark());
+        FinAccount brandFinAccount = teamFinAccountMapper.selectOneByFidForUpdate(commission.getWorker(),FidTypeEnum.BRAND.getMark());
         BigDecimal brandFinAccountAmountBalance = brandFinAccount.getAmount().add(commission.getBonus());
         brandFinAccount.setAmount(brandFinAccountAmountBalance);
-        teamAccountMapper.updateById(brandFinAccount);
+        teamFinAccountMapper.updateById(brandFinAccount);
         // 4. update oasis join
         updateOasisJoinModifiedAt(commission.getOasisId(), commission.getWorker());
         // 5. mark commission   deliver tag as delivered

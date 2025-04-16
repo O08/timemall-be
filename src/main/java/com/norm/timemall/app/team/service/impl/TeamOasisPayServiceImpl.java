@@ -11,7 +11,7 @@ import com.norm.timemall.app.base.mo.FinAccount;
 import com.norm.timemall.app.base.mo.Transactions;
 import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.team.domain.dto.TeamTopUpOasisDTO;
-import com.norm.timemall.app.team.mapper.TeamAccountMapper;
+import com.norm.timemall.app.team.mapper.TeamFinAccountMapper;
 import com.norm.timemall.app.team.mapper.TeamTransactionsMapper;
 import com.norm.timemall.app.team.service.TeamOasisPayService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import java.util.Date;
 @Service
 public class TeamOasisPayServiceImpl implements TeamOasisPayService {
     @Autowired
-    private TeamAccountMapper teamAccountMapper;
+    private TeamFinAccountMapper teamFinAccountMapper;
     @Autowired
     private AccountService accountService;
     @Autowired
@@ -36,9 +36,9 @@ public class TeamOasisPayServiceImpl implements TeamOasisPayService {
         String brandId = accountService.
                 findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
                 .getId();
-        FinAccount brandFinAccount = teamAccountMapper.selectOneByFidForUpdate(brandId, FidTypeEnum.BRAND.getMark());
+        FinAccount brandFinAccount = teamFinAccountMapper.selectOneByFidForUpdate(brandId, FidTypeEnum.BRAND.getMark());
         // query Oasis account
-        FinAccount oasisFinAccount = teamAccountMapper.selectOneByFidForUpdate(dto.getOasisId(),FidTypeEnum.OASIS.getMark());
+        FinAccount oasisFinAccount = teamFinAccountMapper.selectOneByFidForUpdate(dto.getOasisId(),FidTypeEnum.OASIS.getMark());
         // validate
         if(brandFinAccount == null || oasisFinAccount == null ||
                 brandFinAccount.getDrawable().compareTo(dto.getAmount())<0){
@@ -77,11 +77,11 @@ public class TeamOasisPayServiceImpl implements TeamOasisPayService {
         // action option
         BigDecimal brandBalance = brandFinAccount.getDrawable().subtract(dto.getAmount());
         brandFinAccount.setDrawable(brandBalance);
-        teamAccountMapper.updateById(brandFinAccount);
+        teamFinAccountMapper.updateById(brandFinAccount);
 
         BigDecimal oasisBalance = oasisFinAccount.getDrawable().add(dto.getAmount());
         oasisFinAccount.setDrawable(oasisBalance);
-        teamAccountMapper.updateById(oasisFinAccount);
+        teamFinAccountMapper.updateById(oasisFinAccount);
 
 
     }

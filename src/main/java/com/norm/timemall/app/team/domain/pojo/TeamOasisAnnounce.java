@@ -13,4 +13,5 @@ public class TeamOasisAnnounce {
     private String canAddMember;
     private String forPrivate;
     private String privateCode;
+    private String mark;
 }

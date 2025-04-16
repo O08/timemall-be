@@ -23,7 +23,7 @@ public enum FileStoreDir {
     FEED_COVER("app/feed/cover","app feed store" ),
     FAST_LINK_LOGO("fast-link/logo", "oasis fast link logo dir"),
     CARD_FEED_COVER("app/card/cover", "app card store"),
-    LINKSHOPPING_FEED_COVER("app/link-shopping/cover", "app link shopping dir");
+    LINKSHOPPING_FEED_COVER("app/link-shopping/cover", "app link shopping dir"), CASE_MATERIAL("dsp-case/material", "dsp case material");
     private final String dir;
 
     private final String desc;

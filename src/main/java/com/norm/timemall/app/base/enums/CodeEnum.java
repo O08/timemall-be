@@ -35,7 +35,7 @@ public enum CodeEnum implements Code{
 
     USER_CREDENTIALS_EXPIRED(2004, "密码过期"),
 
-    USER_ACCOUNT_LOCKED(2006, "账号被锁定"),
+    USER_ACCOUNT_LOCKED(2006, "账号被冻结"),
 
     USER_ACCOUNT_NOT_EXIST(2007, "账号不存在"),
 
@@ -80,7 +80,8 @@ public enum CodeEnum implements Code{
     UN_SUPPORT_REFUND_ACTION(40035,"不支持退款操作" ),
     PHONE_LIMIT(40036,"短信业务已达最大配额，请明日再来" ),
     PHONE_TEMPLATE_NOT_CONFIG(40037,"短信模版未配置" ),
-    ONLY_FOR_MEMBER(40038,"仅对已加入的成员开放" )
+    ONLY_FOR_MEMBER(40038,"仅对已加入的成员开放" ),
+    USER_ALI_PAY_ACCOUNT_NOT_EXIST(40039,"支付宝账号未配置" )
     ;
 
     private final int code;

@@ -23,6 +23,7 @@ public class BluvarrierServiceImpl implements BluvarrierService {
         Bluvarrier bluvarrier = mallBluvarrierMapper.selectOne(lambdaQueryWrapper);
         FetchBluvarrierRO ro=new FetchBluvarrierRO();
         ro.setCustomerId(bluvarrier.getCustomerId());
+        ro.setBrandId(bluvarrier.getBrandId());
         return ro;
 
     }

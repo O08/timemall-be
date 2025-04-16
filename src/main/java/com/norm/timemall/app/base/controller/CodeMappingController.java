@@ -19,13 +19,7 @@ public class CodeMappingController {
 
     @GetMapping("/api/v1/base/code_mapping")
     public BaseFetchCodeMappingListVO fetchCodeMappingList(@Validated BaseFetchCodeMappingDTO dto){
-        // only occupation and industry can open
-        String occupationCodeType="occupation";
-        String industryCodeType="industry";
-        if(!(occupationCodeType.equals(dto.getCodeType())
-                || industryCodeType.equals(dto.getCodeType()))){
-            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
-        }
+
         BaseFetchCodeMapping codes = baseCodeMappingService.findCodeMappingList(dto);
         BaseFetchCodeMappingListVO vo = new BaseFetchCodeMappingListVO();
         vo.setResponseCode(CodeEnum.SUCCESS);

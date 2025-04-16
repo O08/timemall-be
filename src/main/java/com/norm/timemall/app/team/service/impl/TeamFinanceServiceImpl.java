@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class TeamFinanceServiceImpl implements TeamFinanceService {
 
     @Autowired
-    private TeamAccountMapper teamAccountMapper;
+    private TeamFinAccountMapper teamFinAccountMapper;
     @Autowired
     private TeamTransactionsMapper teamTransactionsMapper;
 
@@ -31,7 +31,7 @@ public class TeamFinanceServiceImpl implements TeamFinanceService {
     @Override
     public TeamFinBoardRO kanban() {
         String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
-        FinAccount account = teamAccountMapper.selectOneByFid(brandId, FidTypeEnum.BRAND.getMark());
+        FinAccount account = teamFinAccountMapper.selectOneByFid(brandId, FidTypeEnum.BRAND.getMark());
         TeamFinBoardRO ro = new TeamFinBoardRO();
         ro.setAmount(account==null ? BigDecimal.ZERO : account.getAmount());
         ro.setDrawable(account==null? BigDecimal.ZERO :account.getDrawable());
@@ -50,7 +50,7 @@ public class TeamFinanceServiceImpl implements TeamFinanceService {
 
     @Override
     public TeamFinBoardRO oasisKanban(String oasisId) {
-        FinAccount account = teamAccountMapper.selectOneByFid(oasisId, FidTypeEnum.OASIS.getMark());
+        FinAccount account = teamFinAccountMapper.selectOneByFid(oasisId, FidTypeEnum.OASIS.getMark());
         TeamFinBoardRO ro = new TeamFinBoardRO();
         ro.setAmount(account==null ? BigDecimal.ZERO : account.getAmount());
         ro.setDrawable(account==null? BigDecimal.ZERO :account.getDrawable());

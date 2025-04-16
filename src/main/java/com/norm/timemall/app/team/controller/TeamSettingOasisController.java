@@ -31,4 +31,11 @@ public class TeamSettingOasisController {
         teamOasisService.modifyOasisBaseInfo(dto);
         return new SuccessVO(CodeEnum.SUCCESS);
     }
+
+    @PutMapping("/api/v1/team/dsp_case/action/oasis/{oasis_id}/freeze")
+    public SuccessVO freezeOasis(@PathVariable("oasis_id") String oasisId){
+
+        teamOasisService.blockedOasis(oasisId);
+        return new SuccessVO(CodeEnum.SUCCESS);
+    }
 }

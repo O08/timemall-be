@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class FetchBluvarrierRO {
     private String customerId;
+    private String brandId;
 }

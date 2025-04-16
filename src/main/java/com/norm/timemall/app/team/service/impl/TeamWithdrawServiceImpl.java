@@ -1,10 +1,12 @@
 package com.norm.timemall.app.team.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSON;
 import com.alipay.api.response.AlipayFundTransToaccountTransferResponse;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.FidTypeEnum;
+import com.norm.timemall.app.base.enums.FinAccountMarkEnum;
 import com.norm.timemall.app.base.enums.WithdrawTagEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
@@ -13,7 +15,7 @@ import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.base.service.OrderFlowService;
 import com.norm.timemall.app.pay.domain.dto.WithDrawDTO;
 import com.norm.timemall.app.team.domain.pojo.WithdrawToALiPayBO;
-import com.norm.timemall.app.team.mapper.TeamAccountMapper;
+import com.norm.timemall.app.team.mapper.TeamFinAccountMapper;
 import com.norm.timemall.app.team.mapper.TeamBrandAlipayMapper;
 import com.norm.timemall.app.team.mapper.TeamTransactionsMapper;
 import com.norm.timemall.app.team.mapper.TeamWithdrawRecordMapper;
@@ -31,7 +33,7 @@ public class TeamWithdrawServiceImpl implements TeamWithdrawService {
     @Autowired
     private TeamBrandAlipayMapper teamBrandAlipayMapper;
     @Autowired
-    private TeamAccountMapper teamAccountMapper;
+    private TeamFinAccountMapper teamFinAccountMapper;
 
     @Autowired
     private TeamWithdrawRecordMapper teamWithdrawRecordMapper;
@@ -59,11 +61,22 @@ public class TeamWithdrawServiceImpl implements TeamWithdrawService {
         String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
 
         // 查询账户信息 提现金额验证
-        FinAccount account = teamAccountMapper.selectOneByFid(brandId, FidTypeEnum.BRAND.getMark());
+        FinAccount account = teamFinAccountMapper.selectOneByFid(brandId, FidTypeEnum.BRAND.getMark());
         if(account == null || dto.getAmount().compareTo(account.getDrawable())>0){
             throw  new ErrorCodeException(CodeEnum.NO_SUFFICIENT_FUNDS);
         }
+        BigDecimal usedCredit = teamWithdrawRecordMapper.selectUsedCreditIn24Hour(brandId, DateUtil.beginOfDay(new Date()));
+        BigDecimal remainingCredit = account.getBankLine() ==null ? BigDecimal.valueOf(500000) :  account.getBankLine().subtract(usedCredit);
+        // 限额处理
+        if(FinAccountMarkEnum.WITHDRAW_LIMIT.getMark().equals(account.getMark())
+                && dto.getAmount().compareTo(remainingCredit)>0){
+
+            throw  new ErrorCodeException(CodeEnum.MAX_LIMIT);
+        }
         BrandAlipay brandAlipay = teamBrandAlipayMapper.selectById(dto.getToAccountId());
+        if(brandAlipay==null){
+            throw  new ErrorCodeException(CodeEnum.USER_ALI_PAY_ACCOUNT_NOT_EXIST);
+        }
         // insert record
         WithdrawRecord record = new WithdrawRecord();
         BigDecimal feeRate = BigDecimal.valueOf(0.03); // todo change to config
@@ -101,7 +114,7 @@ public class TeamWithdrawServiceImpl implements TeamWithdrawService {
                 .setModifiedAt(new Date());
         teamWithdrawRecordMapper.updateById(record);
         // account option
-        teamAccountMapper.updateMinusAccountByFid(record.getAmount(),brandId,FidTypeEnum.BRAND.getMark());
+        teamFinAccountMapper.updateMinusAccountByFid(record.getAmount(),brandId,FidTypeEnum.BRAND.getMark());
 
     }
 

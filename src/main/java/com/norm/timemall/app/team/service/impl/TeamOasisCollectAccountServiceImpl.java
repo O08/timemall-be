@@ -17,7 +17,7 @@ import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.pay.service.DefaultPayService;
 import com.norm.timemall.app.team.domain.dto.TeamOasisAdminWithdrawDTO;
 import com.norm.timemall.app.team.domain.dto.TeamOasisCollectAccountDTO;
-import com.norm.timemall.app.team.mapper.TeamAccountMapper;
+import com.norm.timemall.app.team.mapper.TeamFinAccountMapper;
 import com.norm.timemall.app.team.mapper.TeamFinDistributeMapper;
 import com.norm.timemall.app.team.mapper.TeamOasisMapper;
 import com.norm.timemall.app.team.mapper.TeamTransactionsMapper;
@@ -32,7 +32,7 @@ import java.util.Date;
 @Service
 public class TeamOasisCollectAccountServiceImpl implements TeamOasisCollectAccountService {
     @Autowired
-    private TeamAccountMapper teamAccountMapper;
+    private TeamFinAccountMapper teamFinAccountMapper;
     @Autowired
     private AccountService accountService;
     @Autowired
@@ -55,9 +55,9 @@ public class TeamOasisCollectAccountServiceImpl implements TeamOasisCollectAccou
                 .getId();
         FinDistribute finDistribute= teamFinDistributeMapper.selectDistributeByBrandIdAndOasisId(brandId,dto.getOasisId());
         // query brand account
-        FinAccount brandFinAccount = teamAccountMapper.selectOneByFid(brandId, FidTypeEnum.BRAND.getMark());
+        FinAccount brandFinAccount = teamFinAccountMapper.selectOneByFid(brandId, FidTypeEnum.BRAND.getMark());
         // query Oasis account
-        FinAccount oasisFinAccount = teamAccountMapper.selectOneByFidForUpdate(dto.getOasisId(),FidTypeEnum.OASIS.getMark());
+        FinAccount oasisFinAccount = teamFinAccountMapper.selectOneByFidForUpdate(dto.getOasisId(),FidTypeEnum.OASIS.getMark());
         // query collect account trans
         Transactions brandCollectAccountTran = teamTransactionsMapper.selectCollectAccountForTodayTrans(brandId,
                 FidTypeEnum.BRAND.getMark(),dto.getOasisId(),FidTypeEnum.OASIS.getMark());
@@ -112,11 +112,11 @@ public class TeamOasisCollectAccountServiceImpl implements TeamOasisCollectAccou
         // action option
         BigDecimal brandBalance = brandFinAccount.getDrawable().add(dto.getAmount());
         brandFinAccount.setDrawable(brandBalance);
-        teamAccountMapper.updateById(brandFinAccount);
+        teamFinAccountMapper.updateById(brandFinAccount);
 
         BigDecimal oasisBalance = oasisFinAccount.getDrawable().subtract(dto.getAmount());
         oasisFinAccount.setDrawable(oasisBalance);
-        teamAccountMapper.updateById(oasisFinAccount);
+        teamFinAccountMapper.updateById(oasisFinAccount);
 
         // update fin_distribute
         BigDecimal distributeBalance= finDistribute.getAmount().subtract(dto.getAmount());
@@ -136,7 +136,7 @@ public class TeamOasisCollectAccountServiceImpl implements TeamOasisCollectAccou
         }
 
         // query Oasis account, then check amount
-        FinAccount oasisFinAccount = teamAccountMapper.selectOneByFidForUpdate(dto.getOasisId(),FidTypeEnum.OASIS.getMark());
+        FinAccount oasisFinAccount = teamFinAccountMapper.selectOneByFidForUpdate(dto.getOasisId(),FidTypeEnum.OASIS.getMark());
         if(oasisFinAccount==null){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }

@@ -159,5 +159,13 @@ public class AuthenticationController {
         return new SuccessVO(CodeEnum.SUCCESS);
     }
 
+    @PutMapping("/api/v1/team/dsp_case/action/account/{user_id}/freeze")
+    public SuccessVO freezeAccount(@PathVariable("user_id") String userId){
+
+        accountService.blockedAccount(userId);
+        return new SuccessVO(CodeEnum.SUCCESS);
+
+    }
+
 
 }

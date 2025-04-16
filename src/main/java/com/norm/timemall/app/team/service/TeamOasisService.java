@@ -35,4 +35,7 @@ public interface TeamOasisService {
 
 
     void doSetting(TeamOasisSettingDTO dto);
+
+    void blockedOasis(String oasisId);
+
 }

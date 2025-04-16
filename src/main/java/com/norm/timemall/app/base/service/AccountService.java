@@ -28,4 +28,7 @@ public interface AccountService {
     UserDetails loadUserForPhoneOrEmailLogin(String username);
 
     void doUniSignUp(String emailOrPhone, String password);
+
+    void blockedAccount(String userId);
+
 }

@@ -1,13 +1,13 @@
 package com.norm.timemall.app.base.enums;
 
-public enum SequenceKeyEnum {
-    PUZZLE_VERSION_ONE("puzzle_version_one","解密第一期"),
-    DSP_CASE_NO("dsp_case_no","举报编号")
+public enum FinAccountMarkEnum {
+    NORMAL("0","正常"),
+    WITHDRAW_LIMIT("1","限额处理")
     ;
     private String mark;
     private String desc;
 
-    SequenceKeyEnum(String mark, String desc) {
+    FinAccountMarkEnum(String mark, String desc) {
         this.mark = mark;
         this.desc = desc;
     }

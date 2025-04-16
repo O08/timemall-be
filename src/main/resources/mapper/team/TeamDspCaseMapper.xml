@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamDspCaseMapper">
+
+
+    <select id="selectPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamFetchDspCaseListPageRO">
+        select
+          d.case_desc,
+          d.case_no,
+          d.case_status,
+          d.create_at,
+          d.fraud_type,
+          m.item fraudTypeDesc,
+          d.peacemaker_brand_id,
+          b.brand_name peacemakerBrandName,
+          b.customer_id peacemakerUserId,
+          d.scene,
+          d.scene_url,
+          d.solution
+        from dsp_case d
+        inner join code_mapping m
+          on m.code_type='fraud_type'
+            and m.item_code=d.fraud_type
+        inner join brand b
+          on b.id=d.peacemaker_brand_id
+        where
+        1 = 1
+        <if test="dto.q != null and dto.q != ''">
+            AND ( locate(#{dto.q}, m.item)>0
+              or locate(#{dto.q}, d.case_desc)>0
+              or locate(#{dto.q}, d.case_no)>0
+            )
+        </if>
+        <if test="dto.caseStatus != null and dto.caseStatus != ''">
+            and d.case_status=#{dto.caseStatus}
+        </if>
+        <if test="dto.materialType != null and dto.materialType != ''">
+            <choose>
+                <when test='dto.materialType == "informer"'>
+                    and d.informer_brand_id = #{userBrandId}
+                </when>
+                <when test='dto.materialType == "defendant"'>
+                    and d.defendant_brand_id= #{userBrandId}
+                </when>
+                <when test='dto.materialType == "peacemaker"'>
+                    and 1=0
+                </when>
+            </choose>
+        </if>
+
+    </select>
+
+    <select id="selectLibraryByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamFetchDspCaseLibraryPageRO">
+        select
+            d.id,
+            d.case_desc,
+            d.case_no,
+            d.case_status,
+            d.create_at,
+            d.fraud_type,
+            d.case_amount,
+            d.claim_amount,
+            m.item fraudTypeDesc,
+            f.brand_name defendantBrandName,
+            i.brand_name informerBrandName,
+            d.scene,
+            d.case_priority,
+            d.scene_url,
+            d.solution
+        from dsp_case d
+        inner join code_mapping m
+          on m.code_type='fraud_type'
+             and m.item_code=d.fraud_type
+        inner join brand i
+          on i.id=d.informer_brand_id
+        inner join brand f
+          on f.id=d.defendant_brand_id
+        where
+          1 = 1
+          and d.peacemaker_brand_id=#{peacemaker_brand_id}
+        <if test="dto.q != null and dto.q != ''">
+            AND ( locate(#{dto.q}, m.item)>0
+                 or locate(#{dto.q}, d.case_no)>0
+                 or locate(#{dto.q}, d.case_desc)>0
+                 or locate(#{dto.q}, i.brand_name)>0
+                 or locate(#{dto.q}, f.brand_name)>0
+            )
+        </if>
+        <if test="dto.casePriority != null and dto.casePriority != ''">
+            and d.case_priority=#{dto.casePriority}
+        </if>
+        <if test="dto.caseStatus != null and dto.caseStatus != ''">
+            and d.case_status=#{dto.caseStatus}
+        </if>
+        <if test="dto.sort != null and dto.sort != ''">
+            <choose>
+                <when test='dto.sort == "1"'>
+                    order by d.create_at desc
+                </when>
+                <when test='dto.sort == "2"'>
+                    order by d.case_amount desc
+                </when>
+            </choose>
+        </if>
+
+    </select>
+
+    <select id="selectOneCaseByCaseNO" resultType="com.norm.timemall.app.team.domain.ro.TeamGetDspOneCaseInfoBasicRO">
+        select
+            d.id,
+            d.case_desc,
+            d.case_no,
+            d.case_status,
+            d.create_at,
+            d.fraud_type,
+            d.case_amount,
+            d.claim_amount,
+            m.item fraudTypeDesc,
+            f.id defendantUserId,
+            f.brand_name defendantBrandName,
+            i.id informerUserId,
+            i.brand_name informerBrandName,
+            d.scene,
+            d.case_priority,
+            d.scene_url,
+            d.solution
+        from dsp_case d
+        inner join code_mapping m
+           on m.code_type='fraud_type'
+            and m.item_code=d.fraud_type
+        inner join brand i
+           on i.id=d.informer_brand_id
+        inner join brand f
+           on f.id=d.defendant_brand_id
+        where
+          1 = 1
+          and d.case_no=#{case_no}
+          and d.peacemaker_brand_id=#{peacemaker_brand_id}
+
+    </select>
+
+</mapper>

@@ -76,4 +76,7 @@ public class Customer extends Model<Customer> implements Serializable {
      */
     private String password;
 
+    // 账号状态
+    private String mark;
+
 }

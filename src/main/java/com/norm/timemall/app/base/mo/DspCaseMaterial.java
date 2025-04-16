@@ -4,23 +4,23 @@ import java.io.Serializable;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import java.math.BigDecimal;
+import java.util.Date;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
- * (account)实体类
+ * (dsp_case_material)实体类
  *
  * @author kancy
- * @since 2023-03-15 11:04:49
+ * @since 2025-04-14 15:02:32
  * @description 由 Mybatisplus Code Generator 创建
  */
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("fin_account")
-public class FinAccount extends Model<FinAccount> implements Serializable {
+@TableName("dsp_case_material")
+public class DspCaseMaterial extends Model<DspCaseMaterial> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -29,27 +29,28 @@ public class FinAccount extends Model<FinAccount> implements Serializable {
     @TableId
 	private String id;
     /**
-     * 交易对象
+     * 案件编号
      */
-    private String fid;
+    private String caseNo;
     /**
-     * 交易对象type: oasis or brand or user or other
+     * 类型：peacemaker -- 调解员上传的资料；informer -- 吹哨人上传的资料；defendant -- 被举报人上传资料
      */
-    private String fidType;
+    private String materialType;
     /**
-     * 持有价值
+     * 资料
      */
-    private BigDecimal amount;
+    private String materialName;
     /**
-     * 可提取余额
+     * 资料地址
      */
-    private BigDecimal drawable;
-
-    // 账号状态
-    private String mark;
-
-    // 限额
-    private BigDecimal bankLine;
-
+    private String materialUrl;
+    /**
+     * createAt
+     */
+    private Date createAt;
+    /**
+     * modifiedAt
+     */
+    private Date modifiedAt;
 
 }

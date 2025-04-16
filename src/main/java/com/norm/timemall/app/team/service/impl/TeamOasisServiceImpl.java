@@ -47,6 +47,9 @@ public class TeamOasisServiceImpl implements TeamOasisService {
     @Autowired
     private TeamGroupMemberRelMapper teamGroupMemberRelMapper;
 
+    @Autowired
+    private TeamBluvarrierMapper teamBluvarrierMapper;
+
     @Override
     public IPage<TeamOasisRO> findOasis(TeamOasisPageDTO dto) {
         IPage<TeamOasisRO> page = new Page<>();
@@ -242,6 +245,23 @@ public class TeamOasisServiceImpl implements TeamOasisService {
                 .eq(Oasis::getInitiatorId, brandId);
 
         teamOasisMapper.update(oasis,wrapper);
+
+    }
+
+    @Override
+    public void blockedOasis(String oasisId) {
+        String currentBrandId=SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        LambdaQueryWrapper<Bluvarrier> lambdaQueryWrapper= Wrappers.lambdaQuery();
+        lambdaQueryWrapper.eq(Bluvarrier::getRoleCode, BluvarrierRoleEnum.HOSTING.getMark());
+        Bluvarrier bluvarrier = teamBluvarrierMapper.selectOne(lambdaQueryWrapper);
+        if(bluvarrier==null || !currentBrandId.equals(bluvarrier.getBrandId())){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        Oasis oasis = new Oasis();
+        oasis.setId(oasisId)
+                .setMark(OasisMarkEnum.BLOCKED.getMark())
+                .setModifiedAt(new Date());
+        teamOasisMapper.updateById(oasis);
 
     }
 }
