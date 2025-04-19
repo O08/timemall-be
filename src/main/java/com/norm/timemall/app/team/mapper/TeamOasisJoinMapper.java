@@ -27,12 +27,12 @@ public interface TeamOasisJoinMapper extends BaseMapper<OasisJoin> {
     ArrayList<TeamInviteRO> selectListByUser(@Param("brand_id") String brandId);
 @Update("update oasis_join j set tag = #{tag} where id = #{id}")
     void updateTagById(@Param("id") String id, @Param("tag") String mark);
-    @Select("select o.avatar,o.title,o.id from oasis_join j inner join  oasis  o on j.oasis_id = o.id  inner join brand b2 on b2.id = o.initiator_id where j.brand_id=#{brand_id} and j.tag='2' and o.mark = '2' order by j.modified_at desc")
+    @Select("select o.mark,o.avatar,o.title,o.id from oasis_join j inner join  oasis  o on j.oasis_id = o.id  inner join brand b2 on b2.id = o.initiator_id where j.brand_id=#{brand_id} and j.tag='2' and o.mark in( '2','4') order by j.modified_at desc")
     ArrayList<TeamJoinedRO> selectJoinedOasesByUser(@Param("brand_id") String userId);
     @Update("update oasis_join j set modified_at = now() where oasis_id = #{oasis_id} and brand_id =#{brand_id}")
     void updateModifiedAtByBrandIdAndOasisId(@Param("oasis_id") String oasisId, @Param("brand_id") String brandId);
 
     ArrayList<TeamFetchFriendRO> selectFriendNotInOasis(@Param("dto") TeamFetchFriendListDTO dto, @Param("user_id") String userId);
-    @Select("select o.avatar,o.title,o.id from oasis_join j inner join  oasis  o on j.oasis_id = o.id  inner join brand b2 on b2.id = o.initiator_id where j.brand_id=#{brand_id} and j.tag='2' and o.mark = '2' and ((o.for_private= '1' and  o.initiator_id=#{brand_id}) or o.for_private='0' ) order by j.modified_at desc")
+    @Select("select o.mark, o.avatar,o.title,o.id from oasis_join j inner join  oasis  o on j.oasis_id = o.id  inner join brand b2 on b2.id = o.initiator_id where j.brand_id=#{brand_id} and j.tag='2' and o.mark = '2' and ((o.for_private= '1' and  o.initiator_id=#{brand_id}) or o.for_private='0' ) order by j.modified_at desc")
     ArrayList<TeamJoinedRO> selectShareOasisByUser(@Param("brand_id") String brandId);
 }

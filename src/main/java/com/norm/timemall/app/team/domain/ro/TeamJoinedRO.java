@@ -7,4 +7,5 @@ public class TeamJoinedRO {
     private String avatar;
     private String title;
     private String id;
+    private String mark;
 }

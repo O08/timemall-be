@@ -1,7 +1,6 @@
 package com.norm.timemall.app.team.domain.dto;
 
 import com.norm.timemall.app.base.enums.DspCaseStatusEnum;
-import com.norm.timemall.app.base.enums.SwitchCheckEnum;
 import com.norm.timemall.app.base.validator.EnumCheck;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
