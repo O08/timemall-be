@@ -2,10 +2,7 @@ package com.norm.timemall.app.team.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import com.google.gson.Gson;
-import com.norm.timemall.app.base.enums.CodeEnum;
-import com.norm.timemall.app.base.enums.FidTypeEnum;
-import com.norm.timemall.app.base.enums.TransDirectionEnum;
-import com.norm.timemall.app.base.enums.TransTypeEnum;
+import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.FinAccount;
@@ -50,6 +47,16 @@ public class TeamOasisCollectAccountServiceImpl implements TeamOasisCollectAccou
     @Override
     public void collectAccountFromOasis(TeamOasisCollectAccountDTO dto)
     {
+        // query oasis
+        Oasis oasis = teamOasisMapper.selectById(dto.getOasisId());
+
+        if(oasis==null){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        if(OasisMarkEnum.BLOCKED.getMark().equals(oasis.getMark())){
+            throw new ErrorCodeException(CodeEnum.OASIS_LOCKED);
+        }
+
         String brandId = accountService.
                 findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
                 .getId();
@@ -133,6 +140,9 @@ public class TeamOasisCollectAccountServiceImpl implements TeamOasisCollectAccou
         Oasis oasis = teamOasisMapper.selectById(dto.getOasisId());
         if(oasis==null || !brandId.equals(oasis.getInitiatorId())){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        if(OasisMarkEnum.BLOCKED.getMark().equals(oasis.getMark())){
+            throw new ErrorCodeException(CodeEnum.OASIS_LOCKED);
         }
 
         // query Oasis account, then check amount
