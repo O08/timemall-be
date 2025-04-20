@@ -12,6 +12,7 @@ public class TeamFetchDspCaseListPageRO {
     private String fraudTypeDesc;
     private String peacemakerBrandId;
     private String peacemakerBrandName;
+    private String peacemakerAvatar;
     private String peacemakerUserId;
     private String scene;
     private String sceneUrl;

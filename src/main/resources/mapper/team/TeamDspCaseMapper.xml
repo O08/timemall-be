@@ -13,6 +13,7 @@
           m.item fraudTypeDesc,
           d.peacemaker_brand_id,
           b.brand_name peacemakerBrandName,
+          b.avator peacemakerAvatar,
           b.customer_id peacemakerUserId,
           d.scene,
           d.scene_url,
