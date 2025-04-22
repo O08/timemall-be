@@ -52,6 +52,13 @@ public class ExceptionHandle {
         log.error("error:", e);
         return new ErrorVO(e.getCode());
     }
+    @ExceptionHandler(value = QuickMessageException.class)
+    public ErrorVO quickMessageHandler(QuickMessageException e) {
+        ErrorVO vo = new ErrorVO();
+        vo.setCode(CodeEnum.FAILED.getCode());
+        vo.setMessage(e.getMessage());
+        return vo;
+    }
     @ExceptionHandler(value = MultipartException.class)
     public ErrorVO multipartExceptionHandler(MultipartException e) {
         log.error("error:", e);

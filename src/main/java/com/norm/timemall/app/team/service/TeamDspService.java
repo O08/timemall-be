@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface TeamDspService {
-    void newCase(TeamDspAddCaseDTO dto,String materialUrl);
+    void newCase(TeamDspAddCaseDTO dto,String materialName,String materialUrl);
 
     IPage<TeamFetchDspCaseListPageRO> findDspCaseList(TeamFetchDspCaseListPageDTO dto);
 

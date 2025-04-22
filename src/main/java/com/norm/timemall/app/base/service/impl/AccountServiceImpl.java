@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
+import com.norm.timemall.app.base.exception.QuickMessageException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mapper.BaseBluvarrierMapper;
 import com.norm.timemall.app.base.mapper.BaseBrandMapper;
@@ -236,6 +237,10 @@ public class AccountServiceImpl implements AccountService {
         Bluvarrier bluvarrier = baseBluvarrierMapper.selectOne(lambdaQueryWrapper);
         if(bluvarrier==null || !currentBrandId.equals(bluvarrier.getBrandId())){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        Customer targetUser = customerMapper.selectById(userId);
+        if(targetUser==null){
+            throw new QuickMessageException("user not exist");
         }
         Customer customer =new Customer();
         customer.setId(userId)

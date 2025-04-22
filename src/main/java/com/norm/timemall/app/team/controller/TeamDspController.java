@@ -36,6 +36,7 @@ public class TeamDspController {
     @PostMapping("/api/v1/team/dsp_case/new")
     public SuccessVO addCase(@Validated TeamDspAddCaseDTO dto){
         String materialUrl="";
+        String materialName="";
         // validate link url
         if(!Validator.isUrl(dto.getSceneUrl())){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
@@ -52,12 +53,13 @@ public class TeamDspController {
 
         // store file to oss
         if(!(dto.getMaterial() == null || dto.getMaterial().isEmpty())){
+            materialName = dto.getMaterial().getOriginalFilename();
             materialUrl = fileStoreService.storeWithLimitedAccess(dto.getMaterial(), FileStoreDir.CASE_MATERIAL);
         }
 
 
 
-        teamDspService.newCase(dto,materialUrl);
+        teamDspService.newCase(dto,materialName,materialUrl);
         return new SuccessVO(CodeEnum.SUCCESS);
 
     }

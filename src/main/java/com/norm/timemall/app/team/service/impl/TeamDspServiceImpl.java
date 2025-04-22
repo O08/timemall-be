@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
+import com.norm.timemall.app.base.exception.QuickMessageException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mapper.BaseSequenceMapper;
 import com.norm.timemall.app.base.mo.*;
@@ -52,7 +53,7 @@ public class TeamDspServiceImpl implements TeamDspService {
     private TeamFinAccountMapper teamFinAccountMapper;
 
     @Override
-    public void newCase(TeamDspAddCaseDTO dto,String materialUrl) {
+    public void newCase(TeamDspAddCaseDTO dto,String materialName,String materialUrl) {
         String defendantBrandId = getDefendantBrandId(dto.getScene(),dto.getSceneUrl());
         if(CharSequenceUtil.isBlank(defendantBrandId)){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
@@ -63,9 +64,10 @@ public class TeamDspServiceImpl implements TeamDspService {
         Bluvarrier peacemaker = teamBluvarrierMapper.selectOne(lambdaQueryWrapper);
 
         Long no = baseSequenceMapper.nextSequence(SequenceKeyEnum.DSP_CASE_NO.getMark());
+        String caseNO = "FO"+RandomUtil.randomStringUpper(5)+no;
         DspCase dspCase = new DspCase();
         dspCase.setId(IdUtil.simpleUUID())
-                .setCaseNo("FO"+RandomUtil.randomStringUpper(6)+no)
+                .setCaseNo(caseNO)
                 .setFraudType(dto.getFraudType())
                 .setCaseDesc(dto.getCaseDesc())
                 .setScene(dto.getScene())
@@ -80,6 +82,18 @@ public class TeamDspServiceImpl implements TeamDspService {
         ;
 
         teamDspCaseMapper.insert(dspCase);
+
+        DspCaseMaterial material = new DspCaseMaterial();
+        material.setId(IdUtil.simpleUUID())
+                .setMaterialName(materialName)
+                .setMaterialUrl(materialUrl)
+                .setCaseNo(caseNO)
+                .setMaterialType(DspMaterialTypeEnum.INFORMER.getMark())
+                .setCreateAt(new Date())
+                .setModifiedAt(new Date());
+
+        teamDspCaseMaterialMapper.insert(material);
+
 
     }
 
@@ -203,14 +217,9 @@ public class TeamDspServiceImpl implements TeamDspService {
         if(dspCase==null || !currentBrandId.equals(dspCase.getPeacemakerBrandId())){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
-        dspCase.setCaseAmount(dto.getCaseAmount())
-                .setClaimAmount(dto.getClaimAmount())
-                .setSolution(dto.getSolution())
-                .setCaseStatus(dto.getCaseStatus())
-                .setCasePriority(dto.getCasePriority())
-                .setModifiedAt(new Date());
 
-        teamDspCaseMapper.updateById(dspCase);
+
+        teamDspCaseMapper.updateCaseInfoByCaseNO(dto);
 
     }
 
@@ -219,6 +228,12 @@ public class TeamDspServiceImpl implements TeamDspService {
 
 
         validatedRoleAsPeacemaker();
+
+        // validated cell
+        Cell targetCell = teamCellMapper.selectById(id);
+        if(targetCell==null){
+            throw new QuickMessageException("cell not exist");
+        }
 
         Cell cell =new Cell();
         cell.setId(id)

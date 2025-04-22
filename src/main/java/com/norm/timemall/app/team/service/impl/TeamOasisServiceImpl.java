@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
+import com.norm.timemall.app.base.exception.QuickMessageException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mapper.FinAccountMapper;
 import com.norm.timemall.app.base.mo.*;
@@ -256,6 +257,11 @@ public class TeamOasisServiceImpl implements TeamOasisService {
         Bluvarrier bluvarrier = teamBluvarrierMapper.selectOne(lambdaQueryWrapper);
         if(bluvarrier==null || !currentBrandId.equals(bluvarrier.getBrandId())){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        // validated oasis
+        Oasis targetOasis = teamOasisMapper.selectById(oasisId);
+        if(targetOasis==null){
+            throw new QuickMessageException("oasis not exist");
         }
         Oasis oasis = new Oasis();
         oasis.setId(oasisId)
