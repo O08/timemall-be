@@ -8,7 +8,7 @@ import com.norm.timemall.app.pod.domain.vo.PodGetVirtualOrderDeliverMaterialVO;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface PodVirtualProductService {
+public interface PodVirtualProductOrderService {
     IPage<PodFetchVirtualOrderPageRO> findOrderList(PodFetchVirtualOrderPageDTO dto);
 
     PodGetVirtualOrderDeliverMaterialVO findOrderDeliverMaterial(String orderId);

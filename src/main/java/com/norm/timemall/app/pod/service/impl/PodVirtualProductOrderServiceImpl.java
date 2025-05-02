@@ -17,13 +17,13 @@ import com.norm.timemall.app.pod.domain.ro.PodGetVirtualOrderDeliverMaterialRO;
 import com.norm.timemall.app.pod.domain.vo.PodGetVirtualOrderDeliverMaterialVO;
 import com.norm.timemall.app.pod.mapper.PodVirtualOrderMapper;
 import com.norm.timemall.app.pod.mapper.PodVirtualProductMapper;
-import com.norm.timemall.app.pod.service.PodVirtualProductService;
+import com.norm.timemall.app.pod.service.PodVirtualProductOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 @Service
-public class PodVirtualProductServiceImpl implements PodVirtualProductService {
+public class PodVirtualProductOrderServiceImpl implements PodVirtualProductOrderService {
 
     @Autowired
     private PodVirtualOrderMapper podVirtualOrderMapper;
