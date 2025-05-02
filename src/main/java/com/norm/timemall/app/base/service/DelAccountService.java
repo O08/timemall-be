@@ -29,4 +29,6 @@ public interface DelAccountService {
 
     void labelCommercialPaperAsClosed();
 
+
+    void labelVirtualProductAsOffline();
 }

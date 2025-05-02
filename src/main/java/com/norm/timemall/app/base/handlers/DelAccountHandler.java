@@ -68,6 +68,8 @@ public class DelAccountHandler {
         delAccountService.labelCellAsOffline();
         // 终止所有商单
         delAccountService.labelCommercialPaperAsClosed();
+        // 下线用户的虚拟商品
+        delAccountService.labelVirtualProductAsOffline();
 
     }
 

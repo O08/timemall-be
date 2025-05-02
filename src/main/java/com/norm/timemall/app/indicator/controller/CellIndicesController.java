@@ -7,10 +7,12 @@ import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.indicator.domain.dto.CellIndicesPageDTO;
 import com.norm.timemall.app.indicator.domain.dto.IndDataLayerCellIndicesDTO;
+import com.norm.timemall.app.indicator.domain.dto.IndDataLayerVirtualProductIndicesDTO;
 import com.norm.timemall.app.indicator.domain.ro.IndCellIndicesRO;
 import com.norm.timemall.app.indicator.domain.vo.IndCellIndicesPageVO;
 import com.norm.timemall.app.indicator.service.CellIndicesService;
 import com.norm.timemall.app.indicator.service.IndAffiliateAccessService;
+import com.norm.timemall.app.indicator.service.IndVirtualProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -25,6 +27,9 @@ public class CellIndicesController {
     private CellIndicesService cellIndicesService;
     @Autowired
     private IndAffiliateAccessService indAffiliateAccessService;
+
+    @Autowired
+    private IndVirtualProductService indVirtualProductService;
     /*
      * 分页查询服务指标： 曝光、点击。。。。
      */
@@ -49,4 +54,13 @@ public class CellIndicesController {
         return new SuccessVO(CodeEnum.SUCCESS);
 
     }
+
+    @PutMapping("/api/v1/web_mall/data_layer/virtual_product/indices")
+    public SuccessVO dataLayerVirtualProductIndices(@Validated @RequestBody IndDataLayerVirtualProductIndicesDTO dto){
+        indVirtualProductService.modifyIndices(dto);
+        return new SuccessVO(CodeEnum.SUCCESS);
+
+    }
+
+
 }

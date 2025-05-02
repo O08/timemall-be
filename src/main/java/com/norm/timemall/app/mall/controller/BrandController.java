@@ -13,9 +13,12 @@ import com.norm.timemall.app.mall.domain.vo.BrandGuideVO;
 import com.norm.timemall.app.mall.domain.vo.BrandProfileVO;
 import com.norm.timemall.app.mall.service.BrandService;
 import com.norm.timemall.app.mall.service.CellService;
+import com.norm.timemall.app.mall.service.MallVirtualProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 
 @RestController
 public class BrandController {
@@ -24,6 +27,9 @@ public class BrandController {
     private BrandService brandService;
     @Autowired
     private CellService cellService;
+
+    @Autowired
+    private MallVirtualProductService mallVirtualProductService;
     /*
      * 供应商资料
      */
@@ -34,16 +40,16 @@ public class BrandController {
         BrandProfileVO result = brandService.findBrandProfile(brandId);
         return result;
     }
-    @ResponseBody
+
     @PostMapping(value = "/api/v1/web_mall/brand/guide")
     public BrandGuideVO fetchBrandGuide(@Validated @RequestBody BrandGuideDTO dto){
         BrandGuideResponseContext responseContext = new BrandGuideResponseContext();
          //fetch home info
-        MallHomeInfo homeInfo = cellService.findHomeInfo(dto);
+        MallHomeInfo homeInfo = mallVirtualProductService.findHomeInfo(dto);
         responseContext.setHomeInfo(homeInfo);
 
-        // fetch cells
-        if (homeInfo!=null &&  !homeInfo.getCells().isEmpty()){
+        // fetch  cells
+        if (homeInfo!=null){
             String brandId=homeInfo.getBrowseBrandId();
             BrandCellsPageDTO brandCellsPageDTO=new BrandCellsPageDTO();
             brandCellsPageDTO.setBrandId(brandId)
@@ -54,11 +60,14 @@ public class BrandController {
             IPage<CellRO> brandCells = cellService.findBrandCells(brandCellsPageDTO);
             responseContext.setCells(brandCells);
         }
-        if(homeInfo==null || homeInfo.getCells().isEmpty()){
+        if(homeInfo==null){
             Page<CellRO> emptyCellsObj = new Page<>();
             emptyCellsObj.setSize(12L);
             emptyCellsObj.setCurrent(1L);
             responseContext.setCells(emptyCellsObj);
+            MallHomeInfo emptyHomeInfo = new MallHomeInfo();
+            emptyHomeInfo.setVr(new ArrayList<>());
+            responseContext.setHomeInfo(emptyHomeInfo);
         }
 
         BrandGuideVO vo =new BrandGuideVO();

@@ -17,6 +17,9 @@ public enum TransTypeEnum {
     PLAN_ORDER_AFFILIATE_PAY("13", "单品佣金"),
     PPC_BILL("15","ppc 打款"),
     OASIS_ADMIN_WITHDRAW("16","oasis 管理员取出资金"),
+    VIRTUAL_PRODUCT_ORDER_PAY("17","虚拟商品付款"),
+    VIRTUAL_REMITTANCE_TO_SELLER("18","虚拟商品平台汇款到卖家")
+
     ;
     private String mark;
     private String desc;

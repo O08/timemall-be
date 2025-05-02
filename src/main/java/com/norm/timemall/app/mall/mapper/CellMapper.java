@@ -3,12 +3,10 @@ package com.norm.timemall.app.mall.mapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.norm.timemall.app.mall.domain.dto.BrandCellsPageDTO;
-import com.norm.timemall.app.mall.domain.dto.BrandGuideDTO;
 import com.norm.timemall.app.mall.domain.dto.CellPageDTO;
 import com.norm.timemall.app.base.mo.Cell;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.norm.timemall.app.base.pojo.ro.CellIntroRO;
-import com.norm.timemall.app.mall.domain.pojo.MallHomeInfo;
 import com.norm.timemall.app.mall.domain.ro.CellRO;
 import com.norm.timemall.app.mall.domain.ro.MallFetchMarqueeCellRO;
 import org.apache.ibatis.annotations.Mapper;
@@ -31,7 +29,6 @@ public interface CellMapper extends BaseMapper<Cell> {
 
     IPage<CellRO> selectBrandCellPage(Page<CellRO> page, @Param("dto") BrandCellsPageDTO dto);
 
-    MallHomeInfo selectHomeInfoByBrandIdOrHandle(@Param("dto") BrandGuideDTO dto);
 
 
     ArrayList<MallFetchMarqueeCellRO> selectMarqueeCell();

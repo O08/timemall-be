@@ -5,14 +5,12 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.mall.domain.dto.BrandCellsPageDTO;
-import com.norm.timemall.app.mall.domain.dto.BrandGuideDTO;
 import com.norm.timemall.app.mall.domain.dto.CellPageDTO;
 import com.norm.timemall.app.base.pojo.ro.CellIntroRO;
 import com.norm.timemall.app.base.pojo.vo.CellIntroVO;
 import com.norm.timemall.app.mall.domain.pojo.Fee;
 import com.norm.timemall.app.mall.domain.pojo.MallCellPricing;
 import com.norm.timemall.app.mall.domain.pojo.MallFetchMarqueeCell;
-import com.norm.timemall.app.mall.domain.pojo.MallHomeInfo;
 import com.norm.timemall.app.mall.domain.ro.MallFetchMarqueeCellRO;
 import com.norm.timemall.app.mall.domain.vo.CellPricingVO;
 import com.norm.timemall.app.mall.mapper.CellMapper;
@@ -56,10 +54,7 @@ public class CellServiceImpl implements CellService {
     }
 
 
-    @Override
-    public MallHomeInfo findHomeInfo(BrandGuideDTO dto) {
-        return cellMapper.selectHomeInfoByBrandIdOrHandle(dto);
-    }
+
 
     @Override
     public CellPricingVO findCellPricing(String cellId) {

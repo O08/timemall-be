@@ -54,6 +54,7 @@ public class ExceptionHandle {
     }
     @ExceptionHandler(value = QuickMessageException.class)
     public ErrorVO quickMessageHandler(QuickMessageException e) {
+        log.error("error:", e);
         ErrorVO vo = new ErrorVO();
         vo.setCode(CodeEnum.FAILED.getCode());
         vo.setMessage(e.getMessage());

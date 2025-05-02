@@ -2,10 +2,7 @@ package com.norm.timemall.app.base.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.norm.timemall.app.base.enums.BrandMarkEnum;
-import com.norm.timemall.app.base.enums.CellMarkEnum;
-import com.norm.timemall.app.base.enums.CommercialPaperTagEnum;
-import com.norm.timemall.app.base.enums.OasisMarkEnum;
+import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mapper.*;
 import com.norm.timemall.app.base.mo.*;
@@ -40,6 +37,8 @@ public class DelAccountServiceImpl implements DelAccountService {
     private BaseCellMapper baseCellMapper;
     @Autowired
     private BaseCommercialPaperMapper baseCommercialPaperMapper;
+    @Autowired
+    private BaseVirtualProductMapper baseVirtualProductMapper;
 
     @Override
     public void delAlipayInfo() {
@@ -138,5 +137,13 @@ public class DelAccountServiceImpl implements DelAccountService {
 
         baseCommercialPaperMapper.updateTagAsClosedBySupplier(CommercialPaperTagEnum.CLOSED.getMark(),SecurityUserHelper.getCurrentPrincipal().getBrandId());
 
+    }
+
+
+
+    @Override
+    public void labelVirtualProductAsOffline() {
+        String sellerBrandId=SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        baseVirtualProductMapper.updateProductStatusBySeller(sellerBrandId, ProductStatusEnum.OFFLINE.getMark());
     }
 }

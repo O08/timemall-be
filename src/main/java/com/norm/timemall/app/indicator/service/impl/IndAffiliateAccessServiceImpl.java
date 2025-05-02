@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
-import com.norm.timemall.app.base.enums.IndDataLayerCellIndicesEventEnum;
+import com.norm.timemall.app.base.enums.IndDataLayerIndicesEventEnum;
 import com.norm.timemall.app.base.mo.AffiliateAccess;
 import com.norm.timemall.app.base.util.IpLocationUtil;
 import com.norm.timemall.app.indicator.domain.dto.IndDataLayerCellIndicesDTO;
@@ -24,7 +24,7 @@ public class IndAffiliateAccessServiceImpl implements IndAffiliateAccessService 
     public void newAccess(IndDataLayerCellIndicesDTO dto, HttpServletRequest request) {
 
         // is valid param
-        if(    (!IndDataLayerCellIndicesEventEnum.CLICKS.getMark().equals(dto.getEvent()))
+        if(    (!IndDataLayerIndicesEventEnum.CLICKS.getMark().equals(dto.getEvent()))
                 || CollUtil.isEmpty(dto.getCell().getClicks())
                 || ObjectUtil.isNull(dto.getAffiliate())
                 ||  CharSequenceUtil.isBlank(dto.getAffiliate().getInfluencer())

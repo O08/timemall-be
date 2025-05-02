@@ -8,10 +8,13 @@ import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.base.service.OrderFlowService;
 import com.norm.timemall.app.mall.domain.dto.AffiliateDTO;
 import com.norm.timemall.app.mall.domain.dto.OrderDTO;
+import com.norm.timemall.app.mall.domain.dto.OrderVirtualProductDTO;
 import com.norm.timemall.app.mall.domain.vo.OrderCellPlanVO;
 import com.norm.timemall.app.mall.domain.vo.OrderCellVO;
+import com.norm.timemall.app.mall.domain.vo.OrderVirtualProductVO;
 import com.norm.timemall.app.mall.service.CellPlanOrderService;
 import com.norm.timemall.app.mall.service.OrderDetailService;
+import com.norm.timemall.app.mall.service.MallVirtualProductOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -24,6 +27,9 @@ public class OrderController {
     private OrderDetailService orderDetailService;
     @Autowired
     private CellPlanOrderService cellPlanOrderService;
+
+    @Autowired
+    private MallVirtualProductOrderService mallVirtualProductOrderService;
     @Autowired
     private OrderFlowService orderFlowService;
 
@@ -60,6 +66,40 @@ public class OrderController {
         }
         vo.setResponseCode(CodeEnum.SUCCESS);
         return vo;
+
+    }
+    @PostMapping("/api/v1/mall/virtual/order")
+    public OrderVirtualProductVO orderVirtualProduct(@RequestBody @Validated OrderVirtualProductDTO dto){
+
+        OrderVirtualProductVO vo = new OrderVirtualProductVO();
+        try {
+            orderFlowService.insertOrderFlow(SecurityUserHelper.getCurrentPrincipal().getUserId(),
+                    TransTypeEnum.VIRTUAL_PRODUCT_ORDER_PAY.getMark());
+            String orderId = mallVirtualProductOrderService.newOrder(dto);
+            vo.setOrderId(orderId);
+
+        }finally {
+            orderFlowService.deleteOrderFlow(SecurityUserHelper.getCurrentPrincipal().getUserId(),
+                    TransTypeEnum.VIRTUAL_PRODUCT_ORDER_PAY.getMark());
+        }
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        return vo;
+
+    }
+
+    @PostMapping("/api/v1/mall/virtual/order/{id}/repay")
+    public SuccessVO rePayVirtualProductOrder(@PathVariable("id") String orderId){
+
+        try {
+            orderFlowService.insertOrderFlow(SecurityUserHelper.getCurrentPrincipal().getUserId(),
+                    TransTypeEnum.VIRTUAL_PRODUCT_ORDER_PAY.getMark());
+
+            mallVirtualProductOrderService.repayOrder(orderId);
+        }finally {
+            orderFlowService.deleteOrderFlow(SecurityUserHelper.getCurrentPrincipal().getUserId(),
+                    TransTypeEnum.VIRTUAL_PRODUCT_ORDER_PAY.getMark());
+        }
+        return  new SuccessVO(CodeEnum.SUCCESS);
 
     }
 

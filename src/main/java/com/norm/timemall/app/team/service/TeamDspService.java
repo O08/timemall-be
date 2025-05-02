@@ -30,4 +30,5 @@ public interface TeamDspService {
 
     void withdrawToAlipayCreditSetting(WithdrawToAlipayCreditSettingDTO dto);
 
+    void doOfflineVirtualProduct(String id);
 }

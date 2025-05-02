@@ -24,10 +24,13 @@ import com.norm.timemall.app.team.domain.vo.TeamGetDspCaseMaterialVO;
 import com.norm.timemall.app.team.domain.vo.TeamGetDspOneCaseInfoVO;
 import com.norm.timemall.app.team.mapper.*;
 import com.norm.timemall.app.team.service.TeamDspService;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 @Service
@@ -51,6 +54,12 @@ public class TeamDspServiceImpl implements TeamDspService {
 
     @Autowired
     private TeamFinAccountMapper teamFinAccountMapper;
+
+    @Autowired
+    private TeamVirtualProductMapper teamVirtualProductMapper;
+
+    @Autowired
+    private TeamVirtualOrderMapper teamVirtualOrderMapper;
 
     @Override
     public void newCase(TeamDspAddCaseDTO dto,String materialName,String materialUrl) {
@@ -279,6 +288,24 @@ public class TeamDspServiceImpl implements TeamDspService {
 
     }
 
+    @Override
+    public void doOfflineVirtualProduct(String id) {
+
+        validatedRoleAsPeacemaker();
+
+        // validated cell
+        VirtualProduct targetProduct = teamVirtualProductMapper.selectById(id);
+        if(targetProduct==null){
+            throw new QuickMessageException("cell not exist");
+        }
+
+        targetProduct.setProductStatus(ProductStatusEnum.OFFLINE.getMark());
+        targetProduct.setModifiedAt(new Date());
+
+        teamVirtualProductMapper.updateById(targetProduct);
+
+    }
+
     private String getDefendantBrandId(String scene,String sceneUrl){
         String defendantBrandId="";
         switch(scene){
@@ -294,6 +321,15 @@ public class TeamDspServiceImpl implements TeamDspService {
                 defendantBrandId=getDefendantBrandIdByOasisId(oasisId);
 
                 break;
+
+            case "虚拟商品":
+                defendantBrandId=getDefendantBrandIdFromVirtualProductUrl(sceneUrl);
+                break;
+
+            case "虚拟商品订单":
+                defendantBrandId=getDefendantBrandIdFromVirtualProductOrder(sceneUrl);
+                break;
+
             default:
                 break;
         }
@@ -301,6 +337,26 @@ public class TeamDspServiceImpl implements TeamDspService {
         return defendantBrandId;
     }
 
+    private String getDefendantBrandIdFromVirtualProductOrder(String sceneUrl){
+        String vrOrderId = HttpUtil.decodeParams(sceneUrl, StandardCharsets.UTF_8).get("order_id").getFirst();
+        VirtualOrder order = teamVirtualOrderMapper.selectById(vrOrderId);
+        return order ==null ? "" : order.getSellerBrandId();
+    }
+
+    private String getDefendantBrandIdFromVirtualProductUrl(String productUrl){
+
+        URI uri = null;
+        try {
+            uri = new URI(productUrl);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        String path = uri.getPath();
+        String vrProductId = FilenameUtils.getName(path);
+        VirtualProduct product = teamVirtualProductMapper.selectById(vrProductId);
+        return  product == null ? "" : product.getSellerBrandId();
+
+    }
     private String getDefendantBrandIdByCellId(String cellId){
         Cell cell = teamCellMapper.selectById(cellId);
         return cell == null ? "" : cell.getBrandId();

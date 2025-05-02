@@ -139,7 +139,7 @@ public class CellPlanOrderServiceImpl implements CellPlanOrderService {
         bo.setAmount(amount)
                 .setOutNo(outNo)
                 .setPayeeType(FidTypeEnum.OPERATOR.getMark())
-                .setPayeeAccount(OperatorConfig.sysCellPlanOrderMidFinAccount)
+                .setPayeeAccount(OperatorConfig.sysMidFinAccount)
                 .setPayerAccount(SecurityUserHelper.getCurrentPrincipal().getBrandId())
                 .setPayerType(FidTypeEnum.BRAND.getMark())
                 .setTransType(TransTypeEnum.PLAN_ORDER_PAY.getMark());

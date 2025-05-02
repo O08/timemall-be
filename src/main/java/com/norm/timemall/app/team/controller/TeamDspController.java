@@ -94,6 +94,14 @@ public class TeamDspController {
 
     }
 
+    @PutMapping("/api/v1/team/dsp_case/action/virtual/{product_id}/offline")
+    public SuccessVO offlineVirtualProduct(@PathVariable("product_id") String id){
+
+        teamDspService.doOfflineVirtualProduct(id);
+        return new SuccessVO(CodeEnum.SUCCESS);
+
+    }
+
     @PutMapping("/api/v1/team/dsp_case/action/withdraw_limits")
     public SuccessVO withdrawToAlipayCreditSetting(@Validated @RequestBody WithdrawToAlipayCreditSettingDTO dto){
 

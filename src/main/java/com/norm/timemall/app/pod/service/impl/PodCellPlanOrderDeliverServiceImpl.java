@@ -102,7 +102,7 @@ public class PodCellPlanOrderDeliverServiceImpl implements PodCellPlanOrderDeliv
                 .setOutNo(orderId)
                 .setPayeeType(FidTypeEnum.BRAND.getMark())
                 .setPayeeAccount(payeeAccount)
-                .setPayerAccount(OperatorConfig.sysCellPlanOrderMidFinAccount)
+                .setPayerAccount(OperatorConfig.sysMidFinAccount)
                 .setPayerType(FidTypeEnum.OPERATOR.getMark())
                 .setTransType(TransTypeEnum.PLAN_ORDER_TRANSFER_TO_BRAND.getMark());
         return  bo;

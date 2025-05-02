@@ -1,13 +1,9 @@
 package com.norm.timemall.app.pod.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.gson.Gson;
 import com.norm.timemall.app.base.config.OperatorConfig;
-import com.norm.timemall.app.base.enums.AffiliateOrderTypeEnum;
 import com.norm.timemall.app.base.enums.FidTypeEnum;
 import com.norm.timemall.app.base.enums.TransTypeEnum;
-import com.norm.timemall.app.base.mo.AffiliateOrder;
 import com.norm.timemall.app.base.pojo.TransferBO;
 import com.norm.timemall.app.pay.service.DefaultPayService;
 import com.norm.timemall.app.pod.mapper.PodAffiliateOrderMapper;
@@ -61,7 +57,7 @@ public class PodAffiliatePayServiceImpl implements PodAffiliatePayService {
                 .setOutNo(outNo)
                 .setPayeeType(FidTypeEnum.BRAND.getMark())
                 .setPayeeAccount(payeeAccount)
-                .setPayerAccount(OperatorConfig.sysCellPlanOrderMidFinAccount)
+                .setPayerAccount(OperatorConfig.sysMidFinAccount)
                 .setPayerType(FidTypeEnum.OPERATOR.getMark())
                 .setTransType(TransTypeEnum.PLAN_ORDER_AFFILIATE_PAY.getMark());
         return  bo;

@@ -82,8 +82,8 @@ public enum CodeEnum implements Code{
     PHONE_TEMPLATE_NOT_CONFIG(40037,"短信模版未配置" ),
     ONLY_FOR_MEMBER(40038,"仅对已加入的成员开放" ),
     USER_ALI_PAY_ACCOUNT_NOT_EXIST(40039,"支付宝账号未配置" ),
-    OASIS_LOCKED(40040,"部落已被封禁" )
-    ;
+    OASIS_LOCKED(40040,"部落已被封禁" ),
+    REPEAT_REQUEST_REFUND(40041, "已退款，请勿重复请求");
 
     private final int code;
     private final String desc;

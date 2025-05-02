@@ -1,6 +1,6 @@
 package com.norm.timemall.app.base.enums;
 
-public enum IndDataLayerCellIndicesEventEnum {
+public enum IndDataLayerIndicesEventEnum {
     IMPRESSIONS("impressions","曝光"),
     CLICKS("clicks","点击"),
     APPOINTMENTS("appointments","特约预约"),
@@ -9,7 +9,7 @@ public enum IndDataLayerCellIndicesEventEnum {
     private String mark;
     private String desc;
 
-    IndDataLayerCellIndicesEventEnum(String mark, String desc) {
+    IndDataLayerIndicesEventEnum(String mark, String desc) {
         this.mark = mark;
         this.desc = desc;
     }
