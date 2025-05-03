@@ -14,7 +14,7 @@
           b.id buyerBrandId,b.customer_id buyerUserId,b.brand_name buyerBrandName,b.avator buyerAvatar
         from virtual_order o
         inner join virtual_product p on o.product_id = p.id
-        inner join brand b on p.buyer_brand_id = b.id
+        inner join brand b on o.buyer_brand_id = b.id
         <where>
             1=1
             and o.seller_brand_id=#{seller_brand_id}
