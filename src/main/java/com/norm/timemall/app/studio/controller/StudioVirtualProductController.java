@@ -141,7 +141,7 @@ public class StudioVirtualProductController {
         // store deliver file to oss
         String  deliverAttachmentUrl ="";
         if(needStoreFile){
-              deliverAttachmentUrl = fileStoreService.storeImageAndProcessAsAvifWithUnlimitedAccess(dto.getDeliverAttachment(), FileStoreDir.VIRTUAL_PRODUCT_DELIVER);
+              deliverAttachmentUrl = fileStoreService.storeWithLimitedAccess(dto.getDeliverAttachment(), FileStoreDir.VIRTUAL_PRODUCT_DELIVER);
         }
 
         // update db
