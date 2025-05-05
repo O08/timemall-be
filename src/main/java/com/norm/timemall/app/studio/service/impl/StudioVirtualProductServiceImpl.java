@@ -97,7 +97,7 @@ public class StudioVirtualProductServiceImpl implements StudioVirtualProductServ
     }
 
     @Override
-    public void newProduct(StudioVirtualProductCreateDTO dto, String thumbnailUrl) {
+    public String newProduct(StudioVirtualProductCreateDTO dto, String thumbnailUrl) {
         String sellerBrandId= SecurityUserHelper.getCurrentPrincipal().getBrandId();
 
         // validate tags to json  arr
@@ -108,8 +108,9 @@ public class StudioVirtualProductServiceImpl implements StudioVirtualProductServ
         }
 
         VirtualProduct vrProduct = new VirtualProduct();
+        String productId = IdUtil.simpleUUID();
         vrProduct
-                .setId(IdUtil.simpleUUID())
+                .setId(productId)
                 .setProductName(dto.getProductName())
                 .setProductPrice(dto.getProductPrice())
                 .setProvideInvoice(dto.getProvideInvoice())
@@ -123,6 +124,7 @@ public class StudioVirtualProductServiceImpl implements StudioVirtualProductServ
 
         studioVirtualProductMapper.insert(vrProduct);
 
+        return  productId;
 
     }
 

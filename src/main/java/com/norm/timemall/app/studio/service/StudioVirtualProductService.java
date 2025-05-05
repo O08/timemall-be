@@ -16,7 +16,7 @@ public interface StudioVirtualProductService {
 
     void removeOneProduct(String productId);
 
-    void newProduct(StudioVirtualProductCreateDTO dto, String thumbnailUrl);
+    String newProduct(StudioVirtualProductCreateDTO dto, String thumbnailUrl);
 
     void changeProductMetaInfo(StudioVirtualProductChangeDTO dto);
 

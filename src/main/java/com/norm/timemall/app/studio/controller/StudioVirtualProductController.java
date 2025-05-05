@@ -13,6 +13,7 @@ import com.norm.timemall.app.base.service.FileStoreService;
 import com.norm.timemall.app.ms.constant.ChatSupportUploadImageFormat;
 import com.norm.timemall.app.studio.domain.dto.*;
 import com.norm.timemall.app.studio.domain.vo.FetchVirtualProductMetaInfoVO;
+import com.norm.timemall.app.studio.domain.vo.StudioVirtualProductCreateVO;
 import com.norm.timemall.app.studio.service.StudioVirtualProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -32,7 +33,7 @@ public class StudioVirtualProductController {
 
 
     @PostMapping("/api/v1/web_estudio/virtual/product/create")
-    public SuccessVO createProduct(@Validated StudioVirtualProductCreateDTO dto) throws IOException {
+    public StudioVirtualProductCreateVO createProduct(@Validated StudioVirtualProductCreateDTO dto) throws IOException {
 
         // validate file
         if(dto.getThumbnail() == null || dto.getThumbnail().isEmpty()){
@@ -46,10 +47,12 @@ public class StudioVirtualProductController {
         // store thumbnail file to oss
         String  thumbnailUrl = fileStoreService.storeImageAndProcessAsAvifWithUnlimitedAccess(dto.getThumbnail(), FileStoreDir.VIRTUAL_PRODUCT_THUMBNAIL);
 
-        studioVirtualProductService.newProduct(dto,thumbnailUrl);
+        String productId = studioVirtualProductService.newProduct(dto,thumbnailUrl);
+        StudioVirtualProductCreateVO vo = new StudioVirtualProductCreateVO();
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        vo.setProductId(productId);
 
-
-        return new SuccessVO(CodeEnum.SUCCESS);
+        return vo;
 
     }
 
