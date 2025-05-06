@@ -37,4 +37,5 @@ public class BrandProfileRO {
     private String brandMark;
     private String pdOasisId;
     private String businessScope;
+    private String createAt;
 }
