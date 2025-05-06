@@ -11,7 +11,7 @@
 
     <select id="selectPageByQ" resultType="com.norm.timemall.app.pod.domain.ro.PodFetchVirtualOrderPageRO">
         select o.id orderId,o.order_no orderNO,p.id productId,p.product_price,p.product_name,o.quantity,o.total_fee,o.tag,o.create_at,o.refund_reason,o.already_refund,
-          b.id sellerBrandId,b.customer_id sellerUserId,b.brand_name sellerBrandName,b.avator sellerAvatar
+          b.id sellerBrandId,b.customer_id sellerUserId,b.brand_name sellerBrandName,b.avator sellerAvatar,o.already_remittance,o.already_pay
         from virtual_order o
         inner join virtual_product p on o.product_id = p.id
         inner join brand b on p.seller_brand_id = b.id

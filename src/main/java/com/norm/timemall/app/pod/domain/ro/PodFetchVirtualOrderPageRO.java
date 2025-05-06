@@ -18,5 +18,7 @@ public class PodFetchVirtualOrderPageRO {
     private String tag;
     private String totalFee;
     private String alreadyRefund;
+    private String alreadyRemittance;
+    private String alreadyPay;
     private String refundReason;
 }

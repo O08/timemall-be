@@ -20,4 +20,5 @@ public class StudioFetchVirtualOrderListPageRO {
     private String refundReason;
     private String alreadyRemittance;
     private String alreadyRefund;
+    private String alreadyPay;
 }
