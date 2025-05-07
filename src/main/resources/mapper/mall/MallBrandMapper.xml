@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.mall.mapper.BrandMapper">
+    <sql id="tableName">
+        brand
+    </sql>
+
+    <sql id="baseColumn">
+        id,brand_name,title,cover,avator,customer_id,wechat,phone,email,cardholder,cardno,alipay,wechatpay,experience,skills,location
+    </sql>
+
+    <resultMap id="brandProfileResultMap" type="com.norm.timemall.app.mall.domain.ro.BrandProfileRO">
+        <result property="brand" column="brand"/>
+        <result property="brandMark" column="brandMark"/>
+        <result property="brandUserId" column="customer_id"/>
+        <result property="avator" column="avator"/>
+        <result property="cover" column="cover"/>
+        <result property="occupationCode" column="occupation_code"/>
+        <result property="occupation" column="occupation"/>
+        <result property="industryCode" column="industry_code"/>
+        <result property="industry" column="industry"/>
+        <result property="brandTypeCode" column="brand_type_code"/>
+        <result property="supportFreeCooperation" column="support_free_cooperation"/>
+        <result property="cooperationScope" column="cooperation_scope"/>
+        <result property="availableForWork" column="available_for_work"/>
+        <result property="hiring" column="hiring"/>
+        <result property="typeOfBusiness" column="type_of_business"/>
+        <result property="freeNightCounsellor" column="free_night_counsellor"/>
+        <result property="pdOasisId" column="pd_oasis_id"/>
+        <result property="createAt" column="create_at"/>
+
+
+        <result property="experience"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
+                column="experience"/>
+        <result property="title" column="title"/>
+        <result property="handle" column="handle"/>
+        <result property="location" column="location"/>
+        <result property="skills"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
+                column="skills"/>
+        <result property="links"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
+                column="links"/>
+        <result property="enableBlue" column="enableBlue"/>
+
+    </resultMap>
+
+    <select id="selectProileByBrandId" resultMap="brandProfileResultMap">
+        select b.handle,b.brand_name brand,b.customer_id ,b.avator,b.cover,s.occupation_code,b.mark brandMark,
+        CASE s.occupation_code
+          when '0' then s.self_defined_occupation
+          else c.item
+        END as occupation,
+        s.business_scope,
+        s.free_night_counsellor,
+        b.pd_oasis_id,
+        b.create_at,
+        s.industry_code,s.industry,s.support_free_cooperation,s.cooperation_scope, s.brand_type_code, s.available_for_work,s.hiring,s.type_of_business, b.experience,b.title,b.location,b.skills,b.links,ifnull(b.blue_end_at > now(),0) enableBlue
+        from brand b
+        left join brand_sub s
+          on b.id=s.brand_id
+        left join code_mapping c
+          on c.code_type='occupation'
+            and c.item_code=s.occupation_code
+        where b.id = #{brandId}
+    </select>
+
+</mapper>

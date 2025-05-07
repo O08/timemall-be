@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.affiliate.mapper.AffiliatePpcVisitMapper">
+
+    <select id="selectPageByDTO" resultType="com.norm.timemall.app.affiliate.domain.ro.PpcVisitPageRO">
+
+        select
+            vs.id,vs.create_at,vs.source_address,vs.ip,vs.link_address,vs.price,vs.batch,
+            CASE
+              WHEN vs.valid='1' THEN '合法流量'
+              ELSE '灰产流量'
+            END as valid ,
+            CASE
+              WHEN vs.pay='1' THEN '已结算'
+              ELSE '待结算'
+            END as pay
+
+        from ppc_visit vs
+        inner join ppc_link lk
+          on lk.track_code=vs.track_code
+        <where>
+            1=1
+            And lk.supplier_brand_id=#{supplierBrandId}
+
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, vs.source_address)>0 or locate(#{dto.q}, vs.link_address)>0  or  locate(#{dto.q}, lk.link_name)>0 )
+            </if>
+
+            <if test="dto.valid != null and dto.valid != ''">
+                AND vs.valid=#{dto.valid}
+            </if>
+
+            <if test="dto.pay != null and dto.pay != ''">
+                AND vs.pay=#{dto.pay}
+            </if>
+
+            <if test="dto.batch != null and dto.batch != ''">
+                AND vs.batch=#{dto.batch}
+            </if>
+
+            <if test="dto.visitTime != null and dto.visitTime != ''">
+                AND  DATE_FORMAT(vs.create_at,'%Y-%m-%d') = #{dto.visitTime}
+            </if>
+
+            Order by vs.create_at desc
+
+
+
+        </where>
+    </select>
+
+    <select id="selectPpcVisitRecord" resultType="com.norm.timemall.app.affiliate.domain.ro.PpcVisitPageRO">
+
+        select
+            vs.id,vs.create_at,vs.source_address,vs.ip,vs.link_address,vs.price,vs.batch,
+            CASE
+               WHEN vs.valid='1' THEN '合法流量'
+               ELSE '灰产流量'
+            END as valid ,
+            CASE
+               WHEN vs.pay='1' THEN '已结算'
+               ELSE '待结算'
+            END as pay
+        from ppc_visit vs
+        inner join ppc_link lk
+        on lk.track_code=vs.track_code
+        <where>
+            1=1
+            And lk.supplier_brand_id=#{supplierBrandId}
+
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, vs.source_address)>0 or locate(#{dto.q}, vs.link_address)>0  or  locate(#{dto.q}, lk.link_name)>0 )
+            </if>
+
+            <if test="dto.valid != null and dto.valid != ''">
+                AND vs.valid=#{dto.valid}
+            </if>
+
+            <if test="dto.pay != null and dto.pay != ''">
+                AND vs.pay=#{dto.pay}
+            </if>
+
+            <if test="dto.batch != null and dto.batch != ''">
+                AND vs.batch=#{dto.batch}
+            </if>
+
+            <if test="dto.visitTime != null and dto.visitTime != ''">
+                AND  DATE_FORMAT(vs.create_at,'%Y-%m-%d') = #{dto.visitTime}
+            </if>
+
+            Order by vs.create_at desc
+
+        </where>
+        limit 50000
+    </select>
+
+
+</mapper>
