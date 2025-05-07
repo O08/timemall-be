@@ -136,7 +136,7 @@
                     and b.id = #{dto.param}
                 </otherwise>
             </choose>
-            order by p.modified_at desc limit 24
+            order by p.modified_at desc limit 96
         </where>
 
     </select>
