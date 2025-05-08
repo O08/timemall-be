@@ -6,4 +6,5 @@ import lombok.Data;
 public class PodGetVirtualOrderDeliverMaterialRO {
     private String deliverAttachment;
     private String deliverNote;
+    private String productName;
 }

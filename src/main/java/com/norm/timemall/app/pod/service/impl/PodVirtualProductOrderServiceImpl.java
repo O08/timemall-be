@@ -56,6 +56,7 @@ public class PodVirtualProductOrderServiceImpl implements PodVirtualProductOrder
         PodGetVirtualOrderDeliverMaterialRO deliver = new PodGetVirtualOrderDeliverMaterialRO();
         deliver.setDeliverAttachment(product.getDeliverAttachment());
         deliver.setDeliverNote(product.getDeliverNote());
+        deliver.setProductName(product.getProductName());
 
         PodGetVirtualOrderDeliverMaterialVO vo =new PodGetVirtualOrderDeliverMaterialVO();
         vo.setDeliver(deliver);
