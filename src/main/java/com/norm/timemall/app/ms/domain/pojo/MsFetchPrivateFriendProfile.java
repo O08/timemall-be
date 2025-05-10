@@ -8,4 +8,5 @@ public class MsFetchPrivateFriendProfile {
     private String username;
     private String avatar;
     private String brandId;
+    private String mark;
 }
