@@ -11,10 +11,7 @@ import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.exception.QuickMessageException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.VirtualProduct;
-import com.norm.timemall.app.studio.domain.dto.StudioVirtualProductChangeDTO;
-import com.norm.timemall.app.studio.domain.dto.StudioVirtualProductChangeDeliverMaterialDTO;
-import com.norm.timemall.app.studio.domain.dto.StudioVirtualProductCreateDTO;
-import com.norm.timemall.app.studio.domain.dto.StudioVirtualProductStatusManagementDTO;
+import com.norm.timemall.app.studio.domain.dto.*;
 import com.norm.timemall.app.studio.domain.ro.FetchVirtualProductMetaInfoRO;
 import com.norm.timemall.app.studio.domain.vo.FetchVirtualProductMetaInfoVO;
 import com.norm.timemall.app.studio.mapper.StudioVirtualProductMapper;
@@ -153,7 +150,6 @@ public class StudioVirtualProductServiceImpl implements StudioVirtualProductServ
         // change data
         product.setProductName(dto.getProductName())
                 .setProductPrice(dto.getProductPrice())
-                .setProductDesc(dto.getProductDesc())
                 .setProvideInvoice(dto.getProvideInvoice())
                 .setTags(dto.getTags())
                 .setInventory(dto.getInventory())
@@ -196,5 +192,27 @@ public class StudioVirtualProductServiceImpl implements StudioVirtualProductServ
 
         studioVirtualProductMapper.updateById(vrProduct);
 
+    }
+
+    @Override
+    public void changeProductDescInfo(StudioVirtualProductChangeDescDTO dto) {
+
+        // validated product and role
+        VirtualProduct product = studioVirtualProductMapper.selectById(dto.getProductId());
+        if(product==null){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        String sellerBrandId= SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        boolean isSeller =  sellerBrandId.equals(product.getSellerBrandId());
+
+        if(!isSeller){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+
+        // change data
+        product.setProductDesc(dto.getProductDesc())
+                .setModifiedAt(new Date())
+        ;
+        studioVirtualProductMapper.updateById(product);
     }
 }

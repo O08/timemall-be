@@ -17,7 +17,7 @@
     </update>
 
     <update id="updateClicks" parameterType="com.norm.timemall.app.indicator.domain.dto.IndDataLayerVirtualProductIndicesDTO">
-        update virtual_product set views=IFNULL(views,0)+1 where id in
+        update virtual_product set clicks=IFNULL(clicks,0)+1 where id in
         <foreach collection="dto.virtual.clicks" item="product"  separator="," open="(" close=")">
             #{product.productId}
         </foreach>

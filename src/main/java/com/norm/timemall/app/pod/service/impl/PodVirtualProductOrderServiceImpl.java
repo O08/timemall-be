@@ -46,11 +46,16 @@ public class PodVirtualProductOrderServiceImpl implements PodVirtualProductOrder
     public PodGetVirtualOrderDeliverMaterialVO findOrderDeliverMaterial(String orderId) {
         // validate role : seller \ buyer
         VirtualOrder order = podVirtualOrderMapper.selectById(orderId);
-        String currentUserBrandId=SecurityUserHelper.getCurrentPrincipal().getBrandId();
-        if(order==null || !(currentUserBrandId.equals(order.getBuyerBrandId()) ||
-            currentUserBrandId.equals(order.getSellerBrandId()))){
+        if(order==null){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
+
+        boolean checked = checkDeliverMaterialAccess(order);
+
+        if(!checked){
+            throw new QuickMessageException("未获得访问权限,购买成功后自动开通");
+        }
+
         // query deliver info
         VirtualProduct product = podVirtualProductMapper.selectById(order.getProductId());
         PodGetVirtualOrderDeliverMaterialRO deliver = new PodGetVirtualOrderDeliverMaterialRO();
@@ -63,6 +68,20 @@ public class PodVirtualProductOrderServiceImpl implements PodVirtualProductOrder
         vo.setResponseCode(CodeEnum.SUCCESS);
         return vo;
 
+    }
+    private boolean checkDeliverMaterialAccess(VirtualOrder order){
+
+        String currentUserBrandId=SecurityUserHelper.getCurrentPrincipal().getBrandId();
+
+        boolean isSeller = currentUserBrandId.equals(order.getSellerBrandId());
+        boolean buyerAuth = currentUserBrandId.equals(order.getBuyerBrandId()) &&
+                SwitchCheckEnum.ENABLE.getMark().equals(order.getAlreadyPay())
+                && !SwitchCheckEnum.ENABLE.getMark().equals(order.getAlreadyRefund());
+
+        if(isSeller){
+            return true;
+        }
+        return buyerAuth;
     }
 
     @Override

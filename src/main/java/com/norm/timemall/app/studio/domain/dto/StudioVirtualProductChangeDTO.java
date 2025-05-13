@@ -17,9 +17,7 @@ public class StudioVirtualProductChangeDTO {
     @Positive(message = "inventory required and must be positive")
     private Integer inventory;
 
-    @NotBlank(message = "productDesc required")
-    @Length(message = "productDesc length must in range {min}-{max}",min = 1,max = 11000)
-    private String productDesc;
+
 
     @NotBlank(message = "productId required")
     private String productId;

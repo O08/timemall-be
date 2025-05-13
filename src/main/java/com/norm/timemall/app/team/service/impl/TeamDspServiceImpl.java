@@ -92,16 +92,18 @@ public class TeamDspServiceImpl implements TeamDspService {
 
         teamDspCaseMapper.insert(dspCase);
 
-        DspCaseMaterial material = new DspCaseMaterial();
-        material.setId(IdUtil.simpleUUID())
-                .setMaterialName(materialName)
-                .setMaterialUrl(materialUrl)
-                .setCaseNo(caseNO)
-                .setMaterialType(DspMaterialTypeEnum.INFORMER.getMark())
-                .setCreateAt(new Date())
-                .setModifiedAt(new Date());
+        if(CharSequenceUtil.isNotBlank(materialUrl)){
+            DspCaseMaterial material = new DspCaseMaterial();
+            material.setId(IdUtil.simpleUUID())
+                    .setMaterialName(materialName)
+                    .setMaterialUrl(materialUrl)
+                    .setCaseNo(caseNO)
+                    .setMaterialType(DspMaterialTypeEnum.INFORMER.getMark())
+                    .setCreateAt(new Date())
+                    .setModifiedAt(new Date());
 
-        teamDspCaseMaterialMapper.insert(material);
+            teamDspCaseMaterialMapper.insert(material);
+        }
 
 
     }
@@ -296,7 +298,10 @@ public class TeamDspServiceImpl implements TeamDspService {
         // validated cell
         VirtualProduct targetProduct = teamVirtualProductMapper.selectById(id);
         if(targetProduct==null){
-            throw new QuickMessageException("cell not exist");
+            throw new QuickMessageException("product not exist");
+        }
+        if(!ProductStatusEnum.ONLINE.getMark().equals(targetProduct.getProductStatus())){
+            throw new QuickMessageException("product status not is online");
         }
 
         targetProduct.setProductStatus(ProductStatusEnum.OFFLINE.getMark());

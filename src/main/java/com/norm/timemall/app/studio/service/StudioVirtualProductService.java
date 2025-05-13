@@ -1,10 +1,7 @@
 package com.norm.timemall.app.studio.service;
 
 import com.norm.timemall.app.base.mo.VirtualProduct;
-import com.norm.timemall.app.studio.domain.dto.StudioVirtualProductChangeDTO;
-import com.norm.timemall.app.studio.domain.dto.StudioVirtualProductChangeDeliverMaterialDTO;
-import com.norm.timemall.app.studio.domain.dto.StudioVirtualProductCreateDTO;
-import com.norm.timemall.app.studio.domain.dto.StudioVirtualProductStatusManagementDTO;
+import com.norm.timemall.app.studio.domain.dto.*;
 import com.norm.timemall.app.studio.domain.vo.FetchVirtualProductMetaInfoVO;
 import org.springframework.stereotype.Service;
 
@@ -26,4 +23,5 @@ public interface StudioVirtualProductService {
 
     void modifyProductDeliverMaterial(StudioVirtualProductChangeDeliverMaterialDTO dto, String deliverAttachmentUrl);
 
+    void changeProductDescInfo(StudioVirtualProductChangeDescDTO dto);
 }

@@ -63,6 +63,13 @@ public class StudioVirtualProductController {
         return new SuccessVO(CodeEnum.SUCCESS);
 
     }
+    @PutMapping("/api/v1/web_estudio/virtual/product/change_desc")
+    public SuccessVO changeProductDesc(@RequestBody @Validated StudioVirtualProductChangeDescDTO dto){
+
+        studioVirtualProductService.changeProductDescInfo(dto);
+        return new SuccessVO(CodeEnum.SUCCESS);
+
+    }
 
     @PutMapping("/api/v1/web_estudio/virtual/product/change_thumbnail")
     public SuccessVO changeThumbnail(@Validated StudioVirtualProductChangeThumbnailDTO dto) throws IOException {

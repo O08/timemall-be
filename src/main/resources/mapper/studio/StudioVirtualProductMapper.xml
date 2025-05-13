@@ -40,7 +40,7 @@
         inner join brand b on p.seller_brand_id = b.id
         left join virtual_product_showcase sh on p.id=sh.product_id
         where p.id = #{productId} and p.seller_brand_id=#{sellerBrandId}
-        order by sh.showcase_od desc
+        order by sh.showcase_od asc
     </select>
 
 
