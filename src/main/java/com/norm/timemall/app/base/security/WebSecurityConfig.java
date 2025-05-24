@@ -58,6 +58,8 @@ public class WebSecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizeHttpRequests -> {
                     authorizeHttpRequests.requestMatchers("/api/v1/web_mall/**",
+                                    "/api/v1/app/feed_channel/*/guide",
+                                    "api/v1/app/feed/list",
                                     "/api/open/**",
                                     "/api/public/**",
                                     "/api/file/{fileName:.+}/**",
