@@ -20,4 +20,13 @@ public class AliPayResource {
     private String signType;
     private String charset;
     private String gatewayUrl;
+
+    private String devAppCertPath;
+    private String devAlipayPublicCertPath;
+    private String devRootCertPath;
+
+    private String prodAppCertPath;
+    private String prodAlipayPublicCertPath;
+    private String prodRootCertPath;
+
 }

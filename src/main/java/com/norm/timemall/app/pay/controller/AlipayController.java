@@ -128,7 +128,7 @@ public class AlipayController {
 
 
         boolean signVerified = AlipaySignature.rsaCertCheckV1(params,
-                AliPayUtil.getAliPayPublicCertPath(envBean),
+                AliPayUtil.getAliPayPublicCertPath( aliPayResource,envBean),
                 AlipayConstants.CHARSET_UTF8,
                 AlipayConstants.SIGN_TYPE_RSA2);
 
