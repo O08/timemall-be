@@ -3,12 +3,7 @@ package com.norm.timemall.app.pay.config;
 import com.alipay.api.AlipayConfig;
 import com.norm.timemall.app.base.config.env.EnvBean;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.ResourceUtils;
 
-import java.io.*;
-import java.net.URL;
-import java.rmi.ServerException;
 
 @Slf4j
 public class AliPayUtil {
@@ -21,135 +16,29 @@ public class AliPayUtil {
         alipayConfig.setSignType(aliPayResource.getSignType());
         alipayConfig.setFormat("json");
 
-        String basePath = "";
-        try {
-            basePath = queryPath(aliPayResource);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (ServerException e) {
-            throw new RuntimeException(e);
+        if(envBean.getSoftwareDevelopmentLifeCycle().equals("local")){
+            alipayConfig.setAppCertPath(aliPayResource.getLocalAppCertPath());
+            alipayConfig.setAlipayPublicCertPath(aliPayResource.getLocalAlipayPublicCertPath());
+            alipayConfig.setRootCertPath(aliPayResource.getLocalRootCertPath());
         }
-
-        if(envBean.getSoftwareDevelopmentLifeCycle().equals("dev")){
-            alipayConfig.setAppCertPath(basePath+aliPayResource.getDevAppCertPath());
-            alipayConfig.setAlipayPublicCertPath(basePath+aliPayResource.getDevAlipayPublicCertPath());
-            alipayConfig.setRootCertPath(basePath+aliPayResource.getDevRootCertPath());
-        }
-        if(envBean.getSoftwareDevelopmentLifeCycle().equals("prod")
+        if(envBean.getSoftwareDevelopmentLifeCycle().equals("deploy")
         ){
-            alipayConfig.setAppCertPath(basePath+aliPayResource.getProdAppCertPath());
-            alipayConfig.setAlipayPublicCertPath(basePath+aliPayResource.getProdAlipayPublicCertPath());
-            alipayConfig.setRootCertPath(basePath+aliPayResource.getProdRootCertPath());
+            alipayConfig.setAppCertPath(aliPayResource.getDeployAppCertPath());
+            alipayConfig.setAlipayPublicCertPath(aliPayResource.getDeployAlipayPublicCertPath());
+            alipayConfig.setRootCertPath(aliPayResource.getDeployRootCertPath());
         }
 
         return alipayConfig;
     }
 
     public static String getAliPayPublicCertPath(AliPayResource aliPayResource,EnvBean envBean){
-        String basePath = "";
-        try {
-            basePath = queryPath(aliPayResource);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (ServerException e) {
-            throw new RuntimeException(e);
+
+
+        if(envBean.getSoftwareDevelopmentLifeCycle().equals("local")){
+            return aliPayResource.getLocalAlipayPublicCertPath();
         }
 
-        if(envBean.getSoftwareDevelopmentLifeCycle().equals("dev")){
-            return basePath + aliPayResource.getDevAlipayPublicCertPath();
-        }
-
-        return basePath + aliPayResource.getProdAlipayPublicCertPath();
-    }
-
-    /**
-     * 证书模式   获取文件路径
-     * 不这样把证书复制出来服务器上会获取不到证书路径
-     *
-     * @return
-     * @throws FileNotFoundException
-     * @throws ServerException
-     */
-    public static String queryPath(AliPayResource aliPayResource) throws FileNotFoundException, ServerException {
-        URL baseUrl = ResourceUtils.getURL("classpath:");
-        String basePath = ("jar".equals(baseUrl.getProtocol())) ? baseUrl.toExternalForm() : baseUrl.getPath();
-        log.info("final basePath:"+ basePath);
-        File file = new File("BOOT-INF/classes/dev/alipay-crt/alipayRootCert.crt");
-        File file2 = new File("/BOOT-INF/classes/dev/alipay-crt/alipayRootCert.crt");
-        File file3 = new File("dev/alipay-crt/alipayRootCert.crt");
-        File file4 = new File("/dev/alipay-crt/alipayRootCert.crt");
-        File file5 = new File("/tmp/data/logs/timemall-be.2025-05-29.0.log");
-        log.info("file exist:" +file.exists());
-        log.info("file2 exist:" +file2.exists());
-        log.info("file3 exist:" +file3.exists());
-        log.info("file4 exist:" +file4.exists());
-        log.info("file5 exist:" +file5.exists());
-        // basePath = initCrt(basePath, aliPayResource);
-        return basePath;
-    }
-
-//    /**
-//     * 证书模式 初始化证书文件
-//     *
-//     * @param basePath
-//     * @return
-//     * @throws ServerException
-//     */
-//    private static String initCrt(String basePath,AliPayResource aliPayResource) throws ServerException {
-//        log.info("raw basePath:"+ basePath);
-//        if (basePath.contains("jar!")) {
-//            if (basePath.startsWith("file:")) {
-//                basePath = basePath.replace("file:", "");
-//            }
-//            doInitDevCrt(basePath,aliPayResource);
-//            doInitProdCrt(basePath,aliPayResource);
-//        }
-//        log.info("final basePath:"+ basePath);
-//
-//        return basePath.replace("!/","/"); // docker special handle
-//    }
-    private static void doInitDevCrt(String basePath,AliPayResource aliPayResource)  throws ServerException {
-        checkAndcopyCart(basePath, aliPayResource.getDevAppCertPath());
-        checkAndcopyCart(basePath, aliPayResource.getDevAlipayPublicCertPath());
-        checkAndcopyCart(basePath, aliPayResource.getDevRootCertPath());
-    }
-    private static void doInitProdCrt(String basePath,AliPayResource aliPayResource)  throws ServerException {
-        checkAndcopyCart(basePath, aliPayResource.getProdAppCertPath());
-        checkAndcopyCart(basePath, aliPayResource.getProdAlipayPublicCertPath());
-        checkAndcopyCart(basePath, aliPayResource.getProdRootCertPath());
-    }
-
-
-    /**
-     * 证书模式下需要
-     *
-     * @param basePath
-     * @param path
-     * @throws ServerException
-     * @description 查找在该文件路径下是否已经存在这个文件，如果不存在，则拷贝文件
-     */
-    private static void checkAndcopyCart(String basePath, String path) throws ServerException {
-        InputStream cartInputStream = null;
-        OutputStream cartOutputStream = null;
-        String cartPath = basePath + path;
-        File cartFile = new File(cartPath);
-        File parentFile = cartFile.getParentFile();
-        parentFile.mkdirs();
-        try {
-            if (!cartFile.exists()) {
-                cartInputStream = ClassUtils.getDefaultClassLoader().getResourceAsStream(path);
-                cartOutputStream = new FileOutputStream(cartFile);
-                byte[] buf = new byte[1024];
-                int bytesRead;
-                while ((bytesRead = cartInputStream.read(buf)) != -1) {
-                    cartOutputStream.write(buf, 0, bytesRead);
-                }
-                cartInputStream.close();
-                cartOutputStream.close();
-            }
-        } catch (IOException e) {
-            throw new ServerException(e.getMessage());
-        }
+        return aliPayResource.getDeployAlipayPublicCertPath();
     }
 
 

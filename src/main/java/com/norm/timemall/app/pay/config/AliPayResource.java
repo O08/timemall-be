@@ -21,12 +21,12 @@ public class AliPayResource {
     private String charset;
     private String gatewayUrl;
 
-    private String devAppCertPath;
-    private String devAlipayPublicCertPath;
-    private String devRootCertPath;
+    private String deployAppCertPath;
+    private String deployAlipayPublicCertPath;
+    private String deployRootCertPath;
 
-    private String prodAppCertPath;
-    private String prodAlipayPublicCertPath;
-    private String prodRootCertPath;
+    private String localAppCertPath;
+    private String localAlipayPublicCertPath;
+    private String localRootCertPath;
 
 }
