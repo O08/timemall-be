@@ -93,7 +93,7 @@ public class AliPayUtil {
         }
         log.info("final basePath:"+ basePath);
 
-        return basePath;
+        return basePath.replace("!/","/"); // docker special handle
     }
     private static void doInitDevCrt(String basePath,AliPayResource aliPayResource)  throws ServerException {
         checkAndcopyCart(basePath, aliPayResource.getDevAppCertPath());
