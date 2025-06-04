@@ -7,6 +7,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.ResourceUtils;
 
 import java.io.*;
+import java.net.URL;
 import java.rmi.ServerException;
 
 @Slf4j
@@ -70,31 +71,33 @@ public class AliPayUtil {
      * @throws ServerException
      */
     public static String queryPath(AliPayResource aliPayResource) throws FileNotFoundException, ServerException {
-        String basePath = ResourceUtils.getURL("classpath:").getPath();
-        basePath = initCrt(basePath, aliPayResource);
+        URL baseUrl = ResourceUtils.getURL("classpath:");
+        String basePath = ("jar".equals(baseUrl.getProtocol())) ? baseUrl.toExternalForm() : baseUrl.getPath();
+        log.info("final basePath:"+ basePath);
+       // basePath = initCrt(basePath, aliPayResource);
         return basePath;
     }
 
-    /**
-     * 证书模式 初始化证书文件
-     *
-     * @param basePath
-     * @return
-     * @throws ServerException
-     */
-    private static String initCrt(String basePath,AliPayResource aliPayResource) throws ServerException {
-        log.info("raw basePath:"+ basePath);
-        if (basePath.contains("jar!")) {
-            if (basePath.startsWith("file:")) {
-                basePath = basePath.replace("file:", "");
-            }
-            doInitDevCrt(basePath,aliPayResource);
-            doInitProdCrt(basePath,aliPayResource);
-        }
-        log.info("final basePath:"+ basePath);
-
-        return basePath.replace("!/","/"); // docker special handle
-    }
+//    /**
+//     * 证书模式 初始化证书文件
+//     *
+//     * @param basePath
+//     * @return
+//     * @throws ServerException
+//     */
+//    private static String initCrt(String basePath,AliPayResource aliPayResource) throws ServerException {
+//        log.info("raw basePath:"+ basePath);
+//        if (basePath.contains("jar!")) {
+//            if (basePath.startsWith("file:")) {
+//                basePath = basePath.replace("file:", "");
+//            }
+//            doInitDevCrt(basePath,aliPayResource);
+//            doInitProdCrt(basePath,aliPayResource);
+//        }
+//        log.info("final basePath:"+ basePath);
+//
+//        return basePath.replace("!/","/"); // docker special handle
+//    }
     private static void doInitDevCrt(String basePath,AliPayResource aliPayResource)  throws ServerException {
         checkAndcopyCart(basePath, aliPayResource.getDevAppCertPath());
         checkAndcopyCart(basePath, aliPayResource.getDevAlipayPublicCertPath());
