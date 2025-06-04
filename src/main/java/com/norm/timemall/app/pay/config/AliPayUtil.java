@@ -2,13 +2,14 @@ package com.norm.timemall.app.pay.config;
 
 import com.alipay.api.AlipayConfig;
 import com.norm.timemall.app.base.config.env.EnvBean;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ResourceUtils;
 
 import java.io.*;
 import java.rmi.ServerException;
 
-
+@Slf4j
 public class AliPayUtil {
     public static   AlipayConfig getAlipayConfig(AliPayResource aliPayResource, EnvBean envBean) {
         AlipayConfig alipayConfig = new AlipayConfig();
@@ -82,6 +83,7 @@ public class AliPayUtil {
      * @throws ServerException
      */
     private static String initCrt(String basePath,AliPayResource aliPayResource) throws ServerException {
+        log.info("raw basePath:"+ basePath);
         if (basePath.contains("jar!")) {
             if (basePath.startsWith("file:")) {
                 basePath = basePath.replace("file:", "");
@@ -89,6 +91,8 @@ public class AliPayUtil {
             doInitDevCrt(basePath,aliPayResource);
             doInitProdCrt(basePath,aliPayResource);
         }
+        log.info("final basePath:"+ basePath);
+
         return basePath;
     }
     private static void doInitDevCrt(String basePath,AliPayResource aliPayResource)  throws ServerException {
