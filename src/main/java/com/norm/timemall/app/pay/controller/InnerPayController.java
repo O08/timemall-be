@@ -4,14 +4,16 @@ import com.alibaba.fastjson.JSON;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
-import com.alipay.api.request.AlipayFundTransToaccountTransferRequest;
-import com.alipay.api.response.AlipayFundTransToaccountTransferResponse;
+import com.alipay.api.domain.AlipayFundTransUniTransferModel;
+import com.alipay.api.domain.Participant;
+import com.alipay.api.internal.util.WebUtils;
+import com.alipay.api.request.AlipayFundTransUniTransferRequest;
+import com.alipay.api.response.AlipayFundTransUniTransferResponse;
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.pay.config.AliPayResource;
 import com.norm.timemall.app.pay.domain.dto.WithDrawDTO;
-import com.norm.timemall.app.pay.domain.pojo.BizContentForUniTransfer;
 import com.norm.timemall.app.team.domain.pojo.WithdrawToALiPayBO;
 import com.norm.timemall.app.team.service.TeamWithdrawService;
 import lombok.extern.slf4j.Slf4j;
@@ -43,31 +45,45 @@ public class InnerPayController {
                 aliPayResource.getSignType());
 
 
+
         WithdrawToALiPayBO bo =  teamWithdrawService.toAliPay(dto);
 
-        AlipayFundTransToaccountTransferRequest request = new AlipayFundTransToaccountTransferRequest();
-//        request.setBizContent("{" +
-//                "  \"out_biz_no\":\""+"3142321423432\"," +
-//                "  \"payee_type\":\"ALIPAY_LOGONID\"," +
-//                "  \"payee_account\":\"abc@sina.com\"," +
-//                "  \"amount\":\"12.23\"," +
-//                "  \"payer_show_name\":\"群巅-提现\"," +
-//                "  \"payee_real_name\":\"张三\"," +
-//                "  \"remark\":\"提现\"" +
-//                "}");
-//转账参数
-        BizContentForUniTransfer bizContent = new BizContentForUniTransfer();
-        bizContent.setOut_biz_no(bo.getOrderNo());
-        bizContent.setPayee_type("ALIPAY_LOGONID");
-        bizContent.setPayee_account(bo.getPayeeAccount());
-        bizContent.setAmount(bo.getAmount());
-        bizContent.setPayer_show_name("群巅-提现");
-        bizContent.setPayee_real_name(bo.getPayeeRealName());
-        bizContent.setRemark("提现");
+        //设置收款方信息
+        Participant payeeInfo = new Participant();
+        payeeInfo.setIdentity(bo.getPayeeAccount());
+        payeeInfo.setName(bo.getPayeeRealName());
+        payeeInfo.setIdentityType("ALIPAY_LOGON_ID");
 
-        request.setBizContent(JSON.toJSONString(bizContent));
+        AlipayFundTransUniTransferModel model = new AlipayFundTransUniTransferModel();
+        // 设置商家侧唯一订单号
+        model.setOutBizNo(bo.getOrderNo());
 
-        AlipayFundTransToaccountTransferResponse response = alipayClient.execute(request);
+        // 设置订单总金额
+        model.setTransAmount(""+bo.getAmount());
+
+        // 设置描述特定的业务场景
+        model.setBizScene("DIRECT_TRANSFER");
+
+        // 设置业务产品码
+        model.setProductCode("TRANS_ACCOUNT_NO_PWD");
+
+        // 设置转账业务的标题
+        model.setOrderTitle("群巅-提现");
+
+        model.setPayeeInfo(payeeInfo);
+
+        // 设置业务备注
+        model.setRemark("群巅-提现");
+
+        // 设置转账业务请求的扩展参数
+        model.setBusinessParams("{\"payer_show_name_use_alias\":\"true\"}");
+
+
+        AlipayFundTransUniTransferRequest request = new AlipayFundTransUniTransferRequest();
+        WebUtils.setNeedCheckServerTrusted(false);
+        request.setBizModel(model);
+        AlipayFundTransUniTransferResponse response = alipayClient.execute(request);
+
         log.info("orderNO:"+bo.getOrderNo()+"提现返回："+JSON.toJSONString(response));
         if(response.isSuccess()){
             teamWithdrawService.toAliPaySuccess(bo.getOrderNo(),response);
@@ -77,4 +93,5 @@ public class InnerPayController {
         }
         return new SuccessVO(CodeEnum.SUCCESS);
     }
+
 }

@@ -3,7 +3,7 @@ package com.norm.timemall.app.team.service.impl;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSON;
-import com.alipay.api.response.AlipayFundTransToaccountTransferResponse;
+import com.alipay.api.response.AlipayFundTransUniTransferResponse;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.FidTypeEnum;
 import com.norm.timemall.app.base.enums.FinAccountMarkEnum;
@@ -104,7 +104,7 @@ public class TeamWithdrawServiceImpl implements TeamWithdrawService {
     }
 
     @Override
-    public void toAliPaySuccess(String orderNo, AlipayFundTransToaccountTransferResponse response) {
+    public void toAliPaySuccess(String orderNo, AlipayFundTransUniTransferResponse response) {
         String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         // update tag and msg
         WithdrawRecord record = teamWithdrawRecordMapper.selectById(orderNo);
@@ -119,7 +119,7 @@ public class TeamWithdrawServiceImpl implements TeamWithdrawService {
     }
 
     @Override
-    public void toAliPayFail(String orderNo, AlipayFundTransToaccountTransferResponse response) {
+    public void toAliPayFail(String orderNo, AlipayFundTransUniTransferResponse response) {
         // update tag and msg
         WithdrawRecord record = teamWithdrawRecordMapper.selectById(orderNo);
         record.setTag(WithdrawTagEnum.FAIL.getMark())
