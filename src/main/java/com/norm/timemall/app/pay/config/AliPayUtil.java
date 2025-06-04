@@ -18,15 +18,6 @@ public class AliPayUtil {
         alipayConfig.setSignType(aliPayResource.getSignType());
         alipayConfig.setFormat("json");
 
-        File file5 = new File("/tmp/data/logs/timemall-be.2025-05-29.0.log");
-        File file6 = new File("/tmp/data/deploy/alipay-crt/alipayRootCert.crt");
-        File file7 = new File("tmp/data/deploy/alipay-crt/alipayRootCert.crt");
-
-        log.info("file5 exist:" +file5.exists());
-        log.info("file6 exist:" +file6.exists());
-        log.info("file7 exist:" +file7.exists());
-
-
         if(envBean.getSoftwareDevelopmentLifeCycle().equals("local")){
             alipayConfig.setAppCertPath(aliPayResource.getLocalAppCertPath());
             alipayConfig.setAlipayPublicCertPath(aliPayResource.getLocalAlipayPublicCertPath());
