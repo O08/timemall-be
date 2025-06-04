@@ -74,7 +74,17 @@ public class AliPayUtil {
         URL baseUrl = ResourceUtils.getURL("classpath:");
         String basePath = ("jar".equals(baseUrl.getProtocol())) ? baseUrl.toExternalForm() : baseUrl.getPath();
         log.info("final basePath:"+ basePath);
-       // basePath = initCrt(basePath, aliPayResource);
+        File file = new File("BOOT-INF/classes/dev/alipay-crt/alipayRootCert.crt");
+        File file2 = new File("/BOOT-INF/classes/dev/alipay-crt/alipayRootCert.crt");
+        File file3 = new File("dev/alipay-crt/alipayRootCert.crt");
+        File file4 = new File("/dev/alipay-crt/alipayRootCert.crt");
+        File file5 = new File("/tmp/data/logs/timemall-be.2025-05-29.0.log");
+        log.info("file exist:" +file.exists());
+        log.info("file2 exist:" +file2.exists());
+        log.info("file3 exist:" +file3.exists());
+        log.info("file4 exist:" +file4.exists());
+        log.info("file5 exist:" +file5.exists());
+        // basePath = initCrt(basePath, aliPayResource);
         return basePath;
     }
 
