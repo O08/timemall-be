@@ -17,23 +17,30 @@ public class AliPayUtil {
         alipayConfig.setFormat("json");
 
         if(envBean.getSoftwareDevelopmentLifeCycle().equals("dev")){
-            alipayConfig.setAppCertPath("src/main/resources/dev/alipay-crt/appPublicCert.crt");
-            alipayConfig.setAlipayPublicCertPath("src/main/resources/dev/alipay-crt/alipayPublicCert.crt");
-            alipayConfig.setRootCertPath("src/main/resources/dev/alipay-crt/alipayRootCert.crt");
+            alipayConfig.setAppCertPath(getServerPath()+"/dev/alipay-crt/appPublicCert.crt");
+            alipayConfig.setAlipayPublicCertPath(getServerPath()+"/dev/alipay-crt/alipayPublicCert.crt");
+            alipayConfig.setRootCertPath(getServerPath()+"/dev/alipay-crt/alipayRootCert.crt");
         }
         if(envBean.getSoftwareDevelopmentLifeCycle().equals("prd")){
-            alipayConfig.setAppCertPath("<-- 请填写您的应用公钥证书文件路径，例如：/foo/appCertPublicKey_2019051064521003.crt -->");
-            alipayConfig.setAlipayPublicCertPath("<-- 请填写您的支付宝公钥证书文件路径，例如：/foo/alipayCertPublicKey_RSA2.crt -->");
-            alipayConfig.setRootCertPath("<-- 请填写您的支付宝根证书文件路径，例如：/foo/alipayRootCert.crt -->");
+            alipayConfig.setAppCertPath(getServerPath()+"/alipay-crt/appPublicCert.crt");
+            alipayConfig.setAlipayPublicCertPath(getServerPath()+"/alipay-crt/alipayPublicCert.crt");
+            alipayConfig.setRootCertPath(getServerPath()+"/alipay-crt/alipayRootCert.crt");
         }
 
         return alipayConfig;
     }
     public static String getAliPayPublicCertPath(EnvBean envBean){
         if(envBean.getSoftwareDevelopmentLifeCycle().equals("dev")){
-            return "src/main/resources/dev/alipay-crt/alipayPublicCert.crt";
+            return getServerPath()+"/dev/alipay-crt/alipayPublicCert.crt";
         }
 
-        return "src/main/resources/alipay-crt/alipayPublicCert.crt";
+        return getServerPath()+"/alipay-crt/alipayPublicCert.crt";
+    }
+    private  static   String getServerPath(){
+        try {
+            return   new PathMatchingResourcePatternResolver().getResource("/").getFile().getPath();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
