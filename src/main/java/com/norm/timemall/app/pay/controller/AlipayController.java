@@ -5,12 +5,15 @@ import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
+import com.alipay.api.AlipayConstants;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradePagePayRequest;
+import com.norm.timemall.app.base.config.env.EnvBean;
 import com.norm.timemall.app.base.mo.ProprietaryTradingOrder;
 import com.norm.timemall.app.base.mo.ProprietaryTradingPayment;
 import com.norm.timemall.app.pay.config.AliPayResource;
+import com.norm.timemall.app.pay.config.AliPayUtil;
 import com.norm.timemall.app.pay.helper.PayHelper;
 import com.norm.timemall.app.studio.service.StudioProprietaryTradingOrderService;
 import com.norm.timemall.app.studio.service.StudioProprietaryTradingPaymentService;
@@ -23,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -37,6 +39,9 @@ public class AlipayController {
 
     @Autowired
     private AliPayResource aliPayResource;
+
+    @Autowired
+    private EnvBean envBean;
 
     @Autowired
     private StudioProprietaryTradingOrderService studioProprietaryTradingOrderService;
@@ -53,13 +58,8 @@ public class AlipayController {
     @GetMapping(value="/goAlipay.html")
     public String goAlipay(String merchantUserId, String merchantOrderId) throws Exception{
         //获得初始化的AlipayClient
-        AlipayClient alipayClient = new DefaultAlipayClient(aliPayResource.getGatewayUrl(),
-                aliPayResource.getAppId(),
-                aliPayResource.getMerchantPrivateKey(),
-                "json",
-                aliPayResource.getCharset(),
-                aliPayResource.getAlipayPublicKey(),
-                aliPayResource.getSignType());
+        AlipayClient alipayClient = new DefaultAlipayClient(AliPayUtil.getAlipayConfig(aliPayResource,envBean));
+
 
         //设置请求参数
         AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
@@ -126,10 +126,12 @@ public class AlipayController {
         String paramsJson = JSON.toJSONString(params);
         log.info("支付宝回调，{}", paramsJson);
 
-        boolean signVerified = AlipaySignature.rsaCheckV1(params,
-                aliPayResource.getAlipayPublicKey(),
-                aliPayResource.getCharset(),
-                aliPayResource.getSignType()); //调用SDK验证签名
+
+        boolean signVerified = AlipaySignature.rsaCertCheckV1(params,
+                AliPayUtil.getAliPayPublicCertPath(envBean),
+                AlipayConstants.CHARSET_UTF8,
+                AlipayConstants.SIGN_TYPE_RSA2);
+
 
         if(signVerified) {//验证成功
             // 商户订单号

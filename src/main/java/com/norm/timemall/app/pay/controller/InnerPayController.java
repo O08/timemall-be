@@ -6,13 +6,14 @@ import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayFundTransUniTransferModel;
 import com.alipay.api.domain.Participant;
-import com.alipay.api.internal.util.WebUtils;
 import com.alipay.api.request.AlipayFundTransUniTransferRequest;
 import com.alipay.api.response.AlipayFundTransUniTransferResponse;
+import com.norm.timemall.app.base.config.env.EnvBean;
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.pay.config.AliPayResource;
+import com.norm.timemall.app.pay.config.AliPayUtil;
 import com.norm.timemall.app.pay.domain.dto.WithDrawDTO;
 import com.norm.timemall.app.team.domain.pojo.WithdrawToALiPayBO;
 import com.norm.timemall.app.team.service.TeamWithdrawService;
@@ -28,6 +29,8 @@ public class InnerPayController {
     @Autowired
     private AliPayResource aliPayResource;
     @Autowired
+    private EnvBean envBean;
+    @Autowired
     private TeamWithdrawService teamWithdrawService;
 
     /**
@@ -36,14 +39,8 @@ public class InnerPayController {
     @PostMapping(value="/api/v1/team/withdraw_to_alipay")
     public SuccessVO withdraw(@RequestBody WithDrawDTO dto) throws AlipayApiException {
         //获得初始化的AlipayClient
-        AlipayClient alipayClient = new DefaultAlipayClient(aliPayResource.getGatewayUrl(),
-                aliPayResource.getAppId(),
-                aliPayResource.getMerchantPrivateKey(),
-                "json",
-                aliPayResource.getCharset(),
-                aliPayResource.getAlipayPublicKey(),
-                aliPayResource.getSignType());
 
+        AlipayClient alipayClient = new DefaultAlipayClient(AliPayUtil.getAlipayConfig(aliPayResource,envBean));
 
 
         WithdrawToALiPayBO bo =  teamWithdrawService.toAliPay(dto);
@@ -80,9 +77,8 @@ public class InnerPayController {
 
 
         AlipayFundTransUniTransferRequest request = new AlipayFundTransUniTransferRequest();
-        WebUtils.setNeedCheckServerTrusted(false);
         request.setBizModel(model);
-        AlipayFundTransUniTransferResponse response = alipayClient.execute(request);
+        AlipayFundTransUniTransferResponse response = alipayClient.certificateExecute(request);
 
         log.info("orderNO:"+bo.getOrderNo()+"提现返回："+JSON.toJSONString(response));
         if(response.isSuccess()){

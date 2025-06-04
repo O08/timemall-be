@@ -11,6 +11,8 @@ public class EnvBean {
     private String website;
     @Value("${env.short-link-site}")
     private String shortSite;
+    @Value("${env.life-cycle}")
+    private String softwareDevelopmentLifeCycle;
     /**
      * 密码重置有效区
      */
