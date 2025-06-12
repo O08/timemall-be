@@ -26,8 +26,8 @@ public enum FileStoreDir {
     LINKSHOPPING_FEED_COVER("app/link-shopping/cover", "app link shopping dir"), CASE_MATERIAL("dsp-case/material", "dsp case material"),
     VIRTUAL_PRODUCT_THUMBNAIL("virtual/thumbnail", "virtual product thumbnail file"),
     VIRTUAL_PRODUCT_SHOWCASE("virtual/showcase","virtual product show case file" ),
-    VIRTUAL_PRODUCT_DELIVER("virtual/deliver", "virtual product deliver file")
-    ;
+    VIRTUAL_PRODUCT_DELIVER("virtual/deliver", "virtual product deliver file"),
+    APP_DESK_ELEMENT_ICON("app/desk/icon", "app desk element icon dir");
     private final String dir;
 
     private final String desc;
