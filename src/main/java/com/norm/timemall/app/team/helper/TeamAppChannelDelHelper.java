@@ -21,6 +21,9 @@ public class TeamAppChannelDelHelper {
     private TeamAppFbService teamAppFbService;
 
     @Autowired
+    private TeamAppDeskService teamAppDeskService;
+
+    @Autowired
     private TeamAppGroupChatService teamAppGroupChatService;
 
     public void doRemoveOasisChannelData(OasisChannel oasisChannel){
@@ -42,6 +45,9 @@ public class TeamAppChannelDelHelper {
                 break;
             case "5":
                 teamAppGroupChatService.removeChannelData(oasisChannel.getId());
+                break;
+            case "6":
+                teamAppDeskService.removeChannelData(oasisChannel.getId());
                 break;
             default:
                 break;

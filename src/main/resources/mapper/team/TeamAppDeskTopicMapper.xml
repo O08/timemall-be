@@ -36,7 +36,7 @@
                 AND (locate(#{dto.q}, t.title)>0
                 or  locate(#{dto.q}, e.title)>0 or  locate(#{dto.q}, e.preface)>0 )
             </if>
-            order by t.od asc,e.views desc
+            order by t.od asc,e.views desc,e.modified_at asc
 
         </where>
 

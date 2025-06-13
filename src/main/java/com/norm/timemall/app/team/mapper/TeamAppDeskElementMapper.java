@@ -17,4 +17,6 @@ import org.apache.ibatis.annotations.Update;
 public interface TeamAppDeskElementMapper extends BaseMapper<AppDeskElement> {
     @Update("update app_desk_element set views = views + 1 where id = #{id}")
     void autoIncrementViewsById(@Param("id") String id);
+
+    void deleteByChannel(@Param("chn") String channel);
 }

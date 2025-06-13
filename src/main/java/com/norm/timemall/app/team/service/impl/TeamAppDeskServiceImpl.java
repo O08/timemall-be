@@ -182,4 +182,16 @@ public class TeamAppDeskServiceImpl implements TeamAppDeskService {
         teamAppDeskTopicMapper.reorderForBiggerThanOd(oasisChannelId,od);
     }
 
+    @Override
+    public void removeChannelData(String channel) {
+
+        // del from app_desk_element
+        teamAppDeskElementMapper.deleteByChannel(channel);
+        // del from app_desk_topic
+        LambdaQueryWrapper<AppDeskTopic> topicLambdaQueryWrapper=Wrappers.lambdaQuery();
+        topicLambdaQueryWrapper.eq(AppDeskTopic::getOasisChannelId,channel);
+        teamAppDeskTopicMapper.delete(topicLambdaQueryWrapper);
+
+    }
+
 }

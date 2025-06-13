@@ -9,4 +9,13 @@
         id,app_desk_topic_id,title,preface,icon_url,link_url,views,create_at,modified_at
     </sql>
 
+    <delete id="deleteByChannel" >
+        DELETE FROM app_desk_element
+        WHERE EXISTS(
+        SELECT 1 FROM app_desk_topic Where app_desk_topic.id = app_desk_element.app_desk_topic_id
+        and app_desk_topic.oasis_channel_id=#{chn}
+        )
+    </delete>
+
+
 </mapper>

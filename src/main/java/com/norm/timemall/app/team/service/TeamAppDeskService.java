@@ -33,4 +33,6 @@ public interface TeamAppDeskService {
     void storeElementStatisticsData(String id);
 
     void reorderTopicWhenDel(String oasisChannelId, Long od);
+
+    void removeChannelData(String channel);
 }
