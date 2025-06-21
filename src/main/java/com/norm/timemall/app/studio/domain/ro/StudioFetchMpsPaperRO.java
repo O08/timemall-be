@@ -8,6 +8,8 @@ public class StudioFetchMpsPaperRO {
     private String title;
     private String supplier;
     private String purchaser;
+    private String purchaserAvatar;
+    private String purchaserUserId;
     private String piece;
     private String bonus;
     private String createAt;

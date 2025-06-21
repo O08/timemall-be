@@ -6,4 +6,5 @@ import lombok.Data;
 @Data
 public class StudioWorkflowPageDTO extends PageDTO {
     private String code;
+    private String q;
 }

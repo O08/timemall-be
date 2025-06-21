@@ -9,12 +9,20 @@
         id,stage,amount,voucher,mark,order_id,create_at,modified_at
     </sql>
     <select id="selectBillPageByBrandId" resultType="com.norm.timemall.app.studio.domain.ro.StudioBillRO">
-        select b.promotion_deduction, b.commission,b.net_income, b.stage,d.consumer_name customer,d.cell_title service,b.amount,b.id billId,b.voucher,b.create_at added
+        select b.promotion_deduction, b.commission,b.net_income, b.stage,buyer.brand_name customer,buyer.avator customerAvatar,d.consumer_id customerUserId, d.cell_title service,b.amount,b.id billId,b.voucher,b.create_at added
         from bill b
         inner join order_details d on b.order_id = d.id
-        inner join brand r on r.id=d.brand_id
-        where r.customer_id = #{user_id}
-          and b.mark = #{code}
+        inner join brand buyer on buyer.customer_id=d.consumer_id
+
+        <where>
+            1=1
+            and b.mark = #{dto.code}
+            and d.brand_id = #{brand_id}
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, d.cell_title)>0 or locate(#{dto.q}, b.stage)>0  or locate(#{dto.q}, buyer.brand_name)>0)
+            </if>
+        </where>
+
         order by b.create_at desc
     </select>
 

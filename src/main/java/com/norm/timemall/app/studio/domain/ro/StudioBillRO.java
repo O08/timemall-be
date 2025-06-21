@@ -7,6 +7,8 @@ import lombok.Data;
 public class StudioBillRO {
     private String stage;
     private String customer;
+    private String customerAvatar;
+    private String customerUserId;
     private String service;
     private String amount;
     private String billId;

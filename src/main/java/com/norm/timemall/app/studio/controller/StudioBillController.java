@@ -33,7 +33,7 @@ public class StudioBillController {
                                           @AuthenticationPrincipal CustomizeUser user,
                                           @Validated StudioBrandBillPageDTO dto)
     {
-        IPage<StudioBillRO> bills = studioBillService.findBills(user.getUserId(),dto);
+        IPage<StudioBillRO> bills = studioBillService.findBills(user.getBrandId(),dto);
         StudioBillPageVO vo = new StudioBillPageVO();
         vo.setResponseCode(CodeEnum.SUCCESS);
         vo.setBills(bills);

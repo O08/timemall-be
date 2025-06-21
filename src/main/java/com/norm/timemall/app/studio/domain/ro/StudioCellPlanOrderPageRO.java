@@ -17,4 +17,7 @@ public class StudioCellPlanOrderPageRO {
     private BigDecimal commission;
     private BigDecimal revenue;
     private BigDecimal promotionDeduction;
+    private String buyerAvatar;
+    private String buyerName;
+    private String buyerUserId;
 }

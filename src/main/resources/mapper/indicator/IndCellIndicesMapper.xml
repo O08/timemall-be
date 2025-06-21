@@ -13,8 +13,13 @@
         from cell  c
         inner join brand b on b.id = c.brand_id
         left join cell_indices i on c.id = i.cell_id
-        where b.customer_id = #{customer_id}
-          and c.mark = #{code}
+        <where>
+            b.customer_id = #{customer_id}
+            and c.mark = #{dto.code}
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, c.title)>0  or locate(#{dto.q}, c.tags)>0)
+            </if>
+        </where>
         order by c.create_at desc
     </select>
 

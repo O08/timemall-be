@@ -15,11 +15,11 @@ public class StudioBillServiceImpl implements StudioBillService {
     @Autowired
     private StudioBillMapper studioBillMapper;
     @Override
-    public IPage<StudioBillRO> findBills( String userId ,StudioBrandBillPageDTO dto) {
+    public IPage<StudioBillRO> findBills( String brandId ,StudioBrandBillPageDTO dto) {
         IPage<StudioBillRO> page = new Page<>();
         page.setCurrent(dto.getCurrent());
         page.setSize(dto.getSize());
-        return studioBillMapper.selectBillPageByBrandId(page, userId,dto.getCode());
+        return studioBillMapper.selectBillPageByBrandId(page, brandId,dto);
     }
 
     @Override

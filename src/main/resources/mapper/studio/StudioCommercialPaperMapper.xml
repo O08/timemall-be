@@ -4,7 +4,7 @@
 
     <select id="selectPaperPageForBrand" resultType="com.norm.timemall.app.studio.domain.ro.StudioFetchMpsPaperRO">
 
-        select p.id,p.title,p.tag,b1.brand_name supplier,b2.brand_name purchaser,p.piece,p.bonus,p.create_at
+        select p.id,p.title,p.tag,b1.brand_name supplier,b2.brand_name purchaser,b2.avator purchaserAvatar,b2.customer_id purchaserUserId, p.piece,p.bonus,p.create_at
         from commercial_paper p
         left join brand b1
           on b1.id=p.supplier
@@ -15,7 +15,7 @@
             1=1
             and p.supplier = #{dto.brandId}
             <if test="dto.q != null and dto.q != ''">
-                AND locate(#{dto.q}, p.title)>0
+                AND (locate(#{dto.q}, p.title)>0 or locate(#{dto.q}, p.id)>0  or locate(#{dto.q}, b2.brand_name)>0)
             </if>
             <if test="dto.tag != null and dto.tag != ''">
                 AND p.tag = #{dto.tag}

@@ -23,7 +23,7 @@ public class CellIndicesServiceImpl implements CellIndicesService {
         IPage<IndCellIndicesRO>  page = new Page<>();
         page.setCurrent(dto.getCurrent());
         page.setSize(dto.getSize());
-        IPage<IndCellIndicesRO> cells = indCellIndicesMapper.selectCellIndicesPageByUserId(page, dto.getCode(),user.getUserId());
+        IPage<IndCellIndicesRO> cells = indCellIndicesMapper.selectCellIndicesPageByUserId(page, dto,user.getUserId());
         return cells;
     }
 

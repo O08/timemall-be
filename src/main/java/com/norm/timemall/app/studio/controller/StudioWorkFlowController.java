@@ -35,11 +35,11 @@ public class StudioWorkFlowController {
      */
     @ResponseBody
     @GetMapping(value = "/api/v1/web_estudio/brand/millstone/workflow")
-    public StudioTransPageVO retrievWrokflows(
+    public StudioTransPageVO retrieveWrokflows(
             @AuthenticationPrincipal CustomizeUser user,
             @Validated StudioWorkflowPageDTO dto)
     {
-        IPage<StudioTransRO> trans = studioOrderDetailsService.findWorkflowForBrand(user.getUserId(),dto);
+        IPage<StudioTransRO> trans = studioOrderDetailsService.findWorkflowForBrand(user.getBrandId(),dto);
         StudioTransPageVO vo = new StudioTransPageVO();
         vo.setResponseCode(CodeEnum.SUCCESS);
         vo.setTransactions(trans);

@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 public class StudioTransRO {
     private String service;
     private String customer;
+    private String customerAvatar;
     private String fee;
     private String added;
     private String id;

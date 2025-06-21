@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface StudioOrderDetailsService {
-    IPage<StudioTransRO> findTrans( String userId,PageDTO dto);
 
-    IPage<StudioTransRO> findWorkflowForBrand(String userId, StudioWorkflowPageDTO dto);
+
+    IPage<StudioTransRO> findWorkflowForBrand(String brandId, StudioWorkflowPageDTO dto);
 }
