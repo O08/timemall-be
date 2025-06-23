@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamTransactionsQueryMapper">
+    <sql id="tableName">
+        transactions_query
+    </sql>
+
+    <sql id="baseColumn">
+        id,fid,fid_type,target_fid,target_fid_type,trans_no,trans_type,trans_type_desc,amount,direction,remark,create_at,modified_at
+    </sql>
+
+    <select id="selectTransByBrand" resultType="com.norm.timemall.app.team.domain.pojo.TeamTrans">
+        select
+          t.amount,t.trans_no transNumber,t.direction,t.trans_type_desc,t.trans_type,b.brand_name targetName,b.avator targetAvatar,t.create_at
+        from transactions_query t
+        left join brand b
+          on t.fid=b.id
+        where t.fid=#{fid}
+        and t.fid_type=#{fid_type}
+        order by t.create_at desc
+    </select>
+
+</mapper>

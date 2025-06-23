@@ -1,14 +1,14 @@
 package com.norm.timemall.app.team.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.norm.timemall.app.base.entity.PageDTO;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.team.domain.pojo.TeamTrans;
-import com.norm.timemall.app.team.domain.vo.TeamTransVO;
+import com.norm.timemall.app.team.domain.vo.TeamTransPageVO;
 import com.norm.timemall.app.team.service.TeamTransService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import jakarta.validation.constraints.NotBlank;
 
 @Validated
 @RestController
@@ -21,12 +21,9 @@ public class TeamTransController {
      */
     @ResponseBody
     @GetMapping(value = "/api/v1/team/trans")
-    public TeamTransVO retrieveTrans(@RequestParam @NotBlank(message = "fid is required") String fid,
-                                     @RequestParam @NotBlank(message = "fidType is required") String fidType,
-                                     @RequestParam @NotBlank(message = "year is required") String year,
-                                     @RequestParam @NotBlank(message = "month is required") String month){
-        TeamTrans trans = teamTransService.findTrans(fid,fidType,year,month);
-        TeamTransVO vo = new TeamTransVO();
+    public TeamTransPageVO retrieveTrans(@Validated PageDTO dto){
+        IPage<TeamTrans> trans = teamTransService.findTrans(dto);
+        TeamTransPageVO vo = new TeamTransPageVO();
         vo.setTrans(trans);
         vo.setResponseCode(CodeEnum.SUCCESS);
         return vo;
