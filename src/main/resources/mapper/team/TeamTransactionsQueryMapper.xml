@@ -14,7 +14,7 @@
           t.amount,t.trans_no transNumber,t.direction,t.trans_type_desc,t.trans_type,b.brand_name targetName,b.avator targetAvatar,t.create_at
         from transactions_query t
         left join brand b
-          on t.fid=b.id
+          on t.target_fid=b.id
         where t.fid=#{fid}
         and t.fid_type=#{fid_type}
         order by t.create_at desc
