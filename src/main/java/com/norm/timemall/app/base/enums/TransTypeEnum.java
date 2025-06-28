@@ -1,7 +1,7 @@
 package com.norm.timemall.app.base.enums;
 
 public enum TransTypeEnum {
-    COMMISSION("1","佣金"),
+    COMMISSION("1","部落任务佣金"),
     OTHER("2","其他"),
 
     TRANSFER("3","交易"),

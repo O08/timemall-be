@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 
 @Slf4j
 @Service
@@ -30,6 +32,19 @@ public class DefaultPayServiceImpl implements DefaultPayService {
         // refund
         String tradeNo = transfer(new Gson().toJson(refundTransferBO));
         payRefundHandler.modifyRefundRecordWhenRefundSuccess(payRefund,tradeNo);
+    }
+
+    @Override
+    public TransferBO generateTransferBO(String transType, String payeeType, String payeeAccount, String payerType, String payerAccount, BigDecimal amount, String outNo) {
+        TransferBO transferBO=new TransferBO();
+        transferBO.setOutNo(outNo)
+                .setAmount(amount)
+                .setTransType(transType)
+                .setPayeeType(payeeType)
+                .setPayeeAccount(payeeAccount)
+                .setPayerType(payerType)
+                .setPayerAccount(payerAccount);
+        return transferBO;
     }
 
 

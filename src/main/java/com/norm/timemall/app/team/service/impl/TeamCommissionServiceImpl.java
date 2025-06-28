@@ -105,36 +105,7 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
                 dto.getCommissionId(),
                 commission.getWorker(),
                 OasisCommissionTagEnum.FINISH.getMark());
-        // calculate finance info
-        // 1.insert trans
-        String transNo = IdUtil.simpleUUID();
-        Transactions creditTrans = new Transactions();
-        creditTrans.setId(IdUtil.simpleUUID())
-                .setFid(commission.getWorker())
-                .setFidType(FidTypeEnum.BRAND.getMark())
-                .setTransNo(transNo)
-                .setTransType(TransTypeEnum.COMMISSION.getMark())
-                .setTransTypeDesc(TransTypeEnum.COMMISSION.getDesc())
-                .setAmount(commission.getBonus())
-                .setDirection(TransDirectionEnum.CREDIT.getMark())
-                .setRemark(TransTypeEnum.COMMISSION.getDesc()+"-"+commission.getTitle())
-                .setCreateAt(new Date())
-                .setModifiedAt(new Date());
-        Transactions debitTrans = new Transactions();
-        debitTrans.setId(IdUtil.simpleUUID())
-                .setFid(commission.getOasisId())
-                .setFidType(FidTypeEnum.OASIS.getMark())
-                .setTransNo(transNo)
-                .setTransType(TransTypeEnum.COMMISSION.getMark())
-                .setTransTypeDesc(TransTypeEnum.COMMISSION.getDesc())
-                .setAmount(commission.getBonus())
-                .setDirection(TransDirectionEnum.DEBIT.getMark())
-                .setRemark(TransTypeEnum.COMMISSION.getDesc()+"-"+commission.getTitle())
-                .setCreateAt(new Date())
-                .setModifiedAt(new Date());
 
-        teamTransactionsMapper.insert(creditTrans);
-        teamTransactionsMapper.insert(debitTrans);
         // 2. update or insert fin_distribute
         teamCommissionHelper.UpdateFinDistribute(commission.getOasisId(), commission.getWorker(), commission.getBonus());
         // 3. update finAccount amount
@@ -152,13 +123,6 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
         teamCommissionDeliverMapper.updateTagById(deliverTagDTO);
 
 
-//        //2. calculate total
-//        teamCommissionHelper.calTotalTransWhenFinishTask(commission.getWorker()
-//                ,commission.getOasisId(),commission.getBonus());
-//
-//        //3. calculate month
-//        teamCommissionHelper.calMonthTransWhenFinishTask(commission.getWorker()
-//                ,commission.getOasisId(),commission.getBonus());
 
     }
 

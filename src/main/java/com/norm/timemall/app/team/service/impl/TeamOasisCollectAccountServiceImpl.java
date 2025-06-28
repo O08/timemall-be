@@ -1,6 +1,5 @@
 package com.norm.timemall.app.team.service.impl;
 
-import cn.hutool.core.util.IdUtil;
 import com.google.gson.Gson;
 import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
@@ -10,7 +9,6 @@ import com.norm.timemall.app.base.mo.FinDistribute;
 import com.norm.timemall.app.base.mo.Oasis;
 import com.norm.timemall.app.base.mo.Transactions;
 import com.norm.timemall.app.base.pojo.TransferBO;
-import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.pay.service.DefaultPayService;
 import com.norm.timemall.app.team.domain.dto.TeamOasisAdminWithdrawDTO;
 import com.norm.timemall.app.team.domain.dto.TeamOasisCollectAccountDTO;
@@ -24,14 +22,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Service
 public class TeamOasisCollectAccountServiceImpl implements TeamOasisCollectAccountService {
     @Autowired
     private TeamFinAccountMapper teamFinAccountMapper;
-    @Autowired
-    private AccountService accountService;
     @Autowired
     private TeamTransactionsMapper teamTransactionsMapper;
     @Autowired
@@ -57,21 +52,19 @@ public class TeamOasisCollectAccountServiceImpl implements TeamOasisCollectAccou
             throw new ErrorCodeException(CodeEnum.OASIS_LOCKED);
         }
 
-        String brandId = accountService.
-                findBrandInfoByUserId(SecurityUserHelper.getCurrentPrincipal().getUserId())
-                .getId();
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         FinDistribute finDistribute= teamFinDistributeMapper.selectDistributeByBrandIdAndOasisId(brandId,dto.getOasisId());
-        // query brand account
-        FinAccount brandFinAccount = teamFinAccountMapper.selectOneByFid(brandId, FidTypeEnum.BRAND.getMark());
+
+
         // query Oasis account
-        FinAccount oasisFinAccount = teamFinAccountMapper.selectOneByFidForUpdate(dto.getOasisId(),FidTypeEnum.OASIS.getMark());
+        FinAccount oasisFinAccount = teamFinAccountMapper.selectOneByFid(dto.getOasisId(),FidTypeEnum.OASIS.getMark());
         // query collect account trans
         Transactions brandCollectAccountTran = teamTransactionsMapper.selectCollectAccountForTodayTrans(brandId,
                 FidTypeEnum.BRAND.getMark(),dto.getOasisId(),FidTypeEnum.OASIS.getMark());
 
 
         // validate
-        if(finDistribute==null || brandFinAccount == null || oasisFinAccount == null
+        if(finDistribute==null || oasisFinAccount == null
         ){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
@@ -86,49 +79,24 @@ public class TeamOasisCollectAccountServiceImpl implements TeamOasisCollectAccou
         }
 
 
-        // insert trans
-        String transNo = IdUtil.simpleUUID();
-        Transactions creditTrans = new Transactions();
-        creditTrans.setId(IdUtil.simpleUUID())
-                .setFid(brandId)
-                .setFidType(FidTypeEnum.BRAND.getMark())
-                .setTransNo(transNo)
-                .setTransType(TransTypeEnum.OASIS_COLLECT_IN.getMark())
-                .setTransTypeDesc(TransTypeEnum.OASIS_COLLECT_IN.getDesc())
-                .setAmount(dto.getAmount())
-                .setDirection(TransDirectionEnum.CREDIT.getMark())
-                .setRemark(TransTypeEnum.OASIS_COLLECT_IN.getDesc())
-                .setCreateAt(new Date())
-                .setModifiedAt(new Date());
-        Transactions debitTrans = new Transactions();
-        debitTrans.setId(IdUtil.simpleUUID())
-                .setFid(dto.getOasisId())
-                .setFidType(FidTypeEnum.OASIS.getMark())
-                .setTransNo(transNo)
-                .setTransType(TransTypeEnum.OASIS_COLLECT_IN.getMark())
-                .setTransTypeDesc(TransTypeEnum.OASIS_COLLECT_IN.getDesc())
-                .setAmount(dto.getAmount())
-                .setDirection(TransDirectionEnum.DEBIT.getMark())
-                .setRemark(TransTypeEnum.OASIS_COLLECT_IN.getDesc())
-                .setCreateAt(new Date())
-                .setModifiedAt(new Date());
+        TransferBO bo = defaultPayService.generateTransferBO(TransTypeEnum.OASIS_COLLECT_IN.getMark(),
+                FidTypeEnum.BRAND.getMark(),brandId,FidTypeEnum.OASIS.getMark(),dto.getOasisId(),dto.getAmount(),dto.getOasisId());
 
-        teamTransactionsMapper.insert(creditTrans);
-        teamTransactionsMapper.insert(debitTrans);
+        defaultPayService.transfer(new Gson().toJson(bo));
 
-        // action option
-        BigDecimal brandBalance = brandFinAccount.getDrawable().add(dto.getAmount());
-        brandFinAccount.setDrawable(brandBalance);
-        teamFinAccountMapper.updateById(brandFinAccount);
 
-        BigDecimal oasisBalance = oasisFinAccount.getDrawable().subtract(dto.getAmount());
-        oasisFinAccount.setDrawable(oasisBalance);
-        teamFinAccountMapper.updateById(oasisFinAccount);
 
         // update fin_distribute
         BigDecimal distributeBalance= finDistribute.getAmount().subtract(dto.getAmount());
         finDistribute.setAmount(distributeBalance);
         teamFinDistributeMapper.updateById(finDistribute);
+
+        // update fin_account amount
+        // query brand account
+        FinAccount brandFinAccount = teamFinAccountMapper.selectOneByFidForUpdate(brandId, FidTypeEnum.BRAND.getMark());
+        BigDecimal amountBalance=brandFinAccount.getAmount().subtract(dto.getAmount());
+        brandFinAccount.setAmount(amountBalance);
+        teamFinAccountMapper.updateById(brandFinAccount);
     }
 
     @Override
