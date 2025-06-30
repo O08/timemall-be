@@ -12,6 +12,10 @@ public class PodBillsRO {
     // 服务供应商 ref: brand.brand_name
     private String brand;
 
+    private String brandAvatar;
+
+    private String brandUserId;
+
     // 服务名称 ref: cell.title
     private String service;
 

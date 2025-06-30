@@ -11,6 +11,7 @@ public class PodTransRO {
     private String service;
     // The brand_name for brand, ref: brand.brand_name
     private String supplier;
+    private String supplierAvatar;
     // The total fee for order,ref: order_details.total
     private BigDecimal fee;
     // Create date for order, ref: order_details.create_at

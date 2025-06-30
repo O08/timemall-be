@@ -20,4 +20,7 @@ public class PodWorkflowRO {
     private String id;
     private String sbu;
     private String quantity;
+    private String supplierAvatar;
+    private String supplierUserId;
+
 }

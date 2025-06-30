@@ -9,4 +9,5 @@ import jakarta.validation.constraints.NotEmpty;
 public class PodBillPageDTO extends PageDTO {
     @NotEmpty(message = "code is required")
     private String code;
+    private String q;
 }

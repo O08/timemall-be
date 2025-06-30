@@ -13,4 +13,7 @@ public class PodCellPlanOrderPageRO {
     private String planType;
     private String revenue;
     private String promotionDeduction;
+    private String sellerName;
+    private String sellerAvatar;
+    private String sellerUserId;
 }

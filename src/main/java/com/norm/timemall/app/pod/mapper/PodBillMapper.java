@@ -3,6 +3,7 @@ package com.norm.timemall.app.pod.mapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.mo.Bill;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.norm.timemall.app.pod.domain.dto.PodBillPageDTO;
 import com.norm.timemall.app.pod.domain.ro.FetchBillDetailRO;
 import com.norm.timemall.app.pod.domain.ro.PodBillsRO;
 import org.apache.ibatis.annotations.Mapper;
@@ -29,7 +30,7 @@ public interface PodBillMapper extends BaseMapper<Bill> {
                             @Param("promotionDeduction") BigDecimal promotionDeduction,
                             @Param("id")  String billId, @Param("code") String code);
 
-    IPage<PodBillsRO> selectBillPageByUserId(IPage<PodBillsRO> page,  @Param("mark") String  code, @Param("user_id") String customerId);
+    IPage<PodBillsRO> selectBillPageByUserId(IPage<PodBillsRO> page, @Param("dto") PodBillPageDTO dto, @Param("user_id") String customerId);
 
     FetchBillDetailRO selectBillDetailById(@Param("id") String id,
                                            @Param("consumerBrandId") String consumerBrandId,

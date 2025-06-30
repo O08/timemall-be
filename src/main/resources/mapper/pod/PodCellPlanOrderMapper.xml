@@ -3,14 +3,16 @@
 <mapper namespace="com.norm.timemall.app.pod.mapper.PodCellPlanOrderMapper">
 
     <select id="selectCellPlanOrderPage" resultType="com.norm.timemall.app.pod.domain.ro.PodCellPlanOrderPageRO">
-        select o.revenue,o.promotion_deduction, o.id orderId,c.title cellTitle,o.plan_type_desc,o.plan_price price,o.tag,o.create_at,o.plan_type
+        select seller.brand_name sellerName,seller.customer_id sellerUserId,seller.avator sellerAvatar,  o.revenue,o.promotion_deduction, o.id orderId,c.title cellTitle,o.plan_type_desc,o.plan_price price,o.tag,o.create_at,o.plan_type
         from cell_plan_order o
         inner join cell c
            on c.id=o.cell_id
+        inner join brand seller
+           on seller.id=o.brand_id
         where 1=1
             and o.consumer_id=#{consumer_id}
         <if test="dto.q != null and dto.q != ''">
-            AND locate(#{dto.q}, c.title)>0
+            AND (locate(#{dto.q}, c.title)>0 or locate(#{dto.q}, seller.brand_name)>0)
         </if>
         <if test="dto.planType != null and dto.planType != ''">
             AND o.plan_type=#{dto.planType}

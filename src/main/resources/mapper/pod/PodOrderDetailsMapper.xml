@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.pod.mapper.PodOrderDetailsMapper">
+
+
+    <select id="selectTransPageByUserId" resultType="com.norm.timemall.app.pod.domain.ro.PodTransRO">
+        select
+           d.sbu,d.quantity, d.cell_title service, b.brand_name supplier,b.avator supplierAvatar, d.total fee,d.create_at added,d.brand_id,b.customer_id as supplierUserId
+        from order_details d, brand b
+        where b.id=d.brand_id
+          and d.consumer_id = #{user_id}
+        <if test="dto.q != null and dto.q != ''">
+            AND (locate(#{dto.q}, d.cell_title)>0 or locate(#{dto.q}, b.brand_name)>0)
+        </if>
+        order by d.create_at desc
+    </select>
+
+    <select id="selectWorkflowByUserId" resultType="com.norm.timemall.app.pod.domain.ro.PodWorkflowRO">
+        select
+            o.sbu,o.quantity,o.cell_title service, seller.brand_name supplier,seller.customer_id supplierUserId,seller.avator supplierAvatar, o.total fee,o.create_at added,o.id
+        from order_details o
+        inner join millstone m
+           on o.id = m.order_id
+        inner join brand seller
+           on seller.id=o.brand_id
+        where
+          o.consumer_id = #{user_id}
+          and m.mark= #{dto.code}
+        <if test="dto.q != null and dto.q != ''">
+            AND (locate(#{dto.q}, o.cell_title)>0 or locate(#{dto.q}, seller.brand_name)>0)
+        </if>
+        order by o.create_at desc
+    </select>
+
+
+</mapper>

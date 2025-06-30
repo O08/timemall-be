@@ -45,9 +45,9 @@ public class PodBillController {
      */
     @ResponseBody
     @GetMapping(value = "/api/v1/web_epod/me/bill")
-    public PodBillsPageVO retrieveBills(@Validated PodBillPageDTO PageDTO, @AuthenticationPrincipal CustomizeUser user)
+    public PodBillsPageVO retrieveBills(@Validated PodBillPageDTO dto, @AuthenticationPrincipal CustomizeUser user)
     {
-        IPage<PodBillsRO> bills = podBillService.findBills(PageDTO,user);
+        IPage<PodBillsRO> bills = podBillService.findBills(dto,user);
         PodBillsPageVO billsPageVO = new PodBillsPageVO();
         billsPageVO.setResponseCode(CodeEnum.SUCCESS);
         billsPageVO.setBills(bills);

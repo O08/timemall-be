@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.entity.PageDTO;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.security.CustomizeUser;
+import com.norm.timemall.app.pod.domain.dto.PodTransPageDTO;
 import com.norm.timemall.app.pod.domain.ro.PodTransRO;
 import com.norm.timemall.app.pod.domain.vo.PodTransPageVO;
 import com.norm.timemall.app.pod.service.PodOrderDetailService;
@@ -29,9 +30,9 @@ public class PodTransController {
      */
     @ResponseBody
     @GetMapping(value = "/api/v1/web_epod/me/transaction")
-    public PodTransPageVO retrieveTrans(@Validated  PageDTO transPageDTO, @AuthenticationPrincipal CustomizeUser user)
+    public PodTransPageVO retrieveTrans(@Validated PodTransPageDTO dto, @AuthenticationPrincipal CustomizeUser user)
     {
-        IPage<PodTransRO> trans = podOrderDetailService.findTrans(transPageDTO,user);
+        IPage<PodTransRO> trans = podOrderDetailService.findTrans(dto,user);
         PodTransPageVO transPageVO = new PodTransPageVO();
         transPageVO.setResponseCode(CodeEnum.SUCCESS);
         transPageVO.setTransactions(trans);

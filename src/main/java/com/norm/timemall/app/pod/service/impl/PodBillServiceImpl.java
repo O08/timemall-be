@@ -66,7 +66,7 @@ public class PodBillServiceImpl implements PodBillService {
         IPage<PodBillsRO> page = new Page<>();
         page.setCurrent(pageDTO.getCurrent());
         page.setSize(pageDTO.getSize());
-        IPage<PodBillsRO>  bills = podBillMapper.selectBillPageByUserId(page, pageDTO.getCode(),user.getUserId());
+        IPage<PodBillsRO>  bills = podBillMapper.selectBillPageByUserId(page, pageDTO,user.getUserId());
         return bills;
     }
 
