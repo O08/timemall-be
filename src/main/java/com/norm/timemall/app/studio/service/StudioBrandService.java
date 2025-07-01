@@ -34,4 +34,6 @@ public interface StudioBrandService {
     void modifyBrandExperience(String brandId, String userId, StudioBrandExperienceDTO dto);
 
     void modifyBrandLinks(StudioBrandLinksDTO dto);
+
+    void settingStudioConfig(ModifyBrandStudioConfigDTO dto);
 }

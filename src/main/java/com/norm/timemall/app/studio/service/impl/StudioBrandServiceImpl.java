@@ -3,20 +3,18 @@ package com.norm.timemall.app.studio.service.impl;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.gson.Gson;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.Brand;
-import com.norm.timemall.app.base.pojo.SimpleBrandBank;
-import com.norm.timemall.app.base.pojo.BrandInfo;
-import com.norm.timemall.app.base.pojo.BrandPayway;
+import com.norm.timemall.app.base.pojo.*;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.base.util.mate.MybatisMateEncryptor;
 import com.norm.timemall.app.studio.domain.dto.*;
 import com.norm.timemall.app.studio.domain.pojo.StudioBank;
-import com.norm.timemall.app.base.pojo.BrandContact;
 import com.norm.timemall.app.studio.mapper.StudioBrandMapper;
 import com.norm.timemall.app.studio.service.StudioBrandService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,8 +110,15 @@ public class StudioBrandServiceImpl implements StudioBrandService {
         BrandInfo brandInfo = new BrandInfo();
         brandInfo.setContact(contact)
                 .setPayway(payway);
+
+        BrandStudio brandStudio = new BrandStudio();
+        brandStudio.setHiLinkName(brand.getHiLinkName())
+                        .setHiLinkUrl(brand.getHiLinkUrl());
+
         brandInfo.setBrand(brand.getBrandName());
         brandInfo.setAvatar(brand.getAvator());
+        brandInfo.setStudio(brandStudio);
+
         return  brandInfo;
 
     }
@@ -159,6 +164,20 @@ public class StudioBrandServiceImpl implements StudioBrandService {
         Gson gson = new Gson();
         String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         studioBrandMapper.updateBrandLinks(brandId,gson.toJson(dto.getLink().getRecords()));
+
+    }
+
+    @Override
+    public void settingStudioConfig(ModifyBrandStudioConfigDTO dto) {
+
+        String currentBrandId=SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        Brand brand = new Brand();
+        brand.setId(currentBrandId)
+                .setHiLinkName(dto.getHiLinkName())
+                .setHiLinkUrl(dto.getHiLinkUrl());
+        LambdaUpdateWrapper<Brand> wrapper =Wrappers.lambdaUpdate();
+        wrapper.eq(Brand::getId,currentBrandId);
+        studioBrandMapper.update(brand,wrapper);
 
     }
 }

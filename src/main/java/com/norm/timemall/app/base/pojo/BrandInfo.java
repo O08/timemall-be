@@ -8,6 +8,7 @@ import lombok.experimental.Accessors;
 public class BrandInfo {
     private BrandContact contact;
     private BrandPayway payway;
+    private BrandStudio studio;
     private String brand;
     private String avatar;
 

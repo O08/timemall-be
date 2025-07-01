@@ -1,7 +1,10 @@
 package com.norm.timemall.app.studio.controller;
 
+import cn.hutool.core.lang.Validator;
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
+import com.norm.timemall.app.base.exception.ErrorCodeException;
+import com.norm.timemall.app.base.exception.QuickMessageException;
 import com.norm.timemall.app.base.pojo.BrandInfo;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.base.util.IpLocationUtil;
@@ -127,6 +130,17 @@ public class StudioBrandController {
     {
         studioBrandService.modifyBrandExperience(brandId,user.getUserId(),dto);
         return new SuccessVO(CodeEnum.SUCCESS);
+    }
+    @PutMapping("/api/v1/web_estudio/brand/setting/studio_hi_link")
+    public SuccessVO modifyBrandStudioConfig(@Validated @RequestBody ModifyBrandStudioConfigDTO dto ){
+
+        // validate link url
+        if(!Validator.isUrl(dto.getHiLinkUrl())){
+            throw new QuickMessageException("hiLinkUrl not valid.");
+        }
+        studioBrandService.settingStudioConfig(dto);
+        return new SuccessVO(CodeEnum.SUCCESS);
+
     }
 
 

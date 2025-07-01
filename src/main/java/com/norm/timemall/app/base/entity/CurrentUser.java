@@ -13,4 +13,6 @@ public class CurrentUser {
     private String brandId;
     private String avatar;
     private String brandName;
+    private String hiLinkName;
+    private String hiLinkUrl;
 }

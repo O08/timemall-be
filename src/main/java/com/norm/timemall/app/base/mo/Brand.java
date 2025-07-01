@@ -118,6 +118,13 @@ public class Brand extends Model<Brand> implements Serializable {
     private String pdOasisId;
 
     /**
+     * e studio super link
+     */
+    private String hiLinkName;
+
+    private String hiLinkUrl;
+
+    /**
      * createAt
      */
     private Date createAt;
