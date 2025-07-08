@@ -80,4 +80,11 @@ public class DataPolicyServiceImpl implements DataPolicyService {
         return dataPolicyMapper.countMillstoneByIdAndAc(workflowId, MillstoneAcEnum.OPEN.getMark())>0;
 
     }
+
+    @Override
+    public boolean proposalBillCanMarkAsPendingForBrand(String billId) {
+        String  currentBrandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        Integer cnt = dataPolicyMapper.selectProposalCountBillIdForBrandByIdAndCustomerId(billId,currentBrandId, BillMarkEnum.CREATED.getMark());
+        return cnt>0;
+    }
 }

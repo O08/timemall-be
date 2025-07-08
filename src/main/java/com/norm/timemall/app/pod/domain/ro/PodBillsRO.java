@@ -32,5 +32,6 @@ public class PodBillsRO {
     // ref: brand.id
     private String brandId;
     private String promotionDeduction;
+    private String categories;
 
 }

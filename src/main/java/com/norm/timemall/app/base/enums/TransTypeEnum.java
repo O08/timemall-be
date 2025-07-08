@@ -18,9 +18,9 @@ public enum TransTypeEnum {
     PPC_BILL("15","ppc 打款"),
     OASIS_ADMIN_WITHDRAW("16","部落管理员取出资金"),
     VIRTUAL_PRODUCT_ORDER_PAY("17","虚拟商品付款"),
-    VIRTUAL_REMITTANCE_TO_SELLER("18","虚拟商品平台汇款到卖家")
+    VIRTUAL_REMITTANCE_TO_SELLER("18","虚拟商品平台汇款到卖家"),
 
-    ;
+    PROPOSAL_BILL_PAY("19", "提案账单支付");
     private String mark;
     private String desc;
 

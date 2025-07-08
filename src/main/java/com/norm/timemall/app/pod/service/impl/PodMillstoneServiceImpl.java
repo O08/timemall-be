@@ -5,15 +5,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.gson.Gson;
-import com.norm.timemall.app.base.enums.BillMarkEnum;
-import com.norm.timemall.app.base.enums.CodeEnum;
-import com.norm.timemall.app.base.enums.OrderTypeEnum;
-import com.norm.timemall.app.base.enums.WorkflowMarkEnum;
+import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.Bill;
 import com.norm.timemall.app.base.mo.Millstone;
 import com.norm.timemall.app.base.mo.OrderDetails;
+import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.pod.domain.dto.PodMillstonePermissionDTO;
 import com.norm.timemall.app.pod.domain.dto.PodModifyWorkflowDTO;
 import com.norm.timemall.app.pod.domain.pojo.PodMillStoneNode;
@@ -108,6 +106,8 @@ public class PodMillstoneServiceImpl implements PodMillstoneService {
      * @param workflwoId
      */
     private void generateFirstBill(String workflwoId){
+        CustomizeUser payer =SecurityUserHelper.getCurrentPrincipal();
+
         LambdaQueryWrapper<Millstone> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(Millstone::getOrderId,workflwoId);
         Millstone millstone = podMillstoneMapper.selectOne(wrapper);
@@ -135,6 +135,12 @@ public class PodMillstoneServiceImpl implements PodMillstoneService {
                     .setStage( millStoneNode.getTitle())
                     .setStageNo("" + (millstones.length-1))
                     .setAmount(amount)
+                    .setCategories(BillCategoiesEnum.CELL.getMark())
+                    .setPayeeFid(workflow.getServiceInfo().getBrandId())
+                    .setPayeeFidType(FidTypeEnum.BRAND.getMark())
+                    .setPayerFid(payer.getBrandId())
+                    .setPayerFidType(FidTypeEnum.BRAND.getMark())
+                    .setRemark(workflow.getServiceInfo().getTitle())
                     .setMark(BillMarkEnum.CREATED.getMark())
                     .setCreateAt(new Date())
                     .setModifiedAt(new Date());

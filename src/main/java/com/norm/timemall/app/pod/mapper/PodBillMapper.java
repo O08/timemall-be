@@ -30,7 +30,7 @@ public interface PodBillMapper extends BaseMapper<Bill> {
                             @Param("promotionDeduction") BigDecimal promotionDeduction,
                             @Param("id")  String billId, @Param("code") String code);
 
-    IPage<PodBillsRO> selectBillPageByUserId(IPage<PodBillsRO> page, @Param("dto") PodBillPageDTO dto, @Param("user_id") String customerId);
+    IPage<PodBillsRO> selectBillPageByPayerBrandId(IPage<PodBillsRO> page, @Param("dto") PodBillPageDTO dto, @Param("payer_brand_id") String payerBrandId);
 
     FetchBillDetailRO selectBillDetailById(@Param("id") String id,
                                            @Param("consumerBrandId") String consumerBrandId,

@@ -2,18 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.norm.timemall.app.pod.mapper.PodBillMapper">
 
-    <select id="selectBillPageByUserId" resultType="com.norm.timemall.app.pod.domain.ro.PodBillsRO">
-        select b.promotion_deduction,b.stage,seller.brand_name brand,seller.avator brandAvatar,seller.customer_id brandUserId, d.cell_title service,b.amount,b.id billId,b.voucher,b.create_at added,d.brand_id brandId
+    <select id="selectBillPageByPayerBrandId" resultType="com.norm.timemall.app.pod.domain.ro.PodBillsRO">
+        select b.categories,b.promotion_deduction,b.stage,seller.brand_name brand,seller.avator brandAvatar,seller.customer_id brandUserId, b.remark service,b.amount,b.id billId,b.voucher,b.create_at added,seller.id brandId
         from bill b
-        inner join order_details d on b.order_id = d.id
-        inner join brand seller on seller.id= d.brand_id
+        inner join brand seller on seller.id= b.payee_fid and b.payee_fid_type='1'
         <where>
             1=1
-            and d.consumer_id = #{user_id}
+            and b.payer_fid = #{payer_brand_id}
+            and b.payer_fid_type='1'
             and b.mark = #{dto.code}
-          <if test="dto.q != null and dto.q != ''">
-             AND (locate(#{dto.q}, d.cell_title)>0 or locate(#{dto.q}, b.stage)>0  or locate(#{dto.q}, seller.brand_name)>0)
-          </if>
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, b.remark)>0 or locate(#{dto.q}, b.stage)>0  or locate(#{dto.q}, seller.brand_name)>0)
+            </if>
+            <if test="dto.categories != null and dto.categories != ''">
+               And b.categories=#{dto.categories}
+            </if>
         </where>
 
         order by b.create_at desc

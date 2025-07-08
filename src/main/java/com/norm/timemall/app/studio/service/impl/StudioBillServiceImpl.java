@@ -2,6 +2,7 @@ package com.norm.timemall.app.studio.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.norm.timemall.app.base.mo.Bill;
 import com.norm.timemall.app.studio.domain.dto.StudioBrandBillPageDTO;
 import com.norm.timemall.app.studio.domain.ro.StudioBillRO;
 import com.norm.timemall.app.studio.mapper.StudioBillMapper;
@@ -25,5 +26,10 @@ public class StudioBillServiceImpl implements StudioBillService {
     @Override
     public void markBillForBrandByIdAndCode(String billId, String code) {
         studioBillMapper.updateBillForBrandMarkById(billId,code);
+    }
+
+    @Override
+    public Bill findOneBill(String billId) {
+        return studioBillMapper.selectById(billId);
     }
 }

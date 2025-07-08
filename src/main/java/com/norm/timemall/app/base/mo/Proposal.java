@@ -4,7 +4,6 @@ import java.io.Serializable;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-
 import java.math.BigDecimal;
 import java.util.Date;
 import lombok.Data;
@@ -12,17 +11,17 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
- * (bill)实体类
+ * (proposal)实体类
  *
  * @author kancy
- * @since 2022-10-27 11:26:23
+ * @since 2025-07-05 17:11:01
  * @description 由 Mybatisplus Code Generator 创建
  */
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("bill")
-public class Bill extends Model<Bill> implements Serializable {
+@TableName("proposal")
+public class Proposal extends Model<Proposal> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -31,57 +30,50 @@ public class Bill extends Model<Bill> implements Serializable {
     @TableId
 	private String id;
     /**
-     *  业务类型： cell or proposal
+     * 商家
      */
+    private String sellerBrandId;
+    /**
+     * 买家
+     */
+    private String buyerBrandId;
+    /**
+     * 编号
+     */
+    private String projectNo;
+    /**
+     * 项目
+     */
+    private String projectName;
 
-    private String categories;
     /**
-     * 收费项目
+     * 项目status
      */
-    private String stage;
-
+    private String projectStatus;
     /**
-     * 收费序列
+     * 开始时间
      */
-    private String stageNo;
+    private Date projectStarts;
     /**
-     * amount
+     * 结束时间
      */
-    private BigDecimal amount;
+    private Date projectEnds;
     /**
-     * voucher
+     * 服务与费用
      */
-    private String voucher;
+    private Object services;
     /**
-     * 账单状态标记
+     * 服务履约进度
      */
-    private String mark;
+    private String serviceProgress;
     /**
-     * orderId
+     * 条款或其他
      */
-    private String orderId;
+    private String extraContent;
     /**
-     * 扣除减免、佣金收入
+     * 提案总金额
      */
-    private BigDecimal netIncome;
-    /**
-     * 佣金
-     */
-    private BigDecimal commission;
-    /**
-     * 优惠减免
-     */
-    private BigDecimal promotionDeduction;
-
-    private String payeeFid;
-
-    private String payeeFidType;
-
-    private String payerFid;
-
-    private String payerFidType;
-
-    private String remark;
+    private BigDecimal total;
     /**
      * createAt
      */

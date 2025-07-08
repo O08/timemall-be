@@ -17,4 +17,5 @@ public class StudioBillRO {
     private String netIncome;
     private String commission;
     private String promotionDeduction;
+    private String categories;
 }

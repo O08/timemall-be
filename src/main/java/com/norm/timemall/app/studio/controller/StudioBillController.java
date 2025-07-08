@@ -1,10 +1,14 @@
 package com.norm.timemall.app.studio.controller;
 
+import cn.hutool.core.text.CharSequenceUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.entity.SuccessVO;
+import com.norm.timemall.app.base.enums.BillCategoiesEnum;
 import com.norm.timemall.app.base.enums.BillMarkEnum;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
+import com.norm.timemall.app.base.exception.QuickMessageException;
+import com.norm.timemall.app.base.mo.Bill;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.base.service.DataPolicyService;
 import com.norm.timemall.app.studio.domain.dto.StudioBrandBillPageDTO;
@@ -45,11 +49,27 @@ public class StudioBillController {
     @ResponseBody
     @PutMapping(value = "/api/v1/web_estudio/bill/{bill_id}/mark")
     public SuccessVO markBillsForBrand(@PathVariable("bill_id") String billId,@RequestParam String code){
-        // bill_Id 合法性校验
-        boolean checked = dataPolicyService.billCanMarkAsPendingForBrand(billId);
+
+        if(CharSequenceUtil.isBlank(code)){
+            throw new QuickMessageException("code required");
+        }
+        // query bill
+        Bill bill =studioBillService.findOneBill(billId);
+        if(bill==null){
+            throw new QuickMessageException("未找到相关账单");
+        }
+
+        boolean checked = false;
+        if(BillCategoiesEnum.CELL.getMark().equals(bill.getCategories())){
+             checked = dataPolicyService.billCanMarkAsPendingForBrand(billId);
+        }
+        if(BillCategoiesEnum.PROPOSAL.getMark().equals(bill.getCategories())){
+            checked = dataPolicyService.proposalBillCanMarkAsPendingForBrand(billId);
+        }
+
         if(!checked)
         {
-            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+            throw new QuickMessageException("权限校验不通过，操作失败");
         }
         studioBillService.markBillForBrandByIdAndCode(billId,code);
         return new SuccessVO(CodeEnum.SUCCESS);
