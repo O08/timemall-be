@@ -8,6 +8,7 @@ import com.norm.timemall.app.studio.domain.dto.StudioChangeProposalStatusDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioCreateNewProposalDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioFetchProposalPageDTO;
 import com.norm.timemall.app.studio.domain.ro.StudioFetchProposalPageRO;
+import com.norm.timemall.app.studio.domain.vo.StudioCreateNewProposalVO;
 import com.norm.timemall.app.studio.domain.vo.StudioFetchOneProposalVO;
 import com.norm.timemall.app.studio.domain.vo.StudioFetchProposalPageVO;
 import com.norm.timemall.app.studio.service.StudioProposalMaterialService;
@@ -36,10 +37,10 @@ public class StudioProposalController {
     }
 
     @PostMapping("/api/v1/web_estudio/brand/proposal/new")
-    public SuccessVO createNewProposal(@Validated @RequestBody StudioCreateNewProposalDTO dto){
+    public StudioCreateNewProposalVO createNewProposal(@Validated @RequestBody StudioCreateNewProposalDTO dto){
 
-        studioProposalService.newOneProposal(dto);
-        return new SuccessVO(CodeEnum.SUCCESS);
+       return studioProposalService.newOneProposal(dto);
+
 
     }
     @PutMapping("/api/v1/web_estudio/brand/proposal/change")

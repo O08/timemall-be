@@ -7,12 +7,13 @@ import com.norm.timemall.app.studio.domain.dto.StudioChangeProposalStatusDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioCreateNewProposalDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioFetchProposalPageDTO;
 import com.norm.timemall.app.studio.domain.ro.StudioFetchProposalPageRO;
+import com.norm.timemall.app.studio.domain.vo.StudioCreateNewProposalVO;
 import com.norm.timemall.app.studio.domain.vo.StudioFetchOneProposalVO;
 import org.springframework.stereotype.Service;
 
 @Service
 public interface StudioProposalService {
-    void newOneProposal(StudioCreateNewProposalDTO dto);
+    StudioCreateNewProposalVO newOneProposal(StudioCreateNewProposalDTO dto);
 
     void modifyProposal(StudioChangeProposalDTO dto);
 

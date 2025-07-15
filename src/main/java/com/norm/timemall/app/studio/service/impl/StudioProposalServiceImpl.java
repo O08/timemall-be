@@ -21,6 +21,7 @@ import com.norm.timemall.app.studio.domain.dto.StudioFetchProposalPageDTO;
 import com.norm.timemall.app.base.pojo.ProposalServiceItem;
 import com.norm.timemall.app.studio.domain.ro.StudioFetchOneProposalRO;
 import com.norm.timemall.app.studio.domain.ro.StudioFetchProposalPageRO;
+import com.norm.timemall.app.studio.domain.vo.StudioCreateNewProposalVO;
 import com.norm.timemall.app.studio.domain.vo.StudioFetchOneProposalVO;
 import com.norm.timemall.app.studio.mapper.StudioProposalMapper;
 import com.norm.timemall.app.studio.service.StudioProposalService;
@@ -38,7 +39,7 @@ public class StudioProposalServiceImpl implements StudioProposalService {
     private StudioProposalMapper studioProposalMapper;
 
     @Override
-    public void newOneProposal(StudioCreateNewProposalDTO dto) {
+    public StudioCreateNewProposalVO newOneProposal(StudioCreateNewProposalDTO dto) {
         // validate tags to json  arr
         try {
             new JSONArray(dto.getServices());
@@ -78,6 +79,12 @@ public class StudioProposalServiceImpl implements StudioProposalService {
                 .setModifiedAt(new Date());
 
         studioProposalMapper.insert(proposal);
+        StudioCreateNewProposalVO vo =new StudioCreateNewProposalVO();
+        vo.setProposalId(proposal.getId());
+        vo.setProjectNo(proposal.getProjectNo());
+        vo.setResponseCode(CodeEnum.SUCCESS);
+
+        return vo;
     }
     private String getProjectNo(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmm");
