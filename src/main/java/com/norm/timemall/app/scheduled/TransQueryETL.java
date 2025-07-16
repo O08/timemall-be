@@ -12,7 +12,7 @@ public class TransQueryETL {
     @Autowired
     private TransQueryService transQueryService;
 
-    @Scheduled(cron = "0 0 */2 * * ?",zone = "Asia/Shanghai")
+    @Scheduled(cron = "0 0/30 * * * ?",zone = "Asia/Shanghai")
     public  void scheduleLoadTransData(){
         log.info("scheduleLoadTransData etl task start.....");
         transQueryService.loadTransData();
