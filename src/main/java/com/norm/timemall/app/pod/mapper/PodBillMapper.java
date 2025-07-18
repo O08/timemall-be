@@ -35,4 +35,6 @@ public interface PodBillMapper extends BaseMapper<Bill> {
     FetchBillDetailRO selectBillDetailById(@Param("id") String id,
                                            @Param("consumerBrandId") String consumerBrandId,
                                            @Param("consumerUserId") String consumerUserId );
+
+
 }

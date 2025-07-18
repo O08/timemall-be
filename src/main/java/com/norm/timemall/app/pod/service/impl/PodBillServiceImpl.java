@@ -95,7 +95,18 @@ public class PodBillServiceImpl implements PodBillService {
 
     @Override
     public FetchBillDetailRO findbillDetail(String id) {
-        return podBillMapper.selectBillDetailById(id,SecurityUserHelper.getCurrentPrincipal().getBrandId(),SecurityUserHelper.getCurrentPrincipal().getUserId());
+        Bill bill = podBillMapper.selectById(id);
+        if(bill==null){
+            throw new QuickMessageException("未找到相关账单");
+        }
+        if(BillCategoiesEnum.CELL.getMark().equals(bill.getCategories())){
+            return podBillMapper.selectBillDetailById(id,SecurityUserHelper.getCurrentPrincipal().getBrandId(),SecurityUserHelper.getCurrentPrincipal().getUserId());
+        }
+        // proposal  bill detail vo
+        FetchBillDetailRO ro = new FetchBillDetailRO();
+        ro.setAmount(bill.getAmount().toString());
+        ro.setItem(bill.getStage());
+        return ro;
     }
 
     public void doPayMillstoneBill(Bill bill){
