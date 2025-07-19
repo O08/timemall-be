@@ -134,7 +134,7 @@ public class PodBillServiceImpl implements PodBillService {
 
         // pay
         if(netIncome.compareTo(BigDecimal.ZERO)>0){
-            TransferBO bo = generateTransferBO(netIncome,orderDetails.getBrandId(),bill.getId());
+            TransferBO bo = generateTransferBO(revenue,orderDetails.getBrandId(),bill.getId());
             defaultPayService.transfer(new Gson().toJson(bo));
         }
 
