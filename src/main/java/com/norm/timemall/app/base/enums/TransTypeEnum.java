@@ -20,7 +20,11 @@ public enum TransTypeEnum {
     VIRTUAL_PRODUCT_ORDER_PAY("17","虚拟商品付款"),
     VIRTUAL_REMITTANCE_TO_SELLER("18","虚拟商品平台汇款到卖家"),
 
-    PROPOSAL_BILL_PAY("19", "提案账单支付");
+    PROPOSAL_BILL_PAY("19", "提案账单支付"),
+    SUBSCRIPTION_BILL_PAY("20", "订阅账单支付"),
+    SUBSCRIPTION_BILL_REMITTANCE("21", "订阅账单平台汇款到卖家"),
+
+    ;
     private String mark;
     private String desc;
 

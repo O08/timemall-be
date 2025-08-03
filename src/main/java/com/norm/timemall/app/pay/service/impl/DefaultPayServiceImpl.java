@@ -1,6 +1,10 @@
 package com.norm.timemall.app.pay.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.gson.Gson;
+import com.norm.timemall.app.base.mapper.FinAccountMapper;
+import com.norm.timemall.app.base.mo.FinAccount;
 import com.norm.timemall.app.base.mo.PayRefund;
 import com.norm.timemall.app.base.pojo.TransferBO;
 import com.norm.timemall.app.pay.handler.PayRefundHandler;
@@ -20,6 +24,17 @@ public class DefaultPayServiceImpl implements DefaultPayService {
     private PayTransferHandler payTransferHandler;
     @Autowired
     private PayRefundHandler payRefundHandler;
+    @Autowired
+    private FinAccountMapper finAccountMapper;
+
+    @Override
+    public FinAccount findBalanceInfo(String fidType, String fid) {
+        LambdaQueryWrapper<FinAccount> wrapper= Wrappers.lambdaQuery();
+        wrapper.eq(FinAccount::getFid,fid);
+        wrapper.eq(FinAccount::getFidType,fidType);
+        return finAccountMapper.selectOne(wrapper);
+    }
+
     @Override
     public String transfer(String param) {
         return payTransferHandler.doTransfer(param);

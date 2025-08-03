@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.util.Date;
+
 /**
  * 订单流转控制
  */
@@ -27,6 +29,8 @@ public class OrderFlow {
      * order flow stage
      */
     private String stage;
+
+    private Date createAt;
 
 
 }

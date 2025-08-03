@@ -41,7 +41,8 @@ public class UserInfoController {
                     .setBrandId(brand == null ? "" :brand.getId())
                     .setAvatar(brand==null ? "" : brand.getAvator())
                     .setHiLinkName(brand==null ? "" : brand.getHiLinkName())
-                    .setHiLinkUrl(brand==null ? "" : brand.getHiLinkUrl());
+                    .setHiLinkUrl(brand==null ? "" : brand.getHiLinkUrl())
+                    .setHandle(brand==null ? "": brand.getHandle());
 
             user.setUser(currentUser);
             user.setResponseCode(CodeEnum.SUCCESS);

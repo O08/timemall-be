@@ -60,6 +60,8 @@ public class TeamDspServiceImpl implements TeamDspService {
 
     @Autowired
     private TeamVirtualOrderMapper teamVirtualOrderMapper;
+    @Autowired
+    private TeamSubscriptionMapper teamSubscriptionMapper;
 
     @Override
     public void newCase(TeamDspAddCaseDTO dto,String materialName,String materialUrl) {
@@ -335,11 +337,21 @@ public class TeamDspServiceImpl implements TeamDspService {
                 defendantBrandId=getDefendantBrandIdFromVirtualProductOrder(sceneUrl);
                 break;
 
+            case "付费订阅":
+                defendantBrandId=getDefendantBrandIdFromSubscriptionRecord(sceneUrl);
+                break;
+
             default:
                 break;
         }
 
         return defendantBrandId;
+    }
+
+    private String getDefendantBrandIdFromSubscriptionRecord(String sceneUrl){
+        String subscriptionId = HttpUtil.decodeParams(sceneUrl, StandardCharsets.UTF_8).get("subscription_id").getFirst();
+        Subscription order = teamSubscriptionMapper.selectById(subscriptionId);
+        return order ==null ? "" : order.getSellerBrandId();
     }
 
     private String getDefendantBrandIdFromVirtualProductOrder(String sceneUrl){

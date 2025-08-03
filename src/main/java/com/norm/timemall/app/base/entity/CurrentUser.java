@@ -15,4 +15,5 @@ public class CurrentUser {
     private String brandName;
     private String hiLinkName;
     private String hiLinkUrl;
+    private String handle;
 }

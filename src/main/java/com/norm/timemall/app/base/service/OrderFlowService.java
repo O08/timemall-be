@@ -24,4 +24,9 @@ public interface OrderFlowService extends IService<OrderFlow> {
      * @return
      */
     int deleteOrderFlow(String id,String stage);
+
+    int insertAutoFlow(String id ,String stage);
+    int deleteAutoFlow(String id,String stage);
+    boolean existsAutoFlow(String id,String stage);
+    OrderFlow findAutoFlow(String id,String stage);
 }

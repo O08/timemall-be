@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.studio.mapper.StudioSubsBillMapper">
+    <sql id="tableName">
+        subs_bill
+    </sql>
+
+    <sql id="baseColumn">
+        id,product_name,trans_no,plan_id,amount,coupon_money,net_income,buyer_fid_type,buyer_fid,buyer_pay_at,seller_get_at,where_store_money,remark,status,create_at,modified_at
+    </sql>
+
+    <select id="selectPageByQ" resultType="com.norm.timemall.app.studio.domain.ro.StudioGetSubsBillingPageRO">
+        select b.id billId,b.trans_no, b.product_name,p.name planName,p.price planPrice,b.amount,b.coupon_money,b.net_income,b.where_store_money,b.status,
+               b.create_at,b.bill_calendar,buyer.brand_name buyerName,buyer.avator buyerAvatar,buyer.customer_id buyerUserId
+        from subs_bill b
+        inner join subs_plan p
+          on b.plan_id=p.id
+        inner join brand buyer
+          on b.buyer_fid=buyer.id and b.buyer_fid_type='1'
+
+        <where>
+            1=1
+            and b.seller_brand_id=#{seller_brand_id}
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, b.product_name)>0 or locate(#{dto.q}, p.name)>0  or  locate(#{dto.q}, buyer.brand_name)>0 )
+            </if>
+            <if test="dto.tag != null and dto.tag != ''">
+                AND b.status=#{dto.tag}
+            </if>
+        </where>
+        order by b.create_at desc
+
+    </select>
+
+</mapper>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.studio.mapper.StudioSubsPlanMapper">
+    <sql id="tableName">
+        subs_plan
+    </sql>
+
+
+    <select id="selectPageByQ" resultType="com.norm.timemall.app.studio.domain.ro.StudioGetSubsPlanPageRO">
+        select p.id,t.product_name, t.product_code,p.name planName,p.plan_type,p.price, p.status,p.sales,p.trial_period,p.grace_period,p.create_at
+        from subs_plan p
+        inner join subs_product t
+          on p.product_id=t.id
+        <where>
+            1=1
+            and t.seller_brand_id=#{seller_brand_id}
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, p.name)>0 or locate(#{dto.q}, t.product_name)>0 or locate(#{dto.q}, t.product_code)>0  or  locate(#{dto.q}, t.product_desc)>0 )
+            </if>
+            <if test="dto.tag != null and dto.tag != ''">
+                AND p.status=#{dto.tag}
+            </if>
+        </where>
+        order by p.create_at desc
+
+    </select>
+
+    <resultMap id="selectOnePlanResultMap" type="com.norm.timemall.app.studio.domain.ro.StudioGetOneSubsPlanRO">
+        <result property="productName" column="product_name"/>
+        <result property="planName" column="planName"/>
+        <result property="status" column="status"/>
+        <result property="price" column="price"/>
+        <result property="description" column="planDescription"/>
+        <result property="sellerName" column="brand_name"/>
+        <result property="sellerAvatar" column="avator"/>
+        <result property="sellerHandle" column="handle"/>
+
+        <result property="features"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
+                column="features"/>
+
+    </resultMap>
+
+    <select id="selectOnePlanById" resultMap="selectOnePlanResultMap">
+        select t.product_name,p.name planName,p.features,p.price,p.description planDescription,p.status,seller.brand_name ,seller.avator,seller.handle
+        from subs_plan p
+        inner join subs_product t
+           on p.product_id=t.id
+        inner join brand seller
+          on seller.id=t.seller_brand_id
+        where p.id=#{plan_id}
+    </select>
+
+    <resultMap id="selectSpacePlansResultMap" type="com.norm.timemall.app.studio.domain.ro.StudioGetSpaceSubscriptionPlanPageRO">
+        <result property="productName" column="product_name"/>
+        <result property="planName" column="planName"/>
+        <result property="status" column="status"/>
+        <result property="price" column="price"/>
+        <result property="planId" column="planId"/>
+        <result property="sales" column="sales"/>
+        <result property="productDesc" column="product_desc"/>
+        <result property="gracePeriod" column="grace_period"/>
+        <result property="trialPeriod" column="trial_period"/>
+        <result property="productCode" column="product_code"/>
+
+        <result property="features"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
+                column="features"/>
+
+    </resultMap>
+
+    <select id="selectSpacePlans" resultMap="selectSpacePlansResultMap">
+        select p.grace_period,p.trial_period, t.product_code,p.id planId,t.product_desc, t.product_name,p.name planName,p.features,p.price,p.description planDescription,p.status,p.sales
+        from subs_plan p
+        inner join subs_product t
+          on p.product_id=t.id
+        where  t.seller_brand_id=#{dto.sellerBrandId}
+        and p.status='2'
+        order by p.create_at desc
+
+    </select>
+
+
+    <resultMap id="selectShoppingPlansResultMap" type="com.norm.timemall.app.studio.domain.ro.StudioGetShoppingSubscriptionPlansRO">
+        <result property="productName" column="product_name"/>
+        <result property="productId" column="productId"/>
+        <result property="planName" column="planName"/>
+        <result property="status" column="status"/>
+        <result property="price" column="price"/>
+        <result property="sales" column="sales"/>
+        <result property="productDesc" column="product_desc"/>
+
+        <result property="sellerName" column="sellerName"/>
+        <result property="sellerAvatar" column="sellerAvatar"/>
+        <result property="sellerHandle" column="sellerHandle"/>
+        <result property="sellerBrandId" column="sellerBrandId"/>
+
+
+        <result property="trialPeriod" column="trial_period"/>
+        <result property="planType" column="plan_type"/>
+        <result property="id" column="planId"/>
+        <result property="gracePeriod" column="grace_period"/>
+
+        <result property="features"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
+                column="features"/>
+
+        <collection property="offers" ofType="com.norm.timemall.app.studio.domain.pojo.StudioGetShoppingSubscriptionPlansOfferItem" javaType="ArrayList">
+            <result property="name" column="offerName"/>
+            <result property="description" column="offerDescription"/>
+            <result property="discountAmount" column="discount_amount"/>
+            <result property="discountPercentage" column="discount_percentage"/>
+            <result property="offerType" column="offer_type"/>
+        </collection>
+
+    </resultMap>
+
+    <select id="selectShoppingPlans" resultMap="selectShoppingPlansResultMap">
+        select seller.id sellerBrandId, t.id productId, o.offer_type,p.plan_type, o.name offerName,o.description offerDescription,o.discount_amount,o.discount_percentage, p.grace_period,p.trial_period, t.product_code,p.id planId,t.product_desc, t.product_name,p.name planName,p.features,p.price,p.description planDescription,p.status,p.sales,seller.brand_name sellerName,seller.avator sellerAvatar,seller.handle sellerHandle
+        from subs_plan p
+        inner join subs_product t
+          on p.product_id=t.id
+        inner join brand seller
+          on t.seller_brand_id= seller.id
+        left join subs_offer o
+          on o.for_plan_id=p.id
+             and o.status='2'
+        <where> 1=1
+            and seller.handle=#{dto.sellerHandle}
+            and t.product_code=#{dto.productCode}
+            and p.status='2'
+            <if test="dto.planId != null and dto.planId != ''">
+                and p.id=#{dto.planId}
+            </if>
+            <if test="dto.planType != null and dto.planType != ''">
+                and p.plan_type=#{dto.planType}
+            </if>
+        </where>
+
+
+    </select>
+
+</mapper>
