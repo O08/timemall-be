@@ -31,6 +31,8 @@
         <result property="status" column="status"/>
         <result property="price" column="price"/>
         <result property="description" column="planDescription"/>
+        <result property="gracePeriod" column="grace_period"/>
+        <result property="trialPeriod" column="trial_period"/>
         <result property="sellerName" column="brand_name"/>
         <result property="sellerAvatar" column="avator"/>
         <result property="sellerHandle" column="handle"/>
@@ -42,7 +44,7 @@
     </resultMap>
 
     <select id="selectOnePlanById" resultMap="selectOnePlanResultMap">
-        select t.product_name,p.name planName,p.features,p.price,p.description planDescription,p.status,seller.brand_name ,seller.avator,seller.handle
+        select p.grace_period,p.trial_period, t.product_name,p.name planName,p.features,p.price,p.description planDescription,p.status,seller.brand_name ,seller.avator,seller.handle
         from subs_plan p
         inner join subs_product t
            on p.product_id=t.id

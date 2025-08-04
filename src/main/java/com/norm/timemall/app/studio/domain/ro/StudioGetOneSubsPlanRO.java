@@ -16,4 +16,6 @@ public class StudioGetOneSubsPlanRO {
     private String sellerAvatar;
     private String sellerName;
     private String status;
+    private String trialPeriod;
+    private String gracePeriod;
 }
