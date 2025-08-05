@@ -16,6 +16,7 @@ public class StudioGetShoppingSubscriptionPlansRO {
     private String planType;
     private String price;
     private String productDesc;
+    private String planDesc;
     private String productId;
     private String productName;
     private String sales;

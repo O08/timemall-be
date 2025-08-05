@@ -91,7 +91,7 @@
         <result property="price" column="price"/>
         <result property="sales" column="sales"/>
         <result property="productDesc" column="product_desc"/>
-
+        <result property="planDesc" column="planDescription"/>
         <result property="sellerName" column="sellerName"/>
         <result property="sellerAvatar" column="sellerAvatar"/>
         <result property="sellerHandle" column="sellerHandle"/>
@@ -125,7 +125,7 @@
         inner join brand seller
           on t.seller_brand_id= seller.id
         left join subs_offer o
-          on o.for_plan_id=p.id
+          on o.for_product_id=t.id
              and o.status='2'
         <where> 1=1
             and seller.handle=#{dto.sellerHandle}
