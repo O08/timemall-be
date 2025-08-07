@@ -156,7 +156,7 @@ public class SubscriptionFreezeBillPayTask {
                     bill.getBuyerFidType(), bill.getBuyerFid(), bill.getNetIncome(), bill.getTransNo());
 
             String tradeNo = defaultPayService.transfer(new Gson().toJson(transferBO));
-            taskSubscriptionMapper.updateSubscriptionOnSuccess(subscription.getId(),SubscriptionStatusEnum.ACTIVE.getMark(),new Date(),endsAt);
+            taskSubscriptionMapper.updateSubscriptionForFreezeBillOnSuccess(subscription.getId(),SubscriptionStatusEnum.ACTIVE.getMark(),new Date(),bill.getUnfreezeAt(), endsAt);
             taskSubsBillMapper.updateStatusAndModifyAtOnSuccessById(tradeNo,bill.getId(), WhereStoreMoneyEnum.MID.getMark(), SubsBillStatusEnum.PAID.getMark(),new Date());
         }catch (Exception e){
             log.info("freeze bill pay fail,reason:" +e.getMessage());

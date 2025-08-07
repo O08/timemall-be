@@ -22,7 +22,7 @@
             1=1
             and b.seller_brand_id=#{seller_brand_id}
             <if test="dto.q != null and dto.q != ''">
-                AND (locate(#{dto.q}, b.product_name)>0 or locate(#{dto.q}, p.name)>0  or  locate(#{dto.q}, buyer.brand_name)>0 )
+                AND (locate(#{dto.q}, b.product_name)>0 or locate(#{dto.q}, b.trans_no)>0 or locate(#{dto.q}, p.product_code)>0  or locate(#{dto.q}, p.name)>0  or  locate(#{dto.q}, buyer.brand_name)>0 )
             </if>
             <if test="dto.tag != null and dto.tag != ''">
                 AND b.status=#{dto.tag}

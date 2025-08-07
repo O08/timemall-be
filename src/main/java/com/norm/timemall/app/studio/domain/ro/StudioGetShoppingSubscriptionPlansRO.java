@@ -26,4 +26,6 @@ public class StudioGetShoppingSubscriptionPlansRO {
     private String sellerAvatar;
     private String sellerHandle;
     private String sellerBrandId;
+    private String sellerUserId;
+    private String sellerPdOasisId;
 }

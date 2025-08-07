@@ -96,7 +96,8 @@
         <result property="sellerAvatar" column="sellerAvatar"/>
         <result property="sellerHandle" column="sellerHandle"/>
         <result property="sellerBrandId" column="sellerBrandId"/>
-
+        <result property="sellerUserId" column="sellerUserId"/>
+        <result property="sellerPdOasisId" column="sellerPdOasisId"/>
 
         <result property="trialPeriod" column="trial_period"/>
         <result property="planType" column="plan_type"/>
@@ -118,7 +119,7 @@
     </resultMap>
 
     <select id="selectShoppingPlans" resultMap="selectShoppingPlansResultMap">
-        select seller.id sellerBrandId, t.id productId, o.offer_type,p.plan_type, o.name offerName,o.description offerDescription,o.discount_amount,o.discount_percentage, p.grace_period,p.trial_period, t.product_code,p.id planId,t.product_desc, t.product_name,p.name planName,p.features,p.price,p.description planDescription,p.status,p.sales,seller.brand_name sellerName,seller.avator sellerAvatar,seller.handle sellerHandle
+        select seller.customer_id sellerUserId,seller.pd_oasis_id sellerPdOasisId , seller.id sellerBrandId, t.id productId, o.offer_type,p.plan_type, o.name offerName,o.description offerDescription,o.discount_amount,o.discount_percentage, p.grace_period,p.trial_period, t.product_code,p.id planId,t.product_desc, t.product_name,p.name planName,p.features,p.price,p.description planDescription,p.status,p.sales,seller.brand_name sellerName,seller.avator sellerAvatar,seller.handle sellerHandle
         from subs_plan p
         inner join subs_product t
           on p.product_id=t.id
