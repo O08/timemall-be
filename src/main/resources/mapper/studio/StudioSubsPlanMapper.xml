@@ -64,6 +64,7 @@
         <result property="gracePeriod" column="grace_period"/>
         <result property="trialPeriod" column="trial_period"/>
         <result property="productCode" column="product_code"/>
+        <result property="planDesc" column="planDesc"/>
 
         <result property="features"
                 typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
@@ -72,7 +73,7 @@
     </resultMap>
 
     <select id="selectSpacePlans" resultMap="selectSpacePlansResultMap">
-        select p.grace_period,p.trial_period, t.product_code,p.id planId,t.product_desc, t.product_name,p.name planName,p.features,p.price,p.description planDescription,p.status,p.sales
+        select p.description planDesc,p.grace_period,p.trial_period, t.product_code,p.id planId,t.product_desc, t.product_name,p.name planName,p.features,p.price,p.description planDescription,p.status,p.sales
         from subs_plan p
         inner join subs_product t
           on p.product_id=t.id

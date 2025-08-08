@@ -112,11 +112,13 @@
         <result property="avator" column="avator"/>
         <result property="cover" column="cover"/>
         <result property="enableBlue" column="enableBlue"/>
+        <result property="sellerHandle" column="sellerHandle"/>
+
         <collection property="vr" ofType="com.norm.timemall.app.mall.domain.ro.MallHomeVirtualProductRO" javaType="ArrayList" resultMap="vrResultMap"/>
     </resultMap>
     <select id="selectHomeInfoByBrandIdOrHandle" resultMap="homeInfoResultMap">
         select
-          b.pd_oasis_id pdOasisId,b.brand_name brand,b.title brandTitle,b.avator,b.cover, b.id brandId,ifnull(b.blue_end_at > now(),0) enableBlue,
+          b.handle sellerHandle ,b.pd_oasis_id pdOasisId,b.brand_name brand,b.title brandTitle,b.avator,b.cover, b.id brandId,ifnull(b.blue_end_at > now(),0) enableBlue,
           p.id productId,p.seller_brand_id,p.product_name , p.product_price,p.thumbnail_url,p.clicks,p.sales_volume,p.views,p.inventory,p.create_at
         from brand b
         left join virtual_product p on p.seller_brand_id = b.id  and p.product_status = '2'

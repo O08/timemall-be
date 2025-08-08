@@ -70,7 +70,7 @@ public class StudioSubscriptionPlanController {
     public StudioGetOneSubsPlanVO getOneSubsPlan(@PathVariable("id") String id){
       return studioSubscriptionPlanService.findOnePlan(id);
     }
-    @GetMapping("/api/v1/web_estudio/brand/space/subscription/plan/query")
+    @GetMapping("/api/public/brand/space/subscription/plan/query")
     public StudioGetSpaceSubscriptionPlanPageVO fetchSpaceSubscriptionPlan(@Validated StudioGetSpaceSubscriptionPlanPageDTO dto){
         IPage<StudioGetSpaceSubscriptionPlanPageRO> plan = studioSubscriptionPlanService.findSpacePlans(dto);
         StudioGetSpaceSubscriptionPlanPageVO vo = new StudioGetSpaceSubscriptionPlanPageVO();

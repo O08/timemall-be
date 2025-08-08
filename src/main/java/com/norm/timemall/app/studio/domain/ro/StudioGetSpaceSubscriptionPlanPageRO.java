@@ -18,4 +18,5 @@ public class StudioGetSpaceSubscriptionPlanPageRO {
     private String sales;
     private String status;
     private String trialPeriod;
+    private String planDesc;
 }
