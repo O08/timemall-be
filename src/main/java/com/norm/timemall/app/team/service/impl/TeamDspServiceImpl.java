@@ -62,6 +62,8 @@ public class TeamDspServiceImpl implements TeamDspService {
     private TeamVirtualOrderMapper teamVirtualOrderMapper;
     @Autowired
     private TeamSubscriptionMapper teamSubscriptionMapper;
+    @Autowired
+    private TeamSubsProductMapper teamSubsProductMapper;
 
     @Override
     public void newCase(TeamDspAddCaseDTO dto,String materialName,String materialUrl) {
@@ -341,13 +343,36 @@ public class TeamDspServiceImpl implements TeamDspService {
                 defendantBrandId=getDefendantBrandIdFromSubscriptionRecord(sceneUrl);
                 break;
 
+            case "订阅专区":
+                defendantBrandId=getDefendantBrandIdFromSubscriptionShopping(sceneUrl);
+                break;
             default:
                 break;
         }
 
         return defendantBrandId;
     }
+    private String getDefendantBrandIdFromSubscriptionShopping(String sceneUrl){
 
+        URI uri = null;
+        try {
+            uri = new URI(sceneUrl);
+        } catch (URISyntaxException e) {
+            throw new QuickMessageException("校验不通过");
+        }
+
+        String path = uri.getPath();
+        String[] split = path.split("/");
+        String sellerHandle= split.length>1? split[1] : "";
+        String productCode = split.length>2? split[2] : "";
+        if(CharSequenceUtil.isBlank(productCode) ||CharSequenceUtil.isBlank(sellerHandle) ){
+            return "";
+        }
+
+        SubsProduct product = teamSubsProductMapper.selectProductBySellerHandleAndProductCode(sellerHandle,productCode);
+        return  product == null ? "" : product.getSellerBrandId();
+
+    }
     private String getDefendantBrandIdFromSubscriptionRecord(String sceneUrl){
         String subscriptionId = HttpUtil.decodeParams(sceneUrl, StandardCharsets.UTF_8).get("subscription_id").getFirst();
         Subscription order = teamSubscriptionMapper.selectById(subscriptionId);
