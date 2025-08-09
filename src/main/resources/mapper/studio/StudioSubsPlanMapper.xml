@@ -132,7 +132,16 @@
         <where> 1=1
             and seller.handle=#{dto.sellerHandle}
             and t.product_code=#{dto.productCode}
-            and p.status='2'
+            <if test="dto.mode != null and dto.mode != ''">
+                <choose>
+                    <when test='dto.mode == "hard"'>
+                        and p.status='2'
+                    </when>
+                    <when test='dto.mode == "easy"'>
+                        and p.status in('1','2','3')
+                    </when>
+                </choose>
+            </if>
             <if test="dto.planId != null and dto.planId != ''">
                 and p.id=#{dto.planId}
             </if>

@@ -17,4 +17,6 @@ public class StudioGetShoppingSubscriptionPlansDTO{
     @EnumCheck(enumClass = SubsPlanTypeEnum.class,message = "field: planType, incorrect parameter value ,option: standard flex")
     private String planType;
 
+    private String mode;
+
 }
