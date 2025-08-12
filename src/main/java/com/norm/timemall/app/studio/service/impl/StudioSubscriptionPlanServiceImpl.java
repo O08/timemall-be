@@ -20,10 +20,7 @@ import com.norm.timemall.app.base.mo.SubsProduct;
 import com.norm.timemall.app.base.mo.Subscription;
 import com.norm.timemall.app.studio.domain.dto.*;
 import com.norm.timemall.app.studio.domain.pojo.SubsPlanFeatureItem;
-import com.norm.timemall.app.studio.domain.ro.StudioGetOneSubsPlanRO;
-import com.norm.timemall.app.studio.domain.ro.StudioGetShoppingSubscriptionPlansRO;
-import com.norm.timemall.app.studio.domain.ro.StudioGetSpaceSubscriptionPlanPageRO;
-import com.norm.timemall.app.studio.domain.ro.StudioGetSubsPlanPageRO;
+import com.norm.timemall.app.studio.domain.ro.*;
 import com.norm.timemall.app.studio.domain.vo.StudioGetOneSubsPlanVO;
 import com.norm.timemall.app.studio.handler.StudioSubscribePlanHandler;
 import com.norm.timemall.app.studio.mapper.StudioSubsPlanMapper;
@@ -238,5 +235,10 @@ public class StudioSubscriptionPlanServiceImpl implements StudioSubscriptionPlan
     @Override
     public void newSubscription(StudioNewSubscriptionDTO dto) {
         studioSubscribePlanHandler.doSubscribePlan(dto);
+    }
+
+    @Override
+    public StudioGetShoppingSubscriptionMetaInfoRO findShoppingSubscriptionMetaInfo(StudioGetShoppingSubscriptionMetaInfoDTO dto) {
+        return studioSubsPlanMapper.selectShoppingMeta(dto);
     }
 }

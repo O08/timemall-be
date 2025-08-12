@@ -5,13 +5,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.norm.timemall.app.base.mo.SubsPlan;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.norm.timemall.app.base.mo.SubsProduct;
+import com.norm.timemall.app.studio.domain.dto.StudioGetShoppingSubscriptionMetaInfoDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioGetShoppingSubscriptionPlansDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioGetSpaceSubscriptionPlanPageDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioGetSubsPlanPageDTO;
-import com.norm.timemall.app.studio.domain.ro.StudioGetOneSubsPlanRO;
-import com.norm.timemall.app.studio.domain.ro.StudioGetShoppingSubscriptionPlansRO;
-import com.norm.timemall.app.studio.domain.ro.StudioGetSpaceSubscriptionPlanPageRO;
-import com.norm.timemall.app.studio.domain.ro.StudioGetSubsPlanPageRO;
+import com.norm.timemall.app.studio.domain.ro.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -36,5 +34,7 @@ public interface StudioSubsPlanMapper extends BaseMapper<SubsPlan> {
     IPage<StudioGetSpaceSubscriptionPlanPageRO> selectSpacePlans(IPage<StudioGetSpaceSubscriptionPlanPageRO> page,@Param("dto") StudioGetSpaceSubscriptionPlanPageDTO dto);
 
     ArrayList<StudioGetShoppingSubscriptionPlansRO> selectShoppingPlans(@Param("dto") StudioGetShoppingSubscriptionPlansDTO dto);
+
+    StudioGetShoppingSubscriptionMetaInfoRO selectShoppingMeta(@Param("dto") StudioGetShoppingSubscriptionMetaInfoDTO dto);
 
 }

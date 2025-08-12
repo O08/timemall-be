@@ -7,13 +7,11 @@ import com.norm.timemall.app.base.enums.TransTypeEnum;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.service.OrderFlowService;
 import com.norm.timemall.app.studio.domain.dto.*;
+import com.norm.timemall.app.studio.domain.ro.StudioGetShoppingSubscriptionMetaInfoRO;
 import com.norm.timemall.app.studio.domain.ro.StudioGetShoppingSubscriptionPlansRO;
 import com.norm.timemall.app.studio.domain.ro.StudioGetSpaceSubscriptionPlanPageRO;
 import com.norm.timemall.app.studio.domain.ro.StudioGetSubsPlanPageRO;
-import com.norm.timemall.app.studio.domain.vo.StudioGetOneSubsPlanVO;
-import com.norm.timemall.app.studio.domain.vo.StudioGetShoppingSubscriptionPlansVO;
-import com.norm.timemall.app.studio.domain.vo.StudioGetSpaceSubscriptionPlanPageVO;
-import com.norm.timemall.app.studio.domain.vo.StudioGetSubsPlanPageVO;
+import com.norm.timemall.app.studio.domain.vo.*;
 import com.norm.timemall.app.studio.service.StudioSubscriptionPlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -84,6 +82,14 @@ public class StudioSubscriptionPlanController {
         ArrayList<StudioGetShoppingSubscriptionPlansRO> plan = studioSubscriptionPlanService.findShoppingPlans(dto);
         StudioGetShoppingSubscriptionPlansVO vo =new StudioGetShoppingSubscriptionPlansVO();
         vo.setPlan(plan);
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        return vo;
+    }
+    @GetMapping("/api/public/shopping/subscription/meta/query")
+    public StudioGetShoppingSubscriptionMetaInfoVO getShoppingSubscriptionPlans(@Validated StudioGetShoppingSubscriptionMetaInfoDTO dto){
+        StudioGetShoppingSubscriptionMetaInfoRO meta = studioSubscriptionPlanService.findShoppingSubscriptionMetaInfo(dto);
+        StudioGetShoppingSubscriptionMetaInfoVO vo = new StudioGetShoppingSubscriptionMetaInfoVO();
+        vo.setMeta(meta);
         vo.setResponseCode(CodeEnum.SUCCESS);
         return vo;
     }

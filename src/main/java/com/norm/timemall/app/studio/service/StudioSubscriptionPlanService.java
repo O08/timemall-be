@@ -2,6 +2,7 @@ package com.norm.timemall.app.studio.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.studio.domain.dto.*;
+import com.norm.timemall.app.studio.domain.ro.StudioGetShoppingSubscriptionMetaInfoRO;
 import com.norm.timemall.app.studio.domain.ro.StudioGetShoppingSubscriptionPlansRO;
 import com.norm.timemall.app.studio.domain.ro.StudioGetSpaceSubscriptionPlanPageRO;
 import com.norm.timemall.app.studio.domain.ro.StudioGetSubsPlanPageRO;
@@ -29,4 +30,6 @@ public interface StudioSubscriptionPlanService {
     ArrayList<StudioGetShoppingSubscriptionPlansRO> findShoppingPlans(StudioGetShoppingSubscriptionPlansDTO dto);
 
     void newSubscription(StudioNewSubscriptionDTO dto);
+
+    StudioGetShoppingSubscriptionMetaInfoRO findShoppingSubscriptionMetaInfo(StudioGetShoppingSubscriptionMetaInfoDTO dto);
 }

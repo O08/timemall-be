@@ -153,4 +153,16 @@
 
     </select>
 
+    <select id="selectShoppingMeta" resultType="com.norm.timemall.app.studio.domain.ro.StudioGetShoppingSubscriptionMetaInfoRO">
+        select seller.customer_id sellerUserId,seller.pd_oasis_id sellerPdOasisId , seller.id sellerBrandId, t.id productId, t.product_name,seller.handle sellerHandle
+        from  subs_product t
+        inner join brand seller
+           on t.seller_brand_id= seller.id
+        <where>
+            seller.handle=#{dto.sellerHandle}
+            and t.product_code=#{dto.productCode}
+        </where>
+        limit 1
+    </select>
+
 </mapper>
