@@ -79,6 +79,7 @@
           on p.product_id=t.id
         where  t.seller_brand_id=#{dto.sellerBrandId}
         and p.status='2'
+        and p.plan_type='standard'
         order by p.create_at desc
 
     </select>

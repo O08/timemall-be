@@ -16,7 +16,7 @@ public class StudioChangeSubsPlanDTO {
     @NotBlank(message = "description required")
     private String description;
 
-    @Length(message = "features range in {min}-{max}",min = 1,max = 400)
+    @Length(message = "features range in {min}-{max}",min = 1,max = 4000)
     @NotBlank(message = "features required")
     private String features;
 

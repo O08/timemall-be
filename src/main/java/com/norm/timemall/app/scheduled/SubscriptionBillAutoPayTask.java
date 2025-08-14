@@ -186,6 +186,7 @@ public class SubscriptionBillAutoPayTask {
                 .setSellerBrandId(subscription.getSellerBrandId())
                 .setAmount(amount)
                 .setNetIncome(amount)
+                .setCouponMoney(BigDecimal.ZERO)
                 .setBuyerFidType(subscription.getSubscriberType())
                 .setBuyerFid(subscription.getSubscriberFid())
                 .setBuyerPayAt(new Date())
