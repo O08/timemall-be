@@ -35,6 +35,12 @@ public class Brand extends Model<Brand> implements Serializable {
      * brandName
      */
     private String brandName;
+
+    /**
+     * real name
+     */
+    @FieldEncrypt(algorithm = Algorithm.AES)
+    private String realName;
     /**
      * 头衔或简介
      */

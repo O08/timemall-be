@@ -7,10 +7,11 @@ import com.norm.timemall.app.team.domain.ro.FetchOneOasisChannelGeneralInfoRO;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public interface TeamOasisChannelService {
-    ArrayList<FetchOasisChannelListRO> findOasisChannelList(String oasisId);
+    List<FetchOasisChannelListRO> findOasisChannelList(String oasisId);
 
     void removeOasisChannel(String oasisChannelId);
 
@@ -21,4 +22,6 @@ public interface TeamOasisChannelService {
     void modifyChannelSortInfo(RefreshOasisChannelSortDTO dto);
 
     ArrayList<String> findChannelSort(String oasisId);
+
+    ArrayList<FetchOasisChannelListRO> findPublicChannelList(String oasisId);
 }

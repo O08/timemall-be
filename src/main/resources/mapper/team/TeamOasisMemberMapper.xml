@@ -9,4 +9,41 @@
         id,oasis_id,brand_id,create_at,modified_at
     </sql>
 
+    <resultMap id="roleListResultMap" type="com.norm.timemall.app.team.domain.pojo.TeamFetchOasisMemberRole">
+        <result property="roleId" column="roleId"/>
+        <result property="roleName" column="role_name"/>
+    </resultMap>
+
+    <resultMap id="selectMemberAndRoleResultMap" type="com.norm.timemall.app.team.domain.ro.TeamFetchOasisMemberPageRO">
+        <result property="memberBrandId" column="memberBrandId"/>
+        <result property="memberUserId" column="memberUserId"/>
+        <result property="memberName" column="memberName"/>
+        <result property="joinOasisAt" column="joinOasisAt"/>
+        <result property="memberTitle" column="memberTitle"/>
+
+        <collection property="roles" ofType="com.norm.timemall.app.team.domain.pojo.TeamFetchOasisMemberRole" javaType="ArrayList" resultMap="roleListResultMap"/>
+    </resultMap>
+
+    <select id="selectMemberAndRole" resultMap="selectMemberAndRoleResultMap">
+
+        select
+          b.id memberBrandId,b.customer_id memberUserId,b.brand_name memberName,m.create_at joinOasisAt ,b.title memberTitle,r.role_name,r.id roleId
+        from oasis_member m
+        inner join brand b
+          on m.brand_id = b.id
+        left join oasis_member_role mr
+          on mr.member_brand_id=m.brand_id
+           and mr.oasis_id=m.oasis_id
+        left join oasis_role r
+          on mr.oasis_role_id=r.id
+        <where>
+            1=1 and m.oasis_id=#{dto.oasisId}
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, b.brand_name)>0 or locate(#{dto.q}, b.title)>0 or locate(#{dto.q}, r.role_name)>0)
+            </if>
+        </where>
+        order by m.create_at desc
+
+    </select>
+
 </mapper>

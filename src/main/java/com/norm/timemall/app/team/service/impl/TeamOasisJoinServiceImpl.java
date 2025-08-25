@@ -1,11 +1,13 @@
 package com.norm.timemall.app.team.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
+import com.norm.timemall.app.base.exception.QuickMessageException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.*;
 import com.norm.timemall.app.base.service.AccountService;
@@ -15,10 +17,7 @@ import com.norm.timemall.app.team.domain.pojo.TeamFetchFriendList;
 import com.norm.timemall.app.team.domain.ro.TeamFetchFriendRO;
 import com.norm.timemall.app.team.domain.ro.TeamInviteRO;
 import com.norm.timemall.app.team.domain.ro.TeamJoinedRO;
-import com.norm.timemall.app.team.mapper.TeamGroupMemberRelMapper;
-import com.norm.timemall.app.team.mapper.TeamOasisJoinMapper;
-import com.norm.timemall.app.team.mapper.TeamOasisMapper;
-import com.norm.timemall.app.team.mapper.TeamOasisMemberMapper;
+import com.norm.timemall.app.team.mapper.*;
 import com.norm.timemall.app.team.service.TeamOasisJoinService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +39,11 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
     @Autowired
     private AccountService accountService;
 
+    @Autowired
+    private TeamOasisMemberRoleMapper teamOasisMemberRoleMapper;
+    @Autowired
+    private TeamOasisRoleMapper teamOasisRoleMapper;
+
 
 
     @Override
@@ -49,12 +53,17 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
 
     @Override
     public void acceptOasisInvitation(String id) {
+        String currentBrandId=SecurityUserHelper.getCurrentPrincipal().getBrandId();
         // query oasis_join info
         OasisJoin oasisJoin = teamOasisJoinMapper.selectById(id);
         if(oasisJoin ==null){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
-        // query oasis member info
+        if(!currentBrandId.equals(oasisJoin.getBrandId())){
+            throw new QuickMessageException("非法访问");
+        }
+
+            // query oasis member info
         Oasis oasis = teamOasisMapper.selectById(oasisJoin.getOasisId());
         if(oasis==null){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
@@ -105,7 +114,29 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
                     .setModifiedAt(new Date());
             teamGroupMemberRelMapper.insert(groupMemberRel);
 
+            grantPublicRoleToMember(oasis.getId(), member.getBrandId());
+
         }
+    }
+
+    private void grantPublicRoleToMember(String oasisId,String memberBrandId){
+
+        LambdaQueryWrapper<OasisRole> wrapper= Wrappers.lambdaQuery();
+        wrapper.eq(OasisRole::getRoleCode, OasisRoleCoreEnum.PUBLIC.getMark())
+                .eq(OasisRole::getOasisId,oasisId);
+        OasisRole role = teamOasisRoleMapper.selectOne(wrapper);
+
+        OasisMemberRole mr = new OasisMemberRole();
+        mr.setId(IdUtil.simpleUUID())
+                .setOasisId(oasisId)
+                .setOasisRoleId(role.getId())
+                .setMemberBrandId(memberBrandId)
+                .setStartsAt(new Date())
+                .setEndsAt(DateUtil.offsetMonth(new Date(),4096))
+                .setCreateAt(new Date())
+                .setModifiedAt(new Date());
+
+        teamOasisMemberRoleMapper.insert(mr);
     }
 
     @Override
@@ -186,6 +217,9 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
                     .setModifiedAt(new Date());
             teamGroupMemberRelMapper.insert(groupMemberRel);
 
+            grantPublicRoleToMember(oasis.getId(), member.getBrandId());
+
+
         }
     }
 
@@ -201,7 +235,15 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
         // update oasis tb membership
         teamOasisMapper.subtractOneMembershipById(oasisId);
 
+        // cancel grant that give member
+        LambdaQueryWrapper<OasisMemberRole> roleLambdaQueryWrapper=Wrappers.lambdaQuery();
+        roleLambdaQueryWrapper.eq(OasisMemberRole::getMemberBrandId,brandId)
+                .eq(OasisMemberRole::getOasisId,oasisId);
+
+        teamOasisMemberRoleMapper.delete(roleLambdaQueryWrapper);
+
     }
+
 
     @Override
     public void removeOasisInvitation(String id) {

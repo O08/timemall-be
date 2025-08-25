@@ -11,7 +11,7 @@ import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.Oasis;
 import com.norm.timemall.app.base.mo.OasisChannel;
-import com.norm.timemall.app.base.mo.OasisHtmlApp;
+import com.norm.timemall.app.base.mo.OasisRoleChannel;
 import com.norm.timemall.app.team.domain.dto.PutChannelGeneralDTO;
 import com.norm.timemall.app.team.domain.dto.RefreshOasisChannelSortDTO;
 import com.norm.timemall.app.team.domain.ro.FetchOasisChannelListRO;
@@ -20,6 +20,7 @@ import com.norm.timemall.app.team.helper.TeamAppChannelDelHelper;
 import com.norm.timemall.app.team.mapper.TeamOasisChannelMapper;
 import com.norm.timemall.app.team.mapper.TeamOasisHtmlAppMapper;
 import com.norm.timemall.app.team.mapper.TeamOasisMapper;
+import com.norm.timemall.app.team.mapper.TeamOasisRoleChannelMapper;
 import com.norm.timemall.app.team.service.TeamOasisChannelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class TeamOasisChannelServiceImpl implements TeamOasisChannelService {
@@ -41,10 +43,18 @@ public class TeamOasisChannelServiceImpl implements TeamOasisChannelService {
     @Autowired
     private TeamAppChannelDelHelper teamAppChannelDelHelper;
 
+    @Autowired
+    private TeamOasisRoleChannelMapper teamOasisRoleChannelMapper;
+
 
     @Override
-    public ArrayList<FetchOasisChannelListRO> findOasisChannelList(String oasisId) {
-        return teamOasisChannelMapper.selectChannelListByOasisId(oasisId);
+    public List<FetchOasisChannelListRO> findOasisChannelList(String oasisId) {
+        String memberBrandId=SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        ArrayList<FetchOasisChannelListRO> ro = teamOasisChannelMapper.selectChannelListByOasisId(oasisId, memberBrandId);
+        if(ro==null || ro.isEmpty()){
+            ro=findPublicChannelList(oasisId);
+        }
+        return ro.stream().distinct().toList();
     }
 
     @Override
@@ -67,6 +77,8 @@ public class TeamOasisChannelServiceImpl implements TeamOasisChannelService {
         // remove oasis app data
         teamAppChannelDelHelper.doRemoveOasisChannelData(oasisChannel);
 
+        // remove from oasis role channel tb
+        removeChannelFromRoleChannel(oasisChannelId);
 
         // update channel sort
         ArrayList<String> sortArr = oasis.getChannelSort() == null ? new ArrayList<>() : new ArrayList<>(Arrays.asList(new GsonBuilder().create().fromJson(oasis.getChannelSort().toString(), String[].class)));
@@ -76,6 +88,11 @@ public class TeamOasisChannelServiceImpl implements TeamOasisChannelService {
 
         teamOasisMapper.updateById(oasis);
 
+    }
+    private void removeChannelFromRoleChannel(String channel){
+        LambdaQueryWrapper<OasisRoleChannel> wrapper=Wrappers.lambdaQuery();
+        wrapper.eq(OasisRoleChannel::getOasisChannelId,channel);
+        teamOasisRoleChannelMapper.delete(wrapper);
     }
 
     @Override
@@ -123,7 +140,12 @@ public class TeamOasisChannelServiceImpl implements TeamOasisChannelService {
     public ArrayList<String> findChannelSort(String oasisId) {
 
         Oasis oasis = teamOasisMapper.selectById(oasisId);
-        return oasis.getChannelSort() == null ? new ArrayList<>() : new ArrayList<>(Arrays.asList(new GsonBuilder().create().fromJson(oasis.getChannelSort().toString(), String[].class)));
+        return (oasis==null || oasis.getChannelSort() == null) ? new ArrayList<>() : new ArrayList<>(Arrays.asList(new GsonBuilder().create().fromJson(oasis.getChannelSort().toString(), String[].class)));
 
+    }
+
+    @Override
+    public ArrayList<FetchOasisChannelListRO> findPublicChannelList(String oasisId) {
+        return teamOasisChannelMapper.selectPublicChannelListByOasisId(oasisId);
     }
 }

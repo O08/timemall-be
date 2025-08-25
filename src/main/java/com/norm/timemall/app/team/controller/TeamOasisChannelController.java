@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class TeamOasisChannelController {
@@ -23,8 +24,10 @@ public class TeamOasisChannelController {
     @GetMapping(value = "/api/v1/team/oasis/{oasis_id}/oasis_channel/list")
     public FetchOasisChannelListVO fetchOasisChannelList(@PathVariable("oasis_id") String oasisId){
 
-        ArrayList<FetchOasisChannelListRO> ro = teamOasisChannelService.findOasisChannelList(oasisId);
-        ArrayList<String> sort=teamOasisChannelService.findChannelSort(oasisId);
+        List<FetchOasisChannelListRO> ro = teamOasisChannelService.findOasisChannelList(oasisId);
+
+        List<String> sort=teamOasisChannelService.findChannelSort(oasisId);
+        sort= sort.stream().filter(e-> ro.stream().anyMatch(el->el.getOasisChannelId().equals(e))).toList();
         FetchOasisChannelListVO vo = new FetchOasisChannelListVO();
         vo.setSort(sort);
         vo.setChannel(ro);

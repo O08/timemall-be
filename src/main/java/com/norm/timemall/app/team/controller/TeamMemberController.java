@@ -2,6 +2,7 @@ package com.norm.timemall.app.team.controller;
 
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
+import com.norm.timemall.app.base.exception.QuickMessageException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.team.domain.dto.TeamInviteToOasisDTO;
@@ -63,13 +64,19 @@ public class TeamMemberController {
     @ResponseBody
     @DeleteMapping(value = "/api/v1/team/oasis/unfollow")
     public SuccessVO unfollowOasis(@RequestParam("oasisId") String oasisId){
+        boolean isCreatorOfOasis = teamDataPolicyService.passIfBrandIsCreatorOfOasis(oasisId);
+        if(isCreatorOfOasis){
+            throw new QuickMessageException("暂不支持管理员退出");
+        }
+
         String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
-        // remove from oasis join tbl
+        // remove from oasis join tb and remove role info
         teamOasisJoinService.unfollowOasis(oasisId,brandId);
         // remove from oasis member tbl
         teamOasisMemberService.unfollowOasis(oasisId,brandId);
         // remove from group_member_rel tbl
         teamGroupMemberRelService.unfollowChannel(oasisId);
+
 
         return new SuccessVO(CodeEnum.SUCCESS);
     }
@@ -78,10 +85,15 @@ public class TeamMemberController {
      */
     @ResponseBody
     @DeleteMapping(value = "/api/v1/team/oasis/remove_member")
-    public SuccessVO unfollowOasis(@RequestParam("oasisId") String oasisId,
+    public SuccessVO removeMemberFromOasis(@RequestParam("oasisId") String oasisId,
                                    @RequestParam("brandId") String brandId){
         // check oasis ,if role is oasis creator ,pass
         boolean pass = teamDataPolicyService.passIfBrandIsCreatorOfOasis(oasisId);
+        String currentBrandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+
+        if(pass && brandId.equals(currentBrandId)){
+            throw new QuickMessageException("暂不支持管理员退出");
+        }
         if(pass){
             // remove from oasis join tbl
             teamOasisJoinService.unfollowOasis(oasisId,brandId);

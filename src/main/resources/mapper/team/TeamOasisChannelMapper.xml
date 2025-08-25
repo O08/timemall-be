@@ -7,17 +7,33 @@
 
     <select id="selectChannelListByOasisId" resultType="com.norm.timemall.app.team.domain.ro.FetchOasisChannelListRO">
         select
+            cq.app_logo,
+            cq.app_admin_url,
+            cq.app_view_url,
+            cq.channel_desc,
+            cq.channel_name,
+            cq.channel_id oasisChannelId
+        from v_oasis_channel_query cq
+        where cq.member_brand_id=#{memberBrandId}
+           and cq.oasis_id=#{oasisId}
+    </select>
+    <select id="selectPublicChannelListByOasisId" resultType="com.norm.timemall.app.team.domain.ro.FetchOasisChannelListRO">
+        select
             app.app_logo,
             app.app_admin_url,
             app.app_view_url,
             chn.channel_desc,
             chn.channel_name,
             chn.id oasisChannelId
-        from oasis_channel chn
+        from  oasis_role r
+        inner join oasis_role_channel rc
+           on rc.oasis_role_id=r.id
+        inner join oasis_channel chn
+           on chn.id=rc.oasis_channel_id
         inner join mini_app_library app
-          on chn.app_id=app.id
-        where chn.oasis_id=#{oasisId}
-          and chn.channel_tag='1'
+           on chn.app_id=app.id
+        where  r.oasis_id=#{oasisId}
+           and r.role_code='public'
     </select>
     <select id="validateAdminRole" resultType="java.lang.Boolean">
         select count(1)=1 from oasis_channel chn

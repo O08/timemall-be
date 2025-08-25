@@ -6,10 +6,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class FetchOasisChannelListVO  extends CodeVO {
-    private ArrayList<FetchOasisChannelListRO> channel;
-    private ArrayList<String> sort;
+    private List<FetchOasisChannelListRO> channel;
+    private List<String> sort;
 }

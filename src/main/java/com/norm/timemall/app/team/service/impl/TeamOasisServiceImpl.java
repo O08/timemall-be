@@ -1,10 +1,12 @@
 package com.norm.timemall.app.team.service.impl;
 
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -50,6 +52,12 @@ public class TeamOasisServiceImpl implements TeamOasisService {
 
     @Autowired
     private TeamBluvarrierMapper teamBluvarrierMapper;
+
+    @Autowired
+    private TeamOasisRoleMapper teamOasisRoleMapper;
+
+    @Autowired
+    private TeamOasisMemberRoleMapper teamOasisMemberRoleMapper;
 
     @Override
     public IPage<TeamOasisRO> findOasis(TeamOasisPageDTO dto) {
@@ -136,9 +144,52 @@ public class TeamOasisServiceImpl implements TeamOasisService {
                 .setModifiedAt(new Date());
         teamGroupMemberRelMapper.insert(groupMemberRel);
 
+        // init oasis base role
+        initOasisRole(oasis.getId(),oasis.getInitiatorId());
 
 
         return oasis.getId();
+
+    }
+
+    private void grantAdminRoleToInitiator(String oasisId,String roleId,String initiatorBrandId){
+        OasisMemberRole mr = new OasisMemberRole();
+        mr.setId(IdUtil.simpleUUID())
+                .setOasisId(oasisId)
+                .setOasisRoleId(roleId)
+                .setMemberBrandId(initiatorBrandId)
+                .setStartsAt(new Date())
+                .setEndsAt(DateUtil.offsetMonth(new Date(),4096))
+                .setCreateAt(new Date())
+                .setModifiedAt(new Date());
+
+        teamOasisMemberRoleMapper.insert(mr);
+    }
+
+    private void initOasisRole(String oasisId,String initiatorBrandId){
+        OasisRole adminRole=new OasisRole();
+        adminRole.setId(IdUtil.simpleUUID())
+                .setRoleCode(OasisRoleCoreEnum.ADMIN.getMark())
+                .setRoleName(OasisRoleCoreEnum.ADMIN.getDesc())
+                .setOasisId(oasisId)
+                .setRoleDesc("管理员权限身份组，可根据需要分配相应的频道权限")
+                .setCreateAt(new Date())
+                .setModifiedAt(new Date());
+        OasisRole publicRole=new OasisRole();
+
+        publicRole.setId(IdUtil.simpleUUID())
+                .setRoleCode(OasisRoleCoreEnum.PUBLIC.getMark())
+                .setRoleName(OasisRoleCoreEnum.PUBLIC.getDesc())
+                .setOasisId(oasisId)
+                .setRoleDesc("使用每个人可见身份组，可配置面向全部成员的频道权限")
+                .setCreateAt(new Date())
+                .setModifiedAt(new Date());
+
+        teamOasisRoleMapper.insert(adminRole);
+        teamOasisRoleMapper.insert(publicRole);
+
+        grantAdminRoleToInitiator(oasisId,adminRole.getId(),initiatorBrandId);
+
 
     }
     private void newFinAccountWhenOasisCreate(String oasisId){
@@ -268,6 +319,19 @@ public class TeamOasisServiceImpl implements TeamOasisService {
                 .setMark(OasisMarkEnum.BLOCKED.getMark())
                 .setModifiedAt(new Date());
         teamOasisMapper.updateById(oasis);
+
+    }
+
+    @Override
+    public void changeOasisManager(TeamOasisChangeManagerDTO dto) {
+
+        Oasis oasis = new Oasis();
+        oasis.setId(dto.getOasisId());
+        oasis.setInitiatorId(dto.getNewManagerBrandId());
+
+        LambdaUpdateWrapper<Oasis>  wrapper=Wrappers.lambdaUpdate();
+        wrapper.eq(Oasis::getId,dto.getOasisId());
+        teamOasisMapper.update(oasis,wrapper);
 
     }
 }

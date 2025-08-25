@@ -1,20 +1,19 @@
 package com.norm.timemall.app.team.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.OasisChannelTagEnum;
+import com.norm.timemall.app.base.enums.OasisRoleCoreEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
-import com.norm.timemall.app.base.mo.MiniAppLibrary;
-import com.norm.timemall.app.base.mo.Oasis;
-import com.norm.timemall.app.base.mo.OasisChannel;
+import com.norm.timemall.app.base.mo.*;
 import com.norm.timemall.app.team.domain.dto.GetAppDTO;
 import com.norm.timemall.app.team.domain.ro.FetchOasisAppListRO;
-import com.norm.timemall.app.team.mapper.TeamMiniAppLibraryMapper;
-import com.norm.timemall.app.team.mapper.TeamOasisChannelMapper;
-import com.norm.timemall.app.team.mapper.TeamOasisMapper;
+import com.norm.timemall.app.team.mapper.*;
 import com.norm.timemall.app.team.service.TeamMiniAppLibraryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class TeamMiniAppLibraryServiceImpl implements TeamMiniAppLibraryService {
@@ -32,6 +30,10 @@ public class TeamMiniAppLibraryServiceImpl implements TeamMiniAppLibraryService 
     private TeamOasisChannelMapper teamOasisChannelMapper;
     @Autowired
     private TeamOasisMapper teamOasisMapper;
+    @Autowired
+    private TeamOasisRoleMapper teamOasisRoleMapper;
+    @Autowired
+    private TeamOasisRoleChannelMapper teamOasisRoleChannelMapper;
 
     @Override
     public ArrayList<FetchOasisAppListRO> findAppList() {
@@ -67,5 +69,22 @@ public class TeamMiniAppLibraryServiceImpl implements TeamMiniAppLibraryService 
 
         teamOasisMapper.updateById(oasis);
 
+        addChannelToAdminRole(oasis.getId(),och);
+
+    }
+
+    private void addChannelToAdminRole(String oasisId,String channel){
+        LambdaQueryWrapper<OasisRole> wrapper= Wrappers.lambdaQuery();
+        wrapper.eq(OasisRole::getRoleCode, OasisRoleCoreEnum.ADMIN.getMark())
+                .eq(OasisRole::getOasisId,oasisId);
+        OasisRole role = teamOasisRoleMapper.selectOne(wrapper);
+
+        OasisRoleChannel rc=new OasisRoleChannel();
+        rc.setId(IdUtil.simpleUUID())
+                .setOasisRoleId(role.getId())
+                .setOasisChannelId(channel)
+                .setCreateAt(new Date())
+                .setModifiedAt(new Date());
+        teamOasisRoleChannelMapper.insert(rc);
     }
 }

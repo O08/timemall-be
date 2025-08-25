@@ -38,4 +38,5 @@ public interface TeamOasisService {
 
     void blockedOasis(String oasisId);
 
+    void changeOasisManager(TeamOasisChangeManagerDTO dto);
 }

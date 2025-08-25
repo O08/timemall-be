@@ -118,6 +118,7 @@ public class StudioBrandServiceImpl implements StudioBrandService {
         brandInfo.setBrand(brand.getBrandName());
         brandInfo.setAvatar(brand.getAvator());
         brandInfo.setStudio(brandStudio);
+        brandInfo.setRealName(brand.getRealName());
 
         return  brandInfo;
 
@@ -143,6 +144,10 @@ public class StudioBrandServiceImpl implements StudioBrandService {
         if(ObjectUtil.isNotNull(brandHandle) && (!brandId.equals(brandHandle.getId()))  ){
             throw new ErrorCodeException(CodeEnum.USER_ACCOUNT_HANDLE_EXIST);
         }
+
+        String realName= CharSequenceUtil.isEmpty(dto.getRealName()) ? "" : mybatisMateEncryptor.defaultEncrypt(dto.getRealName());
+        dto.setRealName(realName);
+
 
         studioBrandMapper.updateBrandBasicInfo(brandId,userId,dto);
     }
