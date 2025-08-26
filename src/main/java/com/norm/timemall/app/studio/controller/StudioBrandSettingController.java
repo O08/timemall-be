@@ -79,10 +79,10 @@ public class StudioBrandSettingController {
      * @return
      */
     @ResponseBody
-    @PutMapping(value = "/api/v1/web_estudio/brand/{brand_id}/contact_setting")
-    public SuccessVO settingBrandContact(@PathVariable("brand_id") String brandId, @RequestBody StudioContactDTO contact)
+    @PutMapping(value = "/api/v1/web_estudio/brand/contact_setting")
+    public SuccessVO settingBrandContact(@RequestBody StudioContactDTO contact)
     {
-        brandService.modifyBrandContact(brandId,contact);
+        brandService.modifyBrandContact(contact);
         return new SuccessVO(CodeEnum.SUCCESS);
     }
 

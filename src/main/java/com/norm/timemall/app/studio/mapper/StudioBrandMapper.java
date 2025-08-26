@@ -21,10 +21,12 @@ public interface StudioBrandMapper extends BaseMapper<Brand> {
                              @Param("cardholder") String cardholder,
                              @Param("cardno") String cardNo);
 
-    @Update(value = "update brand set email = #{email}, phone = #{phone} where id = #{id} and customer_id = #{user_id}")
-    void updateBrandContactById(@Param("id") String brandId, @Param("user_id") String userId,
+    @Update(value = "update brand set real_name=#{real_name}, email = #{email}, phone = #{phone} where id = #{id}")
+    void updateBrandContactById(@Param("id") String brandId,
                                 @Param("email") String email,
-                                @Param("phone") String phone);
+                                @Param("phone") String phone,
+                                @Param("real_name") String realName
+    );
     @Update(value="update brand set alipay = #{uri} where id = #{id}")
     void updateAliPayById(@Param("id") String brandId,@Param("uri") String uri);
     @Update(value="update brand set wechatpay = #{uri} where id = #{id}")
@@ -36,7 +38,7 @@ public interface StudioBrandMapper extends BaseMapper<Brand> {
     void updateBrandAvatar(@Param("id") String brandId, @Param("uri") String uri);
     @Update(value="update brand set wechat = #{uri} where id = #{id}")
     void updateBrandWechatQr(@Param("id") String brandId, @Param("uri") String uri);
-    @Update(value="update brand set real_name=#{dto.realName}, brand_name = #{dto.brand},title= #{dto.title},location=#{dto.location},handle=#{dto.handle},pd_oasis_id=#{dto.pdOasisId} where id = #{id}  and customer_id = #{user_id}")
+    @Update(value="update brand set brand_name = #{dto.brand},title= #{dto.title},location=#{dto.location},handle=#{dto.handle},pd_oasis_id=#{dto.pdOasisId} where id = #{id}  and customer_id = #{user_id}")
     void updateBrandBasicInfo(@Param("id") String brandId, @Param("user_id") String userId, @Param("dto") StudioBrandBasicInfoDTO dto);
     @Update(value="update brand set skills = #{skills} where id = #{id}  and customer_id = #{user_id}")
     void updateBrandSkills(@Param("id")String brandId, @Param("user_id")String userId, @Param("skills")String skillJson);

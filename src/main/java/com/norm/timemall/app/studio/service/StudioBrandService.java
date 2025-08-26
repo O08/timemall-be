@@ -11,7 +11,7 @@ public interface StudioBrandService {
 
     void modifyBrandBank(String brandId, String userId,StudioBrandBankDTO dto);
 
-    void modifyBrandContact(String brandId, StudioContactDTO contact);
+    void modifyBrandContact( StudioContactDTO contact);
 
     void modifyAliPay(String brandId, String uri);
 

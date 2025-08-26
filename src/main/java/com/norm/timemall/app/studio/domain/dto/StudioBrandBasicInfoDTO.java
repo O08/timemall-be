@@ -22,7 +22,6 @@ public class StudioBrandBasicInfoDTO {
 
     private String pdOasisId;
 
-    @Length(message = "realName range in {min}-{max}",min = 0,max = 36)
-    private String realName;
+
 
 }

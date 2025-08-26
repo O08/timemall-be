@@ -55,11 +55,12 @@ public class StudioBrandServiceImpl implements StudioBrandService {
     }
 
     @Override
-    public void modifyBrandContact(String brandId, StudioContactDTO contact) {
+    public void modifyBrandContact( StudioContactDTO contact) {
         CustomizeUser user = SecurityUserHelper.getCurrentPrincipal();
         String email= CharSequenceUtil.isEmpty(contact.getEmail()) ? "" : mybatisMateEncryptor.defaultEncrypt(contact.getEmail());
         String phone= CharSequenceUtil.isEmpty(contact.getPhone()) ? "" : mybatisMateEncryptor.defaultEncrypt(contact.getPhone());
-        studioBrandMapper.updateBrandContactById(brandId, user.getUserId(), email,phone);
+        String realName= CharSequenceUtil.isEmpty(contact.getRealName()) ? "" : mybatisMateEncryptor.defaultEncrypt(contact.getRealName());
+        studioBrandMapper.updateBrandContactById( user.getBrandId(), email,phone,realName);
     }
 
     @Override
@@ -145,8 +146,7 @@ public class StudioBrandServiceImpl implements StudioBrandService {
             throw new ErrorCodeException(CodeEnum.USER_ACCOUNT_HANDLE_EXIST);
         }
 
-        String realName= CharSequenceUtil.isEmpty(dto.getRealName()) ? "" : mybatisMateEncryptor.defaultEncrypt(dto.getRealName());
-        dto.setRealName(realName);
+
 
 
         studioBrandMapper.updateBrandBasicInfo(brandId,userId,dto);
