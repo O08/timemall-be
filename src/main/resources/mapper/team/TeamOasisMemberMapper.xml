@@ -18,6 +18,7 @@
         <result property="memberBrandId" column="memberBrandId"/>
         <result property="memberUserId" column="memberUserId"/>
         <result property="memberName" column="memberName"/>
+        <result property="memberAvatar" column="memberAvatar"/>
         <result property="joinOasisAt" column="joinOasisAt"/>
         <result property="memberTitle" column="memberTitle"/>
 
@@ -27,7 +28,7 @@
     <select id="selectMemberAndRole" resultMap="selectMemberAndRoleResultMap">
 
         select
-          b.id memberBrandId,b.customer_id memberUserId,b.brand_name memberName,m.create_at joinOasisAt ,b.title memberTitle,r.role_name,r.id roleId
+          b.avator memberAvatar,b.id memberBrandId,b.customer_id memberUserId,b.brand_name memberName,m.create_at joinOasisAt ,b.title memberTitle,r.role_name,r.id roleId
         from oasis_member m
         inner join brand b
           on m.brand_id = b.id

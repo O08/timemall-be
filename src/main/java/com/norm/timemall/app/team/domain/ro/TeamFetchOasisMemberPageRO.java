@@ -12,6 +12,7 @@ public class TeamFetchOasisMemberPageRO {
     private String memberName;
     private String memberTitle;
     private String memberUserId;
+    private String memberAvatar;
     private ArrayList<TeamFetchOasisMemberRole> roles;
 
 }
