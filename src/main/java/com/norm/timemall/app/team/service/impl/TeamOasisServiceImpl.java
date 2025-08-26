@@ -333,5 +333,42 @@ public class TeamOasisServiceImpl implements TeamOasisService {
         wrapper.eq(Oasis::getId,dto.getOasisId());
         teamOasisMapper.update(oasis,wrapper);
 
+        LambdaQueryWrapper<OasisRole> roleWrapper= Wrappers.lambdaQuery();
+        roleWrapper.eq(OasisRole::getRoleCode, OasisRoleCoreEnum.ADMIN.getMark())
+                .eq(OasisRole::getOasisId,dto.getOasisId());
+        OasisRole adminRole = teamOasisRoleMapper.selectOne(roleWrapper);
+
+        // config oasis admin role for new manager
+        grantAdminRoleToMember(dto.getOasisId(), dto.getNewManagerBrandId(), adminRole.getId());
+
+        // cancel admin role  for old manager
+        String oldManagerBrandId= SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        cancelAdminRoleForOldManager(adminRole.getId(),oldManagerBrandId);
+
+    }
+
+    private void  cancelAdminRoleForOldManager(String roleId,String memberBrandId){
+
+        LambdaQueryWrapper<OasisMemberRole> wrapper=Wrappers.lambdaQuery();
+        wrapper.eq(OasisMemberRole::getOasisRoleId,roleId)
+                .eq(OasisMemberRole::getMemberBrandId,memberBrandId);
+
+        teamOasisMemberRoleMapper.delete(wrapper);
+
+    }
+
+    private void grantAdminRoleToMember(String oasisId,String memberBrandId,String roleId){
+
+        OasisMemberRole mr = new OasisMemberRole();
+        mr.setId(IdUtil.simpleUUID())
+                .setOasisId(oasisId)
+                .setOasisRoleId(roleId)
+                .setMemberBrandId(memberBrandId)
+                .setStartsAt(new Date())
+                .setEndsAt(DateUtil.offsetMonth(new Date(),4096))
+                .setCreateAt(new Date())
+                .setModifiedAt(new Date());
+
+        teamOasisMemberRoleMapper.insert(mr);
     }
 }

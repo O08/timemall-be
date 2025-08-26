@@ -87,6 +87,7 @@ public class TeamSettingOasisController {
             throw new QuickMessageException("新管理员与原管理员相同，移交失败");
         }
         teamOasisService.changeOasisManager(dto);
+
         return new SuccessVO(CodeEnum.SUCCESS);
     }
 }
