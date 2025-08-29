@@ -9,6 +9,21 @@
         id,oasis_id,brand_id,create_at,modified_at
     </sql>
 
+    <select id="selectListByOasisId" resultType="com.norm.timemall.app.team.domain.ro.TeamOasisMemberRO">
+        select b.avator avatar, b.brand_name ,b.id brandId,d.amount,b.title
+        from oasis_member m
+        inner join brand b
+          on m.brand_id = b.id
+        inner join fin_distribute d
+          on d.oasis_id=m.oasis_id and d.brand_id=m.brand_id
+        where m.oasis_id= #{oasis_id}
+        <if test="q != null and q != ''">
+            AND (locate(#{q}, b.title)>0)
+        </if>
+        order by d.amount desc limit 100
+
+    </select>
+
     <resultMap id="roleListResultMap" type="com.norm.timemall.app.team.domain.pojo.TeamFetchOasisMemberRole">
         <result property="roleId" column="roleId"/>
         <result property="roleName" column="role_name"/>

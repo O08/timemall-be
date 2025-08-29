@@ -25,8 +25,8 @@ public class TeamOasisMemberServiceImpl implements TeamOasisMemberService {
     @Autowired
     private AccountService accountService;
     @Override
-    public ArrayList<TeamOasisMemberRO> findOasisMember(String oasisId) {
-        return teamOasisMemberMapper.selectListByOasisId(oasisId);
+    public ArrayList<TeamOasisMemberRO> findOasisMember(String oasisId,String q) {
+        return teamOasisMemberMapper.selectListByOasisId(oasisId,q);
     }
 
     @Override

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 @Service
 public interface TeamOasisMemberService {
-    ArrayList<TeamOasisMemberRO> findOasisMember(String oasisId);
+    ArrayList<TeamOasisMemberRO> findOasisMember(String oasisId,String q);
 
     void unfollowOasis(String oasisId,String brandId);
 

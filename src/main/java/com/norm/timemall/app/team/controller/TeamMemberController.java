@@ -40,8 +40,8 @@ public class TeamMemberController {
     */
     @ResponseBody
     @GetMapping(value = "/api/v1/team/member")
-    public TeamOasisMemberVO retrieveOasisMember(@RequestParam @NotBlank(message = "oasisId is required")String oasisId){
-      ArrayList<TeamOasisMemberRO> ros =  teamOasisMemberService.findOasisMember(oasisId);
+    public TeamOasisMemberVO retrieveOasisMember(@RequestParam @NotBlank(message = "oasisId is required")String oasisId,String q){
+      ArrayList<TeamOasisMemberRO> ros =  teamOasisMemberService.findOasisMember(oasisId,q);
 
       TeamOasisMember member = new TeamOasisMember();
       member.setRecords(ros);

@@ -21,8 +21,7 @@ import java.util.ArrayList;
 */
 @Mapper
 public interface TeamOasisMemberMapper extends BaseMapper<OasisMember> {
-    @Select("select b.avator avatar, b.brand_name ,b.id brandId from oasis_member m inner join brand b on m.brand_id = b.id inner join fin_distribute d on d.oasis_id=m.oasis_id and d.brand_id=m.brand_id where m.oasis_id= #{oasis_id} order by d.amount desc limit 100")
-    ArrayList<TeamOasisMemberRO> selectListByOasisId(@Param("oasis_id") String oasisId);
+    ArrayList<TeamOasisMemberRO> selectListByOasisId(@Param("oasis_id") String oasisId,@Param("q") String q);
 
     IPage<TeamFetchOasisMemberPageRO> selectMemberAndRole(IPage<TeamFetchOasisMemberPageRO> page, @Param("dto") TeamFetchOasisMemberPageDTO dto);
 

@@ -8,4 +8,6 @@ public class TeamOasisMemberRO {
     private String avatar;
     private String brandName;
     private String brandId;
+    private String amount;
+    private String title;
 }
