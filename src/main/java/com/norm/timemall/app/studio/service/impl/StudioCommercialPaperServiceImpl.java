@@ -1,18 +1,25 @@
 package com.norm.timemall.app.studio.service.impl;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONException;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.gson.Gson;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.CommercialPaperTagEnum;
+import com.norm.timemall.app.base.enums.ElectricityBusinessTypeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
+import com.norm.timemall.app.base.exception.QuickMessageException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.CommercialPaper;
 import com.norm.timemall.app.base.mo.MpsTemplate;
 import com.norm.timemall.app.base.service.AccountService;
+import com.norm.timemall.app.base.service.BaseElectricityService;
 import com.norm.timemall.app.studio.domain.dto.*;
 import com.norm.timemall.app.studio.domain.pojo.StudioFetchMpsPaper;
 import com.norm.timemall.app.studio.domain.pojo.StudioFetchMpsPaperDetail;
@@ -27,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -40,6 +48,9 @@ public class StudioCommercialPaperServiceImpl implements StudioCommercialPaperSe
     private AccountService accountService;
     @Autowired
     private StudioMpsMapper studioMpsMapper;
+
+    @Autowired
+    private BaseElectricityService baseElectricityService;
 
     @Override
     public void generateMpsPaper(String chainId,String brandId,String mpsId) {
@@ -100,11 +111,21 @@ public class StudioCommercialPaperServiceImpl implements StudioCommercialPaperSe
         String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         // check paper is validate
         CommercialPaper commercialPaper = studioCommercialPaperMapper.selectById(dto.getPaperId());
+        if(commercialPaper==null){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
         Date deadLineDate=DateUtil.offsetDay(commercialPaper.getModifiedAt(),commercialPaper.getContractValidityPeriod());
         boolean paperAlreadyInvalid = DateUtil.compare(new Date(),deadLineDate)>1;
         if(paperAlreadyInvalid || !CommercialPaperTagEnum.PUBLISH.getMark().equals(commercialPaper.getTag())){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
+        // can't receive self paper, if current brand is purchaser, block
+        if(commercialPaper.getPurchaser().equals(brandId)){
+            throw new ErrorCodeException(CodeEnum.FALSE_SHOPPING);
+        }
+        // deduct electricity
+        baseElectricityService.deduct(brandId,commercialPaper.getBidElectricity(),"接取商单扣除电力", ElectricityBusinessTypeEnum.DEDUCT.getMark(),  commercialPaper.getId(), "目标商单："+commercialPaper.getId());
+
         studioCommercialPaperMapper.updateTagAndSupplierById(dto.getPaperId(),CommercialPaperTagEnum.DELIVERING.getMark(),brandId);
     }
 
@@ -124,6 +145,20 @@ public class StudioCommercialPaperServiceImpl implements StudioCommercialPaperSe
     @Override
     public void generateFastMpsPaper(StudioNewFastMpsDTO dto, String brandId, String mpsId) {
 
+        // validate json arr
+        try {
+            new JSONArray(dto.getSkills());
+        } catch (JSONException ne) {
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        String[] skills = new Gson().fromJson(dto.getSkills(), String[].class);
+        if(skills.length>5){
+            throw new QuickMessageException("技能项目最大可配置5项，配额超限请调整");
+        }
+        boolean existsBlankSkill = Arrays.stream(skills).anyMatch(CharSequenceUtil::isBlank);
+        if(existsBlankSkill){
+            throw new QuickMessageException("技能项目存在空值，校验不通过");
+        }
         CommercialPaper paper = new CommercialPaper();
         paper.setId(IdUtil.simpleUUID())
                 .setTitle(dto.getTitle())
@@ -136,6 +171,11 @@ public class StudioCommercialPaperServiceImpl implements StudioCommercialPaperSe
                 .setDuration(dto.getDuration())
                 .setDeliveryCycle(dto.getDeliveryCycle())
                 .setContractValidityPeriod(dto.getContractValidityPeriod())
+                .setSkills(dto.getSkills())
+                .setDifficulty(dto.getDifficulty())
+                .setExperience(dto.getExperience())
+                .setLocation(dto.getLocation())
+                .setBidElectricity(dto.getBidElectricity())
                 .setTag(CommercialPaperTagEnum.CREATED.getMark())
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
@@ -170,6 +210,11 @@ public class StudioCommercialPaperServiceImpl implements StudioCommercialPaperSe
                     .setContractValidityPeriod(e.getContractValidityPeriod())
                     .setTag(CommercialPaperTagEnum.CREATED.getMark())
                     .setTemplateId(e.getId())
+                    .setSkills(e.getSkills())
+                    .setDifficulty(e.getDifficulty())
+                    .setExperience(e.getExperience())
+                    .setLocation(e.getLocation())
+                    .setBidElectricity(e.getBidElectricity())
                     .setCreateAt(new Date())
                     .setModifiedAt(new Date());
             paperList.add(paper);

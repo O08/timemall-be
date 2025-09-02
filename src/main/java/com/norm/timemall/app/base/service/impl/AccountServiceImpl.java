@@ -254,9 +254,26 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void topUpElectricity(String buyerBrandId, int defaultPoints) {
-        Brand brand = baseBrandMapper.selectById(buyerBrandId);
-        brand.setElectricity(brand.getElectricity()+defaultPoints);
+    public void topUpElectricity(String targetBrandId, int points) {
+        Brand brand = baseBrandMapper.selectById(targetBrandId);
+        if(brand==null){
+            throw new ErrorCodeException(CodeEnum.USER_ACCOUNT_DISABLE);
+        }
+        brand.setElectricity(brand.getElectricity()+points);
+        brand.setModifiedAt(new Date());
+        baseBrandMapper.updateById(brand);
+    }
+
+    @Override
+    public void deductElectricity(String targetBrandId, int points) {
+        Brand brand = baseBrandMapper.selectById(targetBrandId);
+        if(brand==null){
+            throw new ErrorCodeException(CodeEnum.USER_ACCOUNT_DISABLE);
+        }
+        if(brand.getElectricity()<points){
+            throw new ErrorCodeException(CodeEnum.NO_SUFFICIENT_FUNDS);
+        }
+        brand.setElectricity(brand.getElectricity() - points);
         brand.setModifiedAt(new Date());
         baseBrandMapper.updateById(brand);
     }

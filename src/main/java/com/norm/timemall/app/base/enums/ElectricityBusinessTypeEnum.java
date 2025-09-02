@@ -1,7 +1,9 @@
 package com.norm.timemall.app.base.enums;
 
 public enum ElectricityBusinessTypeEnum {
-    TOP_UP("top_up","top up")
+    TOP_UP("top_up","top up"),
+    DEDUCT("deduct","deduct"),
+
     ;
     private String mark;
     private String desc;

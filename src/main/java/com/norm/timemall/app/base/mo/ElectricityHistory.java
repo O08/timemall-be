@@ -29,7 +29,7 @@ public class ElectricityHistory extends Model<ElectricityHistory> implements Ser
     @TableId
 	private String id;
 
-    private String buyerBrandId;
+    private String userBrandId;
 
     private String busiType;
     /**

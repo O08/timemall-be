@@ -2,6 +2,8 @@ package com.norm.timemall.app.studio.domain.pojo;
 
 import lombok.Data;
 
+import java.util.ArrayList;
+
 @Data
 public class StudioFetchMpsTemplateDetailRO {
     private String title;
@@ -14,4 +16,9 @@ public class StudioFetchMpsTemplateDetailRO {
     private String deliveryCycle;
     private String contractValidityPeriod;
     private String id;
+    private ArrayList<String> skills;
+    private String difficulty;
+    private String experience;
+    private String location;
+    private String bidElectricity;
 }

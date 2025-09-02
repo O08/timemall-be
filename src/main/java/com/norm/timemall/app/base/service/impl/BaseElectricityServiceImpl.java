@@ -29,7 +29,7 @@ public class BaseElectricityServiceImpl implements BaseElectricityService {
         Date endDate = DateUtil.endOfMonth(target);
 
         LambdaQueryWrapper<ElectricityHistory> wrapper= Wrappers.lambdaQuery();
-        wrapper.eq(ElectricityHistory::getBuyerBrandId,buyerBrandId);
+        wrapper.eq(ElectricityHistory::getUserBrandId,buyerBrandId);
         wrapper.eq(ElectricityHistory::getBusiType, ElectricityBusinessTypeEnum.TOP_UP.getMark());
         wrapper.lt(ElectricityHistory::getCreateAt,endDate);
         wrapper.gt(ElectricityHistory::getCreateAt,beginDate);
@@ -39,19 +39,39 @@ public class BaseElectricityServiceImpl implements BaseElectricityService {
     }
 
     @Override
-    public void topup(String buyerBrandId, int defaultPoints,String item,String businessType,String outNo,String clue) {
-        accountService.topUpElectricity(buyerBrandId,defaultPoints);
+    public void topup(String buyerBrandId, int points,String item,String businessType,String outNo,String clue) {
+        accountService.topUpElectricity(buyerBrandId,points);
         ElectricityHistory history=new ElectricityHistory();
         history.setId(IdUtil.simpleUUID())
                 .setItem(item)
                 .setBusiType(businessType)
-                .setBuyerBrandId(buyerBrandId)
-                .setAmount(defaultPoints)
+                .setUserBrandId(buyerBrandId)
+                .setAmount(points)
                 .setDirection(TransDirectionEnum.CREDIT.getMark())
                 .setOutNo(outNo)
                 .setClue(clue)
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
         baseElectricityHistoryMapper.insert(history);
+    }
+
+    @Override
+    public void deduct(String targetBrandId, int points, String item, String businessType, String outNo, String clue) {
+
+        accountService.deductElectricity(targetBrandId,points);
+
+        ElectricityHistory history=new ElectricityHistory();
+        history.setId(IdUtil.simpleUUID())
+                .setItem(item)
+                .setBusiType(businessType)
+                .setUserBrandId(targetBrandId)
+                .setAmount(points)
+                .setDirection(TransDirectionEnum.DEBIT.getMark())
+                .setOutNo(outNo)
+                .setClue(clue)
+                .setCreateAt(new Date())
+                .setModifiedAt(new Date());
+        baseElectricityHistoryMapper.insert(history);
+
     }
 }

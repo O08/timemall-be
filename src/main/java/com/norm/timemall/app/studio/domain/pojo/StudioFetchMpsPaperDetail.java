@@ -2,6 +2,7 @@ package com.norm.timemall.app.studio.domain.pojo;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 
 
 @Data
@@ -22,4 +23,9 @@ public class StudioFetchMpsPaperDetail {
     private String modifiedAt;
     private String purchaserUserId;
     private String supplierUserId;
+    private ArrayList<String> skills;
+    private String difficulty;
+    private String experience;
+    private String location;
+    private String bidElectricity;
 }

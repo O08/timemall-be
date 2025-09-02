@@ -9,4 +9,38 @@
         id,chain_id,title,sow,piece,bonus,first_supplier,duration,create_at,modified_at
     </sql>
 
+
+    <resultMap id="selectTemplateDetailResultMap" type="com.norm.timemall.app.studio.domain.pojo.StudioFetchMpsTemplateDetailRO">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="sow" column="sow"/>
+        <result property="piece" column="piece"/>
+        <result property="bonus" column="bonus"/>
+        <result property="firstSupplier" column="first_supplier"/>
+        <result property="firstSupplierName" column="firstSupplierName"/>
+        <result property="duration" column="duration"/>
+        <result property="deliveryCycle" column="delivery_cycle"/>
+        <result property="contractValidityPeriod" column="contract_validity_period"/>
+        <result property="difficulty" column="difficulty"/>
+        <result property="experience" column="experience"/>
+        <result property="location" column="location"/>
+        <result property="bidElectricity" column="bid_electricity"/>
+
+
+        <result property="skills"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
+                column="skills"/>
+
+
+    </resultMap>
+
+    <select id="selectTemplateDetailById" resultMap="selectTemplateDetailResultMap">
+        select
+          t.skills,t.difficulty,t.experience,t.location,t.bid_electricity, t.id,t.title,t.sow,t.piece,t.bonus,t.first_supplier,b.brand_name firstSupplierName,t.duration,t.delivery_cycle,t.contract_validity_period
+        from mps_template t
+        left join brand b
+          on t.first_supplier=b.id
+        where t.id=#{id}
+    </select>
+
 </mapper>

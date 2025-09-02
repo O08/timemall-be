@@ -31,5 +31,7 @@ public interface AccountService {
 
     void blockedAccount(String userId);
 
-    void topUpElectricity(String buyerBrandId, int defaultPoints);
+    void topUpElectricity(String targetBrandId, int points);
+
+    void deductElectricity(String targetBrandId, int points);
 }
