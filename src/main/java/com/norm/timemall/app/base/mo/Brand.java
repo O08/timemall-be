@@ -116,6 +116,10 @@ public class Brand extends Model<Brand> implements Serializable {
      * brand handle
      */
     private String handle;
+    /**
+     * 电力值
+     */
+    private Integer electricity;
 
 
     /**

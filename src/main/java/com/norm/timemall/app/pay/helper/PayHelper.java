@@ -33,6 +33,19 @@ public class PayHelper {
 
         return tradingPayment;
     }
+    public ProprietaryTradingPayment generatePaymentWhenSuccessForInnerPay(String outTradeNo,String tradeNo,
+                                                                         String tradeStatus,String totalAmount,String message){
+        ProprietaryTradingPayment tradingPayment = new ProprietaryTradingPayment();
+        tradingPayment.setTradingOrderId(outTradeNo)
+                .setTradeNo(tradeNo)
+                .setStatus(tradeStatus)
+                .setPayType(PayType.BALANCE.getCode()+"")
+                .setPayTypeDesc(PayType.BALANCE.getDesc())
+                .setTotalAmount(totalAmount)
+                .setMessage(message);
+
+        return tradingPayment;
+    }
 
     public void busiHandler(Map<String,String> params){
         String out_trade_no = params.get("out_trade_no");

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.base.mapper.BaseElectricityHistoryMapper">
+    <sql id="tableName">
+        electricity_history
+    </sql>
+
+    <sql id="baseColumn">
+        id,item,direction,amount,out_no,clue,create_at,modified_at
+    </sql>
+
+</mapper>

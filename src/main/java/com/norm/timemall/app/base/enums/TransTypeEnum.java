@@ -23,7 +23,7 @@ public enum TransTypeEnum {
     PROPOSAL_BILL_PAY("19", "提案账单支付"),
     SUBSCRIPTION_BILL_PAY("20", "订阅账单支付"),
     SUBSCRIPTION_BILL_REMITTANCE("21", "订阅账单平台汇款到卖家"),
-
+    BUY_ELECTRICITY_PAY("22", "购买电力值"),
     ;
     private String mark;
     private String desc;

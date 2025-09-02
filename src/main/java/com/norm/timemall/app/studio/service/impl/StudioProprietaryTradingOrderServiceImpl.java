@@ -13,4 +13,10 @@ public class StudioProprietaryTradingOrderServiceImpl  extends ServiceImpl<Studi
     public void updateTradingOrderStatusAsPaid(String tradingOrderId) {
         this.baseMapper.updateTradingOrderStatus(tradingOrderId, ""+OrderStatusEnum.PAID.ordinal(),OrderStatusEnum.PAID.name());
     }
+
+    @Override
+    public void updateTradingOrderStatusAsFail(String tradingOrderId) {
+        this.baseMapper.updateTradingOrderStatus(tradingOrderId, ""+OrderStatusEnum.FAIL.ordinal(),OrderStatusEnum.FAIL.name());
+
+    }
 }

@@ -3,6 +3,7 @@ package com.norm.timemall.app.studio.mapper;
 import com.norm.timemall.app.base.mo.ProprietaryTrading;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.norm.timemall.app.studio.domain.pojo.StudioBlueSign;
+import com.norm.timemall.app.studio.domain.ro.StudioGetElectricityProductInfoRO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -18,4 +19,7 @@ import org.apache.ibatis.annotations.Select;
 public interface StudioProprietaryTradingMapper extends BaseMapper<ProprietaryTrading> {
 @Select("select t.id,t.trading_name,t.trading_desc,p.price,b.blue_begain_at,b.blue_end_at from proprietary_trading t left join brand b on b.id = #{brand_id} left join proprietary_trading_pricing p on p.trading_id = t.id where t.id = 'prd-0001'")
     StudioBlueSign selectBlueSign( @Param("brand_id") String brandId);
+@Select("select t.id,t.trading_name,t.trading_desc,p.price,b.electricity from proprietary_trading t inner join brand b on b.id = #{brand_id} inner join proprietary_trading_pricing p on p.trading_id = t.id where t.id = 'prd-0003'")
+    StudioGetElectricityProductInfoRO selectElectricity(@Param("brand_id") String buyerBrandId);
+
 }

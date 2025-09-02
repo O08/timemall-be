@@ -7,6 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.norm.timemall.app.base.config.OperatorConfig;
 import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.exception.QuickMessageException;
@@ -52,6 +53,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private BaseBluvarrierMapper baseBluvarrierMapper;
+
 
     @Override
     public Account findAccountByUserName(String username) {
@@ -251,10 +253,19 @@ public class AccountServiceImpl implements AccountService {
 
     }
 
+    @Override
+    public void topUpElectricity(String buyerBrandId, int defaultPoints) {
+        Brand brand = baseBrandMapper.selectById(buyerBrandId);
+        brand.setElectricity(brand.getElectricity()+defaultPoints);
+        brand.setModifiedAt(new Date());
+        baseBrandMapper.updateById(brand);
+    }
+
     private void newBrandWhenUserRegister(String userId,String brandName){
         Brand brand = new Brand();
         String brandId=IdUtil.simpleUUID();
         brand.setId(brandId)
+                .setElectricity(OperatorConfig.electricityGiftOnRegister)
                 .setMark(BrandMarkEnum.CREATED.getMark())
                 .setBrandName(brandName)
                 .setCustomerId(userId)
@@ -268,6 +279,7 @@ public class AccountServiceImpl implements AccountService {
         Brand brand = new Brand();
         String brandId=IdUtil.simpleUUID();
         brand.setId(brandId)
+                .setElectricity(OperatorConfig.electricityGiftOnRegister)
                 .setAvator(wechatUserInfoBO.getHeadimgurl())
                 .setMark(BrandMarkEnum.CREATED.getMark())
                 .setBrandName(wechatUserInfoBO.getNickname())

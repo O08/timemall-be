@@ -11,4 +11,6 @@ public interface StudioProprietaryTradingOrderService  extends IService<Propriet
      * @param tradingOrderId
      */
     void updateTradingOrderStatusAsPaid(String tradingOrderId);
+
+    void updateTradingOrderStatusAsFail(String tradingOrderId);
 }
