@@ -1,5 +1,6 @@
 package com.norm.timemall.app.studio.service;
 
+import com.norm.timemall.app.base.mo.CommercialPaper;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,4 +22,6 @@ public interface StudioApiAccessControlService {
     boolean alreadySubmitOnePendingDeliverForPlan(String orderId);
 
     boolean alreadySubmitOnePendingDeliverForMps(String paperId);
+
+    CommercialPaper findPaper(String paperId);
 }

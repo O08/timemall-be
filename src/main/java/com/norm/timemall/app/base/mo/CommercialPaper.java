@@ -99,4 +99,6 @@ public class CommercialPaper extends Model<CommercialPaper> implements Serializa
      */
     private Date modifiedAt;
 
+    private Date bidAt;
+
 }

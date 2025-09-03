@@ -110,4 +110,9 @@ public class StudioApiAccessControlServiceImpl implements StudioApiAccessControl
                 .eq(CommercialPaperDeliver::getTag, DeliverTagEnum.CREATED.getMark());
         return studioCommercialPaperDeliverMapper.exists(wrapper);
     }
+
+    @Override
+    public CommercialPaper findPaper(String paperId) {
+        return studioCommercialPaperMapper.selectById(paperId);
+    }
 }

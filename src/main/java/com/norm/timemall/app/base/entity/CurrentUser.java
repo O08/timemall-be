@@ -16,4 +16,5 @@ public class CurrentUser {
     private String hiLinkName;
     private String hiLinkUrl;
     private String handle;
+    private Integer electricity;
 }

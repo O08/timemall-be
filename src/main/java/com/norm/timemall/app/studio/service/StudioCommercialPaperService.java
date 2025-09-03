@@ -31,4 +31,8 @@ public interface StudioCommercialPaperService {
     void modifyPaperTagForCurrentUser(String paperId, String mark);
 
     void generateFastMpsPaper(StudioNewFastMpsDTO dto, String brandId, String mpsId);
+
+    void emptySupplier(String id);
+
+
 }

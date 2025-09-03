@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.gson.Gson;
 import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
+import com.norm.timemall.app.base.exception.QuickMessageException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.CommercialPaper;
 import com.norm.timemall.app.base.mo.FinAccount;
@@ -117,6 +118,10 @@ public class StudioMpsFundServiceImpl implements StudioMpsFundService {
         wrapper.eq(MpsFund::getFounder,brandId);
 
         MpsFund qFund = studioMpsFundMapper.selectOne(wrapper);
+
+        if(qFund==null){
+            throw new QuickMessageException("未开通商单基金账户，前往商单助手开通后再继续。");
+        }
 
         // pay
         TransferBO bo = defaultPayService.generateTransferBO(TransTypeEnum.MPS_FUND_TRANSFER.getMark(),

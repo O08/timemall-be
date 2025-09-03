@@ -42,7 +42,7 @@ public interface StudioCommercialPaperMapper extends BaseMapper<CommercialPaper>
     void updateTagById(@Param("dto") StudioPutMpsPaperTagDTO dto);
 @Update("update commercial_paper set sow=#{dto.sow},bonus=#{dto.bonus} where id=#{dto.paperId}")
     void updateSowAndBonusById(@Param("dto") StudioPutMpsPaperDTO dto);
-@Update("update commercial_paper set tag=#{tag},supplier=#{supplier} where id=#{id} and tag='2'")
+@Update("update commercial_paper set tag=#{tag},bid_at=now(), supplier=#{supplier} where id=#{id} and tag='2'")
     void updateTagAndSupplierById(@Param("id") String paperId,@Param("tag") String tag,@Param("supplier") String supplier);
 
     ArrayList<StudioFetchFirstSupplierRO> selectFirstSupplierByBrandId(@Param("purchaser") String brandId,@Param("q") String q);
@@ -52,4 +52,7 @@ public interface StudioCommercialPaperMapper extends BaseMapper<CommercialPaper>
     CommercialPaper selectPaperByDeliverId(@Param("deliverId") String deliverId,@Param("tag") String tag);
     @Update("update commercial_paper set tag=#{tag} where id=#{paperId} and purchaser=#{purchaser}")
     void updateTagByPurchaserAndId(@Param("paperId") String paperId, @Param("tag") String mark, @Param("purchaser") String brandId);
+    @Update("update commercial_paper set tag=#{tag},bid_at=null,supplier='' where id=#{paperId}")
+    void updateSupplierAndTagAndBidAtById(@Param("paperId") String paperId,@Param("tag") String tag);
+
 }

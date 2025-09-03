@@ -42,7 +42,9 @@ public class UserInfoController {
                     .setAvatar(brand==null ? "" : brand.getAvator())
                     .setHiLinkName(brand==null ? "" : brand.getHiLinkName())
                     .setHiLinkUrl(brand==null ? "" : brand.getHiLinkUrl())
-                    .setHandle(brand==null ? "": brand.getHandle());
+                    .setHandle(brand==null ? "": brand.getHandle())
+                    .setElectricity(brand==null ? 0: brand.getElectricity())
+            ;
 
             user.setUser(currentUser);
             user.setResponseCode(CodeEnum.SUCCESS);
