@@ -24,6 +24,8 @@ public enum TransTypeEnum {
     SUBSCRIPTION_BILL_PAY("20", "订阅账单支付"),
     SUBSCRIPTION_BILL_REMITTANCE("21", "订阅账单平台汇款到卖家"),
     BUY_ELECTRICITY_PAY("22", "购买电力值"),
+    BUY_BLUE_VIP_PAY("23", "购买会员")
+
     ;
     private String mark;
     private String desc;

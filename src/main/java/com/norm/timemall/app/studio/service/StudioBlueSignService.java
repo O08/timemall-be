@@ -8,8 +8,7 @@ import org.springframework.stereotype.Service;
 public interface StudioBlueSignService {
     StudioBlueSign findStudioBlueSign(String brandId);
     //蓝标下单
-    NewOrderRO newBlueSignOrder();
-    boolean payVerify(String id,String stage);
+    void newBlueSignOrder();
 
     /**
      * 激活蓝标

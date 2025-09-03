@@ -4,34 +4,40 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
-import com.norm.timemall.app.base.enums.CodeEnum;
-import com.norm.timemall.app.base.enums.OrderStatusEnum;
+import com.google.gson.Gson;
+import com.norm.timemall.app.base.config.OperatorConfig;
+import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
+import com.norm.timemall.app.base.exception.QuickMessageException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.Brand;
-import com.norm.timemall.app.base.mo.OrderFlow;
 import com.norm.timemall.app.base.mo.ProprietaryTradingOrder;
+import com.norm.timemall.app.base.mo.ProprietaryTradingPayment;
+import com.norm.timemall.app.base.pojo.TransferBO;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.base.service.AccountService;
+import com.norm.timemall.app.base.service.BaseElectricityService;
+import com.norm.timemall.app.pay.helper.PayHelper;
+import com.norm.timemall.app.pay.service.DefaultPayService;
 import com.norm.timemall.app.studio.domain.pojo.StudioBlueSign;
-import com.norm.timemall.app.base.pojo.ro.NewOrderRO;
 import com.norm.timemall.app.studio.mapper.StudioBrandMapper;
 import com.norm.timemall.app.studio.mapper.StudioProprietaryTradingMapper;
 import com.norm.timemall.app.studio.mapper.StudioProprietaryTradingOrderMapper;
-import com.norm.timemall.app.base.service.OrderFlowService;
 import com.norm.timemall.app.studio.service.StudioBlueSignService;
+import com.norm.timemall.app.studio.service.StudioProprietaryTradingOrderService;
+import com.norm.timemall.app.studio.service.StudioProprietaryTradingPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class StudioBlueSignServiceImpl implements StudioBlueSignService {
+
+    private static final int DEFAULT_POINTS=200;
     @Autowired
     private StudioProprietaryTradingMapper tradingMapper;
-    @Autowired
-    private OrderFlowService orderFlowService;
+
 
     @Autowired
     private AccountService accountService;
@@ -40,16 +46,26 @@ public class StudioBlueSignServiceImpl implements StudioBlueSignService {
     private StudioProprietaryTradingOrderMapper studioProprietaryTradingOrderMapper;
 
     @Autowired
+    private BaseElectricityService baseElectricityService;
+
+    @Autowired
+    private DefaultPayService defaultPayService;
+    @Autowired
+    private PayHelper payHelper;
+
+
+    @Autowired
+    private StudioProprietaryTradingPaymentService studioProprietaryTradingPaymentService;
+
+    @Autowired
+    private StudioProprietaryTradingOrderService studioProprietaryTradingOrderService;
+
+    @Autowired
     private StudioBrandMapper studioBrandMapper;
+
+
     @Override
     public StudioBlueSign findStudioBlueSign(String brandId) {
-        // insert order flow statue machine creating this stage use user id replace order details id
-        CustomizeUser user = SecurityUserHelper.getCurrentPrincipal();
-        List<OrderFlow> orderFlows = orderFlowService.lambdaQuery().eq(OrderFlow::getOrderId, user.getUserId())
-                .eq(OrderFlow::getStage, OrderStatusEnum.CREATING.name()).list();
-        if(orderFlows.size() == 0){
-            orderFlowService.insertOrderFlow(user.getUserId(),OrderStatusEnum.CREATING.name());
-        }
         return tradingMapper.selectBlueSign(brandId);
     }
 
@@ -58,15 +74,10 @@ public class StudioBlueSignServiceImpl implements StudioBlueSignService {
      * @return
      */
     @Override
-    public NewOrderRO newBlueSignOrder() {
-        // verify
-        CustomizeUser user = SecurityUserHelper.getCurrentPrincipal();
-        boolean verify =payVerify(user.getUserId(),OrderStatusEnum.CREATING.name());
-        if(!verify){
-            throw new ErrorCodeException(CodeEnum.PROCESSING);
-        }
+    public void newBlueSignOrder() {
+        CustomizeUser buyer = SecurityUserHelper.getCurrentPrincipal();
         // select bluesign info
-        Brand brand = accountService.findBrandInfoByUserId(user.getUserId());
+        Brand brand = accountService.findBrandInfoByUserId(buyer.getUserId());
         StudioBlueSign blueSign = tradingMapper.selectBlueSign(brand.getId());
 
         // if user already buy and bluesign still valid,return
@@ -79,7 +90,7 @@ public class StudioBlueSignServiceImpl implements StudioBlueSignService {
         ProprietaryTradingOrder proprietaryTradingOrder=new ProprietaryTradingOrder();
         proprietaryTradingOrder.setId(IdUtil.simpleUUID())
                 .setBrandId(brand.getId())
-                .setCustomerId(user.getUserId())
+                .setCustomerId(buyer.getUserId())
                 .setTradingId(blueSign.getId())
                 .setQuantity(1)
                 .setTotal(NumberUtil.toBigDecimal(blueSign.getPrice()))
@@ -89,23 +100,33 @@ public class StudioBlueSignServiceImpl implements StudioBlueSignService {
                 .setModifiedAt(new Date());
         studioProprietaryTradingOrderMapper.insert(proprietaryTradingOrder);
 
-        // return StudioNewOrderRO
-        NewOrderRO ro = new NewOrderRO();
-        ro.setMerchantOrderId(proprietaryTradingOrder.getId());
-        ro.setMerchantUserId(user.getUserId());
+        // pay process
+        TransferBO transferBO = defaultPayService.generateTransferBO(TransTypeEnum.BUY_BLUE_VIP_PAY.getMark(), FidTypeEnum.OPERATOR.getMark(), OperatorConfig.sysMidFinAccount,
+                FidTypeEnum.BRAND.getMark(), buyer.getBrandId(), blueSign.getPrice(), proprietaryTradingOrder.getId());
 
-        return ro;
-    }
-    /**
-     * verify order status
-     * @param id
-     */
-    @Override
-    public boolean payVerify(String id,String stage){
-        // verify identity or order exists and debounce
-        return orderFlowService.deleteOrderFlow(id,stage)> 0 ;
+        try {
+            String tradeNo = defaultPayService.transfer(new Gson().toJson(transferBO));
 
+            ProprietaryTradingPayment proprietaryTradingPayment = payHelper.generatePaymentWhenSuccessForInnerPay(proprietaryTradingOrder.getId(), tradeNo, "TRADE_SUCCESS", proprietaryTradingOrder.getTotal().toString(), new Gson().toJson(transferBO));
+            studioProprietaryTradingPaymentService.insertTradingPayment(proprietaryTradingPayment);
+            studioProprietaryTradingOrderService.updateTradingOrderStatusAsPaid(proprietaryTradingOrder.getId());
+
+
+            enableBlueSign(proprietaryTradingOrder.getCustomerId());
+
+            // top up electricity 200 points
+            baseElectricityService.topup(buyer.getBrandId(),DEFAULT_POINTS,"蓝标权益", ElectricityBusinessTypeEnum.TOP_UP.getMark(), proprietaryTradingOrder.getId(), "开通会员赠送电力");
+
+        }catch (ErrorCodeException e){
+            studioProprietaryTradingOrderService.updateTradingOrderStatusAsFail(proprietaryTradingOrder.getId());
+            throw new ErrorCodeException(e.getCode());
+        }
+        catch (Exception e){
+            studioProprietaryTradingOrderService.updateTradingOrderStatusAsFail(proprietaryTradingOrder.getId());
+            throw new QuickMessageException("系统异常");
+        }
     }
+
 
     @Override
     public void enableBlueSign(String userId) {

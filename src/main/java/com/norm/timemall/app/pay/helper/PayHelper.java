@@ -3,7 +3,6 @@ package com.norm.timemall.app.pay.helper;
 import com.norm.timemall.app.base.enums.PayType;
 import com.norm.timemall.app.base.mo.ProprietaryTradingOrder;
 import com.norm.timemall.app.base.mo.ProprietaryTradingPayment;
-import com.norm.timemall.app.studio.service.StudioBlueSignService;
 import com.norm.timemall.app.studio.service.StudioProprietaryTradingOrderService;
 import com.norm.timemall.app.studio.service.StudioTopUpService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +12,6 @@ import java.util.Map;
 @Component
 public class PayHelper {
 
-    @Autowired
-    private StudioBlueSignService studioBlueSignService;
 
     @Autowired
     private StudioProprietaryTradingOrderService studioProprietaryTradingOrderService;
@@ -51,9 +48,6 @@ public class PayHelper {
         String out_trade_no = params.get("out_trade_no");
         ProprietaryTradingOrder tradingOrder = studioProprietaryTradingOrderService.getById(out_trade_no);
         String busiType = getBusiType(tradingOrder.getTradingId());
-        if("bluesign".equals(busiType)){
-            studioBlueSignService.enableBlueSign(tradingOrder.getCustomerId());
-        }
         if("topUp".equals(busiType)){
             studioTopUpService.topUpPostHandler(tradingOrder.getBrandId(),tradingOrder.getTotal());
         }
