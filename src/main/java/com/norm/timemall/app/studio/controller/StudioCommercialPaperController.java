@@ -51,7 +51,7 @@ public class StudioCommercialPaperController {
         return vo;
 
     }
-    @GetMapping("/api/v1/web_estudio/commercial_paper/{id}/detail")
+    @GetMapping("/api/public/commercial_paper/{id}/detail")
     public StudioFetchMpsPaperDetailVO fetchMpsPaperDetail(@PathVariable("id")String id){
         StudioFetchMpsPaperDetail detail = studioCommercialPaperService.findMpsPaperDetail(id);
         StudioFetchMpsPaperDetailVO vo = new StudioFetchMpsPaperDetailVO();
