@@ -64,6 +64,8 @@ public class TeamDspServiceImpl implements TeamDspService {
     private TeamSubscriptionMapper teamSubscriptionMapper;
     @Autowired
     private TeamSubsProductMapper teamSubsProductMapper;
+    @Autowired
+    private TeamCommercialPaperMapper teamCommercialPaperMapper;
 
     @Override
     public void newCase(TeamDspAddCaseDTO dto,String materialName,String materialUrl) {
@@ -346,11 +348,29 @@ public class TeamDspServiceImpl implements TeamDspService {
             case "订阅专区":
                 defendantBrandId=getDefendantBrandIdFromSubscriptionShopping(sceneUrl);
                 break;
+            case "线上商单":
+                defendantBrandId=getDefendantBrandIdFromDiscoverCommercialPaper(sceneUrl);
+                break;
             default:
                 break;
         }
 
         return defendantBrandId;
+    }
+    private String getDefendantBrandIdFromDiscoverCommercialPaper(String sceneUrl){
+
+        URI uri = null;
+        try {
+            uri = new URI(sceneUrl);
+        } catch (URISyntaxException e) {
+            throw new QuickMessageException("校验不通过");
+        }
+
+        String path = uri.getPath();
+        String paperId = FilenameUtils.getName(path);
+        CommercialPaper paper = teamCommercialPaperMapper.selectById(paperId);
+        return  paper == null ? "" : paper.getPurchaser();
+
     }
     private String getDefendantBrandIdFromSubscriptionShopping(String sceneUrl){
 
