@@ -108,31 +108,26 @@ public class StudioMpsTemplateServiceImpl implements StudioMpsTemplateService {
             throw new QuickMessageException("技能项目存在空值，校验不通过");
         }
         LambdaUpdateWrapper<MpsTemplate> updateWrapper = Wrappers.lambdaUpdate();
-        // fix duration null value
-        if(ObjectUtil.isNull(dto.getDuration())){
-            updateWrapper.set(MpsTemplate::getDuration,null);
-        }
-
         updateWrapper.eq(MpsTemplate::getId,dto.getId());
-        MpsTemplate template = new MpsTemplate();
-        template.setId(dto.getId())
-                .setTitle(dto.getTitle())
-                .setSow(dto.getSow())
-                .setPiece(dto.getPiece())
-                .setBonus(dto.getBonus())
-                .setFirstSupplier(dto.getFirstSupplier())
-                .setDuration(dto.getDuration())
-                .setChainId(dto.getChainId())
-                .setDeliveryCycle(dto.getDeliveryCycle())
-                .setContractValidityPeriod(dto.getContractValidityPeriod())
-                .setSkills(dto.getSkills())
-                .setDifficulty(dto.getDifficulty())
-                .setExperience(dto.getExperience())
-                .setLocation(dto.getLocation())
-                .setBidElectricity(dto.getBidElectricity())
-                .setCreateAt(new Date())
-                .setModifiedAt(new Date());
-        studioMpsTemplateMapper.update(template, updateWrapper);
+
+        updateWrapper.set(MpsTemplate::getTitle,dto.getTitle());
+        updateWrapper.set(MpsTemplate::getSow,dto.getSow());
+        updateWrapper.set(MpsTemplate::getPiece,dto.getPiece());
+        updateWrapper.set(MpsTemplate::getBonus,dto.getBonus());
+        updateWrapper.set(MpsTemplate::getFirstSupplier,dto.getFirstSupplier());
+        updateWrapper.set(MpsTemplate::getDuration,dto.getDuration());
+        updateWrapper.set(MpsTemplate::getChainId,dto.getChainId());
+        updateWrapper.set(MpsTemplate::getDeliveryCycle,dto.getDeliveryCycle());
+        updateWrapper.set(MpsTemplate::getContractValidityPeriod,dto.getContractValidityPeriod());
+        updateWrapper.set(MpsTemplate::getSkills,dto.getSkills());
+        updateWrapper.set(MpsTemplate::getDifficulty,dto.getDifficulty());
+        updateWrapper.set(MpsTemplate::getExperience,dto.getExperience());
+        updateWrapper.set(MpsTemplate::getLocation,dto.getLocation());
+        updateWrapper.set(MpsTemplate::getBidElectricity,dto.getBidElectricity());
+        updateWrapper.set(MpsTemplate::getModifiedAt,new Date());
+
+
+        studioMpsTemplateMapper.update(updateWrapper);
     }
 
     @Override

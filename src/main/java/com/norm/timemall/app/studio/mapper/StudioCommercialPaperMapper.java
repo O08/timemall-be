@@ -52,7 +52,7 @@ public interface StudioCommercialPaperMapper extends BaseMapper<CommercialPaper>
     CommercialPaper selectPaperByDeliverId(@Param("deliverId") String deliverId,@Param("tag") String tag);
     @Update("update commercial_paper set tag=#{tag} where id=#{paperId} and purchaser=#{purchaser}")
     void updateTagByPurchaserAndId(@Param("paperId") String paperId, @Param("tag") String mark, @Param("purchaser") String brandId);
-    @Update("update commercial_paper set tag=#{tag},bid_at=null,supplier='' where id=#{paperId}")
+    @Update("update commercial_paper set tag=#{tag},duration=null,modified_at=now(),bid_at=null,supplier='' where id=#{paperId}")
     void updateSupplierAndTagAndBidAtById(@Param("paperId") String paperId,@Param("tag") String tag);
 
 }
