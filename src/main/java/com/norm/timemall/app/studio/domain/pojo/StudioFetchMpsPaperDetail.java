@@ -28,4 +28,5 @@ public class StudioFetchMpsPaperDetail {
     private String experience;
     private String location;
     private String bidElectricity;
+    private String bidAt;
 }
