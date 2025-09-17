@@ -24,4 +24,6 @@ public interface StudioVirtualProductService {
     void modifyProductDeliverMaterial(StudioVirtualProductChangeDeliverMaterialDTO dto, String deliverAttachmentUrl);
 
     void changeProductDescInfo(StudioVirtualProductChangeDescDTO dto);
+
+    void modifyShippingInfo(StudioVrProductShippingSettingDTO dto);
 }

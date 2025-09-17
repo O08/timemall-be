@@ -10,7 +10,6 @@
     </sql>
 
     <resultMap id="selectProductMetaResultMap" type="com.norm.timemall.app.studio.domain.ro.FetchVirtualProductMetaInfoRO">
-<!--        <id property="productName" column="product_name"/>-->
         <result property="productName" column="product_name"/>
         <result property="productPrice" column="product_price"/>
         <result property="productDesc" column="product_desc"/>
@@ -20,6 +19,8 @@
         <result property="deliverAttachment" column="deliver_attachment"/>
         <result property="thumbnailUrl" column="thumbnail_url"/>
         <result property="productStatus" column="product_status"/>
+        <result property="pack" column="pack"/>
+        <result property="shippingMethod" column="shipping_method"/>
 
         <result property="tags"
                 typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
@@ -35,7 +36,7 @@
 
     <select id="selectProductMetaById" resultMap="selectProductMetaResultMap">
         select
-          p.product_name,p.product_price,p.inventory,p.product_desc,p.thumbnail_url,p.tags,p.provide_invoice,p.product_status,p.deliver_note,p.deliver_attachment, sh.showcase_url,sh.id showcase_id,sh.showcase_od
+          p.pack,p.shipping_method,p.product_name,p.product_price,p.inventory,p.product_desc,p.thumbnail_url,p.tags,p.provide_invoice,p.product_status,p.deliver_note,p.deliver_attachment, sh.showcase_url,sh.id showcase_id,sh.showcase_od
         from virtual_product p
         inner join brand b on p.seller_brand_id = b.id
         left join virtual_product_showcase sh on p.id=sh.product_id

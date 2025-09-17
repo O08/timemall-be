@@ -16,5 +16,6 @@ public class MallFetchVirtualProductProfileRO {
     private ArrayList<String>  showcase;
     private ArrayList<String> tags;
     private String thumbnailUrl;
+    private String shippingMethod;
 
 }

@@ -107,6 +107,7 @@ public class StudioVirtualProductOrderRefundHandler {
         // update order as refunded
         order.setTag(VirtualOrderTagEnum.REFUNDED.ordinal()+"");
         order.setModifiedAt(new Date());
+        order.setPack("");
         order.setAlreadyRefund(SwitchCheckEnum.ENABLE.getMark());
 
         studioVirtualOrderMapper.updateById(order);

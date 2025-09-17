@@ -7,6 +7,7 @@ import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.exception.QuickMessageException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.VirtualOrder;
+import com.norm.timemall.app.studio.domain.dto.StudioChangeVirtualOrderPackDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioFetchVirtualOrderListPageDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioFetchVirtualOrderMaintenanceDTO;
 import com.norm.timemall.app.studio.domain.ro.StudioFetchVirtualOrderListPageRO;
@@ -26,6 +27,8 @@ public class StudioVirtualProductOrderServiceImpl implements StudioVirtualProduc
 
     @Autowired
     private StudioVirtualOrderRemittanceHandler studioVirtualOrderRemittanceHandler;
+
+
 
     @Override
     public IPage<StudioFetchVirtualOrderListPageRO> findOrders(StudioFetchVirtualOrderListPageDTO dto) {
@@ -60,6 +63,27 @@ public class StudioVirtualProductOrderServiceImpl implements StudioVirtualProduc
         }
 
         order.setTag(dto.getTag());
+        order.setModifiedAt(new Date());
+        studioVirtualOrderMapper.updateById(order);
+
+    }
+
+    @Override
+    public void modifyPack(StudioChangeVirtualOrderPackDTO dto) {
+
+        VirtualOrder order = studioVirtualOrderMapper.selectById(dto.getOrderId());
+        if(order ==null){
+            throw new QuickMessageException("未找到相关订单");
+        }
+        // role validated
+        String currentUserBrandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        boolean isSeller= currentUserBrandId.equals(order.getSellerBrandId());
+
+        if(!isSeller){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+
+        order.setPack(dto.getPack());
         order.setModifiedAt(new Date());
         studioVirtualOrderMapper.updateById(order);
 

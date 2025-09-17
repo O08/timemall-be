@@ -1,7 +1,10 @@
 package com.norm.timemall.app.mall.service.impl;
 
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.gson.Gson;
 import com.norm.timemall.app.base.config.OperatorConfig;
 import com.norm.timemall.app.base.enums.*;
@@ -12,18 +15,24 @@ import com.norm.timemall.app.base.mapper.BaseSequenceMapper;
 import com.norm.timemall.app.base.mo.CommonOrderPayment;
 import com.norm.timemall.app.base.mo.VirtualOrder;
 import com.norm.timemall.app.base.mo.VirtualProduct;
+import com.norm.timemall.app.base.mo.VirtualProductRandomItem;
 import com.norm.timemall.app.base.pojo.TransferBO;
+import com.norm.timemall.app.base.util.mate.MybatisMateEncryptor;
 import com.norm.timemall.app.mall.domain.dto.OrderVirtualProductDTO;
 import com.norm.timemall.app.mall.mapper.CommonOrderPaymentMapper;
 import com.norm.timemall.app.mall.mapper.MallVirtualOrderMapper;
 import com.norm.timemall.app.mall.mapper.MallVirtualProductMapper;
 import com.norm.timemall.app.mall.service.MallVirtualProductOrderService;
 import com.norm.timemall.app.pay.service.DefaultPayService;
+import com.norm.timemall.app.studio.mapper.StudioVirtualProductRandomItemMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.Random;
 
 @Service
 public class MallVirtualProductOrderServiceImpl implements MallVirtualProductOrderService {
@@ -41,6 +50,11 @@ public class MallVirtualProductOrderServiceImpl implements MallVirtualProductOrd
     @Autowired
     private CommonOrderPaymentMapper commonOrderPaymentMapper;
 
+    @Autowired
+    private MybatisMateEncryptor mybatisMateEncryptor;
+
+    @Autowired
+    private StudioVirtualProductRandomItemMapper studioVirtualProductRandomItemMapper;
 
 
     @Override
@@ -62,6 +76,17 @@ public class MallVirtualProductOrderServiceImpl implements MallVirtualProductOrd
         if(product.getInventory() < dto.getQuantity()){
             throw new QuickMessageException("库存不足，下单失败");
         }
+        // validated shipping method
+        if(CharSequenceUtil.isBlank(product.getShippingMethod())){
+            throw new QuickMessageException("商品配置校验不通过，下单失败");
+        }
+        // standard or random that auto shipping only can buy one
+        boolean isAutoShipping = VirtualProductShippingMethodEnum.STANDARD.getMark().equals(product.getShippingMethod())
+                || VirtualProductShippingMethodEnum.RANDOM.getMark().equals(product.getShippingMethod()) ;
+        if(isAutoShipping &&  dto.getQuantity()>1){
+            throw new QuickMessageException("本商品限购 1 份，请调整");
+        }
+
         // deduct inventory
         doDeductProductInventory(product.getId(), product.getInventory(), dto.getQuantity());
 
@@ -86,11 +111,12 @@ public class MallVirtualProductOrderServiceImpl implements MallVirtualProductOrd
         mallVirtualOrderMapper.insert(order);
 
         // pay process
-        doPayVirtualOrder(total,orderId);
+        doPayVirtualOrder(total,orderId,order.getProductId());
 
         return orderId;
 
     }
+
 
     @Override
     public void repayOrder(String orderId) {
@@ -110,7 +136,7 @@ public class MallVirtualProductOrderServiceImpl implements MallVirtualProductOrd
         }
 
         // pay process
-        doPayVirtualOrder(order.getTotalFee(),order.getId());
+        doPayVirtualOrder(order.getTotalFee(),order.getId(),order.getProductId());
 
     }
 
@@ -128,7 +154,7 @@ public class MallVirtualProductOrderServiceImpl implements MallVirtualProductOrd
 
 
     }
-    private void doPayVirtualOrder(BigDecimal revenue,String orderId){
+    private void doPayVirtualOrder(BigDecimal revenue,String orderId,String productId){
         // pay
         if(revenue.compareTo(BigDecimal.ZERO)>0){
             TransferBO bo = generateTransferBO(revenue,orderId);
@@ -136,9 +162,41 @@ public class MallVirtualProductOrderServiceImpl implements MallVirtualProductOrd
             // insert order payment
             newOrderPayment(orderId,transNo,revenue);
         }
-        // update order tag,alreadyPay  as paid
-        mallVirtualOrderMapper.updateTagAndPayById(SwitchCheckEnum.ENABLE.getMark(),VirtualOrderTagEnum.PAID.ordinal(),orderId);
+        // update order tag,alreadyPay  as paid ,pack
+        String encryptedPack=findPack(productId);
+        int orderTagWhenPayFinish=findOrderTagWhenPayFinish(productId);
+        mallVirtualOrderMapper.updateTagAndPayAndPackById(encryptedPack,SwitchCheckEnum.ENABLE.getMark(),orderTagWhenPayFinish,orderId);
 
+    }
+    private String findPack(String productId){
+
+        VirtualProduct product = mallVirtualProductMapper.selectById(productId);
+
+        if(VirtualProductShippingMethodEnum.STANDARD.getMark().equals(product.getShippingMethod())){
+            return  mybatisMateEncryptor.defaultEncrypt(product.getPack());
+        }
+        if(VirtualProductShippingMethodEnum.MANUAL.getMark().equals(product.getShippingMethod())){
+            return "";
+        }
+        if(VirtualProductShippingMethodEnum.RANDOM.getMark().equals(product.getShippingMethod())){
+            LambdaQueryWrapper<VirtualProductRandomItem> wrapper= Wrappers.lambdaQuery();
+            wrapper.eq(VirtualProductRandomItem::getProductId,product.getId());
+            List<VirtualProductRandomItem> list = studioVirtualProductRandomItemMapper.selectList(wrapper);
+            Collections.shuffle(list);
+            return  mybatisMateEncryptor.defaultEncrypt(list.get(0).getPack());
+        }
+        return "";
+
+    }
+    private int findOrderTagWhenPayFinish(String productId){
+        VirtualProduct product = mallVirtualProductMapper.selectById(productId);
+        if(VirtualProductShippingMethodEnum.STANDARD.getMark().equals(product.getShippingMethod())){
+            return VirtualOrderTagEnum.PAID.ordinal();
+        }
+        if(VirtualProductShippingMethodEnum.RANDOM.getMark().equals(product.getShippingMethod())){
+            return VirtualOrderTagEnum.PAID.ordinal();
+        }
+        return VirtualOrderTagEnum.DELIVERING.ordinal();
     }
     private void newOrderPayment(String orderId, String tradeNo, BigDecimal total){
 

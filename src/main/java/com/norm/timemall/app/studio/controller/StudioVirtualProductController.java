@@ -121,6 +121,13 @@ public class StudioVirtualProductController {
         return new SuccessVO(CodeEnum.SUCCESS);
 
     }
+    @PostMapping("/api/v1/web_estudio/virtual/product/shipping/setting")
+    public SuccessVO shippingSetting(@Validated @RequestBody StudioVrProductShippingSettingDTO dto){
+
+        studioVirtualProductService.modifyShippingInfo(dto);
+        return new SuccessVO(CodeEnum.SUCCESS);
+
+    }
 
     @DeleteMapping("/api/v1/web_estudio/virtual/product/{id}/remove")
     public SuccessVO removeProduct(@PathVariable("id") String productId){

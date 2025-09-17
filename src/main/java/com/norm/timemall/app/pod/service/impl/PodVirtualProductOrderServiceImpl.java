@@ -59,9 +59,11 @@ public class PodVirtualProductOrderServiceImpl implements PodVirtualProductOrder
         // query deliver info
         VirtualProduct product = podVirtualProductMapper.selectById(order.getProductId());
         PodGetVirtualOrderDeliverMaterialRO deliver = new PodGetVirtualOrderDeliverMaterialRO();
-        deliver.setDeliverAttachment(product.getDeliverAttachment());
-        deliver.setDeliverNote(product.getDeliverNote());
-        deliver.setProductName(product.getProductName());
+        deliver.setDeliverAttachment(product.getDeliverAttachment())
+         .setDeliverNote(product.getDeliverNote())
+         .setProductName(product.getProductName())
+         .setPack(order.getPack())
+         .setShippingMethod(product.getShippingMethod());
 
         PodGetVirtualOrderDeliverMaterialVO vo =new PodGetVirtualOrderDeliverMaterialVO();
         vo.setDeliver(deliver);

@@ -8,6 +8,7 @@ import com.norm.timemall.app.base.enums.VirtualOrderTagEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.service.OrderFlowService;
+import com.norm.timemall.app.studio.domain.dto.StudioChangeVirtualOrderPackDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioFetchVirtualOrderListPageDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioFetchVirtualOrderMaintenanceDTO;
 import com.norm.timemall.app.studio.domain.ro.StudioFetchVirtualOrderListPageRO;
@@ -63,6 +64,13 @@ public class StudioVirtualProductOrderController {
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
         studioVirtualProductOrderService.orderMaintenance(dto);
+        return new SuccessVO(CodeEnum.SUCCESS);
+
+    }
+    @PutMapping("/api/v1/web_estudio/virtual/product/order/pack/change")
+    public SuccessVO changeOrderPack(@Validated @RequestBody StudioChangeVirtualOrderPackDTO dto){
+
+        studioVirtualProductOrderService.modifyPack(dto);
         return new SuccessVO(CodeEnum.SUCCESS);
 
     }

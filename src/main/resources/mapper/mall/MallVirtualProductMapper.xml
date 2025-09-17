@@ -71,6 +71,7 @@
         <result property="productDesc" column="product_desc"/>
         <result property="thumbnailUrl" column="thumbnail_url"/>
         <result property="productStatus" column="product_status"/>
+        <result property="shippingMethod" column="shipping_method"/>
 
         <result property="tags"
                 typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
@@ -83,7 +84,7 @@
     </resultMap>
 
     <select id="selectProfileInfo" resultMap="productProfileResultMap">
-        select p.product_name,p.product_price,p.inventory,p.product_desc,p.thumbnail_url,p.tags,p.provide_invoice,p.product_status,sh.showcase_url
+        select p.shipping_method, p.product_name,p.product_price,p.inventory,p.product_desc,p.thumbnail_url,p.tags,p.provide_invoice,p.product_status,sh.showcase_url
         from virtual_product p
         inner join brand b on p.seller_brand_id = b.id
         left join virtual_product_showcase sh on p.id=sh.product_id

@@ -16,7 +16,7 @@ import org.apache.ibatis.annotations.Update;
 @Mapper
 public interface MallVirtualOrderMapper extends BaseMapper<VirtualOrder> {
 
-    @Update("update virtual_order set tag=#{tag},already_pay=#{alreadyPay} where id=#{id}")
-    void updateTagAndPayById(@Param("alreadyPay") String alreadyPay,@Param("tag") int tag, @Param("id") String orderId);
+    @Update("update virtual_order set pack=#{pack}, tag=#{tag},already_pay=#{alreadyPay} where id=#{id}")
+    void updateTagAndPayAndPackById(@Param("pack") String pack,@Param("alreadyPay") String alreadyPay,@Param("tag") int tag, @Param("id") String orderId);
 
 }

@@ -9,6 +9,8 @@ import java.util.Date;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import mybatis.mate.annotation.Algorithm;
+import mybatis.mate.annotation.FieldEncrypt;
 
 /**
  * (virtual_order)实体类
@@ -82,6 +84,12 @@ public class VirtualOrder extends Model<VirtualOrder> implements Serializable {
      * 退款原因
      */
     private String refundReason;
+
+    /**
+     * 货品
+     */
+    @FieldEncrypt(algorithm = Algorithm.AES)
+    private String pack;
     /**
      * createAt
      */

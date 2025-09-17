@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.studio.mapper.StudioVirtualProductRandomItemMapper">
+    <sql id="tableName">
+        virtual_product_random_item
+    </sql>
+
+    <select id="selectMerchandiseByProductId" resultType="com.norm.timemall.app.studio.domain.ro.StudioFetchVrProductRandomItemListRO">
+        select m.id,m.pack
+        from virtual_product_random_item m
+        inner join virtual_product p
+           on m.product_id=p.id
+        where
+         p.seller_brand_id=#{sellerBrandId}
+         and m.product_id=#{productId}
+        order by m.create_at desc
+    </select>
+
+</mapper>

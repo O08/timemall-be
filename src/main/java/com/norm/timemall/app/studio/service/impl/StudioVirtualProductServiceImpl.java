@@ -5,16 +5,21 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONException;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.ProductStatusEnum;
+import com.norm.timemall.app.base.enums.VirtualProductShippingMethodEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.exception.QuickMessageException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.VirtualProduct;
+import com.norm.timemall.app.base.mo.VirtualProductRandomItem;
 import com.norm.timemall.app.studio.domain.dto.*;
 import com.norm.timemall.app.studio.domain.ro.FetchVirtualProductMetaInfoRO;
 import com.norm.timemall.app.studio.domain.vo.FetchVirtualProductMetaInfoVO;
 import com.norm.timemall.app.studio.mapper.StudioVirtualProductMapper;
+import com.norm.timemall.app.studio.mapper.StudioVirtualProductRandomItemMapper;
 import com.norm.timemall.app.studio.service.StudioVirtualProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +32,11 @@ import java.util.Date;
 public class StudioVirtualProductServiceImpl implements StudioVirtualProductService {
     @Autowired
     private StudioVirtualProductMapper studioVirtualProductMapper;
+
+    @Autowired
+    private StudioVirtualProductRandomItemMapper studioVirtualProductRandomItemMapper;
+
+
 
     @Override
     public FetchVirtualProductMetaInfoVO findProductMetaInfo(String productId) {
@@ -116,6 +126,7 @@ public class StudioVirtualProductServiceImpl implements StudioVirtualProductServ
                 .setProductStatus(ProductStatusEnum.DRAFT.getMark())
                 .setSellerBrandId(sellerBrandId)
                 .setTags(dto.getTags())
+                .setShippingMethod(VirtualProductShippingMethodEnum.MANUAL.getMark())
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
 
@@ -214,5 +225,40 @@ public class StudioVirtualProductServiceImpl implements StudioVirtualProductServ
                 .setModifiedAt(new Date())
         ;
         studioVirtualProductMapper.updateById(product);
+    }
+
+    @Override
+    public void modifyShippingInfo(StudioVrProductShippingSettingDTO dto) {
+        // check dto
+        if(VirtualProductShippingMethodEnum.STANDARD.getMark().equals(dto.getShippingMethod()) && CharSequenceUtil.isBlank(dto.getPack())){
+            throw new QuickMessageException("标准发货货品为空");
+        }
+        if(VirtualProductShippingMethodEnum.RANDOM.getMark().equals(dto.getShippingMethod()) && fetchMerchandiseRows(dto.getProductId())<=0){
+            throw new QuickMessageException("随机发货货品为空");
+        }
+
+        // validated product and role
+        VirtualProduct product = studioVirtualProductMapper.selectById(dto.getProductId());
+        if(product==null){
+            throw new QuickMessageException("未找到相关商品");
+        }
+        String sellerBrandId= SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        boolean isSeller =  sellerBrandId.equals(product.getSellerBrandId());
+
+        if(!isSeller){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+
+        product.setPack(dto.getPack());
+        product.setShippingMethod(dto.getShippingMethod());
+        product.setModifiedAt(new Date());
+
+        studioVirtualProductMapper.updateById(product);
+
+    }
+    private Long fetchMerchandiseRows(String productId){
+        LambdaQueryWrapper<VirtualProductRandomItem> wrapper= Wrappers.lambdaQuery();
+        wrapper.eq(VirtualProductRandomItem::getProductId,productId);
+        return studioVirtualProductRandomItemMapper.selectCount(wrapper);
     }
 }

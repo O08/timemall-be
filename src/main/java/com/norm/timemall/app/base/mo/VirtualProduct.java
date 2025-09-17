@@ -9,6 +9,8 @@ import java.util.Date;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import mybatis.mate.annotation.Algorithm;
+import mybatis.mate.annotation.FieldEncrypt;
 
 /**
  * (virtual_product)实体类
@@ -81,10 +83,19 @@ public class VirtualProduct extends Model<VirtualProduct> implements Serializabl
      * 曝光
      */
     private Integer views;
+
+    private String shippingMethod;
+
     /**
      * 标签
      */
     private Object tags;
+
+    /**
+     * 货品
+     */
+    @FieldEncrypt(algorithm = Algorithm.AES)
+    private String pack;
     /**
      * createAt
      */
