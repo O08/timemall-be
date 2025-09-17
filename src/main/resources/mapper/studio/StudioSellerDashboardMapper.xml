@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.studio.mapper.StudioSellerDashboardMapper">
+    <sql id="tableName">
+        seller_dashboard
+    </sql>
+
+
+    <select id="selectDashboardByBrand" resultType="com.norm.timemall.app.studio.domain.ro.StudioFetchSellerDashBoardRO">
+        select
+          d.balance,d.earned_month,d.pending_plan_payment,d.pending_virtual_payment,d.earnings_to_date,d.expenses_to_date,d.plan_earnings_from_repeat_buyers,d.cell_earnings_from_repeat_buyers,d.virtual_earnings_from_repeat_buyers,d.plan_repeat_buyers,d.cell_repeat_buyers,d.virtual_repeat_buyers,d.plan_total_buyers,d.cell_total_buyers,d.virtual_total_buyers
+        from seller_dashboard d where d.seller_brand_id=#{seller_brand_id}
+    </select>
+
+</mapper>
