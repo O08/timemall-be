@@ -1,6 +1,8 @@
 package com.norm.timemall.app.studio.domain.ro;
 
 import lombok.Data;
+import mybatis.mate.annotation.Algorithm;
+import mybatis.mate.annotation.FieldEncrypt;
 
 @Data
 public class StudioFetchVirtualOrderListPageRO {
@@ -21,4 +23,8 @@ public class StudioFetchVirtualOrderListPageRO {
     private String alreadyRemittance;
     private String alreadyRefund;
     private String alreadyPay;
+
+    @FieldEncrypt(algorithm = Algorithm.AES)
+    private String pack;
+
 }
