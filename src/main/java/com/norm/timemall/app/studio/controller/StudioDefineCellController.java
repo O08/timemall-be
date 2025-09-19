@@ -107,15 +107,14 @@ public class StudioDefineCellController {
     }
 
     @ResponseBody
-    @PutMapping(value = "/api/v1/web_estudio/services/{cell_id}/intro/content")
-    public SuccessVO putCellIntroContent(@PathVariable("cell_id") String cellId,
-                                         @Validated @RequestBody StudioCellIntroContentDTO dto)
+    @PutMapping(value = "/api/v1/web_estudio/services/intro/content/change")
+    public SuccessVO putCellIntroContent(@Validated @RequestBody StudioCellIntroContentDTO dto)
     {
         // 行级权限检查， 只有服务归属方有权限定义数据
-        if(!dataPolicyService.cellOwnerCheck(cellId)){
+        if(!dataPolicyService.cellOwnerCheck(dto.getId())){
             throw new ErrorCodeException(CodeEnum.INVALID_TOKEN);
         }
-        studioCellService.modifyCellContent(cellId,dto);
+        studioCellService.modifyCellContent(dto);
 
         return new SuccessVO(CodeEnum.SUCCESS);
     }

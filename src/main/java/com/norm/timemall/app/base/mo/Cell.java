@@ -41,9 +41,11 @@ public class Cell extends Model<Cell> implements Serializable {
      */
     private String introCover;
     /**
-     * content
+     * content , 已过时于20250920
      */
     private Object content;
+
+    private String productDesc;
     /**
      * brandId
      */

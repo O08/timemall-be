@@ -21,7 +21,7 @@ public interface StudioCellService {
 
     void modifyIntroCover(String cellId, String uri);
 
-    void modifyCellContent(String cellId, StudioCellIntroContentDTO dto);
+    void modifyCellContent( StudioCellIntroContentDTO dto);
 
     void markCell(String cellId, String code);
 

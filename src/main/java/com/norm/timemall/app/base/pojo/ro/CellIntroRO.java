@@ -1,7 +1,6 @@
 package com.norm.timemall.app.base.pojo.ro;
 
 import com.norm.timemall.app.mall.domain.pojo.Fee;
-import com.norm.timemall.app.mall.domain.pojo.MallCellIntroContent;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -32,8 +31,7 @@ public class CellIntroRO {
     // The avator url for brand
     private String avator;
 
-    // The Intro for cell
-    private MallCellIntroContent content;
+  private String productDesc;
 
     // The pricing for cell
     private ArrayList<Fee> fee;

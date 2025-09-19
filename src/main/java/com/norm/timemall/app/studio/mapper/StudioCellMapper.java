@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.mo.Cell;
 import com.norm.timemall.app.base.pojo.ro.CellIntroRO;
 import com.norm.timemall.app.base.pojo.ro.CellInfoRO;
+import com.norm.timemall.app.studio.domain.dto.StudioCellIntroContentDTO;
 import com.norm.timemall.app.studio.domain.pojo.StudioCellOverView;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -28,8 +29,8 @@ public interface StudioCellMapper extends BaseMapper<Cell> {
     @Update(value = "update cell set intro_cover = #{uri} where id = #{id}")
     void updateIntroCoverById(@Param("id") String cellId, @Param("uri") String uri);
 
-    @Update(value = "update cell set content = #{content} where id = #{id}")
-    void updateCoverContentById(@Param("id") String cellId, @Param("content") String content);
+    @Update(value = "update cell set product_desc = #{dto.productDesc} where id = #{dto.id}")
+    void updateCoverContentById(@Param("dto") StudioCellIntroContentDTO dto);
     @Update(value = "update cell set mark = #{code} where id = #{id}")
     void updateMarkById(@Param("id")  String cellId, @Param("code")  String code);
 

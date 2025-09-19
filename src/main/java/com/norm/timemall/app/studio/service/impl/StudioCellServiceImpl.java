@@ -73,10 +73,9 @@ public class StudioCellServiceImpl implements StudioCellService {
     }
 
     @Override
-    public void modifyCellContent(String cellId, StudioCellIntroContentDTO dto) {
-        Gson gson = new Gson();
-        String content = gson.toJson(dto.getContent());
-        studioCellMapper.updateCoverContentById(cellId,content);
+    public void modifyCellContent(StudioCellIntroContentDTO dto) {
+
+        studioCellMapper.updateCoverContentById(dto);
     }
 
     @Override
