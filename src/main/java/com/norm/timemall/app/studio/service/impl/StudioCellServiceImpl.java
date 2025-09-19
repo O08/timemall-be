@@ -1,5 +1,6 @@
 package com.norm.timemall.app.studio.service.impl;
 
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONArray;
@@ -8,18 +9,21 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.google.gson.Gson;
 import com.norm.timemall.app.base.entity.PageDTO;
 import com.norm.timemall.app.base.enums.CellMarkEnum;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
+import com.norm.timemall.app.base.exception.QuickMessageException;
+import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.Cell;
+import com.norm.timemall.app.base.mo.Pricing;
 import com.norm.timemall.app.base.pojo.ro.CellIntroRO;
 import com.norm.timemall.app.base.pojo.vo.CellIntroVO;
 import com.norm.timemall.app.studio.domain.dto.StudioCellIntroContentDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioCellOverViewDTO;
 import com.norm.timemall.app.base.pojo.ro.CellInfoRO;
 import com.norm.timemall.app.studio.mapper.StudioCellMapper;
+import com.norm.timemall.app.studio.mapper.StudioPricingMapper;
 import com.norm.timemall.app.studio.service.StudioCellService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +35,9 @@ public class StudioCellServiceImpl implements StudioCellService {
 
     @Autowired
     private StudioCellMapper studioCellMapper;
+
+    @Autowired
+    private StudioPricingMapper studioPricingMapper;
     @Override
     public IPage<CellInfoRO> findCells(String brandId, PageDTO cellPageDTO) {
         IPage<CellInfoRO> page = new Page<>();
@@ -80,8 +87,38 @@ public class StudioCellServiceImpl implements StudioCellService {
 
     @Override
     public void markCell(String cellId, String code) {
+        String sellerBrandId= SecurityUserHelper.getCurrentPrincipal().getBrandId();
+
+        boolean isRightEnum=CellMarkEnum.ONLINE.getMark().equals(code) || CellMarkEnum.OFFLINE.getMark().equals(code);
+        if(!isRightEnum){
+            throw new QuickMessageException("参数 code 校验不通过");
+        }
+        // only seller can change product status
+        Cell cell = studioCellMapper.selectById(cellId);
+        if(cell==null){
+            throw new QuickMessageException("未找到相关商品数据");
+        }
+        if(!sellerBrandId.equals(cell.getBrandId())){
+            throw new QuickMessageException("非法访问");
+        }
+        // if not setting product desc ,refuse
+        if(CharSequenceUtil.isBlank(cell.getProductDesc())){
+            throw new QuickMessageException("未提供《商品介绍》资料,操作失败");
+        }
+
+        // if not setting product price info refuse
+        if(!alreadySettingPricingInfo(cellId)){
+            throw new QuickMessageException("未提供《商品定价》资料,操作失败");
+        }
+
         studioCellMapper.updateMarkById(cellId,code);
 
+    }
+
+    private boolean alreadySettingPricingInfo(String cellId){
+        LambdaQueryWrapper<Pricing> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Pricing::getCellId,cellId);
+        return studioPricingMapper.exists(wrapper);
     }
 
     @Override

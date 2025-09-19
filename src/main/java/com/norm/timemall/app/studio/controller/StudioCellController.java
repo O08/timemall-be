@@ -57,10 +57,6 @@ public class StudioCellController {
     public SuccessVO markCell(@PathVariable("cell_id") String cellId,@RequestParam("code") String code)
     {
 
-        boolean checked = dataPolicyService.cellOwnerCheck(cellId);
-        if(!checked){
-            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
-        }
         studioCellService.markCell(cellId,code);
         return new SuccessVO(CodeEnum.SUCCESS);
     }
