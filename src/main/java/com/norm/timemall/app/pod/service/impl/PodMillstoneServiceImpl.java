@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.gson.Gson;
 import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
+import com.norm.timemall.app.base.exception.QuickMessageException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.Bill;
 import com.norm.timemall.app.base.mo.Millstone;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
+import java.util.Objects;
 
 @Service
 public class PodMillstoneServiceImpl implements PodMillstoneService {
@@ -57,12 +59,49 @@ public class PodMillstoneServiceImpl implements PodMillstoneService {
     }
 
     @Override
-    public void markWorkFlowsByIdAndCode(String workflwoId, String code) {
-        podMillstoneMapper.updateWorkflowByIdAndCode(workflwoId,code);
+    public void markWorkFlowsByIdAndCode(String workflowId, String code) {
+        boolean codeValidated = validationWorkflowMarkEnum(code);
+        if(!codeValidated){
+            throw new QuickMessageException("状态码校验不通过");
+        }
+        if(WorkflowMarkEnum.IN_QUEUE.getMark().equals(code)){
+            throw new QuickMessageException("状态码 1 不支持");
+        }
+        if(WorkflowMarkEnum.AUDITED.getMark().equals(code)){
+            throw new QuickMessageException("状态码 3 不支持");
+        }
+        LambdaUpdateWrapper<Millstone> wrapper = Wrappers.lambdaUpdate();
+        // only can modify mark == 1
+        wrapper.eq(Millstone::getOrderId, workflowId);
+
+        Millstone millstone = podMillstoneMapper.selectOne(wrapper);
+        if(millstone==null || millstone.getStageList()==null){
+            throw new QuickMessageException("需求任务未设置，状态流转失败");
+        }
+        // go audit code limit
+        if(WorkflowMarkEnum.AUDITING.getMark().equals(code) &&  !WorkflowMarkEnum.IN_QUEUE.getMark().equals(millstone.getMark())  ){
+            throw new QuickMessageException("仅支持需求沟通阶段的任务进行审查");
+        }
+
+        // starred code limit
+        if(WorkflowMarkEnum.STARRED.getMark().equals(code) &&  !WorkflowMarkEnum.AUDITED.getMark().equals(millstone.getMark())  ){
+            throw new QuickMessageException("仅支持审计完成的任务进行定稿");
+        }
+
+
+        podMillstoneMapper.updateWorkflowByIdAndCode(workflowId,code);
         // 定稿时候触发账单
         if(code.equals(WorkflowMarkEnum.STARRED.getMark())){
-            generateFirstBill(workflwoId);
+            generateFirstBill(workflowId);
         }
+    }
+    public static boolean validationWorkflowMarkEnum(String value) {
+        for (WorkflowMarkEnum s : WorkflowMarkEnum.values()) {
+            if (Objects.equals(s.getMark(), value)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
