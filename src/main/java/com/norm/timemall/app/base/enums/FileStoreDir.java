@@ -28,7 +28,9 @@ public enum FileStoreDir {
     VIRTUAL_PRODUCT_SHOWCASE("virtual/showcase","virtual product show case file" ),
     VIRTUAL_PRODUCT_DELIVER("virtual/deliver", "virtual product deliver file"),
     APP_DESK_ELEMENT_ICON("app/desk/icon", "app desk element icon dir"),
-    PROPOSAL_MATERIAL("proposal/material", "proposal material dir");
+    PROPOSAL_MATERIAL("proposal/material", "proposal material dir"),
+    APP_REDEEM_THUMBNAIL("app/redeem/thumbnail", "app redeem thumbnail data"),
+    APP_REDEEM_DELIVER("app/redeem/deliver", "app redeem deliver data");
     private final String dir;
 
     private final String desc;

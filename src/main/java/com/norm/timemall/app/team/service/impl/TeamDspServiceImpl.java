@@ -67,6 +67,9 @@ public class TeamDspServiceImpl implements TeamDspService {
     @Autowired
     private TeamCommercialPaperMapper teamCommercialPaperMapper;
 
+    @Autowired
+    private TeamAppRedeemOrderMapper teamAppRedeemOrderMapper;
+
     @Override
     public void newCase(TeamDspAddCaseDTO dto,String materialName,String materialUrl) {
         String defendantBrandId = getDefendantBrandId(dto.getScene(),dto.getSceneUrl());
@@ -351,11 +354,20 @@ public class TeamDspServiceImpl implements TeamDspService {
             case "线上商单":
                 defendantBrandId=getDefendantBrandIdFromDiscoverCommercialPaper(sceneUrl);
                 break;
+            case "兑换物品订单":
+                defendantBrandId=getDefendantBrandIdFromAppRedeemOrder(sceneUrl);
+                break;
+
             default:
                 break;
         }
 
         return defendantBrandId;
+    }
+    private String getDefendantBrandIdFromAppRedeemOrder(String sceneUrl){
+        String orderId = HttpUtil.decodeParams(sceneUrl, StandardCharsets.UTF_8).get("order_id").getFirst();
+        AppRedeemOrder order = teamAppRedeemOrderMapper.selectById(orderId);
+        return order ==null ? "" : order.getSellerBrandId();
     }
     private String getDefendantBrandIdFromDiscoverCommercialPaper(String sceneUrl){
 

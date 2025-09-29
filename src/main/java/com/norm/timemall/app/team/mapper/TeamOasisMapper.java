@@ -49,5 +49,6 @@ public interface TeamOasisMapper extends BaseMapper<Oasis> {
 int selectCountByFeedIdAndInitiator(@Param("feedId") String feedId,@Param("initiatorBrandId") String initiatorBrandId);
     @Select("select count(1) from  oasis_channel c inner join oasis o on c.oasis_id=o.id where c.id=#{channelId} and o.initiator_id=#{initiatorBrandId}")
     boolean selectCountByChannelIdAndInitiator(@Param("channelId") String channelId, @Param("initiatorBrandId") String initiatorBrandId);
-
+@Select("select oa.* from oasis oa inner join oasis_channel chn on oa.id=chn.oasis_id where chn.id=#{channelId} ")
+    Oasis selectByChannelId(@Param("channelId") String channel);
 }

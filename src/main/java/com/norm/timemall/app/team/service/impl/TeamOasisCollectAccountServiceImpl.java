@@ -9,11 +9,11 @@ import com.norm.timemall.app.base.mo.FinDistribute;
 import com.norm.timemall.app.base.mo.Oasis;
 import com.norm.timemall.app.base.mo.Transactions;
 import com.norm.timemall.app.base.pojo.TransferBO;
+import com.norm.timemall.app.base.service.BaseOasisPointsService;
 import com.norm.timemall.app.pay.service.DefaultPayService;
 import com.norm.timemall.app.team.domain.dto.TeamOasisAdminWithdrawDTO;
 import com.norm.timemall.app.team.domain.dto.TeamOasisCollectAccountDTO;
 import com.norm.timemall.app.team.mapper.TeamFinAccountMapper;
-import com.norm.timemall.app.team.mapper.TeamFinDistributeMapper;
 import com.norm.timemall.app.team.mapper.TeamOasisMapper;
 import com.norm.timemall.app.team.mapper.TeamTransactionsMapper;
 import com.norm.timemall.app.team.service.TeamOasisCollectAccountService;
@@ -29,11 +29,13 @@ public class TeamOasisCollectAccountServiceImpl implements TeamOasisCollectAccou
     private TeamFinAccountMapper teamFinAccountMapper;
     @Autowired
     private TeamTransactionsMapper teamTransactionsMapper;
-    @Autowired
-    private TeamFinDistributeMapper teamFinDistributeMapper;
+
 
     @Autowired
     private TeamOasisMapper teamOasisMapper;
+
+    @Autowired
+    private BaseOasisPointsService baseOasisPointsService;
 
     @Autowired
     private DefaultPayService defaultPayService;
@@ -53,7 +55,7 @@ public class TeamOasisCollectAccountServiceImpl implements TeamOasisCollectAccou
         }
 
         String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
-        FinDistribute finDistribute= teamFinDistributeMapper.selectDistributeByBrandIdAndOasisId(brandId,dto.getOasisId());
+        FinDistribute finDistribute= baseOasisPointsService.findOasisPointsInfo(dto.getOasisId(),brandId);
 
 
         // query Oasis account
@@ -82,21 +84,12 @@ public class TeamOasisCollectAccountServiceImpl implements TeamOasisCollectAccou
         TransferBO bo = defaultPayService.generateTransferBO(TransTypeEnum.OASIS_COLLECT_IN.getMark(),
                 FidTypeEnum.BRAND.getMark(),brandId,FidTypeEnum.OASIS.getMark(),dto.getOasisId(),dto.getAmount(),dto.getOasisId());
 
-        defaultPayService.transfer(new Gson().toJson(bo));
+        String payId = defaultPayService.transfer(new Gson().toJson(bo));
 
 
+        // update oasis point
+        baseOasisPointsService.deduct(oasis.getId(), brandId,dto.getAmount(),"收帐核销", OasisPointBusinessTypeEnum.DEDUCT.getMark(), payId, "支付返回编号："+payId);
 
-        // update fin_distribute
-        BigDecimal distributeBalance= finDistribute.getAmount().subtract(dto.getAmount());
-        finDistribute.setAmount(distributeBalance);
-        teamFinDistributeMapper.updateById(finDistribute);
-
-        // update fin_account amount
-        // query brand account
-        FinAccount brandFinAccount = teamFinAccountMapper.selectOneByFidForUpdate(brandId, FidTypeEnum.BRAND.getMark());
-        BigDecimal amountBalance=brandFinAccount.getAmount().subtract(dto.getAmount());
-        brandFinAccount.setAmount(amountBalance);
-        teamFinAccountMapper.updateById(brandFinAccount);
     }
 
     @Override

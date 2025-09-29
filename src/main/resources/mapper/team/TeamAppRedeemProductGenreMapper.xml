@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamAppRedeemProductGenreMapper">
+    <sql id="tableName">
+        app_redeem_product_genre
+    </sql>
+
+    <sql id="baseColumn">
+        id,oasis_channel_id,genre_name,create_at,modified_at
+    </sql>
+
+
+    <select id="selectGenreList" resultType="com.norm.timemall.app.team.domain.ro.TeamAppRedeemFetchGenreListRO">
+        select
+          g.id genreId,
+          g.genre_name
+        from app_redeem_product_genre g
+        where 1 = 1
+          and g.oasis_channel_id = #{dto.channel}
+        <if test="dto.q != null and dto.q != ''">
+            AND locate(#{dto.q}, g.genre_name)>0
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamAppRedeemOrderMapper">
+    <sql id="tableName">
+        app_redeem_order
+    </sql>
+
+    <sql id="baseColumn">
+        id,oasis_channel_id,product_id,shipping_type,seller_brand_id,buyer_brand_id,shipping_address,shipping_email,price,quantity,total,consignee,refunded,delivery_note,delivery_material,status,create_at,modified_at
+    </sql>
+
+
+
+    <select id="selectAdminOrderPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamAppRedeemGetAdminOrderPageRO">
+        select
+          o.id orderId,
+          o.order_no,
+          p.product_name,
+          o.quantity,
+          o.shipping_type,
+          o.consignee,
+          o.total,
+          o.shipping_address,
+          o.shipping_email,
+          o.refunded,
+          o.status,
+          b.brand_name buyerName,
+          b.avator buyerAvatar,
+          b.customer_id buyerUserId,
+          o.create_at
+        from app_redeem_order o
+        inner join app_redeem_product p
+          on o.product_id=p.id
+        inner join brand b
+          on b.id=o.buyer_brand_id
+        where 1 = 1
+        and o.oasis_channel_id = #{dto.channel}
+        and o.seller_brand_id=#{seller_brand_id}
+        <if test="dto.q != null and dto.q != ''">
+            AND (locate(#{dto.q}, p.product_name)>0 or locate(#{dto.q}, p.shipping_term)>0  or locate(#{dto.q}, o.order_no)>0 )
+        </if>
+        <if test="dto.genreId != null and dto.genreId != ''">
+            AND p.genre_id=#{dto.genreId}
+        </if>
+        <if test="dto.status != null and dto.status != ''">
+            AND o.status=#{dto.status}
+        </if>
+
+        order by o.create_at desc
+    </select>
+
+
+    <select id="selectOneOrderForAdmin" resultType="com.norm.timemall.app.team.domain.ro.TeamAppRedeemAdminGetOneOrderInfoRO">
+        select
+            o.id orderId,
+            o.order_no,
+            p.product_name,
+            o.price productPrice,
+            p.thumbnail productThumbnail,
+            o.quantity,
+            o.total,
+            o.refunded,
+            b.brand_name buyerName,
+            b.avator buyerAvatar,
+            b.customer_id buyerUserId,
+            o.delivery_note,
+            o.delivery_material,
+            o.status,
+            o.create_at
+        from app_redeem_order o
+        inner join app_redeem_product p
+          on o.product_id=p.id
+        inner join brand b
+          on b.id=o.buyer_brand_id
+        where 1 = 1
+        and o.id = #{id}
+        and o.seller_brand_id=#{seller_brand_id}
+    </select>
+
+
+
+    <select id="selectBuyerOrderPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamAppRedeemGetBuyerOrderPageRO">
+        select
+            o.id orderId,
+            o.order_no,
+            p.product_name,
+            o.quantity,
+            o.shipping_type,
+            o.consignee,
+            o.total,
+            o.shipping_address,
+            o.shipping_email,
+            o.refunded,
+            o.status,
+            o.create_at
+        from app_redeem_order o
+        inner join app_redeem_product p
+          on o.product_id=p.id
+        where 1 = 1
+        and  o.buyer_brand_id=#{buyer_brand_id}
+        <if test="dto.q != null and dto.q != ''">
+            AND (locate(#{dto.q}, p.product_name)>0 or locate(#{dto.q}, p.shipping_term)>0  or locate(#{dto.q}, o.order_no)>0 )
+        </if>
+        <if test="dto.status != null and dto.status != ''">
+            AND o.status=#{dto.status}
+        </if>
+
+        order by o.create_at desc
+    </select>
+
+    <select id="selectOneOrderForBuyer" resultType="com.norm.timemall.app.team.domain.ro.TeamAppRedeemBuyerGetOneOrderInfoRO">
+        select
+            o.id orderId,
+            o.order_no,
+            p.product_name,
+            o.price productPrice,
+            p.thumbnail productThumbnail,
+            o.quantity,
+            o.total,
+            o.refunded,
+            b.brand_name sellerName,
+            b.avator sellerAvatar,
+            b.customer_id sellerUserId,
+            o.delivery_note,
+            o.delivery_material,
+            o.status,
+            o.create_at
+        from app_redeem_order o
+        inner join app_redeem_product p
+          on o.product_id=p.id
+        inner join brand b
+           on b.id=o.seller_brand_id
+        where 1 = 1
+        and o.id = #{id}
+        and o.buyer_brand_id=#{buyer_brand_id}
+    </select>
+
+</mapper>

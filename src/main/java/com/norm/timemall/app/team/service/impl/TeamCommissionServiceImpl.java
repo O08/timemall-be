@@ -9,6 +9,7 @@ import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.*;
+import com.norm.timemall.app.base.service.BaseOasisPointsService;
 import com.norm.timemall.app.team.domain.dto.*;
 import com.norm.timemall.app.team.domain.pojo.TeamFetchCommissionDetail;
 import com.norm.timemall.app.team.domain.ro.TeamCommissionRO;
@@ -18,7 +19,6 @@ import com.norm.timemall.app.team.service.TeamCommissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -31,12 +31,14 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
 
     @Autowired
     private TeamTransactionsMapper teamTransactionsMapper;
-    @Autowired
-    private TeamFinAccountMapper teamFinAccountMapper;
+
     @Autowired
     private TeamOasisJoinMapper teamOasisJoinMapper;
     @Autowired
     private TeamCommissionDeliverMapper teamCommissionDeliverMapper;
+
+    @Autowired
+    private BaseOasisPointsService baseOasisPointsService;
 
 
 
@@ -107,12 +109,9 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
                 OasisCommissionTagEnum.FINISH.getMark());
 
         // 2. update or insert fin_distribute
-        teamCommissionHelper.UpdateFinDistribute(commission.getOasisId(), commission.getWorker(), commission.getBonus());
-        // 3. update finAccount amount
-        FinAccount brandFinAccount = teamFinAccountMapper.selectOneByFidForUpdate(commission.getWorker(),FidTypeEnum.BRAND.getMark());
-        BigDecimal brandFinAccountAmountBalance = brandFinAccount.getAmount().add(commission.getBonus());
-        brandFinAccount.setAmount(brandFinAccountAmountBalance);
-        teamFinAccountMapper.updateById(brandFinAccount);
+        teamCommissionHelper.createFinDistributeIfNotExists(commission.getOasisId(), commission.getWorker());
+        baseOasisPointsService.topUp(commission.getOasisId(), commission.getWorker(),commission.getBonus(),"任务佣金", OasisPointBusinessTypeEnum.TOP_UP.getMark(), commission.getId(), "目标任务："+commission.getId());
+
         // 4. update oasis join
         updateOasisJoinModifiedAt(commission.getOasisId(), commission.getWorker());
         // 5. mark commission   deliver tag as delivered
