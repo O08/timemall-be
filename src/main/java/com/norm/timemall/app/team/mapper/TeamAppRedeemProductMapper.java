@@ -30,4 +30,8 @@ public interface TeamAppRedeemProductMapper extends BaseMapper<AppRedeemProduct>
 
 
     IPage<TeamAppRedeemGetBuyerProductPageRO> selectBuyerProductPageByQ(IPage<TeamAppRedeemGetBuyerProductPageRO> page,@Param("buyerBrandId") String buyerBrandId, @Param("dto") TeamAppRedeemGetBuyerProductPageDTO dto);
+@Update("update app_redeem_product set sold_orders=sold_orders + #{quantity} where id=#{productId}")
+    void updateSoldOrdersById(@Param("productId") String productId,@Param("quantity") Integer quantity);
+    @Update("update app_redeem_product set views = views + 1 where id = #{id}")
+    void autoIncrementViewsById(@Param("id") String productId);
 }

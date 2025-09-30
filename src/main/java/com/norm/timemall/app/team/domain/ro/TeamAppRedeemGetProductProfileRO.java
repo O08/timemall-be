@@ -16,4 +16,9 @@ public class TeamAppRedeemGetProductProfileRO {
     private String shippingType;
     private String status;
     private String thumbnail;
+    private String productCode;
+    private String estimatedDeliveryAt;
+    private String genreId;
+    private String shippingTerm;
+    private String warmReminder;
 }

@@ -493,6 +493,11 @@ public class TeamAppRedeemServiceImpl implements TeamAppRedeemService {
 
     }
 
+    @Override
+    public void storeProductStatisticsData(String id) {
+        teamAppRedeemProductMapper.autoIncrementViewsById(id);
+    }
+
     private void incrementStatsInfo(AppRedeemProductStats  stats,String buyerBrandId,String productId,Integer quantity){
         if(ObjectUtil.isNull(stats)){
             AppRedeemProductStats newStats=new AppRedeemProductStats();
@@ -514,6 +519,8 @@ public class TeamAppRedeemServiceImpl implements TeamAppRedeemService {
             updateWrapper.set(AppRedeemProductStats::getModifiedAt,new Date());
             teamAppRedeemProductStatsMapper.update(updateWrapper);
         }
+        // refresh product sold orders info
+        teamAppRedeemProductMapper.updateSoldOrdersById(productId,quantity);
     }
 
     private void doChangeOrderStatus(String orderId,String status){

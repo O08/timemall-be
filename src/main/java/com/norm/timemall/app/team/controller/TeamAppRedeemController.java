@@ -251,5 +251,12 @@ public class TeamAppRedeemController {
         return new SuccessVO(CodeEnum.SUCCESS);
     }
 
+    @PutMapping("/api/v1/app/redeem/product/{id}/data_science")
+    public SuccessVO captureProductData(@PathVariable("id") String id){
+        teamAppRedeemService.storeProductStatisticsData(id);
+
+        return new SuccessVO(CodeEnum.SUCCESS);
+    }
+
 
 }

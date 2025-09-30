@@ -56,4 +56,7 @@ public interface TeamAppRedeemService {
     void newOrder(TeamAppRedeemNewOrderDTO dto);
 
     void refund(TeamAppRedeemOrderRefundDTO dto);
+
+    void storeProductStatisticsData(String id);
+
 }
