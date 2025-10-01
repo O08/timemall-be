@@ -87,8 +87,8 @@
             p.estimated_delivery_at,
             g.genre_name,
             p.shipping_type,
-            s.history_buyer_orders,
-            s.month_buyer_orders
+            ifnull(s.history_buyer_orders,0) historyBuyerOrders,
+            ifnull(s.month_buyer_orders,0) monthBuyerOrders
         from app_redeem_product p
         inner join app_redeem_product_genre g
           on p.genre_id=g.id
@@ -96,6 +96,7 @@
           on p.id=s.product_id and s.buyer_brand_id=#{buyerBrandId}
         where 1 = 1
           and p.oasis_channel_id = #{dto.channel}
+          and p.status='2'
         <if test="dto.q != null and dto.q != ''">
             AND (locate(#{dto.q}, p.product_name)>0 or  locate(#{dto.q}, p.shipping_term)>0)
         </if>
