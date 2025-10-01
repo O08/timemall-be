@@ -27,4 +27,6 @@ public class TeamAppRedeemGetBuyerOrderPageRO {
     private String total;
     private String createAt;
 
+    private String productId;
+
 }

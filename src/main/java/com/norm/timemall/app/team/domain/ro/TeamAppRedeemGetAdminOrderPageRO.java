@@ -22,6 +22,10 @@ public class TeamAppRedeemGetAdminOrderPageRO {
     @FieldEncrypt(algorithm = Algorithm.AES)
     private String consignee;
 
+    @FieldEncrypt(algorithm = Algorithm.AES)
+    private String deliveryNote;
+    private String deliveryMaterial;
+
     private String shippingType;
     private String status;
     private String total;

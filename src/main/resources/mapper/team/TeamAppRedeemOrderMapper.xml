@@ -27,6 +27,8 @@
           b.brand_name buyerName,
           b.avator buyerAvatar,
           b.customer_id buyerUserId,
+          o.delivery_note,
+          o.delivery_material,
           o.create_at
         from app_redeem_order o
         inner join app_redeem_product p
@@ -82,6 +84,7 @@
     <select id="selectBuyerOrderPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamAppRedeemGetBuyerOrderPageRO">
         select
             o.id orderId,
+            p.id productId,
             o.order_no,
             p.product_name,
             o.quantity,
