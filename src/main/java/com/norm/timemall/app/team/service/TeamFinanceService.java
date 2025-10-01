@@ -18,4 +18,6 @@ public interface TeamFinanceService {
     TeamFinBoardRO oasisKanban(String oasisId);
 
     BigDecimal findPointInOasis(String oasisId, String brandId);
+
+    BigDecimal findPointInOasisUseChannel(String channel);
 }

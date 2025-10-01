@@ -62,6 +62,19 @@ public class TeamFinanceController {
         return vo;
     }
 
+    /**
+     * oasis 奉献查询
+     */
+    @ResponseBody
+    @GetMapping(value = "/api/v1/team/point/query_use_channel")
+    public TeamOasisPointVO retrievePointInOasisUseChannel(@RequestParam @NotBlank(message = "channel is required") String channel){
+        BigDecimal point = teamFinanceService.findPointInOasisUseChannel(channel);
+        TeamOasisPointVO vo = new TeamOasisPointVO();
+        vo.setPoint(point);
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        return vo;
+    }
+
 
     /**
      * oasis 资金

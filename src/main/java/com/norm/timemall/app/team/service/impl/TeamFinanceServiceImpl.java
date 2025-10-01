@@ -63,4 +63,11 @@ public class TeamFinanceServiceImpl implements TeamFinanceService {
         FinDistribute finDistribute = teamFinDistributeMapper.selectDistributeByBrandIdAndOasisId(brandId, oasisId);
         return finDistribute == null ? BigDecimal.ZERO : finDistribute.getAmount() ;
     }
+
+    @Override
+    public BigDecimal findPointInOasisUseChannel(String channel) {
+        String currentUserBrandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        FinDistribute finDistribute = teamFinDistributeMapper.selectDistributeByChannel(channel,currentUserBrandId);
+        return finDistribute == null ? BigDecimal.ZERO : finDistribute.getAmount() ;
+    }
 }
