@@ -21,4 +21,7 @@ public class TeamAppRedeemGetProductProfileRO {
     private String genreId;
     private String shippingTerm;
     private String warmReminder;
+    private String genreName;
+    private String soldOrders;
+    private String views;
 }

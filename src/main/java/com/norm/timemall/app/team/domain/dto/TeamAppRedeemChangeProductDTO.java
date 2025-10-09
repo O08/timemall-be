@@ -45,9 +45,11 @@ public class TeamAppRedeemChangeProductDTO {
     private String salesQuotaType;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @NotNull(message = "releaseAt required")
     private Date releaseAt;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @NotNull(message = "estimatedDeliveryAt required")
     private Date estimatedDeliveryAt;
 
     @NotBlank(message = "genreId required")
