@@ -77,8 +77,14 @@ public class TeamAppRedeemServiceImpl implements TeamAppRedeemService {
 
         validateUserIsAdmin(dto.getChannel());
 
+        // od
+        LambdaQueryWrapper<AppRedeemProductGenre> genreLambdaQueryWrapper=Wrappers.lambdaQuery();
+        genreLambdaQueryWrapper.eq(AppRedeemProductGenre::getOasisChannelId,dto.getChannel());
+        Long od = teamAppRedeemProductGenreMapper.selectCount(genreLambdaQueryWrapper);
+
         AppRedeemProductGenre genre=new AppRedeemProductGenre();
         genre.setId(IdUtil.simpleUUID())
+                .setOd(od+1)
                 .setGenreName(dto.getGenreName())
                 .setOasisChannelId(dto.getChannel())
                 .setCreateAt(new Date())
@@ -119,6 +125,9 @@ public class TeamAppRedeemServiceImpl implements TeamAppRedeemService {
         validateUserIsAdmin(genre.getOasisChannelId());
 
         teamAppRedeemProductGenreMapper.deleteById(id);
+
+        // change od
+        teamAppRedeemProductGenreMapper.reorderForBiggerThanOd(genre.getOasisChannelId(),genre.getOd());
     }
 
 
@@ -496,6 +505,43 @@ public class TeamAppRedeemServiceImpl implements TeamAppRedeemService {
     @Override
     public void storeProductStatisticsData(String id) {
         teamAppRedeemProductMapper.autoIncrementViewsById(id);
+    }
+
+    @Override
+    public void changeGenreSort(TeamAppRedeemSortGenreDTO dto) {
+        AppRedeemProductGenre genre = teamAppRedeemProductGenreMapper.selectById(dto.getGenreId());
+        if (genre==null){
+            throw new QuickMessageException("未找到相关品类数据");
+        }
+
+        validateUserIsAdmin(genre.getOasisChannelId());
+
+        // od
+        LambdaQueryWrapper<AppRedeemProductGenre> genreLambdaQueryWrapper=Wrappers.lambdaQuery();
+        genreLambdaQueryWrapper.eq(AppRedeemProductGenre::getOasisChannelId,genre.getOasisChannelId());
+        long od = teamAppRedeemProductGenreMapper.selectCount(genreLambdaQueryWrapper);
+
+        boolean isFirstAndUp = genre.getOd()==1L && AppSortDirectionEnum.UP.getMark().equals(dto.getDirection());
+        boolean isLastAndDown = genre.getOd()==od && AppSortDirectionEnum.DOWN.getMark().equals(dto.getDirection());
+
+        if(isFirstAndUp || isLastAndDown){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        genre.setModifiedAt(new Date());
+
+        if(AppSortDirectionEnum.UP.getMark().equals(dto.getDirection())){
+
+            teamAppRedeemProductGenreMapper.incrementOdByChnAndOd(genre.getOasisChannelId(),genre.getOd()-1L);
+            genre.setOd(genre.getOd()-1L);
+            teamAppRedeemProductGenreMapper.updateById(genre);
+
+        }
+        if(AppSortDirectionEnum.DOWN.getMark().equals(dto.getDirection())){
+            teamAppRedeemProductGenreMapper.minusOdByChnAndOd(genre.getOasisChannelId(),genre.getOd()+1L);
+            genre.setOd(genre.getOd()+1L);
+            teamAppRedeemProductGenreMapper.updateById(genre);
+        }
+
     }
 
     private void incrementStatsInfo(AppRedeemProductStats  stats,String buyerBrandId,String productId,Integer quantity){

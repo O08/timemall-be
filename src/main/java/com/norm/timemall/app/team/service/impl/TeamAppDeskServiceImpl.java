@@ -3,7 +3,7 @@ package com.norm.timemall.app.team.service.impl;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.norm.timemall.app.base.enums.AppDeskTopicReorderEnum;
+import com.norm.timemall.app.base.enums.AppSortDirectionEnum;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.mo.AppDeskElement;
@@ -107,8 +107,8 @@ public class TeamAppDeskServiceImpl implements TeamAppDeskService {
 
         long od = teamAppDeskTopicMapper.selectCount(queryWrapper);
 
-        boolean isFirstAndUp = topic.getOd()==1L && AppDeskTopicReorderEnum.UP.getMark().equals(dto.getDirection());
-        boolean isLastAndDown = topic.getOd()==od && AppDeskTopicReorderEnum.DOWN.getMark().equals(dto.getDirection());
+        boolean isFirstAndUp = topic.getOd()==1L && AppSortDirectionEnum.UP.getMark().equals(dto.getDirection());
+        boolean isLastAndDown = topic.getOd()==od && AppSortDirectionEnum.DOWN.getMark().equals(dto.getDirection());
 
         if(isFirstAndUp || isLastAndDown){
           throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
@@ -116,14 +116,14 @@ public class TeamAppDeskServiceImpl implements TeamAppDeskService {
 
         topic.setModifiedAt(new Date());
 
-        if(AppDeskTopicReorderEnum.UP.getMark().equals(dto.getDirection())){
+        if(AppSortDirectionEnum.UP.getMark().equals(dto.getDirection())){
 
             teamAppDeskTopicMapper.incrementOdByChnAndOd(topic.getOasisChannelId(),topic.getOd()-1L);
             topic.setOd(topic.getOd()-1L);
             teamAppDeskTopicMapper.updateById(topic);
 
         }
-        if(AppDeskTopicReorderEnum.DOWN.getMark().equals(dto.getDirection())){
+        if(AppSortDirectionEnum.DOWN.getMark().equals(dto.getDirection())){
             teamAppDeskTopicMapper.minusOdByChnAndOd(topic.getOasisChannelId(),topic.getOd()+1L);
             topic.setOd(topic.getOd()+1L);
             teamAppDeskTopicMapper.updateById(topic);

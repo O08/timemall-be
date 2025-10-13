@@ -20,6 +20,7 @@
         <if test="dto.q != null and dto.q != ''">
             AND locate(#{dto.q}, g.genre_name)>0
         </if>
+        order by g.od asc
     </select>
 
 </mapper>

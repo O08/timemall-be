@@ -36,6 +36,12 @@ public class AppRedeemProductGenre extends Model<AppRedeemProductGenre> implemen
      * 品类
      */
     private String genreName;
+
+    /**
+     * 顺序
+     */
+    private Long od;
+
     /**
      * createAt
      */

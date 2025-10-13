@@ -57,6 +57,11 @@ public class TeamAppRedeemController {
         teamAppRedeemService.removeGenre(id);
         return new SuccessVO(CodeEnum.SUCCESS);
     }
+    @PutMapping("/api/v1/app/redeem/genre/sort")
+    public SuccessVO sortGenre(@Validated @RequestBody TeamAppRedeemSortGenreDTO dto){
+        teamAppRedeemService.changeGenreSort(dto);
+        return new SuccessVO(CodeEnum.SUCCESS);
+    }
 
     @PostMapping("/api/v1/app/redeem/product/new")
     public SuccessVO createProduct(@Validated TeamAppRedeemNewProductDTO dto) throws IOException {

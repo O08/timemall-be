@@ -2,14 +2,14 @@ package com.norm.timemall.app.base.enums;
 
 import java.util.Objects;
 
-public enum AppDeskTopicReorderEnum {
+public enum AppSortDirectionEnum {
     UP("up","上移"),
     DOWN("down","下移")
     ;
     private String mark;
     private String desc;
 
-    AppDeskTopicReorderEnum(String mark, String desc) {
+    AppSortDirectionEnum(String mark, String desc) {
         this.mark = mark;
         this.desc = desc;
     }
@@ -36,7 +36,7 @@ public enum AppDeskTopicReorderEnum {
      * @return 判断结果：布尔值
      */
     public static boolean validation(String value) {
-        for (AppDeskTopicReorderEnum s : AppDeskTopicReorderEnum.values()) {
+        for (AppSortDirectionEnum s : AppSortDirectionEnum.values()) {
             if (Objects.equals(s.getMark(), value)) {
                 return true;
             }
