@@ -11,6 +11,7 @@ public class TeamAppRedeemGetAdminOrderPageRO {
     private String orderId;
     private String orderNo;
     private String productName;
+    private String productThumbnail;
     private String quantity;
     private String refunded;
 
