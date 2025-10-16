@@ -60,4 +60,7 @@ public interface TeamAppRedeemService {
     void storeProductStatisticsData(String id);
 
     void changeGenreSort(TeamAppRedeemSortGenreDTO dto);
+
+    void doValidateChannelBeforeRemove(String oasisChannelId);
+
 }

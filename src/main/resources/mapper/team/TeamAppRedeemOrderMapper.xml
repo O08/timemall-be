@@ -6,7 +6,7 @@
     </sql>
 
     <sql id="baseColumn">
-        id,oasis_channel_id,product_id,shipping_type,seller_brand_id,buyer_brand_id,shipping_address,shipping_email,price,quantity,total,consignee,refunded,delivery_note,delivery_material,status,create_at,modified_at
+        id,oasis_channel_id,product_id,shipping_type,seller_brand_id,buyer_brand_id,already_pay,shipping_address,shipping_email,price,quantity,total,consignee,refunded,delivery_note,delivery_material,status,create_at,modified_at
     </sql>
 
 
@@ -17,6 +17,7 @@
           o.order_no,
           p.product_name,
           p.thumbnail productThumbnail,
+          o.already_pay,
           o.quantity,
           o.shipping_type,
           o.consignee,

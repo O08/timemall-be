@@ -1,7 +1,10 @@
 package com.norm.timemall.app.team.helper;
 
 
+import com.norm.timemall.app.base.enums.SwitchCheckEnum;
+import com.norm.timemall.app.base.mo.MiniAppLibrary;
 import com.norm.timemall.app.base.mo.OasisChannel;
+import com.norm.timemall.app.team.mapper.TeamMiniAppLibraryMapper;
 import com.norm.timemall.app.team.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,6 +28,12 @@ public class TeamAppChannelDelHelper {
 
     @Autowired
     private TeamAppGroupChatService teamAppGroupChatService;
+
+    @Autowired
+    private TeamMiniAppLibraryMapper teamMiniAppLibraryMapper;
+
+    @Autowired
+    private TeamAppRedeemService teamAppRedeemService;
 
     public void doRemoveOasisChannelData(OasisChannel oasisChannel){
         switch (oasisChannel.getAppId()){
@@ -55,4 +64,18 @@ public class TeamAppChannelDelHelper {
     }
 
 
+    public void validateCanRemoveChannel(String oasisChannelId, String appId) {
+        MiniAppLibrary miniAppLibrary = teamMiniAppLibraryMapper.selectById(appId);
+        if(!SwitchCheckEnum.ENABLE.getMark().equals(miniAppLibrary.getEnableValidateBeforeRemoveChannel())){
+            return;
+        }
+        switch (appId){
+            case "8":
+                teamAppRedeemService.doValidateChannelBeforeRemove(oasisChannelId);
+                break;
+            default:
+                break;
+        }
+
+    }
 }

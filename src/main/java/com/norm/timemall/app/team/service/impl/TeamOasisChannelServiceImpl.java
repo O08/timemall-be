@@ -71,6 +71,9 @@ public class TeamOasisChannelServiceImpl implements TeamOasisChannelService {
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
 
+        // validate if channel can del
+        teamAppChannelDelHelper.validateCanRemoveChannel(oasisChannelId,oasisChannel.getAppId());
+
         // remove from oasis channel
         teamOasisChannelMapper.deleteById(oasisChannelId);
 

@@ -544,6 +544,21 @@ public class TeamAppRedeemServiceImpl implements TeamAppRedeemService {
 
     }
 
+    @Override
+    public void doValidateChannelBeforeRemove(String oasisChannelId) {
+        LambdaQueryWrapper<AppRedeemOrder> wrapper=Wrappers.lambdaQuery();
+        wrapper.eq(AppRedeemOrder::getOasisChannelId,oasisChannelId)
+                .eq(AppRedeemOrder::getAlreadyPay,SwitchCheckEnum.ENABLE.getMark())
+                .isNull(AppRedeemOrder::getRefunded)
+                .isNull(AppRedeemOrder::getDeliveryNote);
+
+        boolean existsDeliveringOrder = teamAppRedeemOrderMapper.exists(wrapper);
+        if(existsDeliveringOrder){
+            throw new QuickMessageException("移除频道失败，原因-->【存在未完成履约的兑换订单】");
+        }
+
+    }
+
     private void incrementStatsInfo(AppRedeemProductStats  stats,String buyerBrandId,String productId,Integer quantity){
         if(ObjectUtil.isNull(stats)){
             AppRedeemProductStats newStats=new AppRedeemProductStats();

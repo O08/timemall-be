@@ -48,6 +48,12 @@ public class MiniAppLibrary extends Model<MiniAppLibrary> implements Serializabl
      * 原型状态：0-编辑中，1-已上线
      */
     private String appTag;
+
+
+    /***
+     * 删除频道前需要校验：1 需要 ，0 或 空白 为不需要
+     */
+    private String enableValidateBeforeRemoveChannel;
     /**
      * 用户侧入口
      */

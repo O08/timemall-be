@@ -14,6 +14,7 @@ public class TeamAppRedeemGetAdminOrderPageRO {
     private String productThumbnail;
     private String quantity;
     private String refunded;
+    private String alreadyPay;
 
     @FieldEncrypt(algorithm = Algorithm.AES)
     private String shippingAddress;
