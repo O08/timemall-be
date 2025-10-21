@@ -77,6 +77,8 @@ public class TeamAppRedeemServiceImpl implements TeamAppRedeemService {
 
         validateUserIsAdmin(dto.getChannel());
 
+        validateGenreDuplicateInSameChannel(dto.getChannel(),dto.getGenreName());
+
         // od
         LambdaQueryWrapper<AppRedeemProductGenre> genreLambdaQueryWrapper=Wrappers.lambdaQuery();
         genreLambdaQueryWrapper.eq(AppRedeemProductGenre::getOasisChannelId,dto.getChannel());
@@ -93,6 +95,16 @@ public class TeamAppRedeemServiceImpl implements TeamAppRedeemService {
         teamAppRedeemProductGenreMapper.insert(genre);
     }
 
+    private void validateGenreDuplicateInSameChannel(String channel,String genreName){
+        LambdaQueryWrapper<AppRedeemProductGenre> genreLambdaQueryWrapper=Wrappers.lambdaQuery();
+        genreLambdaQueryWrapper.eq(AppRedeemProductGenre::getOasisChannelId,channel)
+                .eq(AppRedeemProductGenre::getGenreName,genreName);
+        boolean genreNameAlreadyUse = teamAppRedeemProductGenreMapper.exists(genreLambdaQueryWrapper);
+        if(genreNameAlreadyUse){
+            throw new QuickMessageException("品类已被使用");
+        }
+    }
+
     @Override
     public void modifyGenre(TeamAppRedeemEditGenreDTO dto) {
 
@@ -102,6 +114,8 @@ public class TeamAppRedeemServiceImpl implements TeamAppRedeemService {
         }
 
         validateUserIsAdmin(genre.getOasisChannelId());
+        validateGenreDuplicateInSameChannel(genre.getOasisChannelId(),dto.getGenreName());
+
 
         genre.setGenreName(dto.getGenreName())
                 .setModifiedAt(new Date());
@@ -214,6 +228,9 @@ public class TeamAppRedeemServiceImpl implements TeamAppRedeemService {
         AppRedeemProduct product = teamAppRedeemProductMapper.selectById(id);
         if(product==null){
             throw new QuickMessageException("未找到相关商品数据");
+        }
+        if(ProductStatusEnum.ONLINE.getMark().equals(product.getStatus())){
+            throw new QuickMessageException("商品售卖中，拒绝操作");
         }
         // deny when exists  order for this product
         LambdaQueryWrapper<AppRedeemOrder> wrapper=Wrappers.lambdaQuery();

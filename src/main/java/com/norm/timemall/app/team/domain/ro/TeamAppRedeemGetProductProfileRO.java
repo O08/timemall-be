@@ -20,10 +20,10 @@ public class TeamAppRedeemGetProductProfileRO {
     private String thumbnail;
     private String productCode;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Shanghai")
     private Date releaseAt;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Shanghai")
     private Date estimatedDeliveryAt;
 
 
