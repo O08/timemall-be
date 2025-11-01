@@ -9,6 +9,7 @@ public enum OrderStatusEnum {
     COMPLETED,// 订单履约完成
     CANCELLED, //取消订单
     FAIL,// 失败
-    INVALID // 失效
+    INVALID, // 失效
+    REFUNDED // 已退款
 
 }

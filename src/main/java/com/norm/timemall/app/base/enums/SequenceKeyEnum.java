@@ -6,7 +6,9 @@ public enum SequenceKeyEnum {
 
     APP_REDEEM_ORDER_NO("app_redeem_order_no","兑换中心订单编号"),
 
-    VIRTUAL_PRODUCT_ORDER_NO("virtual_order_no","虚拟商品订单编号")
+    VIRTUAL_PRODUCT_ORDER_NO("virtual_order_no","虚拟商品订单编号"),
+    OASIS_MEMBERSHIP_TIER_ORDER_NO("membership_order_no","部落会员订单编号")
+
     ;
     private String mark;
     private String desc;

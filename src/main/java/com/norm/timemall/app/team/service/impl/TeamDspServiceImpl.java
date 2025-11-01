@@ -70,6 +70,9 @@ public class TeamDspServiceImpl implements TeamDspService {
     @Autowired
     private TeamAppRedeemOrderMapper teamAppRedeemOrderMapper;
 
+    @Autowired
+    private TeamOasisMembershipOrderMapper teamOasisMembershipOrderMapper;
+
     @Override
     public void newCase(TeamDspAddCaseDTO dto,String materialName,String materialUrl) {
         String defendantBrandId = getDefendantBrandId(dto.getScene(),dto.getSceneUrl());
@@ -357,12 +360,20 @@ public class TeamDspServiceImpl implements TeamDspService {
             case "兑换物品订单":
                 defendantBrandId=getDefendantBrandIdFromAppRedeemOrder(sceneUrl);
                 break;
+            case "部落会员":
+                defendantBrandId=getDefendantBrandIdFromOasisMembershipTierOrder(sceneUrl);
+                break;
 
             default:
                 break;
         }
 
         return defendantBrandId;
+    }
+    private String getDefendantBrandIdFromOasisMembershipTierOrder(String sceneUrl){
+        String orderId = HttpUtil.decodeParams(sceneUrl, StandardCharsets.UTF_8).get("order_id").getFirst();
+        OasisMembershipOrder order = teamOasisMembershipOrderMapper.selectById(orderId);
+        return order ==null ? "" : order.getSellerBrandId();
     }
     private String getDefendantBrandIdFromAppRedeemOrder(String sceneUrl){
         String orderId = HttpUtil.decodeParams(sceneUrl, StandardCharsets.UTF_8).get("order_id").getFirst();
