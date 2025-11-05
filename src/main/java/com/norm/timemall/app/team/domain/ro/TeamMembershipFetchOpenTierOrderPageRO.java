@@ -10,4 +10,5 @@ public class TeamMembershipFetchOpenTierOrderPageRO {
     private String status;
     private String tierName;
     private String total;
+    private String cardType;
 }

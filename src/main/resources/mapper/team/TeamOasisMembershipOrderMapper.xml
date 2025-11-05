@@ -17,6 +17,7 @@
              buyer.avator buyerAvatar,
              t.tier_name,
              o.total,
+             o.card_type,
              o.status
         from oasis_membership_order o
         inner join oasis_membership_tier t
