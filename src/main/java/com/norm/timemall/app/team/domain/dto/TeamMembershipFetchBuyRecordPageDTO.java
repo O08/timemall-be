@@ -6,4 +6,5 @@ import lombok.Data;
 @Data
 public class TeamMembershipFetchBuyRecordPageDTO extends PageDTO {
     private String q;
+    private String status;
 }

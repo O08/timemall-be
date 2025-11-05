@@ -79,6 +79,9 @@
         <if test="dto.q != null and dto.q != ''">
             AND (locate(#{dto.q}, t.tier_name)>0 or  locate(#{dto.q}, seller.brand_name)>0  or  locate(#{dto.q}, o.order_no)>0)
         </if>
+        <if test="dto.status != null and dto.status != ''">
+            AND o.status=#{dto.status}
+        </if>
         order by o.create_at desc
     </select>
 
