@@ -1,12 +1,16 @@
 package com.norm.timemall.app.team.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.norm.timemall.app.base.mo.AppFbFeedAttachments;
 import com.norm.timemall.app.team.domain.dto.*;
+import com.norm.timemall.app.team.domain.ro.TeamAppFbFetchAttachmentsRO;
 import com.norm.timemall.app.team.domain.ro.TeamAppFbFetchCommentRO;
 import com.norm.timemall.app.team.domain.ro.TeamAppFbFetchFeedsPageRO;
 import com.norm.timemall.app.team.domain.ro.TeamAppFbFetchFeedRO;
 import com.norm.timemall.app.team.domain.vo.TeamAppFbFetchGuideVO;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 
 @Service
 public interface TeamAppFbService {
@@ -44,4 +48,12 @@ public interface TeamAppFbService {
 
 
     void removeChannelData(String id);
+
+    ArrayList<TeamAppFbFetchAttachmentsRO> findAttachments(String feedId);
+
+    AppFbFeedAttachments findOneAttachment(String id);
+
+    void removeAttachment(String id);
+
+    void addOneAttachment(String feedId, String fileUri, String fileType, String fileName);
 }

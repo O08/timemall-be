@@ -8,24 +8,16 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.norm.timemall.app.base.enums.*;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
-import com.norm.timemall.app.base.mo.AppFbFeed;
-import com.norm.timemall.app.base.mo.AppFbFeedComment;
-import com.norm.timemall.app.base.mo.AppFbGuide;
-import com.norm.timemall.app.base.mo.OasisChannel;
+import com.norm.timemall.app.base.mo.*;
 import com.norm.timemall.app.team.domain.dto.*;
-import com.norm.timemall.app.team.domain.ro.TeamAppFbFetchCommentRO;
-import com.norm.timemall.app.team.domain.ro.TeamAppFbFetchFeedsPageRO;
-import com.norm.timemall.app.team.domain.ro.TeamAppFbFetchFeedRO;
-import com.norm.timemall.app.team.domain.ro.TeamAppFbFetchGuideRO;
+import com.norm.timemall.app.team.domain.ro.*;
 import com.norm.timemall.app.team.domain.vo.TeamAppFbFetchGuideVO;
-import com.norm.timemall.app.team.mapper.TeamAppFbFeedCommentMapper;
-import com.norm.timemall.app.team.mapper.TeamAppFbFeedMapper;
-import com.norm.timemall.app.team.mapper.TeamAppFbGuideMapper;
-import com.norm.timemall.app.team.mapper.TeamOasisChannelMapper;
+import com.norm.timemall.app.team.mapper.*;
 import com.norm.timemall.app.team.service.TeamAppFbService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 @Service
@@ -40,6 +32,9 @@ public class TeamAppFbServiceImpl implements TeamAppFbService {
 
     @Autowired
     private TeamOasisChannelMapper teamOasisChannelMapper;
+
+    @Autowired
+    private TeamAppFbFeedAttachmentsMapper teamAppFbFeedAttachmentsMapper;
 
     @Override
     public IPage<TeamAppFbFetchFeedsPageRO> findFeeds(TeamAppFbFetchFeedsPageDTO dto) {
@@ -296,6 +291,36 @@ public class TeamAppFbServiceImpl implements TeamAppFbService {
         wrapper.eq(AppFbGuide::getOasisChannelId,id);
         teamAppFbGuideMapper.delete(wrapper);
 
+    }
+
+    @Override
+    public ArrayList<TeamAppFbFetchAttachmentsRO> findAttachments(String feedId) {
+
+        return teamAppFbFeedAttachmentsMapper.selectByFeedId(feedId);
+
+    }
+
+    @Override
+    public AppFbFeedAttachments findOneAttachment(String id) {
+        return teamAppFbFeedAttachmentsMapper.selectById(id);
+    }
+
+    @Override
+    public void removeAttachment(String id) {
+        teamAppFbFeedAttachmentsMapper.deleteById(id);
+    }
+
+    @Override
+    public void addOneAttachment(String feedId, String fileUri, String fileType, String fileName) {
+        AppFbFeedAttachments attachment=new AppFbFeedAttachments();
+        attachment.setId(IdUtil.simpleUUID())
+                .setFeedId(feedId)
+                .setFileName(fileName)
+                .setFileType(fileType)
+                .setFileUri(fileUri)
+                .setCreateAt(new Date())
+                .setModifiedAt(new Date());
+        teamAppFbFeedAttachmentsMapper.insert(attachment);
     }
 
 

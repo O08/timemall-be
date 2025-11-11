@@ -105,7 +105,7 @@ public class AliOssClientUtil {
         try {
             // 创建上传文件的元信息
 
-            meta.addUserMetadata("x-oss-meta-company","7norm.com");
+            meta.addUserMetadata("x-oss-meta-company","bluvarri.com");
 
             // 创建PutObject请求。
             PutObjectResult putObjectResult = ossClient.putObject(bucket, objectName, file, meta);
@@ -176,6 +176,7 @@ public class AliOssClientUtil {
     }
 
     public void deleteBucketFile(String bucketName, String objectName){
+        log.info("deleting oss file:"+objectName);
         // 创建OSSClient实例。
         OSS ossClient = new OSSClientBuilder().build(aliOssConfigure.getEndpoint(), aliOssConfigure.getAccessKeyId(),
                 aliOssConfigure.getAccessKeySecret());
@@ -183,9 +184,9 @@ public class AliOssClientUtil {
             // 删除文件或目录。如果要删除目录，目录必须为空。
             ossClient.deleteObject(bucketName, objectName);
         } catch (OSSException oe) {
-            log.error("oss download exception:",oe);
+            log.error("oss delete exception:",oe);
         } catch (ClientException ce) {
-            log.error("oss download ClientException:",ce);
+            log.error("oss delete ClientException:",ce);
         } finally {
             if (ossClient != null) {
                 ossClient.shutdown();

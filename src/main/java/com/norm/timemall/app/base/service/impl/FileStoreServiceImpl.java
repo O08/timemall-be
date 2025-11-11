@@ -93,9 +93,9 @@ public class FileStoreServiceImpl implements FileStoreService {
         if(StrUtil.isEmpty(uri)){
             return true;
         }
-        // 匹配到私有前缀 为私有文件 uri 与 objectName 相同
+        // 匹配到私有前缀 为私有文件 uri 需去掉 第一个斜杠以及etag
         if(uri.startsWith(limitedFileAccessPrefix)){
-            aliOssClientUtil.deleteLimitedBucketFile(uri);
+            aliOssClientUtil.deleteLimitedBucketFile(uri.substring(1,uri.lastIndexOf("?")));
         }
         if(!uri.startsWith(limitedFileAccessPrefix)){
             // 公共访问文件 去掉uri前缀从而获取objectName

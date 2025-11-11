@@ -3,25 +3,23 @@ package com.norm.timemall.app.team.controller;
 import cn.hutool.core.io.FileTypeUtil;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.AppFbFeedHighlightEnum;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.FileStoreDir;
-import com.norm.timemall.app.base.enums.MsgTypeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
+import com.norm.timemall.app.base.exception.QuickMessageException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
+import com.norm.timemall.app.base.mo.AppFbFeedAttachments;
 import com.norm.timemall.app.base.service.FileStoreService;
 import com.norm.timemall.app.ms.constant.ChatSupportUploadImageFormat;
 import com.norm.timemall.app.team.domain.dto.*;
+import com.norm.timemall.app.team.domain.ro.TeamAppFbFetchAttachmentsRO;
 import com.norm.timemall.app.team.domain.ro.TeamAppFbFetchCommentRO;
 import com.norm.timemall.app.team.domain.ro.TeamAppFbFetchFeedsPageRO;
 import com.norm.timemall.app.team.domain.ro.TeamAppFbFetchFeedRO;
-import com.norm.timemall.app.team.domain.vo.TeamAppFbFetchCommentPageVO;
-import com.norm.timemall.app.team.domain.vo.TeamAppFbFetchFeedsPageVO;
-import com.norm.timemall.app.team.domain.vo.TeamAppFbFetchFeedVO;
-import com.norm.timemall.app.team.domain.vo.TeamAppFbFetchGuideVO;
+import com.norm.timemall.app.team.domain.vo.*;
 import com.norm.timemall.app.team.service.TeamAppFbService;
 import com.norm.timemall.app.team.service.TeamDataPolicyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 @RestController
@@ -269,6 +268,69 @@ public class TeamAppFbController {
         teamAppFbService.doPostComment(dto);
         return new SuccessVO(CodeEnum.SUCCESS);
 
+    }
+    @GetMapping("/api/open/v1/app/feed/{id}/attachments")
+    public TeamAppFbFetchAttachmentsVO fbFetchAttachments(@PathVariable("id") String feedId){
+        ArrayList<TeamAppFbFetchAttachmentsRO> attachments=teamAppFbService.findAttachments(feedId);
+        TeamAppFbFetchAttachmentsVO vo = new TeamAppFbFetchAttachmentsVO();
+        vo.setAttachments(attachments);
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        return vo;
+    }
+
+    @DeleteMapping("/api/v1/app/feed/attachment/{id}/del")
+    public SuccessVO delOneAttachment(@PathVariable("id") String id){
+        AppFbFeedAttachments attachment=teamAppFbService.findOneAttachment(id);
+        if(attachment==null){
+            throw new QuickMessageException("未找到相关文件资料");
+        }
+        TeamAppFbFetchFeedRO feed = teamAppFbService.retrieveOneFeedInfo(attachment.getFeedId());
+        // only author and admin can execute remove operation
+
+        if(feed==null){
+            throw new QuickMessageException("未找到相关帖子资料");
+        }
+
+        String currentUserBrandId= SecurityUserHelper.getCurrentPrincipal().getBrandId();
+
+        boolean notAuthor  = !currentUserBrandId.equals(feed.getAuthorBrandId());
+        boolean notAdmin = !teamDataPolicyService.validateChannelAdminRoleUseFeedId(id);
+
+        if(notAuthor && notAdmin){
+            throw new QuickMessageException("权限校验不通过");
+        }
+        // remove from db
+        teamAppFbService.removeAttachment(id);
+        // remove from oss
+        fileStoreService.deleteFile(attachment.getFileUri());
+        return new SuccessVO(CodeEnum.SUCCESS);
+    }
+    @PostMapping("/api/v1/app/feed/attachment/add")
+    public SuccessVO addAttachment(@Validated TeamAppFbNewAttachmentDTO dto) throws IOException {
+        if( dto.getAttachment()==null || dto.getAttachment().isEmpty()){
+            throw new ErrorCodeException(CodeEnum.FILE_IS_EMPTY);
+        }
+        TeamAppFbFetchFeedRO feed = teamAppFbService.retrieveOneFeedInfo(dto.getFeedId());
+        // only author  can execute  operation
+        if(feed==null){
+            throw new QuickMessageException("未找到相关帖子资料");
+        }
+        String currentUserBrandId= SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        boolean notAuthor  = !currentUserBrandId.equals(feed.getAuthorBrandId());
+        if(notAuthor ){
+            throw new QuickMessageException("权限校验不通过");
+        }
+        // store file to oss
+        String fileUri=fileStoreService.storeWithLimitedAccess(dto.getAttachment(),FileStoreDir.FEED_ATTACHMENTS);
+        String fileName= dto.getAttachment().getOriginalFilename();
+        String fileType= "";
+        if (fileName != null) {
+            fileType = fileName.substring(fileName.lastIndexOf(".")+1);
+        }
+
+        // store to db
+        teamAppFbService.addOneAttachment(dto.getFeedId(),fileUri,fileType,fileName);
+        return new SuccessVO(CodeEnum.SUCCESS);
     }
 
 }

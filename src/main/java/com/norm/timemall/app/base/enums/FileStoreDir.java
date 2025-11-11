@@ -30,8 +30,8 @@ public enum FileStoreDir {
     APP_DESK_ELEMENT_ICON("app/desk/icon", "app desk element icon dir"),
     PROPOSAL_MATERIAL("proposal/material", "proposal material dir"),
     APP_REDEEM_THUMBNAIL("app/redeem/thumbnail", "app redeem thumbnail data"),
-    APP_REDEEM_DELIVER("app/redeem/deliver", "app redeem deliver data"), OASIS_MEMBERSHIP_THUMBNAIL("oasis/membership","oasis membership thumbnail" )
-    ;
+    APP_REDEEM_DELIVER("app/redeem/deliver", "app redeem deliver data"), OASIS_MEMBERSHIP_THUMBNAIL("oasis/membership","oasis membership thumbnail" ),
+    FEED_ATTACHMENTS("app/feed/attachment", "app feed attachment store");
     private final String dir;
 
     private final String desc;
