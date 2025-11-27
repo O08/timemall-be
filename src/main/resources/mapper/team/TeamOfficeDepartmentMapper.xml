@@ -11,7 +11,7 @@
 
     <select id="selectPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamOfficeQueryDepartmentPageRO">
         select
-          d.id,d.create_at,d.description,d.title,d.total_staff,e.employee_name leaderName
+          d.id,d.create_at,d.description,d.title,d.total_staff,e.employee_name leaderName,d.leader_employee_id
         from office_department d
         left join office_employee e
           on d.leader_employee_id=e.id

@@ -11,6 +11,7 @@ public class TeamOfficeQueryDepartmentPageRO {
     private String id;
     @FieldEncrypt(algorithm = Algorithm.AES)
     private String leaderName;
+    private String leaderEmployeeId;
     private String title;
     private String totalStaff;
 }
