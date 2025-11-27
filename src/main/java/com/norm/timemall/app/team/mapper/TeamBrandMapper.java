@@ -21,4 +21,6 @@ import org.apache.ibatis.annotations.Select;
 public interface TeamBrandMapper extends BaseMapper<Brand> {
 
     IPage<TeamTalentRO> selectPageByQ(IPage<TeamTalentRO> page, @Param("dto") TeamTalentPageDTO dto);
+@Select("select * from brand where customer_id=#{uid}")
+    Brand selectByUid(@Param("uid") String uid);
 }

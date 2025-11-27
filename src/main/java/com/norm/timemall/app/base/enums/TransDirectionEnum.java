@@ -1,5 +1,6 @@
 package com.norm.timemall.app.base.enums;
 
+
 public enum TransDirectionEnum {
     DEBIT(-1,"债务"),
     CREDIT(1,"债权");
@@ -9,6 +10,15 @@ public enum TransDirectionEnum {
     TransDirectionEnum(Integer mark, String desc) {
         this.mark = mark;
         this.desc = desc;
+    }
+
+    public static boolean validation(Integer value) {
+        for (TransDirectionEnum s : TransDirectionEnum.values()) {
+            if (s.getMark()==value) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Integer getMark() {

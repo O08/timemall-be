@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamOfficeEmployeeMaterialMapper">
+    <sql id="tableName">
+        office_employee_material
+    </sql>
+
+    <sql id="baseColumn">
+        id,employee_id,material_name,material_uri,remark,create_at,modified_at
+    </sql>
+
+
+    <select id="selectPageByEmployeeId" resultType="com.norm.timemall.app.team.domain.ro.TeamOfficeFetchEmployeeMaterialPageRO">
+
+        select
+          m.id as materialId,m.material_name,m.material_uri,m.remark,m.create_at
+        from office_employee_material m
+        where
+        1 = 1
+        and m.employee_id=#{dto.id}
+        order by m.create_at desc
+
+
+    </select>
+</mapper>

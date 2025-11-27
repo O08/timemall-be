@@ -31,7 +31,9 @@ public enum FileStoreDir {
     PROPOSAL_MATERIAL("proposal/material", "proposal material dir"),
     APP_REDEEM_THUMBNAIL("app/redeem/thumbnail", "app redeem thumbnail data"),
     APP_REDEEM_DELIVER("app/redeem/deliver", "app redeem deliver data"), OASIS_MEMBERSHIP_THUMBNAIL("oasis/membership","oasis membership thumbnail" ),
-    FEED_ATTACHMENTS("app/feed/attachment", "app feed attachment store");
+    FEED_ATTACHMENTS("app/feed/attachment", "app feed attachment store"),
+    PAYROLL_EMPLOYEE_MATERIAL("payroll/employee/material","payroll employee material store" )
+    ;
     private final String dir;
 
     private final String desc;

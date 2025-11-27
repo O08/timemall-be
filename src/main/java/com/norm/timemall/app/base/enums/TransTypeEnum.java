@@ -26,9 +26,9 @@ public enum TransTypeEnum {
     BUY_ELECTRICITY_PAY("22", "购买电力值"),
     BUY_BLUE_VIP_PAY("23", "购买会员"),
     PAY_OASIS_MEMBERSHIP("24","订阅部落会员"),
-    OASIS_MEMBERSHIP_REFUND("25","部落会员退款")
+    OASIS_MEMBERSHIP_REFUND("25","部落会员退款"),
 
-    ;
+    PAY_OASIS_EMPLOYEE("26", "支付薪资、福利");
     private String mark;
     private String desc;
 

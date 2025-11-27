@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamOfficeEmployeeCompensationMapper">
+    <sql id="tableName">
+        office_employee_compensation
+    </sql>
+
+    <sql id="baseColumn">
+        id,employee_id,compensation_id,create_at,modified_at
+    </sql>
+
+    <select id="selectEmployeeCompensationInfoByEmployeeId" resultType="com.norm.timemall.app.team.domain.ro.TeamOfficeFetchEmployeeCompensationInfoPageRO">
+        select
+          c.title,c.amount,c.direction,c.status,ec.create_at
+        from office_employee_compensation ec
+        inner join office_compensation c
+          on ec.compensation_id=c.id
+        where
+        1 = 1
+        and ec.employee_id=#{dto.id}
+        order by ec.create_at
+
+
+    </select>
+
+    <select id="selectEmployeeCompensationConfigInfoByEmployeeId" resultType="com.norm.timemall.app.team.domain.ro.TeamOfficeFetchEmployeeCompensationConfigInfoPageRO">
+        select c.id, c.title,c.amount,c.direction,c.status,c.create_at, if(ec.id is null,'0','1') assigned
+        from office_compensation c
+        left join office_employee_compensation ec
+          on c.id=ec.compensation_id
+           and ec.employee_id=#{dto.employeeId}
+        where
+        1 = 1
+        and c.oasis_id=#{dto.oasisId}
+
+        <if test="dto.q != null and dto.q != ''">
+            AND (locate(#{dto.q}, c.title)>0 or locate(#{dto.q}, c.description)>0)
+        </if>
+
+        order by c.create_at desc
+
+    </select>
+
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamOfficeDepartmentMapper">
+    <sql id="tableName">
+        office_department
+    </sql>
+
+    <sql id="baseColumn">
+        id,oasis_id,title,description,leader_employee_id,create_at,modified_at
+    </sql>
+
+    <select id="selectPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamOfficeQueryDepartmentPageRO">
+        select
+          d.id,d.create_at,d.description,d.title,d.total_staff,e.employee_name leaderName
+        from office_department d
+        left join office_employee e
+          on d.leader_employee_id=e.id
+        where
+        1 = 1
+        and d.oasis_id=#{dto.oasisId}
+        <if test="dto.q != null and dto.q != ''">
+            AND (locate(#{dto.q}, d.title)>0 or locate(#{dto.encryptedQ}, e.employee_name)>0)
+        </if>
+
+        order by d.create_at desc
+
+    </select>
+
+</mapper>
