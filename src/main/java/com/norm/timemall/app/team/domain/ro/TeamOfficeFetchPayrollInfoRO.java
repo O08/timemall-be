@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 @Data
 public class TeamOfficeFetchPayrollInfoRO {
+    private String title;
     private OfficeEmployeeBenefitRO benefit;
     private String birthdate;
     private ArrayList<OfficeEmployeeCompensationRO> compensation;
