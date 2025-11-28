@@ -14,4 +14,7 @@ public class TeamOfficeQueryEmployeePageRO {
     private String officeLocation;
     private String role;
     private String status;
+    private String genre;
+    private String salary;
+    private String level;
 }
