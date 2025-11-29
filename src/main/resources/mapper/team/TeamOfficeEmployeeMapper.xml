@@ -68,7 +68,7 @@
     <select id="selectBasicInfoById" resultType="com.norm.timemall.app.team.domain.ro.TeamOfficeFetchEmployeeBasicInfoRO">
         select e.department_id, e.employee_number,e.id as employeeId,e.employee_name,e.uid as employeeUid,e.employee_brand_id,e.gender,
            e.birthdate,e.education,e.major,e.phone,e.email,d.title department,e.role,e.level,e.office_location,e.hire_date,
-           e.net_worth,e.status,e.genre,e.salary,e.remark
+           e.net_worth,e.status,e.genre,e.salary,e.remark,e.oasis_id
         from office_employee e
         inner join office_department d
         on e.department_id=d.id

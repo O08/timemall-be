@@ -31,4 +31,5 @@ public class TeamOfficeFetchEmployeeBasicInfoRO {
     private String role;
     private String salary;
     private String status;
+    private String oasisId;
 }
