@@ -126,7 +126,7 @@ public class TeamOfficeEmployeeController {
         return new SuccessVO(CodeEnum.SUCCESS);
     }
 
-    @PutMapping("/api/v1/team/office/employee/kv/new")
+    @PostMapping("/api/v1/team/office/employee/kv/new")
     public SuccessVO createEmployeeKvPair(@Validated @RequestBody TeamOfficeCreateEmployeeKvPairDTO dto){
         // validate role
         teamOfficeEmployeeService.validateCurrentUserIsEmployeeAdmin(dto.getEmployeeId());
