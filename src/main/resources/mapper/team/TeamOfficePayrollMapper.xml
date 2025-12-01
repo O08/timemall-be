@@ -33,6 +33,7 @@
         <result property="employeeNumber" column="employee_number"/>
         <result property="employeeId" column="employee_id"/>
         <result property="employeeName" column="employee_name"/>
+        <result property="employeePhoto" column="employeePhoto"/>
         <result property="employeeUid" column="employeeUid"/>
         <result property="employeeBrandId" column="employee_brand_id"/>
         <result property="gender" column="gender"/>
@@ -72,7 +73,7 @@
     <select id="selectOnePayrollById"  resultMap="selectOnePayrollResultMap">
 
         select
-          p.title,e.employee_number,p.employee_id,e.employee_name,e.uid as employeeUid,e.employee_brand_id,e.gender,e.birthdate,e.education,e.major,e.phone,
+          e.photo as employeePhoto, p.title,e.employee_number,p.employee_id,e.employee_name,e.uid as employeeUid,e.employee_brand_id,e.gender,e.birthdate,e.education,e.major,e.phone,
           e.email,p.employee_department,p.employee_role,e.level,e.office_location,e.hire_date,e.status employeeStatus,e.genre,e.salary,
           p.status as payrollStatus,p.category as payrollCategory,p.gross_pay,p.deductions,p.withhold_and_remit_tax,p.net_pay,p.benefits,p.compensations
         from office_payroll p
