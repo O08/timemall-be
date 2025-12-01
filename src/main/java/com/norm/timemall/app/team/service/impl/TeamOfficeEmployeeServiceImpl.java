@@ -276,11 +276,12 @@ public class TeamOfficeEmployeeServiceImpl implements TeamOfficeEmployeeService 
     }
 
     @Override
-    public void doSaveEmployeeMaterialInfo(String employeeId, String materialName, String materialUri) {
+    public void doSaveEmployeeMaterialInfo(String employeeId, String materialName, String materialUri,Long size) {
         OfficeEmployeeMaterial material=new OfficeEmployeeMaterial();
         material.setId(IdUtil.simpleUUID())
                 .setMaterialName(materialName)
                 .setMaterialUri(materialUri)
+                .setSize(size)
                 .setEmployeeId(employeeId)
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
@@ -338,6 +339,18 @@ public class TeamOfficeEmployeeServiceImpl implements TeamOfficeEmployeeService 
         validateCurrentUserIsEmployeeAdmin(material.getEmployeeId());
 
         material.setRemark(dto.getRemark());
+        material.setModifiedAt(new Date());
+        teamOfficeEmployeeMaterialMapper.updateById(material);
+    }
+
+    @Override
+    public void renameEmployeeMaterial(TeamOfficeRenameEmployeeMaterialDTO dto) {
+        OfficeEmployeeMaterial material=teamOfficeEmployeeMaterialMapper.selectById(dto.getId());
+        if(material==null){
+            throw new QuickMessageException("未找到相关员工材料");
+        }
+        validateCurrentUserIsEmployeeAdmin(material.getEmployeeId());
+        material.setMaterialName(dto.getMaterialName());
         material.setModifiedAt(new Date());
         teamOfficeEmployeeMaterialMapper.updateById(material);
     }

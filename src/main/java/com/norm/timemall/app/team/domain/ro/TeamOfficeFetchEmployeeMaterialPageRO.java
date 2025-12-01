@@ -9,5 +9,6 @@ public class TeamOfficeFetchEmployeeMaterialPageRO {
     private String materialUri;
     private String remark;
     private String createAt;
+    private String materialSize;
 
 }

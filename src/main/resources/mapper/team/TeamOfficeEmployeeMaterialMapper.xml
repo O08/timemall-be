@@ -13,7 +13,7 @@
     <select id="selectPageByEmployeeId" resultType="com.norm.timemall.app.team.domain.ro.TeamOfficeFetchEmployeeMaterialPageRO">
 
         select
-          m.id as materialId,m.material_name,m.material_uri,m.remark,m.create_at
+          m.id as materialId,m.material_name,m.material_uri,m.remark,m.create_at,m.size as materialSize
         from office_employee_material m
         where
         1 = 1

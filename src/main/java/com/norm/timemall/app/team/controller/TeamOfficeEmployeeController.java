@@ -16,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.InvalidPathException;
+import java.nio.file.Paths;
+
 @RestController
 public class TeamOfficeEmployeeController {
 
@@ -120,7 +123,8 @@ public class TeamOfficeEmployeeController {
         // store file to oss
         String  materialUri = fileStoreService.storeWithLimitedAccess(dto.getMaterialFile(), FileStoreDir.PAYROLL_EMPLOYEE_MATERIAL);
 
-        teamOfficeEmployeeService.doSaveEmployeeMaterialInfo(dto.getEmployeeId(),materialName,materialUri);
+        long fileSize = dto.getMaterialFile().getSize();
+        teamOfficeEmployeeService.doSaveEmployeeMaterialInfo(dto.getEmployeeId(),materialName,materialUri,fileSize);
 
 
         return new SuccessVO(CodeEnum.SUCCESS);
@@ -162,4 +166,19 @@ public class TeamOfficeEmployeeController {
         teamOfficeEmployeeService.remarkEmployeeMaterial(dto);
         return new SuccessVO(CodeEnum.SUCCESS);
     }
+    @PutMapping("/api/v1/team/office/employee/material/rename")
+    public SuccessVO renameEmployeeMaterial(@Validated @RequestBody TeamOfficeRenameEmployeeMaterialDTO dto){
+
+        validateStringFilenameUsingNIO2(dto.getMaterialName());
+        teamOfficeEmployeeService.renameEmployeeMaterial(dto);
+        return new SuccessVO(CodeEnum.SUCCESS);
+    }
+    public static void validateStringFilenameUsingNIO2(String filename) {
+        try {
+            Paths.get(filename);
+        }catch (InvalidPathException e){
+            throw new QuickMessageException("文件名包含不支持字符");
+        }
+    }
+
 }

@@ -30,7 +30,7 @@ public interface TeamOfficeEmployeeService {
 
     void doConfigEmployeeCompensation(TeamOfficeConfigEmployeeCompensationDTO dto);
 
-    void doSaveEmployeeMaterialInfo(String employeeId, String materialName, String materialUri);
+    void doSaveEmployeeMaterialInfo(String employeeId, String materialName, String materialUri,Long size);
 
     void validateCurrentUserIsEmployeeAdmin(String employeeId);
 
@@ -43,4 +43,6 @@ public interface TeamOfficeEmployeeService {
     void doRemoveEmployeeMaterial(String id);
 
     void remarkEmployeeMaterial(TeamOfficeRemarkEmployeeMaterialDTO dto);
+
+    void renameEmployeeMaterial(TeamOfficeRenameEmployeeMaterialDTO dto);
 }

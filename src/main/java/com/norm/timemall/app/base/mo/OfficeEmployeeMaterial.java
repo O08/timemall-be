@@ -4,6 +4,7 @@ import java.io.Serializable;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+
 import java.util.Date;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -44,6 +45,10 @@ public class OfficeEmployeeMaterial extends Model<OfficeEmployeeMaterial> implem
      * remark
      */
     private String remark;
+    /**
+     * file size
+     */
+    private Long size;
     /**
      * createAt
      */
