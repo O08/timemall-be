@@ -355,6 +355,15 @@ public class TeamOfficeEmployeeServiceImpl implements TeamOfficeEmployeeService 
         teamOfficeEmployeeMaterialMapper.updateById(material);
     }
 
+    @Override
+    public void doChangeEmployeePhoto(String employeeId, String photoUri) {
+        LambdaUpdateWrapper<OfficeEmployee> updateWrapper=Wrappers.lambdaUpdate();
+        updateWrapper.eq(OfficeEmployee::getId,employeeId);
+        updateWrapper.set(OfficeEmployee::getPhoto,photoUri);
+        updateWrapper.set(OfficeEmployee::getModifiedAt,new Date());
+        teamOfficeEmployeeMapper.update(updateWrapper);
+    }
+
     private void doCreateEmployeeBenefit(TeamOfficeTypeInEmployeeDTO dto,String employeeId){
         OfficeEmployeeBenefit benefit = new OfficeEmployeeBenefit();
         benefit.setId(IdUtil.simpleUUID())

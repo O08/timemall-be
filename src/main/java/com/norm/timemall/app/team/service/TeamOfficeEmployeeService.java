@@ -45,4 +45,7 @@ public interface TeamOfficeEmployeeService {
     void remarkEmployeeMaterial(TeamOfficeRemarkEmployeeMaterialDTO dto);
 
     void renameEmployeeMaterial(TeamOfficeRenameEmployeeMaterialDTO dto);
+
+    void doChangeEmployeePhoto(String employeeId, String photoUri);
+
 }

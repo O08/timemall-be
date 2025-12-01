@@ -14,6 +14,7 @@ public class TeamOfficeFetchEmployeeBasicInfoRO {
     private String employeeId;
     @FieldEncrypt(algorithm = Algorithm.AES)
     private String employeeName;
+    private String photo;
     private String employeeUid;
     private String employeeNumber;
     private String gender;

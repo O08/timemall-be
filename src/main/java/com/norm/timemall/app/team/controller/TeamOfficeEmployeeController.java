@@ -1,5 +1,6 @@
 package com.norm.timemall.app.team.controller;
 
+import cn.hutool.core.io.FileTypeUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
@@ -8,6 +9,7 @@ import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.exception.QuickMessageException;
 import com.norm.timemall.app.base.mo.OfficeEmployeeMaterial;
 import com.norm.timemall.app.base.service.FileStoreService;
+import com.norm.timemall.app.ms.constant.ChatSupportUploadImageFormat;
 import com.norm.timemall.app.team.domain.dto.*;
 import com.norm.timemall.app.team.domain.ro.*;
 import com.norm.timemall.app.team.domain.vo.*;
@@ -16,8 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 @RestController
 public class TeamOfficeEmployeeController {
@@ -108,6 +112,31 @@ public class TeamOfficeEmployeeController {
     @PutMapping("/api/v1/team/office/employee/compensation/config")
     public SuccessVO configEmployeeCompensation(@Validated @RequestBody TeamOfficeConfigEmployeeCompensationDTO dto){
         teamOfficeEmployeeService.doConfigEmployeeCompensation(dto);
+        return new SuccessVO(CodeEnum.SUCCESS);
+    }
+    @PutMapping("/api/v1/team/office/employee/photo/change")
+    public SuccessVO changeEmployeePhoto(@Validated TeamOfficeChangeEmployeePhotoDTO dto) throws IOException {
+        // validate file
+        if(dto.getPhotoFile() == null || dto.getPhotoFile().isEmpty()){
+            throw new ErrorCodeException(CodeEnum.FILE_IS_EMPTY);
+        }
+        // validate file type
+        String fileType= FileTypeUtil.getType(dto.getPhotoFile().getInputStream());
+        boolean notInExtensions = Arrays.stream(ChatSupportUploadImageFormat.extensions).noneMatch(e->e.equals(fileType));
+        if(notInExtensions){
+            throw new ErrorCodeException(CodeEnum.FILE_FORMAT_NOT_SUPPORT);
+        }
+        // validate role and query info
+        TeamOfficeFetchEmployeeBasicInfoRO employeeBasicInfo = teamOfficeEmployeeService.findEmployeeBasicInfo(dto.getEmployeeId());
+
+        // store file to oss
+        String  photoUri = fileStoreService.storeWithLimitedAccess(dto.getPhotoFile(), FileStoreDir.PAYROLL_EMPLOYEE_PHOTO);
+
+        teamOfficeEmployeeService.doChangeEmployeePhoto(dto.getEmployeeId(),photoUri);
+
+        // delete old data from oss
+        fileStoreService.deleteFile(employeeBasicInfo.getPhoto());
+
         return new SuccessVO(CodeEnum.SUCCESS);
     }
     @PostMapping("/api/v1/team/office/employee/material/upload")

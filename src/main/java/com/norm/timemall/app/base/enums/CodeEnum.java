@@ -51,6 +51,7 @@ public enum CodeEnum implements Code{
     FILE_IS_EMPTY(3001,"空文件"),
     FILE_STORE_FAIL(3002,"存储文件失败"),
     FILE_IMAGE_AVIF_NOT_SUPPORT(3003,"Avif format not support" ),
+    FILE_FORMAT_NOT_SUPPORT(3004,"文件格式不支持" ),
 
     // business 4....
     BILL_NOT_EXIST(40001,"账单不存在" ),

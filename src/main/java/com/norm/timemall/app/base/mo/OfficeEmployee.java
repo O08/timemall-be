@@ -50,6 +50,8 @@ public class OfficeEmployee extends Model<OfficeEmployee> implements Serializabl
      */
     @FieldEncrypt(algorithm = Algorithm.AES)
     private String employeeName;
+
+    private String photo;
     /**
      * gender
      */
