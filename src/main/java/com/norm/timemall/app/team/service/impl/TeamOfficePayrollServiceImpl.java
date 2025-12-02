@@ -281,7 +281,16 @@ public class TeamOfficePayrollServiceImpl implements TeamOfficePayrollService {
 
     @Override
     public TeamOfficeFetchPayrollInfoRO findPayrollInfo(String id) {
-        return teamOfficePayrollMapper.selectOnePayrollById(id);
+
+        TeamOfficeFetchPayrollInfoRO ro = teamOfficePayrollMapper.selectOnePayrollById(id);
+
+        String authentication = matchUserPayrollRole(ro);
+        if(authentication.equals("illegal_user")){
+            throw new ErrorCodeException(CodeEnum.USER_ROLE_NOT_CORRECT);
+        }
+        ro.setAuthentication(authentication);
+
+        return ro;
     }
 
     @Override
@@ -542,6 +551,19 @@ public class TeamOfficePayrollServiceImpl implements TeamOfficePayrollService {
             throw new QuickMessageException("实发薪资为0或负值");
         }
         return dto.getGrossAmount().subtract(writeDown);
+    }
+
+    private String matchUserPayrollRole(TeamOfficeFetchPayrollInfoRO ro){
+        String authentication="illegal_user";
+        String currentBrandId= SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        Oasis oasis = teamOasisMapper.selectById(ro.getOasisId());
+        if(ro.getEmployeeBrandId().equals(currentBrandId)){
+            authentication="employee";
+        }
+        if(oasis.getInitiatorId().equals(currentBrandId)){
+            authentication="admin";
+        }
+        return authentication;
     }
 
 

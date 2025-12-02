@@ -40,4 +40,7 @@ public class TeamOfficeFetchPayrollInfoRO {
     private String role;
     private String salary;
     private String employeeStatus;
+    // enum: admin or employee
+    private String authentication;
+    private String oasisId;
 }

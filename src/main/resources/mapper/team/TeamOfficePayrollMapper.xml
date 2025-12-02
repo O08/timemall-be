@@ -56,6 +56,8 @@
         <result property="deductions" column="deductions"/>
         <result property="withholdAndRemitTax" column="withhold_and_remit_tax"/>
         <result property="netPay" column="net_pay"/>
+        <result property="oasisId" column="oasis_id"/>
+
 
 
         <result property="benefit"
@@ -73,7 +75,7 @@
     <select id="selectOnePayrollById"  resultMap="selectOnePayrollResultMap">
 
         select
-          e.photo as employeePhoto, p.title,e.employee_number,p.employee_id,e.employee_name,e.uid as employeeUid,e.employee_brand_id,e.gender,e.birthdate,e.education,e.major,e.phone,
+          e.oasis_id, e.photo as employeePhoto, p.title,e.employee_number,p.employee_id,e.employee_name,e.uid as employeeUid,e.employee_brand_id,e.gender,e.birthdate,e.education,e.major,e.phone,
           e.email,p.employee_department,p.employee_role,e.level,e.office_location,e.hire_date,e.status employeeStatus,e.genre,e.salary,
           p.status as payrollStatus,p.category as payrollCategory,p.gross_pay,p.deductions,p.withhold_and_remit_tax,p.net_pay,p.benefits,p.compensations
         from office_payroll p
