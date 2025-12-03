@@ -82,6 +82,14 @@ public class TeamOfficeEmployeeServiceImpl implements TeamOfficeEmployeeService 
 
         validateUserIsAdmin(department.getOasisId());
 
+        // validate employee number
+        LambdaQueryWrapper<OfficeEmployee> employeeLambdaQueryWrapper=Wrappers.lambdaQuery();
+        employeeLambdaQueryWrapper.eq(OfficeEmployee::getOasisId,department.getOasisId());
+        employeeLambdaQueryWrapper.eq(OfficeEmployee::getEmployeeNumber,dto.getEmployeeNumber());
+        boolean employeeNumberExists = teamOfficeEmployeeMapper.exists(employeeLambdaQueryWrapper);
+        if(employeeNumberExists){
+            throw new QuickMessageException("工号已被使用，请检查");
+        }
         // validate uid
         Customer employee = customerMapper.selectById(dto.getUid());
         if(employee==null){
