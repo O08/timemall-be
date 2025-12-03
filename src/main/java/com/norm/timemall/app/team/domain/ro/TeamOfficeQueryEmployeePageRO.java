@@ -17,4 +17,5 @@ public class TeamOfficeQueryEmployeePageRO {
     private String genre;
     private String salary;
     private String level;
+    private String photo;
 }

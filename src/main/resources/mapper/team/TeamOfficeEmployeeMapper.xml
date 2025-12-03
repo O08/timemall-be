@@ -10,7 +10,7 @@
     </sql>
 
     <select id="selectPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamOfficeQueryEmployeePageRO">
-        select e.id,e.employee_name,e.role,d.title department ,e.office_location,e.hire_date,e.status,e.genre,e.salary,e.level
+        select e.photo, e.id,e.employee_name,e.role,d.title department ,e.office_location,e.hire_date,e.status,e.genre,e.salary,e.level
         from office_employee e
         inner join office_department d
           on e.department_id=d.id
