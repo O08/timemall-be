@@ -284,6 +284,10 @@ public class TeamOfficePayrollServiceImpl implements TeamOfficePayrollService {
 
         TeamOfficeFetchPayrollInfoRO ro = teamOfficePayrollMapper.selectOnePayrollById(id);
 
+        if(ro==null){
+            throw new ErrorCodeException(CodeEnum.NOT_FOUND_DATA);
+        }
+
         String authentication = matchUserPayrollRole(ro);
         if(authentication.equals("illegal_user")){
             throw new ErrorCodeException(CodeEnum.USER_ROLE_NOT_CORRECT);
@@ -358,7 +362,7 @@ public class TeamOfficePayrollServiceImpl implements TeamOfficePayrollService {
         salaryItem.setTitle(dto.getTitle());
         salaryItem.setAmount(dto.getAmount());
         salaryItem.setDirection(dto.getDirection());
-        compensationArr.add(salaryItem);
+        compensationArr.addFirst(salaryItem);
 
         // refresh money data
         BigDecimal deductions = compensationArr.stream().filter(x->x.getDirection()==-1).map(OfficeEmployeeCompensationRO::getAmount)
