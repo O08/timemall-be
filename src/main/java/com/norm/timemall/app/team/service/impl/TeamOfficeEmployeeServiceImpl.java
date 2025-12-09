@@ -176,6 +176,17 @@ public class TeamOfficeEmployeeServiceImpl implements TeamOfficeEmployeeService 
         LambdaUpdateWrapper<OfficeEmployee> updateWrapper=Wrappers.lambdaUpdate();
         updateWrapper.eq(OfficeEmployee::getId,employee.getId());
 
+        // encryption
+        if(CharSequenceUtil.isNotBlank(dto.getEmployeeName())){
+            dto.setEmployeeName(mybatisMateEncryptor.defaultEncrypt(dto.getEmployeeName()));
+        }
+        if(CharSequenceUtil.isNotBlank(dto.getPhone())){
+            dto.setPhone(mybatisMateEncryptor.defaultEncrypt(dto.getPhone()));
+        }
+        if(CharSequenceUtil.isNotBlank(dto.getEmail())){
+            dto.setEmail(mybatisMateEncryptor.defaultEncrypt(dto.getEmail()));
+        }
+
         updateWrapper
                 .set(OfficeEmployee::getEmployeeNumber,dto.getEmployeeNumber())
                 .set(OfficeEmployee::getEmployeeName,dto.getEmployeeName())

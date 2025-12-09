@@ -18,7 +18,7 @@
         where
         1 = 1
         and ec.employee_id=#{dto.id}
-        order by ec.create_at
+        order by ec.create_at desc
 
 
     </select>
