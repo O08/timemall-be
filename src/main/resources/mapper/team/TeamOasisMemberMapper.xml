@@ -18,7 +18,7 @@
           on d.oasis_id=m.oasis_id and d.brand_id=m.brand_id
         where m.oasis_id= #{oasis_id}
         <if test="q != null and q != ''">
-            AND (locate(#{q}, b.title)>0)
+            AND (locate(#{q}, b.title)>0 or locate(#{q}, b.brand_name)>0)
         </if>
         order by d.amount desc limit 100
 
