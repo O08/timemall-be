@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.gson.Gson;
+import com.norm.timemall.app.base.enums.BrandMarkEnum;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
@@ -134,6 +135,7 @@ public class StudioBrandServiceImpl implements StudioBrandService {
     public void modifyBrandBasic(String brandId, String userId, StudioBrandBasicInfoDTO dto) {
         LambdaQueryWrapper<Brand> wrapper=Wrappers.lambdaQuery();
         wrapper.eq(Brand::getBrandName,dto.getBrand());
+        wrapper.ne(Brand::getMark, BrandMarkEnum.CLOSED.getMark());
         Brand brand = studioBrandMapper.selectOne(wrapper);
         if(ObjectUtil.isNotNull(brand) && (!brandId.equals(brand.getId())) ){
             throw new ErrorCodeException(CodeEnum.USER_ACCOUNT_NAME_EXIST);
