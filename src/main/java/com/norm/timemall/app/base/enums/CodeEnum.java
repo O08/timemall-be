@@ -86,7 +86,8 @@ public enum CodeEnum implements Code{
     OASIS_LOCKED(40040,"部落已被封禁" ),
     REPEAT_REQUEST_REFUND(40041, "已退款，请勿重复请求"),
     USER_ROLE_NOT_CORRECT(40042,"身份校验不通过"),
-    NOT_FOUND_DATA(40043, "未找到相关数据");
+    NOT_FOUND_DATA(40043, "未找到相关数据"),
+    INVALID_STATUS(40045,"状态校验不通过" );
 
     private final int code;
     private final String desc;

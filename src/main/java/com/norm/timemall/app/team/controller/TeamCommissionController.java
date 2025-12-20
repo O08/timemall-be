@@ -55,7 +55,7 @@ public class TeamCommissionController {
     public SuccessVO acceptTask(@Validated @RequestBody TeamAcceptOasisTaskDTO dto){
         String role=teamApiAccessControlService.findCommissionWsRole(dto.getCommissionId());
         if(CommissionWsRoleEnum.ADMIN.getMark().equals(role)){
-            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+            throw new ErrorCodeException(CodeEnum.USER_ROLE_NOT_CORRECT);
         }
         try{
             orderFlowService.insertOrderFlow(dto.getCommissionId(), OasisCommissionTagEnum.ACCEPT.getMark());

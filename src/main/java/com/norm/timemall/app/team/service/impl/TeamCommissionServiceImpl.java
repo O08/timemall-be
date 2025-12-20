@@ -82,8 +82,12 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
         Commission commission = teamCommissionMapper.selectById(dto.getCommissionId());
 
         if(commission==null ||
-           !OasisCommissionTagEnum.ADD_TO_NEED_POOL.getMark().equals(commission.getTag())){
-            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+           !(
+                   OasisCommissionTagEnum.ADD_TO_NEED_POOL.getMark().equals(commission.getTag())
+                   || OasisCommissionTagEnum.FIND_NEW_SUPPLIER.getMark().equals(commission.getTag())
+           )
+        ){
+            throw new ErrorCodeException(CodeEnum.INVALID_STATUS);
         }
 
         teamCommissionMapper.updateCommissionByIdAndTag(
