@@ -35,16 +35,19 @@ public class TeamCommissionDeliverController {
     ){
 
         // validate
-        if(preview.isEmpty()|| deliver.isEmpty()|| StrUtil.isBlank(commissionId)){
+        if(preview==null || deliver==null || preview.isEmpty() || deliver.isEmpty()){
+            throw new ErrorCodeException(CodeEnum.FILE_IS_EMPTY);
+        }
+        if(StrUtil.isBlank(commissionId)){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
         String role=teamApiAccessControlService.findCommissionWsRole(commissionId);
         if(!CommissionWsRoleEnum.SUPPLIER.getMark().equals(role)){
-            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+            throw new ErrorCodeException(CodeEnum.USER_ROLE_NOT_CORRECT);
         }
         Commission commission = teamCommissionService.findCommissionUsingId(commissionId);
         if(!OasisCommissionTagEnum.ACCEPT.getMark().equals(commission.getTag())){
-            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+            throw new ErrorCodeException(CodeEnum.INVALID_STATUS);
         }
         // store file in classified
         String deliverUri = fileStoreService.storeWithLimitedAccess(deliver, FileStoreDir.COMMISSION_DELIVER);
