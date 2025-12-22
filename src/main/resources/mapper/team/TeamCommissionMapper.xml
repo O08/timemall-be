@@ -20,7 +20,7 @@
         1 = 1
         AND c.oasis_id = #{dto.oasisId}
         <if test="dto.q != null and dto.q != ''">
-            AND locate(#{dto.q}, c.title)>0
+            AND (locate(#{dto.q}, c.title)>0 or locate(#{dto.q}, b1.brand_name)>0 or locate(#{dto.q}, b.brand_name)>0)
         </if>
         <if test="dto.tag != null and dto.tag != ''">
             AND c.tag= #{dto.tag}
