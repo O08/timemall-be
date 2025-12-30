@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class FetchOneOasisChannelGeneralInfoRO {
-    private String channelDesc;
     private String channelName;
+    private String channelDesc;
+    private String oasisId;
 }

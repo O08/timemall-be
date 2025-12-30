@@ -17,9 +17,9 @@ public class MsGroupMemberRelServiceImpl implements MsGroupMemberRelService {
     @Autowired
     private MsGroupMemberRelMapper msGroupMemberRelMapper;
     @Override
-    public void banOneUser(String channel, String userId) {
+    public void banOneUser(String oasisId, String userId) {
 
-        msGroupMemberRelMapper.updatePolicyRelByChannelIdAndChannelTypeAndMemberId(channel, ChannelTypeEnum.DEFAULT.getMark(),
+        msGroupMemberRelMapper.updatePolicyRelByChannelIdAndChannelTypeAndMemberId(oasisId, ChannelTypeEnum.DEFAULT.getMark(),
                 userId, GroupMemberPolicyRelEnum.READ.getMark());
 
     }
@@ -35,10 +35,10 @@ public class MsGroupMemberRelServiceImpl implements MsGroupMemberRelService {
     }
 
     @Override
-    public boolean haveReadAndWriteForChannel(String channel) {
+    public boolean haveReadAndWriteForOasis(String oasisId) {
 
         LambdaQueryWrapper<GroupMemberRel> wrapper= Wrappers.lambdaQuery();
-        wrapper.eq(GroupMemberRel::getChannelId,channel)
+        wrapper.eq(GroupMemberRel::getChannelId,oasisId)
                 .eq(GroupMemberRel::getMemberId, SecurityUserHelper.getCurrentPrincipal().getUserId())
                 .eq(GroupMemberRel::getPolicyRel,GroupMemberPolicyRelEnum.READ_WRITE.getMark());
         return msGroupMemberRelMapper.exists(wrapper);

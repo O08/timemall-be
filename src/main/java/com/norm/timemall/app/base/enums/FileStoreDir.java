@@ -33,8 +33,8 @@ public enum FileStoreDir {
     APP_REDEEM_DELIVER("app/redeem/deliver", "app redeem deliver data"), OASIS_MEMBERSHIP_THUMBNAIL("oasis/membership","oasis membership thumbnail" ),
     FEED_ATTACHMENTS("app/feed/attachment", "app feed attachment store"),
     PAYROLL_EMPLOYEE_MATERIAL("payroll/employee/material","payroll employee material store" ),
-    PAYROLL_EMPLOYEE_PHOTO("payroll/employee/photo","payroll employee photo store" )
-    ;
+    PAYROLL_EMPLOYEE_PHOTO("payroll/employee/photo","payroll employee photo store" ),
+    VIBER_FILE("app/viber/oss", "app viber file dir");
     private final String dir;
 
     private final String desc;

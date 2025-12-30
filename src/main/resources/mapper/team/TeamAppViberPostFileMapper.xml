@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamAppViberPostFileMapper">
+    <sql id="tableName">
+        app_viber_post_file
+    </sql>
+
+    <sql id="baseColumn">
+        id,channel,scene,link,media_type,content_type,status,create_at,modified_at
+    </sql>
+
+    <update id="batchUpdateStatusByLink">
+        UPDATE app_viber_post_file
+        SET status = #{status}, modified_at = NOW()
+        WHERE link IN
+        <foreach collection="links" item="link" open="(" separator="," close=")">
+            #{link}
+        </foreach>
+    </update>
+
+</mapper>

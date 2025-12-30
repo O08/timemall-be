@@ -23,7 +23,7 @@ public interface TeamOasisChannelMapper extends BaseMapper<OasisChannel> {
     ArrayList<FetchOasisChannelListRO> selectChannelListByOasisId(@Param("oasisId") String oasisId,@Param("memberBrandId") String memberBrandId);
 
     boolean validateAdminRole(@Param("oasisChannelId") String oasisChannelId, @Param("founderBrandId") String founderBrandId);
-@Select("select channel_name,channel_desc from oasis_channel where id=#{id}")
+@Select("select oasis_id,channel_name,channel_desc from oasis_channel where id=#{id}")
     FetchOneOasisChannelGeneralInfoRO selectGeneralById(@Param("id") String och);
 
     ArrayList<FetchOasisChannelListRO> selectPublicChannelListByOasisId(@Param("oasisId") String oasisId);

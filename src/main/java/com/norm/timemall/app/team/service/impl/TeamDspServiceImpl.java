@@ -22,6 +22,7 @@ import com.norm.timemall.app.team.domain.ro.TeamGetDspOneCaseInfoBasicRO;
 import com.norm.timemall.app.team.domain.ro.TeamGetDspOneCaseInfoMaterialRO;
 import com.norm.timemall.app.team.domain.vo.TeamGetDspCaseMaterialVO;
 import com.norm.timemall.app.team.domain.vo.TeamGetDspOneCaseInfoVO;
+import com.norm.timemall.app.team.helper.TeamDspHelper;
 import com.norm.timemall.app.team.mapper.*;
 import com.norm.timemall.app.team.service.TeamDspService;
 import org.apache.commons.io.FilenameUtils;
@@ -72,6 +73,9 @@ public class TeamDspServiceImpl implements TeamDspService {
 
     @Autowired
     private TeamOasisMembershipOrderMapper teamOasisMembershipOrderMapper;
+
+    @Autowired
+    private TeamDspHelper teamDspHelper;
 
     @Override
     public void newCase(TeamDspAddCaseDTO dto,String materialName,String materialUrl) {
@@ -362,6 +366,10 @@ public class TeamDspServiceImpl implements TeamDspService {
                 break;
             case "部落会员":
                 defendantBrandId=getDefendantBrandIdFromOasisMembershipTierOrder(sceneUrl);
+                break;
+
+            case "Viber帖子":
+                defendantBrandId=teamDspHelper.getViberPostOasisAdminBrandId(sceneUrl);
                 break;
 
             default:

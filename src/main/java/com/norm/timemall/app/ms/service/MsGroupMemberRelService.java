@@ -5,11 +5,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface MsGroupMemberRelService {
-    void banOneUser(String channel, String userId);
+    void banOneUser(String oasisId, String userId);
 
     boolean beGroupMember(String channel);
 
-    boolean haveReadAndWriteForChannel(String channel);
+    boolean haveReadAndWriteForOasis(String oasisId);
 
     MsFetchGroupMemberProfile findOneMemberProfile(String channel, String memberUserId);
 

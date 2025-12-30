@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamAppViberCommentMapper">
+    <sql id="tableName">
+        app_viber_comment
+    </sql>
+
+    <sql id="baseColumn">
+        id,post_id,text_msg,author_brand_id,likes,diss,create_at,modified_at
+    </sql>
+
+    <select id="selectPageByPostId" resultType="com.norm.timemall.app.team.domain.ro.TeamAppViberFetchCommentPageRO">
+        SELECT
+            c.id AS cid,
+            c.text_msg AS textMsg,
+            c.likes,
+            c.diss AS dislike,
+            c.create_at AS createAt,
+            c.author_brand_id AS authorBrandId,
+            u.avator AS authorAvatar,
+            u.customer_id AS authorUserId,
+            u.brand_name AS authorName,
+            COALESCE(i.like_action, 0) AS interactLikeAction
+        FROM app_viber_comment c
+        LEFT JOIN brand u ON c.author_brand_id = u.id
+        LEFT JOIN app_viber_comment_interact i ON i.comment_id = c.id AND i.reader_brand_id = #{currentUserBrandId}
+        WHERE c.post_id = #{dto.postId}
+        ORDER BY c.create_at DESC
+    </select>
+
+</mapper>

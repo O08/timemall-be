@@ -61,7 +61,7 @@ public class MsGroupController {
     @PutMapping(value = "/api/v1/ms/group/{channel}/storeText")
     public SuccessVO storeGroupTextMessage(@PathVariable("channel") String channel, @RequestBody @Validated MsStoreDefaultTextMessageDTO dto){
 
-        boolean enableRW = msGroupMemberRelService.haveReadAndWriteForChannel(channel);
+        boolean enableRW = msGroupMemberRelService.haveReadAndWriteForOasis(channel);
         if(!enableRW || !MsgTypeEnum.TEXT.getMark().equals(dto.getMsgType())){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
@@ -87,7 +87,7 @@ public class MsGroupController {
         if(notInExtensions){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
-        boolean enableRW = msGroupMemberRelService.haveReadAndWriteForChannel(channel);
+        boolean enableRW = msGroupMemberRelService.haveReadAndWriteForOasis(channel);
         if(!enableRW){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
@@ -113,7 +113,7 @@ public class MsGroupController {
         if(file.isEmpty() ||  StrUtil.isBlank(msgType) || !MsgTypeEnum.ATTACHMENT.getMark().equals(msgType)){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
-        boolean enableRW = msGroupMemberRelService.haveReadAndWriteForChannel(channel);
+        boolean enableRW = msGroupMemberRelService.haveReadAndWriteForOasis(channel);
         if(!enableRW){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
