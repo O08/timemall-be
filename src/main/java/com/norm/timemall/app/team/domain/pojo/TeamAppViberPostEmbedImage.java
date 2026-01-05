@@ -9,6 +9,6 @@ public class TeamAppViberPostEmbedImage {
     private String innerUrl;
     private String link;
     private String contentType;
-    private String size;
+    private Integer size;
     private String type;
 }

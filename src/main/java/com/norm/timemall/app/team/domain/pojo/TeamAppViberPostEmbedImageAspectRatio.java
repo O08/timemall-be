@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class TeamAppViberPostEmbedImageAspectRatio {
-    private String height;
-    private String width;
+    private Integer height;
+    private Integer width;
 }

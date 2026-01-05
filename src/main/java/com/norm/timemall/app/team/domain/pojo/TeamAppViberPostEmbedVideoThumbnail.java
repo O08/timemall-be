@@ -6,6 +6,6 @@ import lombok.Data;
 public class TeamAppViberPostEmbedVideoThumbnail {
     private String url;
     private String contentType;
-    private String height;
-    private String width;
+    private Integer height;
+    private Integer width;
 }

@@ -370,8 +370,11 @@ public class TeamAppViberServiceImpl implements TeamAppViberService {
         boolean thirdPartyImagePostIsEmpty=embed != null && embed.getFacet().equals(AppViberPostEmbedFacetEnum.THIRD_PARTY_IMAGE.getCode())
                 && (embed.getImages()==null || embed.getImages().isEmpty());
 
-        boolean videoPostIsEmpty=embed != null && embed.getFacet().equals(AppViberPostEmbedFacetEnum.VIDEO.getCode())
+        boolean thirdPartyVideoPostIsEmpty=embed != null && embed.getFacet().equals(AppViberPostEmbedFacetEnum.THIRD_PARTY_VIDEO.getCode())
                 && (embed.getVideos()==null || embed.getVideos().isEmpty());
+
+        boolean thirdPartyAudioPostIsEmpty=embed != null && embed.getFacet().equals(AppViberPostEmbedFacetEnum.THIRD_PARTY_AUDIO.getCode())
+                && (embed.getAudios()==null || embed.getAudios().isEmpty());
 
         boolean linkPostIsEmpty=embed != null && embed.getFacet().equals(AppViberPostEmbedFacetEnum.LINK.getCode())
                 && (embed.getLinks()==null || embed.getLinks().isEmpty());
@@ -379,7 +382,7 @@ public class TeamAppViberServiceImpl implements TeamAppViberService {
 
 
         if(isEmptyTextMsgAndEmbed || facetNotValid || attachmentPostIsEmpty || imagePostIsEmpty
-                || thirdPartyImagePostIsEmpty || videoPostIsEmpty || linkPostIsEmpty)
+                || thirdPartyImagePostIsEmpty || thirdPartyVideoPostIsEmpty || thirdPartyAudioPostIsEmpty || linkPostIsEmpty)
         {
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
@@ -396,14 +399,17 @@ public class TeamAppViberServiceImpl implements TeamAppViberService {
         boolean thirdPartyImagePostExceedsLimit = embed != null && embed.getFacet().equals(AppViberPostEmbedFacetEnum.THIRD_PARTY_IMAGE.getCode())
                 && (embed.getImages() != null && embed.getImages().size() >= 50);
 
-        boolean videoPostExceedsLimit = embed != null && embed.getFacet().equals(AppViberPostEmbedFacetEnum.VIDEO.getCode())
+        boolean thirdPartyVideoPostExceedsLimit = embed != null && embed.getFacet().equals(AppViberPostEmbedFacetEnum.THIRD_PARTY_VIDEO.getCode())
                 && (embed.getVideos() != null && embed.getVideos().size() >= 2);
+
+        boolean thirdPartyAudioPostExceedsLimit = embed != null && embed.getFacet().equals(AppViberPostEmbedFacetEnum.THIRD_PARTY_AUDIO.getCode())
+                && (embed.getAudios() != null && embed.getAudios().size() >= 10);
 
         boolean linkPostExceedsLimit = embed != null && embed.getFacet().equals(AppViberPostEmbedFacetEnum.LINK.getCode())
                 && (embed.getLinks() != null && embed.getLinks().size() >= 2);
 
         if (attachmentPostExceedsLimit || imagePostExceedsLimit || thirdPartyImagePostExceedsLimit
-                || videoPostExceedsLimit || linkPostExceedsLimit) {
+                || thirdPartyVideoPostExceedsLimit || thirdPartyAudioPostExceedsLimit || linkPostExceedsLimit) {
             throw new ErrorCodeException(CodeEnum.MAX_LIMIT);
         }
     }
