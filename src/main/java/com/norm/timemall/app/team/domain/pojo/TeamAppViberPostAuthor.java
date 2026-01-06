@@ -8,5 +8,6 @@ public class TeamAppViberPostAuthor {
     private String brandId;
     private String userId;
     private String avatar;
-    private String policyRel;
+    private String hasLike;
+    private String hasShare;
 }

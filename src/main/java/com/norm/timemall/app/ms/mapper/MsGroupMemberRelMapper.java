@@ -3,6 +3,7 @@ package com.norm.timemall.app.ms.mapper;
 import com.norm.timemall.app.base.mo.GroupMemberRel;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.norm.timemall.app.ms.domain.pojo.MsFetchGroupMemberProfile;
+import com.norm.timemall.app.team.domain.ro.TeamOasisFetchUserCtaInfoRO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -26,4 +27,7 @@ public interface MsGroupMemberRelMapper extends BaseMapper<GroupMemberRel> {
     MsFetchGroupMemberProfile selectOneMemberProfile(@Param("channel_id") String channel,
                                                      @Param("channel_type") String channelType,
                                                      @Param("member_id") String memberUserId);
+    TeamOasisFetchUserCtaInfoRO selectUserCtaInfo(@Param("channel_id")String oasisId
+                                                  , @Param("member_id") String currentUserId
+                                                  , @Param("member_brand_id") String currentBrandId);
 }

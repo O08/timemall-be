@@ -9,6 +9,7 @@ import com.norm.timemall.app.base.mo.GroupMemberRel;
 import com.norm.timemall.app.ms.domain.pojo.MsFetchGroupMemberProfile;
 import com.norm.timemall.app.ms.mapper.MsGroupMemberRelMapper;
 import com.norm.timemall.app.ms.service.MsGroupMemberRelService;
+import com.norm.timemall.app.team.domain.ro.TeamOasisFetchUserCtaInfoRO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,5 +49,18 @@ public class MsGroupMemberRelServiceImpl implements MsGroupMemberRelService {
     @Override
     public MsFetchGroupMemberProfile findOneMemberProfile(String channel, String memberUserId) {
         return msGroupMemberRelMapper.selectOneMemberProfile(channel,ChannelTypeEnum.DEFAULT.getMark(), memberUserId);
+    }
+
+    @Override
+    public void unbanOneUser(String oasisId, String userId) {
+        msGroupMemberRelMapper.updatePolicyRelByChannelIdAndChannelTypeAndMemberId(oasisId, ChannelTypeEnum.DEFAULT.getMark(),
+                userId, GroupMemberPolicyRelEnum.READ_WRITE.getMark());
+    }
+
+    @Override
+    public TeamOasisFetchUserCtaInfoRO findUserCtaInfo(String oasisId) {
+        String currentBrandId=SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        String currentUserId=SecurityUserHelper.getCurrentPrincipal().getUserId();
+        return msGroupMemberRelMapper.selectUserCtaInfo(oasisId,currentUserId,currentBrandId);
     }
 }

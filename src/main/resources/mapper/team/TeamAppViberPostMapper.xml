@@ -12,6 +12,9 @@
 
     <resultMap id="TeamAppViberFetchPostRecordRO" type="com.norm.timemall.app.team.domain.ro.TeamAppViberFetchOnePostRO">
         <id property="postId" column="postId"/>
+        <result property="oasisId" column="oasis_id"/>
+        <result property="channel" column="channel"/>
+
         <result property="comments" column="comments"/>
         <result property="likes" column="likes"/>
         <result property="shares" column="shares"/>
@@ -28,7 +31,8 @@
             <result property="avatar" column="authorAvatar"/>
             <result property="brandName" column="authorName"/>
             <result property="userId" column="authorUserId"/>
-            <result property="policyRel" column="policy_rel"/>
+            <result property="hasLike" column="has_like"/>
+            <result property="hasShare" column="has_share"/>
         </association>
 
 
@@ -39,15 +43,13 @@
     <select id="selectPostInfoById"  resultMap="TeamAppViberFetchPostRecordRO">
 
         select
-         p.id as postId,p.embed,p.text_msg,p.likes,p.shares,p.comments,p.create_at,
-         b.id as authorBrandId, b.avator as authorAvatar,b.brand_name as authorName,b.customer_id as authorUserId, gmr.policy_rel
+         p.id as postId,p.embed,p.text_msg,p.likes,p.shares,p.comments,p.create_at,p.oasis_id,p.channel,
+         b.id as authorBrandId, b.avator as authorAvatar,b.brand_name as authorName,b.customer_id as authorUserId,
+         i.has_like,i.has_share
         from app_viber_post p
         inner join  brand b
           on p.author_brand_id=b.id
-        inner join group_member_rel gmr
-          on gmr.member_id=b.customer_id
-            and gmr.channel_id=p.oasis_id
-            and gmr.channel_type='default'
+        LEFT JOIN app_viber_post_interact i ON i.post_id = p.id AND i.reader_brand_id = #{currentUserBrandId}
         where p.id=#{postId}
 
     </select>
@@ -56,16 +58,13 @@
 
     <select id="selectPostPage"  resultMap="TeamAppViberFetchPostRecordRO">
         select
-         p.id as postId,p.embed,p.text_msg,p.likes,p.shares,p.comments,p.create_at,
+         p.id as postId,p.embed,p.text_msg,p.likes,p.shares,p.comments,p.create_at,p.oasis_id,p.channel,
          b.id as authorBrandId, b.avator as authorAvatar,b.brand_name as authorName,b.customer_id as authorUserId,
-         gmr.policy_rel
+         i.has_like,i.has_share
         from app_viber_post p
         inner join  brand b
           on p.author_brand_id=b.id
-        inner join group_member_rel gmr
-          on gmr.member_id=b.customer_id
-            and gmr.channel_id=p.oasis_id
-            and gmr.channel_type='default'
+        LEFT JOIN app_viber_post_interact i ON i.post_id = p.id AND i.reader_brand_id = #{currentUserBrandId}
         where 1=1
         and p.channel = #{dto.channel}
         <if test="dto.q != null and dto.q != ''">

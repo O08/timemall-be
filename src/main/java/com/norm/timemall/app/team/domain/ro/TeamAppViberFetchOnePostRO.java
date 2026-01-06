@@ -14,4 +14,6 @@ public class TeamAppViberFetchOnePostRO {
     private String shares;
     private String comments;
     private String createdAt;
+    private String oasisId;
+    private String channel;
 }

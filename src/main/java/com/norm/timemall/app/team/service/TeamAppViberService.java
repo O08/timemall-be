@@ -38,4 +38,5 @@ public interface TeamAppViberService {
     TeamAppViberFileUploadVO uploadFile(TeamAppViberFileUploadDTO dto, String fileUri, MultipartFile file);
 
     void createPost(TeamAppViberCreatePostDTO dto,String oasisId);
+
 }

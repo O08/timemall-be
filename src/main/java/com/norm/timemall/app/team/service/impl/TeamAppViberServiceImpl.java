@@ -174,12 +174,16 @@ public class TeamAppViberServiceImpl implements TeamAppViberService {
         IPage<TeamAppViberFetchOnePostRO> page = new Page<>();
         page.setSize(dto.getSize());
         page.setCurrent(dto.getCurrent());
-        return teamAppViberPostMapper.selectPostPage(page, dto);
+        String currentUserBrandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+
+        return teamAppViberPostMapper.selectPostPage(page, dto,currentUserBrandId);
     }
 
     @Override
     public TeamAppViberFetchOnePostVO fetchOnePost(String postId) {
-        TeamAppViberFetchOnePostRO postRO=teamAppViberPostMapper.selectPostInfoById(postId);
+        String currentUserBrandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+
+        TeamAppViberFetchOnePostRO postRO=teamAppViberPostMapper.selectPostInfoById(postId,currentUserBrandId);
         TeamAppViberFetchOnePostVO vo = new TeamAppViberFetchOnePostVO();
         vo.setPost(postRO);
         vo.setResponseCode(CodeEnum.SUCCESS);

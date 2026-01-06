@@ -18,10 +18,7 @@ import com.norm.timemall.app.team.domain.dto.*;
 import com.norm.timemall.app.team.domain.ro.FetchOneOasisChannelGeneralInfoRO;
 import com.norm.timemall.app.team.domain.ro.TeamAppViberFetchCommentPageRO;
 import com.norm.timemall.app.team.domain.ro.TeamAppViberFetchOnePostRO;
-import com.norm.timemall.app.team.domain.vo.TeamAppViberFetchCommentPageVO;
-import com.norm.timemall.app.team.domain.vo.TeamAppViberFetchOnePostVO;
-import com.norm.timemall.app.team.domain.vo.TeamAppViberFetchPostPageVO;
-import com.norm.timemall.app.team.domain.vo.TeamAppViberFileUploadVO;
+import com.norm.timemall.app.team.domain.vo.*;
 import com.norm.timemall.app.team.service.TeamAppViberService;
 import com.norm.timemall.app.team.service.TeamDataPolicyService;
 import com.norm.timemall.app.team.service.TeamOasisChannelService;
@@ -136,6 +133,11 @@ public class TeamAppViberController {
 
     @GetMapping("/api/v1/app/viber/feed/getFeed")
     public TeamAppViberFetchPostPageVO fetchFeeds(TeamAppViberFetchPostPageDTO dto){
+        // only member can fetch post
+        boolean hasPermission = teamDataPolicyService.alreadyOasisMember(dto.getChannel());
+        if(!hasPermission){
+            throw new ErrorCodeException(CodeEnum.USER_ROLE_NOT_CORRECT);
+        }
         IPage<TeamAppViberFetchOnePostRO> feed = teamAppViberService.fetchFeeds(dto);
         TeamAppViberFetchPostPageVO vo = new TeamAppViberFetchPostPageVO();
         vo.setFeed(feed);

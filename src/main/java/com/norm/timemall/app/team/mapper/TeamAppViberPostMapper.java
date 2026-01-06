@@ -28,7 +28,8 @@ public interface TeamAppViberPostMapper extends BaseMapper<AppViberPost> {
     @Update("update app_viber_post set shares = GREATEST(0, coalesce(shares, 0) + #{increment}) where id = #{postId}")
     void updateShares(@Param("postId") String postId, @Param("increment") int increment);
 
-    TeamAppViberFetchOnePostRO selectPostInfoById(@Param("postId") String postId);
+    TeamAppViberFetchOnePostRO selectPostInfoById(@Param("postId") String postId,@Param("currentUserBrandId") String currentUserBrandId);
 
-    IPage<TeamAppViberFetchOnePostRO> selectPostPage(IPage<TeamAppViberFetchOnePostRO> page, @Param("dto") TeamAppViberFetchPostPageDTO dto);
+    IPage<TeamAppViberFetchOnePostRO> selectPostPage(IPage<TeamAppViberFetchOnePostRO> page, @Param("dto") TeamAppViberFetchPostPageDTO dto
+    ,@Param("currentUserBrandId") String currentUserBrandId);
 }
