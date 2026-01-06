@@ -58,9 +58,8 @@ public class MsGroupMemberRelServiceImpl implements MsGroupMemberRelService {
     }
 
     @Override
-    public TeamOasisFetchUserCtaInfoRO findUserCtaInfo(String oasisId) {
+    public TeamOasisFetchUserCtaInfoRO findUserCtaInfo(String oasisId,String userId) {
         String currentBrandId=SecurityUserHelper.getCurrentPrincipal().getBrandId();
-        String currentUserId=SecurityUserHelper.getCurrentPrincipal().getUserId();
-        return msGroupMemberRelMapper.selectUserCtaInfo(oasisId,currentUserId,currentBrandId);
+        return msGroupMemberRelMapper.selectUserCtaInfo(oasisId,userId,currentBrandId);
     }
 }

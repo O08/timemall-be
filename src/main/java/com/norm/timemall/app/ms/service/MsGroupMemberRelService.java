@@ -16,5 +16,5 @@ public interface MsGroupMemberRelService {
 
     void unbanOneUser(String oasisId, String userId);
 
-    TeamOasisFetchUserCtaInfoRO findUserCtaInfo(String oasisId);
+    TeamOasisFetchUserCtaInfoRO findUserCtaInfo(String oasisId, String userId);
 }

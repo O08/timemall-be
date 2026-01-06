@@ -21,7 +21,7 @@
         from group_member_rel rl
         left join oasis o
           on o.id=rl.channel_id
-            and o.initiator_id=#{member_brand_id}
+            and o.initiator_id=#{current_user_brand_id}
         where rl.channel_id= #{channel_id}
            and rl.channel_type= 'default'
            and rl.member_id= #{member_id}

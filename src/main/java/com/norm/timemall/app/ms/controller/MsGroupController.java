@@ -192,10 +192,10 @@ public class MsGroupController {
         msGroupMemberRelService.unbanOneUser(channelGeneralInfo.getOasisId(), userId);
         return new SuccessVO(CodeEnum.SUCCESS);
     }
-    @GetMapping("/api/v1/app/oasis/{oasis_id}/user/cta_info")
-    public TeamOasisFetchUserCtaInfoVO fetchUserCtaInfo(@PathVariable("oasis_id") String oasisId) {
+    @GetMapping("/api/v1/app/oasis/{oasis_id}/user/{user_id}/cta_info")
+    public TeamOasisFetchUserCtaInfoVO fetchUserCtaInfo(@PathVariable("oasis_id") String oasisId, @PathVariable("user_id") String userId) {
 
-        TeamOasisFetchUserCtaInfoRO ctaInfoRO = msGroupMemberRelService.findUserCtaInfo(oasisId);
+        TeamOasisFetchUserCtaInfoRO ctaInfoRO = msGroupMemberRelService.findUserCtaInfo(oasisId, userId);
 
         TeamOasisFetchUserCtaInfoVO vo =new TeamOasisFetchUserCtaInfoVO();
         vo.setResponseCode(CodeEnum.SUCCESS);

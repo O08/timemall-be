@@ -29,5 +29,5 @@ public interface MsGroupMemberRelMapper extends BaseMapper<GroupMemberRel> {
                                                      @Param("member_id") String memberUserId);
     TeamOasisFetchUserCtaInfoRO selectUserCtaInfo(@Param("channel_id")String oasisId
                                                   , @Param("member_id") String currentUserId
-                                                  , @Param("member_brand_id") String currentBrandId);
+                                                  , @Param("current_user_brand_id") String currentBrandId);
 }
