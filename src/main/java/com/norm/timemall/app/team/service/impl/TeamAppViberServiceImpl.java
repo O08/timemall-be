@@ -279,7 +279,7 @@ public class TeamAppViberServiceImpl implements TeamAppViberService {
         }
 
         // Insert new interact record
-        AppViberPostInteract interact = TeamAppViberPostInteractionHelper.createInteract(dto);
+        AppViberPostInteract interact = TeamAppViberPostInteractionHelper.createInteract(existingInteract,dto);
         teamAppViberPostInteractMapper.insert(interact);
 
     }

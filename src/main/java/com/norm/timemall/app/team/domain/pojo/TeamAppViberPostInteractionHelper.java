@@ -38,7 +38,7 @@ public class TeamAppViberPostInteractionHelper {
         return isSameCancelLikeAction || isSameLikeAction || isSameShareAction ;
 
     }
-    public static AppViberPostInteract createInteract(TeamAppViberPostInteractDTO dto){
+    public static AppViberPostInteract createInteract(AppViberPostInteract existingInteract,TeamAppViberPostInteractDTO dto){
 
         String currentUserBrandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
 
@@ -46,8 +46,15 @@ public class TeamAppViberPostInteractionHelper {
         interact.setId(IdUtil.simpleUUID())
                 .setPostId(dto.getPostId())
                 .setReaderBrandId(currentUserBrandId)
+                .setHasLike(0)
+                .setHasShare(0)
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
+
+        if(existingInteract!=null){
+            interact.setHasLike(existingInteract.getHasLike())
+                    .setHasShare(existingInteract.getHasShare());
+        }
 
         if(dto.getEvent().equals(AppViberPostInteractEventEnum.LIKE.getMark())){
             interact.setHasLike(1);
