@@ -12,6 +12,7 @@ import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.AppViberComment;
 import com.norm.timemall.app.base.mo.AppViberPost;
 import com.norm.timemall.app.base.service.FileStoreService;
+import com.norm.timemall.app.base.service.OrderFlowService;
 import com.norm.timemall.app.ms.constant.ChatSupportUploadImageFormat;
 import com.norm.timemall.app.ms.service.MsGroupMemberRelService;
 import com.norm.timemall.app.team.domain.dto.*;
@@ -45,6 +46,9 @@ public class TeamAppViberController {
 
     @Autowired
     private TeamOasisChannelService teamOasisChannelService;
+
+    @Autowired
+    private OrderFlowService orderFlowService;
 
 
     @PostMapping("/api/v1/app/viber/feed/post/create")
@@ -121,8 +125,12 @@ public class TeamAppViberController {
 
     @PostMapping("/api/v1/app/viber/feed/comment/interact")
     public SuccessVO commentInteract(@Validated @RequestBody TeamAppViberCommentInteractDTO dto) {
-        
-        teamAppViberService.commentInteract(dto);
+        try {
+            orderFlowService.insertOrderFlow(SecurityUserHelper.getCurrentPrincipal().getUserId(),"vb_comment" );
+            teamAppViberService.commentInteract(dto);
+        }finally {
+            orderFlowService.deleteOrderFlow(SecurityUserHelper.getCurrentPrincipal().getUserId(),"vb_comment" );
+        }
         return new SuccessVO(CodeEnum.SUCCESS);
     }
 
@@ -147,8 +155,13 @@ public class TeamAppViberController {
 
     @PostMapping("/api/v1/app/viber/feed/post/interact")
     public SuccessVO postInteract(@Validated @RequestBody TeamAppViberPostInteractDTO dto) {
-        
-        teamAppViberService.postInteract(dto);
+        try {
+            orderFlowService.insertOrderFlow(SecurityUserHelper.getCurrentPrincipal().getUserId(),"vb_post" );
+            teamAppViberService.postInteract(dto);
+
+        }finally {
+            orderFlowService.deleteOrderFlow(SecurityUserHelper.getCurrentPrincipal().getUserId(),"vb_post" );
+        }
         return new SuccessVO(CodeEnum.SUCCESS);
     }
 
