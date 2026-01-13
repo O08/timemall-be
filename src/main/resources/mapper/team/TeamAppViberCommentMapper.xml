@@ -25,7 +25,7 @@
         LEFT JOIN brand u ON c.author_brand_id = u.id
         LEFT JOIN app_viber_comment_interact i ON i.comment_id = c.id AND i.reader_brand_id = #{currentUserBrandId}
         WHERE c.post_id = #{dto.postId}
-        ORDER BY c.create_at asc
+        ORDER BY c.create_at desc
     </select>
 
 </mapper>
