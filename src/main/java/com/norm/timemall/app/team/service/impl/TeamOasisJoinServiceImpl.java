@@ -3,6 +3,7 @@ package com.norm.timemall.app.team.service.impl;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.norm.timemall.app.base.enums.*;
@@ -184,6 +185,10 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
             throw new ErrorCodeException(CodeEnum.ALREADY_JOIN_OASIS);
         }
 
+        // if private oasis , for safety reason, need to change private code
+        if(SwitchCheckEnum.ENABLE.getMark().equals(oasis.getForPrivate())){
+            oasis.setPrivateCode(RandomUtil.randomStringUpper(6));
+        }
         // if membership < max_members insert oasis_member else deny
         if(oasis.getMembership() < oasis.getMaxMembers()){
             OasisMember member = new OasisMember();
