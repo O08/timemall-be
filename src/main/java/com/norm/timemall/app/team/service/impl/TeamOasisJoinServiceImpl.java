@@ -126,11 +126,15 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
         wrapper.eq(OasisRole::getRoleCode, OasisRoleCoreEnum.PUBLIC.getMark())
                 .eq(OasisRole::getOasisId,oasisId);
         OasisRole role = teamOasisRoleMapper.selectOne(wrapper);
+        grantRoleToMember(oasisId,memberBrandId,role.getId());
+    }
+    private void grantRoleToMember(String oasisId,String memberBrandId,String roleId){
+
 
         OasisMemberRole mr = new OasisMemberRole();
         mr.setId(IdUtil.simpleUUID())
                 .setOasisId(oasisId)
-                .setOasisRoleId(role.getId())
+                .setOasisRoleId(roleId)
                 .setMemberBrandId(memberBrandId)
                 .setStartsAt(new Date())
                 .setEndsAt(DateUtil.offsetMonth(new Date(),4096))
@@ -271,6 +275,62 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
     @Override
     public ArrayList<TeamJoinedRO> findShareOasis(String brandId) {
         return teamOasisJoinMapper.selectShareOasisByUser(brandId);
+    }
+
+    @Override
+    public void followOasisUseInvitationLink(String oasisId,String roleId) {
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        // query oasis member info and validated
+        Oasis oasis = teamOasisMapper.selectById(oasisId);
+        if(oasis==null){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        if(SwitchCheckEnum.CLOSE.getMark().equals(oasis.getCanAddMember())){
+            throw new ErrorCodeException(CodeEnum.STOP_INVITATION);
+        }
+
+        if(oasis.getMembership() >= oasis.getMaxMembers()){
+            throw new ErrorCodeException(CodeEnum.MEMBERS_LIMIT);
+        }
+        // if already join, skip
+        boolean alreadyJoin = alreadyMember(oasisId, brandId);
+
+        if(alreadyJoin){
+            throw new ErrorCodeException(CodeEnum.ALREADY_JOIN_OASIS);
+        }
+
+        OasisMember member = new OasisMember();
+        member.setId(IdUtil.simpleUUID())
+                .setCreateAt(new Date())
+                .setModifiedAt(new Date())
+                .setOasisId(oasisId)
+                .setBrandId(brandId);
+        teamOasisMemberMapper.insert(member);
+
+        OasisJoin join =new OasisJoin();
+        join.setId(IdUtil.simpleUUID())
+                .setBrandId(brandId)
+                .setOasisId(oasisId)
+                .setTag(OasisJoinTagEnum.ACCEPT.getMark())
+                .setCreateAt(new Date())
+                .setModifiedAt(new Date());
+        teamOasisJoinMapper.insert(join);
+        // update oasis tb member info
+        oasis.setMembership(oasis.getMembership()+1);
+        teamOasisMapper.updateById(oasis);
+
+        // give member channel
+        GroupMemberRel groupMemberRel = new GroupMemberRel();
+        groupMemberRel.setId(IdUtil.simpleUUID())
+                .setChannelId(oasis.getId())
+                .setChannelType(ChannelTypeEnum.DEFAULT.getMark())
+                .setMemberId(SecurityUserHelper.getCurrentPrincipal().getUserId())
+                .setPolicyRel(GroupMemberPolicyRelEnum.READ_WRITE.getMark())
+                .setCreateAt(new Date())
+                .setModifiedAt(new Date());
+        teamGroupMemberRelMapper.insert(groupMemberRel);
+
+        grantRoleToMember(oasis.getId(), member.getBrandId(),roleId);
     }
 
     private boolean alreadyMember(String oasisId,String brandId){

@@ -28,4 +28,6 @@ public interface TeamOasisJoinService {
     TeamFetchFriendList findFriendThatNotInOasis(TeamFetchFriendListDTO dto);
 
     ArrayList<TeamJoinedRO> findShareOasis(String brandId);
+
+    void followOasisUseInvitationLink(String oasisId,String roleId);
 }
