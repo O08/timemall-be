@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.affiliate.mapper.AffiliateHotProductMapper">
+
+
+    <select id="selectHotProductByBrandIdAndTimeSpan" resultType="com.norm.timemall.app.affiliate.domain.ro.HotProductRO">
+        select bs.supplier_brand_name, bs.product_name,p.cell_sale_volume,p.plan_sale_volume,p.sales,p.revenue, p.timespan
+        from affiliate_hot_product p
+        inner join affiliate_product_ind bs
+          on p.cell_id=bs.cell_id
+        where
+          p.brand_id=#{brandId}
+          and p.timespan=#{timespan}
+        order by p.sales desc
+    </select>
+
+</mapper>
