@@ -33,6 +33,7 @@
             b.avator AS inviterAvatar,
             b.brand_name AS inviterName,
             il.id AS linkId,
+            o.id as oasisId,
             o.title AS oasisName,
             o.avatar as oasisLogo,
             o.mark as oasisStatus,

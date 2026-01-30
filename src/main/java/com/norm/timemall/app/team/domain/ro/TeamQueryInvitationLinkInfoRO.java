@@ -15,4 +15,5 @@ public class TeamQueryInvitationLinkInfoRO {
     private String oasisLogo;
     private String oasisStatus;
     private String expireTime;
+    private String oasisId;
 }
