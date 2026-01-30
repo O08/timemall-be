@@ -42,7 +42,7 @@ public class Oasis extends Model<Oasis> implements Serializable {
      */
     private String subtitle;
     /**
-     * 个性封面
+     * logo
      */
     private String avatar;
     /**

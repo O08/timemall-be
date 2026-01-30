@@ -34,6 +34,8 @@
             b.brand_name AS inviterName,
             il.id AS linkId,
             o.title AS oasisName,
+            o.avatar as oasisLogo,
+            o.mark as oasisStatus,
             o.subtitle AS oasisDescription,
             o.create_at AS oasisCreateAt,
             o.membership AS members

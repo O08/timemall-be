@@ -72,6 +72,9 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
         if(SwitchCheckEnum.CLOSE.getMark().equals(oasis.getCanAddMember())){
             throw new ErrorCodeException(CodeEnum.STOP_INVITATION);
         }
+        if(OasisMarkEnum.BLOCKED.getMark().equals(oasis.getMark())){
+            throw new ErrorCodeException(CodeEnum.OASIS_LOCKED);
+        }
         if(SwitchCheckEnum.ENABLE.getMark().equals(oasis.getForPrivate())
             && !oasis.getInitiatorId().equals(oasisJoin.getInviterBrandId())){
             throw new ErrorCodeException(CodeEnum.PRIVATE_OASIS);
@@ -174,6 +177,9 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
         }
         if(SwitchCheckEnum.CLOSE.getMark().equals(oasis.getCanAddMember())){
             throw new ErrorCodeException(CodeEnum.STOP_INVITATION);
+        }
+        if(OasisMarkEnum.BLOCKED.getMark().equals(oasis.getMark())){
+            throw new ErrorCodeException(CodeEnum.OASIS_LOCKED);
         }
         if(SwitchCheckEnum.ENABLE.getMark().equals(oasis.getForPrivate())
                 && ObjectUtil.notEqual(privateCode,oasis.getPrivateCode())){
@@ -287,6 +293,9 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
         }
         if(SwitchCheckEnum.CLOSE.getMark().equals(oasis.getCanAddMember())){
             throw new ErrorCodeException(CodeEnum.STOP_INVITATION);
+        }
+        if(OasisMarkEnum.BLOCKED.getMark().equals(oasis.getMark())){
+            throw new ErrorCodeException(CodeEnum.OASIS_LOCKED);
         }
 
         if(oasis.getMembership() >= oasis.getMaxMembers()){
