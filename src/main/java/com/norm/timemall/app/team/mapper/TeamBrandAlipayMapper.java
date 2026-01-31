@@ -18,6 +18,6 @@ import java.util.ArrayList;
 */
 @Mapper
 public interface TeamBrandAlipayMapper extends BaseMapper<BrandAlipay> {
-@Select("select id,payee_account,payee_real_name from brand_alipay where brand_id=#{brand_id} and pay_type='1'")
+@Select("select id,payee_account,payee_real_name from brand_alipay where brand_id=#{brand_id} and pay_type='1' order by create_at desc")
     ArrayList<TeamBrandAlipayAccountItem> selectAlipayByBrandId(@Param("brand_id") String brandId);
 }
