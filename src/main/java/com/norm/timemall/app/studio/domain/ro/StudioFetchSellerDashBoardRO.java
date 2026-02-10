@@ -5,6 +5,9 @@ import lombok.Data;
 @Data
 public class StudioFetchSellerDashBoardRO {
     private String balance;
+    private String wealthLevel;
+    private String employees;
+    private String dspCasesSixMonth;
     private String cellEarningsFromRepeatBuyers;
     private String cellRepeatBuyers;
     private String cellTotalBuyers;

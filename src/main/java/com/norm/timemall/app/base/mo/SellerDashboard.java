@@ -37,6 +37,21 @@ public class SellerDashboard extends Model<SellerDashboard> implements Serializa
      * 账户余额
      */
     private BigDecimal balance;
+
+    /**
+     * 财富等级
+     */
+    private Integer wealthLevel;
+    /**
+     * 员工人数
+     */
+    private Integer employees;
+
+    /**
+     * 半年内被举报案件数量
+     */
+    private Integer dspCasesSixMonth;
+
     /**
      * 本月已赚
      */

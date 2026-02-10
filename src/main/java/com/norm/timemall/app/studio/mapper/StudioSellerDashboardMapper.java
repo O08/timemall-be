@@ -3,6 +3,7 @@ package com.norm.timemall.app.studio.mapper;
 import com.norm.timemall.app.base.mo.SellerDashboard;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.norm.timemall.app.studio.domain.ro.StudioFetchSellerDashBoardRO;
+import com.norm.timemall.app.studio.domain.ro.StudioFetchSellerOpenStatsInfoRO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,4 +17,7 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface StudioSellerDashboardMapper extends BaseMapper<SellerDashboard> {
     StudioFetchSellerDashBoardRO selectDashboardByBrand(@Param("seller_brand_id") String sellerBrandId);
+
+    StudioFetchSellerOpenStatsInfoRO selectSellerOpenStatsInfo(@Param("seller_brand_id") String sellerBrandId);
+
 }
