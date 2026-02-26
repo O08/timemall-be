@@ -20,4 +20,13 @@ public class SellerDashboardETL {
         taskSellerDashboardService.doRefreshDashboardInfo();
         log.info("refreshDashboardInfo etl task end.....");
     }
+
+    @Scheduled( cron = "0 */10 * * * *",zone = "Asia/Shanghai")
+    public void refreshDashboardOnlineTimeInfo(){
+        log.info("refreshDashboardOnlineTimeInfo etl task start.....");
+        taskSellerDashboardService.doRefreshDashboardOnlineTimeInfo();
+        log.info("refreshDashboardOnlineTimeInfo etl task end.....");
+    }
+
+
 }

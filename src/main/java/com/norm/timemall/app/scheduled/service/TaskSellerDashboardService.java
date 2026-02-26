@@ -6,4 +6,6 @@ import org.springframework.stereotype.Service;
 public interface TaskSellerDashboardService {
     void doRefreshDashboardInfo();
 
+    void doRefreshDashboardOnlineTimeInfo();
+
 }

@@ -6,4 +6,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface MallScienceDataService {
     void addNewScienceSemiData(ScienceSemiDataDTO dto);
+
+    void newUserHeartbeatPing();
+
 }

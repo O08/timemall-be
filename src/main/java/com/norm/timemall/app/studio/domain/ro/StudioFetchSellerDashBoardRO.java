@@ -22,4 +22,5 @@ public class StudioFetchSellerDashBoardRO {
     private String virtualEarningsFromRepeatBuyers;
     private String virtualRepeatBuyers;
     private String virtualTotalBuyers;
+    private String onlineTimeSecondsToday;
 }

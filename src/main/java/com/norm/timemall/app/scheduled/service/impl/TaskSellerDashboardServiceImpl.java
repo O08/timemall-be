@@ -13,4 +13,9 @@ public class TaskSellerDashboardServiceImpl implements TaskSellerDashboardServic
     public void doRefreshDashboardInfo() {
         taskSellerDashboardMapper.refreshSellerDashboard();
     }
+
+    @Override
+    public void doRefreshDashboardOnlineTimeInfo() {
+        taskSellerDashboardMapper.refreshSellerDashboardOnlineTimeInfo();
+    }
 }

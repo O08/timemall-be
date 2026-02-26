@@ -17,4 +17,6 @@ public interface TaskSellerDashboardMapper extends BaseMapper<SellerDashboard> {
 
     void refreshSellerDashboard();
 
+    void refreshSellerDashboardOnlineTimeInfo();
+
 }
