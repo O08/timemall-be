@@ -1,4 +1,4 @@
-FROM ://dragonwell-registry.cn-hangzhou.cr.aliyuncs.com
+FROM docker.1ms.run/library/eclipse-temurin:21-jre-jammy
 
 ENV TZ=Asia/Shanghai
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo $TZ > /etc/timezone
