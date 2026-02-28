@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamFinDistributeMapper">
+    <sql id="tableName">
+        fin_distribute
+    </sql>
+
+    <select id="selectDistributeByBrandId" resultType="com.norm.timemall.app.team.domain.pojo.TeamFinDistriutionItem">
+        select o.title item,d.amount val, d.amount/a.amount rate,a1.drawable,d.oasis_id
+        from fin_distribute d
+        left join oasis o on d.oasis_id=o.id
+        left join fin_account a on a.fid = d.brand_id and a.fid_type = #{brand_fid_type}
+        left join fin_account a1 on a1.fid = d.oasis_id and a1.fid_type = #{oasis_fid_type}
+        where d.brand_id=#{brand_id}
+    </select>
+
+
+</mapper>

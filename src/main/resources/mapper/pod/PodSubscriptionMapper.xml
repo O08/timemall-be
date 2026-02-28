@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.pod.mapper.PodSubscriptionMapper">
+    <sql id="tableName">
+        subscription
+    </sql>
+
+    <sql id="baseColumn">
+        id,subscriber_type,seller_brand_id,buyer_brand_id,plan_id,trial_period_start_at,trial_period_end_at,starts_at,ends_at,canceled_at,recent_plan_price,status,bill_calendar,remark,create_at,modified_at
+    </sql>
+
+    <select id="selectPageByQ" resultType="com.norm.timemall.app.pod.domain.ro.PodGetSubscriptionPageRO">
+
+        select s.id subscriptionId,p.id planId, p.product_code, s.name productName,p.name planName,p.price planPrice,s.bill_calendar,s.recent_plan_price, s.status,s.remark,s.starts_at,s.ends_at,s.canceled_at,s.trial_period_start_at,s.trial_period_end_at,seller.handle sellerHandle,seller.customer_id sellerUserId,seller.brand_name sellerName,seller.avator sellerAvatar
+        from subscription s
+        inner join subs_plan p
+          on s.plan_id=p.id
+        inner join brand seller
+           on s.seller_brand_id=seller.id
+        <where>
+            1=1
+            and s.subscriber_fid=#{buyer_brand_id}
+            and s.subscriber_type='1'
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, seller.brand_name)>0 or locate(#{dto.q}, s.name)>0  or  locate(#{dto.q}, p.name)>0 )
+            </if>
+            <if test="dto.tag != null and dto.tag != ''">
+                AND s.status=#{dto.tag}
+            </if>
+        </where>
+        order by s.create_at desc
+
+    </select>
+
+</mapper>

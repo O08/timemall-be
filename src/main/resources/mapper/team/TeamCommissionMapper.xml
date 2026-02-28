@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamCommissionMapper">
+    <sql id="tableName">
+        commission
+    </sql>
+
+    <sql id="baseColumn">
+        id,oasis_id,title,tag,founder,worker,bonus,create_at,modified_at
+    </sql>
+    <select id="selectPageByFilter" resultType="com.norm.timemall.app.team.domain.ro.TeamCommissionRO">
+        select
+          c.id,c.title,c.create_at addDate,c.founder,c.tag,c.worker,c.bonus,b.brand_name founder_name,b1.brand_name worker_name,c.sow
+        from commission c
+        left join brand b
+          on c.founder=b.id
+        left join brand b1
+          on c.worker = b1.id
+        where
+        1 = 1
+        AND c.oasis_id = #{dto.oasisId}
+        <if test="dto.q != null and dto.q != ''">
+            AND (locate(#{dto.q}, c.title)>0 or locate(#{dto.q}, b1.brand_name)>0 or locate(#{dto.q}, b.brand_name)>0)
+        </if>
+        <if test="dto.tag != null and dto.tag != ''">
+            AND c.tag= #{dto.tag}
+        </if>
+        <if test="dto.filter != null and dto.filter != ''">
+            <choose>
+                <when test='dto.filter == "1"'>
+                    AND c.worker = #{dto.worker}
+                </when>
+                <when test='dto.filter == "2"'>
+                    AND DATE_SUB(CURDATE(), INTERVAL 7 DAY)  &lt;= date(c.create_at)
+                </when>
+                <when test='dto.filter == "3"'>
+                    AND DATE_SUB(CURDATE(), INTERVAL 1 DAY)  &lt;= date(c.create_at)
+                </when>
+            </choose>
+        </if>
+        <if test="dto.sort != null and dto.sort != ''">
+            <choose>
+                <when test='dto.sort == "1"'>
+                    Order by c.create_At desc
+                </when>
+                <when test='dto.sort == "2"'>
+                    Order by c.create_At
+                </when>
+            </choose>
+        </if>
+
+    </select>
+    <select id="selectCommissionDetailById" resultType="com.norm.timemall.app.team.domain.pojo.TeamFetchCommissionDetail">
+
+        select p.title,p.sow,p.bonus,b1.brand_name supplierName,b1.avator supplierAvatar, p.tag,p.id commissionId,p.oasis_id
+        from commission p
+        left join brand b1
+        on b1.id=p.worker
+        where p.id=#{id}
+    </select>
+
+</mapper>

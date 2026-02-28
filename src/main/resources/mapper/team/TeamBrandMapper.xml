@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamBrandMapper">
+    <sql id="tableName">
+        brand
+    </sql>
+
+    <sql id="baseColumn">
+        id,brand_name,title,cover,avator,customer_id,wechat,phone,email,cardholder,cardno,alipay,wechatpay,experience,skills,location
+    </sql>
+
+
+
+    <select id="selectPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamTalentRO">
+        select b.brand_name,b.avator avatar,b.title ,b.id,
+        CASE s.occupation_code
+        when '0' then s.self_defined_occupation
+        else c.item
+        END as occupation,
+        s.support_free_cooperation,s.brand_type_code, s.available_for_work,s.hiring,s.type_of_business
+        from brand b
+        left join brand_sub s
+          on b.id=s.brand_id
+        left join code_mapping c
+          on c.code_type='occupation'
+          and c.item_code=s.occupation_code
+        where
+            1 = 1
+            and b.mark in ('1','3','4')
+            and b.title is not null
+        <if test="dto.q != null and dto.q != ''">
+            AND (locate(#{dto.q}, b.title)>0
+              or locate(#{dto.q}, b.brand_name)>0
+              or locate(#{dto.q}, c.item)>0
+              or locate(#{dto.q}, s.self_defined_occupation)>0
+              or locate(#{dto.q}, b.location)>0
+              or locate(#{dto.q}, b.customer_id)>0
+            )
+        </if>
+        <if test="dto.location != null and dto.location != ''">
+            AND locate(#{dto.location}, b.location)>0
+        </if>
+        <if test="dto.freeNightCounsellor != null and dto.freeNightCounsellor != ''">
+            <choose>
+                <when test='dto.freeNightCounsellor == "1"'>
+                    AND s.free_night_counsellor='1'
+                </when>
+            </choose>
+        </if>
+        <if test="dto.availableForWork != null and dto.availableForWork != ''">
+            <choose>
+                <when test='dto.availableForWork == "1"'>
+                    AND s.available_for_work='1'
+                </when>
+            </choose>
+        </if>
+        <if test="dto.hiring != null and dto.hiring != ''">
+            <choose>
+                <when test='dto.hiring == "1"'>
+                    AND s.hiring='1'
+                </when>
+            </choose>
+        </if>
+        <if test="dto.supportFreeCooperation != null and dto.supportFreeCooperation != ''">
+            <choose>
+                <when test='dto.supportFreeCooperation == "1"'>
+                    AND s.support_free_cooperation='1'
+                </when>
+            </choose>
+        </if>
+        <if test="dto.loginInWeek != null and dto.loginInWeek != ''">
+            <choose>
+                <when test='dto.loginInWeek == "1"'>
+                    AND TIMESTAMPDIFF(WEEK,b.modified_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S'))  &lt;= 0
+                </when>
+            </choose>
+        </if>
+
+    </select>
+
+</mapper>

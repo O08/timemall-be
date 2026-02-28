@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.affiliate.mapper.AffiliatePpcBillMapper">
+
+    <select id="selectPageByDTO" resultType="com.norm.timemall.app.affiliate.domain.ro.PpcBillPageRO">
+
+        select
+         CASE
+            WHEN bl.tag='1' THEN '财务审核'
+            WHEN bl.tag='2' THEN '已打款'
+            ELSE bl.tag
+         END as tag,
+         bl.id,bl.create_at,bl.batch,bl.amount,bl.ips,bl.admin_customer_id
+        from ppc_bill bl
+        <where>
+            1=1
+            And bl.supplier_brand_id=#{supplierBrandId}
+            <if test="dto.tag != null and dto.tag != ''">
+                AND bl.tag=#{dto.tag}
+            </if>
+
+            <if test="dto.ipVolumeLeft > 0">
+                AND bl.ips  &gt;= #{dto.ipVolumeLeft}
+            </if>
+            <if test="dto.ipVolumeRight > 0">
+                AND  bl.ips  &lt;= #{dto.ipVolumeRight}
+            </if>
+
+            <if test="dto.amountLeft > 0">
+                AND bl.amount  &gt;= #{dto.amountLeft}
+            </if>
+            <if test="dto.amountRight > 0">
+                AND  bl.amount  &lt;= #{dto.amountRight}
+            </if>
+
+            <if test="dto.sort == null or dto.sort == ''">
+                Order by bl.create_at desc
+            </if>
+
+            <if test="dto.sort != null and dto.sort != ''">
+                <choose>
+                    <when test='dto.sort == "1"'>
+                        Order by bl.create_at desc
+                    </when>
+                    <when test='dto.sort == "2"'>
+                        Order by bl.amount desc
+                    </when>
+                </choose>
+            </if>
+
+        </where>
+    </select>
+
+</mapper>

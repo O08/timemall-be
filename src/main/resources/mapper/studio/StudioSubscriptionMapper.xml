@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.studio.mapper.StudioSubscriptionMapper">
+    <sql id="tableName">
+        subscription
+    </sql>
+
+    <sql id="baseColumn">
+        id,subscriber_type,seller_brand_id,buyer_brand_id,plan_id,trial_period_start_at,trail_period_end_at,starts_at,ends_at,canceled_at,recent_plan_price,status,bill_calendar,remark,create_at,modified_at
+    </sql>
+
+    <select id="selectPageByQ" resultType="com.norm.timemall.app.studio.domain.ro.StudioGetSubscriptionPageRO">
+
+        select s.name productName,p.name planName,p.price planPrice,s.bill_calendar,s.status,s.remark,s.starts_at,s.ends_at,s.canceled_at,s.trial_period_start_at,s.trial_period_end_at,buyer.customer_id buyerUserId,buyer.brand_name buyerName,buyer.avator buyerAvatar
+        from subscription s
+        inner join subs_plan p
+          on s.plan_id=p.id
+        inner join brand buyer
+           on s.subscriber_fid=buyer.id
+        <where>
+            1=1
+            and s.seller_brand_id=#{seller_brand_id}
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, buyer.brand_name)>0 or locate(#{dto.q}, s.name)>0  or  locate(#{dto.q}, p.name)>0 )
+            </if>
+            <if test="dto.tag != null and dto.tag != ''">
+                AND s.status=#{dto.tag}
+            </if>
+            <if test="dto.filter != null and dto.filter != ''">
+                <choose>
+                    <when test='dto.filter == "1"'>
+                        AND DATE_SUB(CURDATE(), INTERVAL 7 DAY)  &lt;= date(s.create_at)
+                    </when>
+                    <when test='dto.filter == "2"'>
+                        AND DATE_SUB(CURDATE(), INTERVAL 30 DAY)  &lt;= date(s.create_at)
+                    </when>
+                </choose>
+            </if>
+        </where>
+        order by s.create_at desc
+
+    </select>
+
+</mapper>

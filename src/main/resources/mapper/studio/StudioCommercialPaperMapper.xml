@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.studio.mapper.StudioCommercialPaperMapper">
+
+    <select id="selectPaperPageForBrand" resultType="com.norm.timemall.app.studio.domain.ro.StudioFetchMpsPaperRO">
+
+        select p.id,p.title,p.tag,b1.brand_name supplier,b2.brand_name purchaser,b2.avator purchaserAvatar,b2.customer_id purchaserUserId, p.piece,p.bonus,p.create_at
+        from commercial_paper p
+        left join brand b1
+          on b1.id=p.supplier
+        left join brand b2
+          on b2.id=p.purchaser
+
+        <where>
+            1=1
+            and p.supplier = #{dto.brandId}
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, p.title)>0 or locate(#{dto.q}, p.id)>0  or locate(#{dto.q}, b2.brand_name)>0)
+            </if>
+            <if test="dto.tag != null and dto.tag != ''">
+                AND p.tag = #{dto.tag}
+            </if>
+            <if test="dto.filter != null and dto.filter != ''">
+                <choose>
+                    <when test='dto.filter == "1"'>
+                        AND DATE_SUB(CURDATE(), INTERVAL 7 DAY)  &lt;= date(p.create_at)
+                    </when>
+                    <when test='dto.filter == "2"'>
+                        AND DATE_SUB(CURDATE(), INTERVAL 30 DAY)  &lt;= date(p.create_at)
+                    </when>
+                </choose>
+            </if>
+            order by p.create_at desc
+        </where>
+    </select>
+    <select id="selectPaperPageForPublic" resultType="com.norm.timemall.app.studio.domain.ro.StudioDiscoverMpsPaperPageRO">
+        select p.id,p.title,p.piece,p.bonus,b.avator avatar,b.brand_name,p.delivery_cycle
+        from commercial_paper p
+        left join brand b
+          on p.purchaser = b.id
+        <where>
+            1=1
+            and p.tag='2'
+            <if test="q != null and q != ''">
+                AND ( locate(#{q}, p.title) > 0  or  locate(#{q}, p.piece) > 0 )
+            </if>
+            and ( DATE_ADD( p.modified_at,  INTERVAL p.contract_validity_period DAY) > now() )
+            and ( p.duration is null or (now() > DATE_ADD( p.create_at,  INTERVAL p.duration DAY)))
+        </where>
+    </select>
+    <resultMap id="selectPaperDetailResultMap" type="com.norm.timemall.app.studio.domain.pojo.StudioFetchMpsPaperDetail">
+        <result property="title" column="title"/>
+        <result property="sow" column="sow"/>
+        <result property="piece" column="piece"/>
+        <result property="bonus" column="bonus"/>
+        <result property="supplier" column="supplier"/>
+        <result property="purchaser" column="purchaser"/>
+        <result property="purchaserId" column="purchaserId"/>
+        <result property="tag" column="tag"/>
+        <result property="mpsId" column="mps_id"/>
+        <result property="paperId" column="paperId"/>
+        <result property="deliveryCycle" column="delivery_cycle"/>
+        <result property="contractValidityPeriod" column="contract_validity_period"/>
+        <result property="createAt" column="create_at"/>
+        <result property="modifiedAt" column="modified_at"/>
+        <result property="purchaserUserId" column="purchaserUserId"/>
+        <result property="supplierUserId" column="supplierUserId"/>
+
+        <result property="difficulty" column="difficulty"/>
+        <result property="experience" column="experience"/>
+        <result property="location" column="location"/>
+        <result property="bidElectricity" column="bid_electricity"/>
+        <result property="bidAt" column="bid_at"/>
+
+        <result property="skills"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
+                column="skills"/>
+
+
+    </resultMap>
+    <select id="selectPaperDetailById" resultMap="selectPaperDetailResultMap">
+
+        select
+          p.bid_at,p.skills,p.difficulty,p.experience,p.location,p.bid_electricity, b1.customer_id supplierUserId, p.title,p.sow,p.piece,p.bonus,b1.brand_name supplier,b2.brand_name purchaser,p.tag,p.mps_id,p.id paperId,
+           p.purchaser purchaserId,p.delivery_cycle,p.contract_validity_period,p.create_at,p.modified_at,b2.customer_id purchaserUserId
+        from commercial_paper p
+        left join brand b1
+            on b1.id=p.supplier
+        left join brand b2
+            on b2.id=p.purchaser
+        where p.id=#{id}
+    </select>
+    <select id="selectFirstSupplierByBrandId" resultType="com.norm.timemall.app.studio.domain.ro.StudioFetchFirstSupplierRO">
+
+        select b.id,b.brand_name
+        from commercial_paper p
+        inner join brand b
+          on p.supplier=b.id
+        <where>
+            1=1
+            And p.purchaser=#{purchaser}
+            <if test="q != null and q != ''">
+                AND locate(#{q}, b.brand_name)>0
+            </if>
+            group by b.id,b.brand_name
+        </where>
+    </select>
+    <select id="selectPaperByDeliverId" resultType="com.norm.timemall.app.base.mo.CommercialPaper">
+
+        select p.id,p.template_id,p.mps_id,p.title,p.sow,p.piece,p.bonus,p.supplier,p.purchaser,p.tag,p.create_at,p.modified_at
+        from commercial_paper p
+        inner join commercial_paper_deliver d
+          on p.id=d.paper_id
+        <where>
+            1=1
+            and d.id=#{deliverId}
+            and d.tag=#{tag}
+        </where>
+    </select>
+</mapper>

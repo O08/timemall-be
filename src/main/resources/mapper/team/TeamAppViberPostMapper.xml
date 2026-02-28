@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamAppViberPostMapper">
+    <sql id="tableName">
+        app_viber_post
+    </sql>
+
+    <sql id="baseColumn">
+        id,channel,author_brand_id,text_msg,embed,shares,comments,likes,create_at,modified_at
+    </sql>
+
+
+    <resultMap id="TeamAppViberFetchPostRecordRO" type="com.norm.timemall.app.team.domain.ro.TeamAppViberFetchOnePostRO">
+        <id property="postId" column="postId"/>
+        <result property="oasisId" column="oasis_id"/>
+        <result property="channel" column="channel"/>
+
+        <result property="comments" column="comments"/>
+        <result property="likes" column="likes"/>
+        <result property="shares" column="shares"/>
+        <result property="textMsg" column="text_msg"/>
+        <result property="createdAt" column="create_at"/>
+
+
+        <result property="embed"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
+                column="embed"/>
+
+        <association property="author" javaType="com.norm.timemall.app.team.domain.pojo.TeamAppViberPostAuthor">
+            <id property="brandId" column="authorBrandId"/>
+            <result property="avatar" column="authorAvatar"/>
+            <result property="brandName" column="authorName"/>
+            <result property="userId" column="authorUserId"/>
+            <result property="hasLike" column="has_like"/>
+            <result property="hasShare" column="has_share"/>
+        </association>
+
+
+
+
+    </resultMap>
+
+    <select id="selectPostInfoById"  resultMap="TeamAppViberFetchPostRecordRO">
+
+        select
+         p.id as postId,p.embed,p.text_msg,p.likes,p.shares,p.comments,p.create_at,p.oasis_id,p.channel,
+         b.id as authorBrandId, b.avator as authorAvatar,b.brand_name as authorName,b.customer_id as authorUserId,
+         i.has_like,i.has_share
+        from app_viber_post p
+        inner join  brand b
+          on p.author_brand_id=b.id
+        LEFT JOIN app_viber_post_interact i ON i.post_id = p.id AND i.reader_brand_id = #{currentUserBrandId}
+        where p.id=#{postId}
+
+    </select>
+
+
+
+    <select id="selectPostPage"  resultMap="TeamAppViberFetchPostRecordRO">
+        select
+         p.id as postId,p.embed,p.text_msg,p.likes,p.shares,p.comments,p.create_at,p.oasis_id,p.channel,
+         b.id as authorBrandId, b.avator as authorAvatar,b.brand_name as authorName,b.customer_id as authorUserId,
+         i.has_like,i.has_share
+        from app_viber_post p
+        inner join  brand b
+          on p.author_brand_id=b.id
+        LEFT JOIN app_viber_post_interact i ON i.post_id = p.id AND i.reader_brand_id = #{currentUserBrandId}
+        where 1=1
+        and p.channel = #{dto.channel}
+        <if test="dto.q != null and dto.q != ''">
+            AND ( locate(#{dto.q}, b.brand_name)>0
+            or locate(#{dto.q}, p.text_msg)>0
+            )
+        </if>
+        <if test="dto.endAt != null">
+            and p.create_at &lt;= #{dto.endAt}
+        </if>
+        <if test="dto.sort != null and dto.sort != ''">
+            <choose>
+                <when test='dto.sort == "1"'>
+                    order by p.likes desc
+                </when>
+                <when test='dto.sort == "2"'>
+                    order by p.comments desc
+                </when>
+                <when test='dto.sort == "3"'>
+                    order by p.shares desc
+                </when>
+                <when test='dto.sort == "4"'>
+                    order by p.create_at desc
+                </when>
+            </choose>
+        </if>
+    </select>
+
+</mapper>

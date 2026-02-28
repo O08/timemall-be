@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.pod.mapper.PodProposalMapper">
+
+    <select id="selectPageByQ" resultType="com.norm.timemall.app.pod.domain.vo.PodGetProposalsPageRO">
+        select p.id,p.create_at,p.project_no,p.project_name,p.project_starts,p.project_ends,p.total,p.project_status, seller.customer_id sellerUserId,seller.brand_name sellerName,seller.avator sellerAvatar
+        from proposal p
+        inner join brand seller
+        on seller.id=p.seller_brand_id
+        <where>
+            1=1
+            and p.buyer_brand_id=#{buyer_brand_id}
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, seller.brand_name)>0 or locate(#{dto.q}, p.project_no)>0  or  locate(#{dto.q}, p.project_name)>0 or locate(#{dto.q}, p.services)>0)
+            </if>
+            <if test="dto.tag != null and dto.tag != ''">
+                AND p.project_status=#{dto.tag}
+            </if>
+        </where>
+        order by p.create_at desc
+
+    </select>
+
+</mapper>

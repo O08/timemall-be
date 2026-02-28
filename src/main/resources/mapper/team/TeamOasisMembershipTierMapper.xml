@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamOasisMembershipTierMapper">
+    <sql id="tableName">
+        oasis_membership_tier
+    </sql>
+
+    <sql id="baseColumn">
+        id,oasis_id,tier_name,tier_description,thumbnail,subscribe_role,price,sold_orders,members,status,od,create_at,modified_at
+    </sql>
+
+    <resultMap id="tierFeatureListResultMap" type="com.norm.timemall.app.team.domain.pojo.TeamMembershipFetchSellingTierFeature">
+        <result property="channelId" column="channelId"/>
+        <result property="channelName" column="channel_name"/>
+    </resultMap>
+
+    <resultMap id="selectSellingTierResultMap" type="com.norm.timemall.app.team.domain.ro.TeamMembershipFetchSellingTierRO">
+        <result property="tierId" column="tierId"/>
+        <result property="tierName" column="tier_name"/>
+        <result property="tierDescription" column="tier_description"/>
+        <result property="price" column="price"/>
+        <result property="thumbnail" column="thumbnail"/>
+        <result property="endAt" column="endAt"/>
+
+        <collection property="features" ofType="com.norm.timemall.app.team.domain.pojo.TeamMembershipFetchSellingTierFeature" javaType="ArrayList" resultMap="tierFeatureListResultMap"/>
+    </resultMap>
+
+    <select id="selectSellingTierByOasisIdAndBuyerBrandId" resultMap="selectSellingTierResultMap">
+
+        select
+          t.id tierId,
+          t.tier_name,
+          t.tier_description,
+          t.price,
+          t.thumbnail,
+          chn.id channelId,
+          chn.channel_name,
+          mr.ends_at endAt
+
+        from oasis_membership_tier t
+        left join oasis_member_role mr
+          on t.subscribe_role=mr.oasis_role_id
+           and mr.member_brand_id=#{currentBuyerBrandId}
+        left join oasis_role_channel rc
+          on rc.oasis_role_id = t.subscribe_role
+        left join oasis_channel chn
+          on rc.oasis_channel_id=chn.id
+
+        where t.oasis_id=#{oasisId}
+          and t.status='2'
+        order by t.od asc
+
+    </select>
+
+</mapper>
