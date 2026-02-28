@@ -4,7 +4,6 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.norm.timemall.app.base.config.env.EnvBean;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.RichTextConfigEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
@@ -30,8 +29,6 @@ public class TaskRiskAuditScheduleServiceImpl implements TaskRiskAuditScheduleSe
     @Autowired
     private ZohoEmailApi zohoEmailApi;
 
-    @Autowired
-    private EnvBean envBean;
     @Override
     public void sendRiskAuditEmail() {
         log.info("--- send risk audit report email start ---");
@@ -49,7 +46,7 @@ public class TaskRiskAuditScheduleServiceImpl implements TaskRiskAuditScheduleSe
         // 生成邮件内容
         String content = emailHtmlConfig.getContent().replace("#{riskItems}",report);
         // 发送邮件 1 发送对象  2 主题 3  html
-        zohoEmailApi.sendNoreplyEmail(emailHtmlConfig.getContact(),envBean.getSoftwareDevelopmentLifeCycle()+"_平台运行报告：" + DateUtil.today(),content);
+        zohoEmailApi.sendNoreplyEmail(emailHtmlConfig.getContact(),"平台运行报告：" + DateUtil.today(),content);
 
         log.info("--- send risk audit report email end ---");
 
@@ -68,7 +65,7 @@ public class TaskRiskAuditScheduleServiceImpl implements TaskRiskAuditScheduleSe
                     + "<td>" +r.getRiskName()+ "</td>"
                     + "<td>" +r.getRiskVal()+ "</td>"
                     + "<td>" +r.getDifference()+ "</td>"
-                    + "<td>" + (needCheck.equals(r.getNeedCheck()) ? "✔" : "--") + "</td>"
+                    + "<td>" + (needCheck.equals(r.getNeedCheck()) ? "⚠" : "--") + "</td>"
                     + "<td>" + DateUtil.format( r.getModifiedAt(), DateTimeFormatter.ISO_DATE)+ "</td>"
                     + "</tr>";
             res=res+row;
