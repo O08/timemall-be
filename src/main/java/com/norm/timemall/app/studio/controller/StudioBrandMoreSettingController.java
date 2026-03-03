@@ -5,6 +5,7 @@ import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.studio.domain.dto.StudioBrandBasicSetting;
 import com.norm.timemall.app.studio.service.StudioBrandSubService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -20,7 +21,7 @@ public class StudioBrandMoreSettingController {
      */
     @ResponseBody
     @PutMapping(value = "/api/v1/web_estudio/brand/basic_setting")
-    public SuccessVO settingBasic(@RequestBody StudioBrandBasicSetting dto){
+    public SuccessVO settingBasic(@Validated @RequestBody StudioBrandBasicSetting dto){
 
         studioBrandSubService.modifyBrandSub(dto);
         return new SuccessVO(CodeEnum.SUCCESS);

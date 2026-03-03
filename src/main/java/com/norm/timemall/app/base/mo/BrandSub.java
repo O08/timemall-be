@@ -80,4 +80,9 @@ public class BrandSub extends Model<BrandSub> implements Serializable {
      */
     private String businessScope;
 
+    /**
+     * 显示收徒信息：1 - 显示， 0-不显示
+     */
+    private String enableMentorship;
+
 }

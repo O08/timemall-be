@@ -54,7 +54,7 @@ public class Brand extends Model<Brand> implements Serializable {
      */
     private String avator;
     /**
-     * customerId
+     * user id
      */
     private String customerId;
     /**
@@ -134,6 +134,7 @@ public class Brand extends Model<Brand> implements Serializable {
 
     private String hiLinkUrl;
 
+    private String mentorHonor;
     /**
      * createAt
      */
