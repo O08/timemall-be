@@ -68,6 +68,13 @@
                 </when>
             </choose>
         </if>
+        <if test="dto.enableMentorship != null and dto.enableMentorship != ''">
+            <choose>
+                <when test='dto.enableMentorship == "1"'>
+                    AND s.enable_mentorship='1'
+                </when>
+            </choose>
+        </if>
         <if test="dto.loginInWeek != null and dto.loginInWeek != ''">
             <choose>
                 <when test='dto.loginInWeek == "1"'>
