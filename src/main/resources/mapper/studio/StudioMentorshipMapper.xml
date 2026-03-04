@@ -13,7 +13,7 @@
         SELECT 
             m.id,
             b.brand_name as menteeName,
-            b.mentee_user_id as menteeUserId,
+            m.mentee_user_id as menteeUserId,
             b.avator as menteeAvatar,
             m.past_year_messages as pastYearMessages,
             m.guidance_period_earning as guidancePeriodEarning,
