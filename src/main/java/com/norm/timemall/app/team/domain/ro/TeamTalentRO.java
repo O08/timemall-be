@@ -22,4 +22,5 @@ public class TeamTalentRO {
     private String availableForWork;
     private String hiring;
     private String typeOfBusiness;
+    private String mentorHonor;
 }
