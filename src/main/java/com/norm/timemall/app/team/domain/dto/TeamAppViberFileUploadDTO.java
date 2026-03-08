@@ -18,7 +18,7 @@ public class TeamAppViberFileUploadDTO {
     private MultipartFile file;
 
     @NotBlank(message = "Scene is required")
-    @EnumCheck(enumClass = AppViberFileSceneEnum.class, message = "scene must be 'image' or 'attachment'")
+    @EnumCheck(enumClass = AppViberFileSceneEnum.class, message = "scene must be 'image' or 'attachment' or 'comic' or 'local_audio' or 'local_video'")
     private String scene;
 
 }

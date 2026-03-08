@@ -8,22 +8,21 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.gson.Gson;
-import com.norm.timemall.app.base.enums.AppViberPostEmbedFacetEnum;
 import com.norm.timemall.app.base.enums.AppViberPostFileStautsEnum;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
+import com.norm.timemall.app.base.exception.QuickMessageException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.AppViberComment;
 import com.norm.timemall.app.base.mo.AppViberCommentInteract;
 import com.norm.timemall.app.base.mo.AppViberPost;
 import com.norm.timemall.app.base.mo.AppViberPostInteract;
 import com.norm.timemall.app.team.domain.dto.*;
-import com.norm.timemall.app.team.domain.pojo.TeamAppViberCommentInteractionHelper;
-import com.norm.timemall.app.team.domain.pojo.TeamAppViberPostInteractionHelper;
-import com.norm.timemall.app.team.domain.pojo.TeamAppViberPostEmbed;
+import com.norm.timemall.app.team.domain.pojo.*;
 import com.norm.timemall.app.team.domain.ro.TeamAppViberFetchCommentPageRO;
 import com.norm.timemall.app.team.domain.ro.TeamAppViberFetchOnePostRO;
 import com.norm.timemall.app.team.domain.vo.TeamAppViberFetchOnePostVO;
+import com.norm.timemall.app.team.helper.TeamViberHelper;
 import com.norm.timemall.app.team.mapper.TeamAppViberCommentInteractMapper;
 import com.norm.timemall.app.team.mapper.TeamAppViberCommentMapper;
 import com.norm.timemall.app.team.mapper.TeamAppViberPostInteractMapper;
@@ -36,9 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class TeamAppViberServiceImpl implements TeamAppViberService {
@@ -220,17 +217,7 @@ public class TeamAppViberServiceImpl implements TeamAppViberService {
     }
 
     private void markFileAsInUnUse(TeamAppViberPostEmbed embed){
-        List<String> fileLinks=new ArrayList<>();
-        if(embed!=null && embed.getFacet().equals(AppViberPostEmbedFacetEnum.ATTACHMENT.getCode())){
-            embed.getAttachments().forEach(a->{
-                fileLinks.add(a.getUrl());
-            });
-        }
-        if(embed!=null && embed.getFacet().equals(AppViberPostEmbedFacetEnum.IMAGE.getCode())){
-            embed.getImages().forEach(a->{
-                fileLinks.add(a.getLink());
-            });
-        }
+        List<String> fileLinks= TeamViberHelper.getLocalLinksFromEmbed(embed);
 
         ListUtil.partition(fileLinks,5).forEach(e->{
             teamAppViberPostFileMapper.batchUpdateStatusByLink(e, AppViberPostFileStautsEnum.UNUSED.getCode());
@@ -336,17 +323,7 @@ public class TeamAppViberServiceImpl implements TeamAppViberService {
 
     private void markFileAsInService(TeamAppViberCreatePostDTO dto){
         TeamAppViberPostEmbed embed = dto.getEmbed();
-        List<String> fileLinks=new ArrayList<>();
-        if(dto.getEmbed()!=null && embed.getFacet().equals(AppViberPostEmbedFacetEnum.ATTACHMENT.getCode())){
-            embed.getAttachments().forEach(a->{
-                fileLinks.add(a.getUrl());
-            });
-        }
-        if(dto.getEmbed()!=null && embed.getFacet().equals(AppViberPostEmbedFacetEnum.IMAGE.getCode())){
-            embed.getImages().forEach(a->{
-                fileLinks.add(a.getLink());
-            });
-        }
+        List<String> fileLinks= TeamViberHelper.getLocalLinksFromEmbed(embed);
 
         ListUtil.partition(fileLinks,5).forEach(e->{
             teamAppViberPostFileMapper.batchUpdateStatusByLink(e, AppViberPostFileStautsEnum.IN_SERVICE.getCode());
@@ -359,64 +336,36 @@ public class TeamAppViberServiceImpl implements TeamAppViberService {
         createPostSizeCheck(dto);
     }
 
-    private void  createPostEmptyCheck(TeamAppViberCreatePostDTO dto){
+    private void createPostEmptyCheck(TeamAppViberCreatePostDTO dto) {
         TeamAppViberPostEmbed embed = dto.getEmbed();
-        boolean isEmptyTextMsgAndEmbed=CharSequenceUtil.isBlank(dto.getTextMsg()) && embed==null;
+        boolean textBlank = CharSequenceUtil.isBlank(dto.getTextMsg());
 
-        boolean facetNotValid=embed!=null && !AppViberPostEmbedFacetEnum.validation(embed.getFacet());
+        // Case 1: Everything is empty -> Fail
+        if (textBlank && embed == null) {
+            throw new QuickMessageException("消息内容不能为空");
+        }
 
-        boolean attachmentPostIsEmpty=embed != null && embed.getFacet().equals(AppViberPostEmbedFacetEnum.ATTACHMENT.getCode())
-                && (embed.getAttachments()==null || embed.getAttachments().isEmpty());
-
-        boolean imagePostIsEmpty=embed != null && embed.getFacet().equals(AppViberPostEmbedFacetEnum.IMAGE.getCode())
-                && (embed.getImages()==null || embed.getImages().isEmpty());
-
-        boolean thirdPartyImagePostIsEmpty=embed != null && embed.getFacet().equals(AppViberPostEmbedFacetEnum.THIRD_PARTY_IMAGE.getCode())
-                && (embed.getImages()==null || embed.getImages().isEmpty());
-
-        boolean thirdPartyVideoPostIsEmpty=embed != null && embed.getFacet().equals(AppViberPostEmbedFacetEnum.THIRD_PARTY_VIDEO.getCode())
-                && (embed.getVideos()==null || embed.getVideos().isEmpty());
-
-        boolean thirdPartyAudioPostIsEmpty=embed != null && embed.getFacet().equals(AppViberPostEmbedFacetEnum.THIRD_PARTY_AUDIO.getCode())
-                && (embed.getAudios()==null || embed.getAudios().isEmpty());
-
-        boolean linkPostIsEmpty=embed != null && embed.getFacet().equals(AppViberPostEmbedFacetEnum.LINK.getCode())
-                && (embed.getLinks()==null || embed.getLinks().isEmpty());
-
-
-
-        if(isEmptyTextMsgAndEmbed || facetNotValid || attachmentPostIsEmpty || imagePostIsEmpty
-                || thirdPartyImagePostIsEmpty || thirdPartyVideoPostIsEmpty || thirdPartyAudioPostIsEmpty || linkPostIsEmpty)
-        {
-            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        // Case 2: Embed exists -> Must be valid AND have content
+        if (embed != null) {
+            TeamViberHelper.doContentCheckWhenEmbedNotNull(embed);
         }
     }
+
+
     private void createPostSizeCheck(TeamAppViberCreatePostDTO dto){
         TeamAppViberPostEmbed embed = dto.getEmbed();
-        
-        boolean attachmentPostExceedsLimit = embed != null && embed.getFacet().equals(AppViberPostEmbedFacetEnum.ATTACHMENT.getCode())
-                && (embed.getAttachments() != null && embed.getAttachments().size() >= 10);
+        if (embed == null) {
+            return;
+        }
 
-        boolean imagePostExceedsLimit = embed != null && embed.getFacet().equals(AppViberPostEmbedFacetEnum.IMAGE.getCode())
-                && (embed.getImages() != null && embed.getImages().size() >= 50);
+        // Get the checker for the facet. If no checker exists, it means no limit is defined (default to false).
+        boolean exceedsLimit = TeamViberHelper.doPostSizeCheck(embed);
 
-        boolean thirdPartyImagePostExceedsLimit = embed != null && embed.getFacet().equals(AppViberPostEmbedFacetEnum.THIRD_PARTY_IMAGE.getCode())
-                && (embed.getImages() != null && embed.getImages().size() >= 50);
-
-        boolean thirdPartyVideoPostExceedsLimit = embed != null && embed.getFacet().equals(AppViberPostEmbedFacetEnum.THIRD_PARTY_VIDEO.getCode())
-                && (embed.getVideos() != null && embed.getVideos().size() >= 2);
-
-        boolean thirdPartyAudioPostExceedsLimit = embed != null && embed.getFacet().equals(AppViberPostEmbedFacetEnum.THIRD_PARTY_AUDIO.getCode())
-                && (embed.getAudios() != null && embed.getAudios().size() >= 10);
-
-        boolean linkPostExceedsLimit = embed != null && embed.getFacet().equals(AppViberPostEmbedFacetEnum.LINK.getCode())
-                && (embed.getLinks() != null && embed.getLinks().size() >= 2);
-
-        if (attachmentPostExceedsLimit || imagePostExceedsLimit || thirdPartyImagePostExceedsLimit
-                || thirdPartyVideoPostExceedsLimit || thirdPartyAudioPostExceedsLimit || linkPostExceedsLimit) {
+        if (exceedsLimit) {
             throw new ErrorCodeException(CodeEnum.MAX_LIMIT);
         }
     }
+
 
 
 }

@@ -20,6 +20,7 @@ import com.norm.timemall.app.team.domain.ro.FetchOneOasisChannelGeneralInfoRO;
 import com.norm.timemall.app.team.domain.ro.TeamAppViberFetchCommentPageRO;
 import com.norm.timemall.app.team.domain.ro.TeamAppViberFetchOnePostRO;
 import com.norm.timemall.app.team.domain.vo.*;
+import com.norm.timemall.app.team.helper.TeamViberHelper;
 import com.norm.timemall.app.team.service.TeamAppViberService;
 import com.norm.timemall.app.team.service.TeamDataPolicyService;
 import com.norm.timemall.app.team.service.TeamOasisChannelService;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Set;
 
 @RestController
 public class TeamAppViberController {
@@ -215,8 +217,8 @@ public class TeamAppViberController {
             fileUri = fileStoreService.storeImageAndProcessAsAvifWithUnlimitedAccess(dto.getFile(), FileStoreDir.VIBER_FILE);
         }
 
-        if(AppViberFileSceneEnum.ATTACHMENT.getMark().equals(dto.getScene())){
-            fileUri = fileStoreService.storeWithUnlimitedAccess(dto.getFile(), FileStoreDir.VIBER_FILE);
+        if(TeamViberHelper.isPrivateFile(dto.getScene())){
+            fileUri = fileStoreService.storeWithLimitedAccess(dto.getFile(), FileStoreDir.VIBER_FILE);
         }
 
         return teamAppViberService.uploadFile(dto,fileUri,dto.getFile());

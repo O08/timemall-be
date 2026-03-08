@@ -9,6 +9,10 @@ public enum AppViberPostEmbedFacetEnum {
     THIRD_PARTY_VIDEO("third_party_video", "第三方视频资源"),
     THIRD_PARTY_AUDIO("third_party_audio", "第三方音频资源"),
     LINK("link", "统一链接"),
+
+    COMIC("comic", "漫画"),
+    LOCAL_AUDIO("local_audio", "本地音频资源"),
+    LOCAL_VIDEO("local_video", "本地视频资源"),
     ;
 
     private String code;

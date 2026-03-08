@@ -12,4 +12,5 @@ public class TeamAppViberPostEmbed {
     private ArrayList<TeamAppViberPostEmbedLink> links;
     private ArrayList<TeamAppViberPostEmbedVideo> videos;
     private ArrayList<TeamAppViberPostEmbedAudio> audios;
+    private TeamAppViberPostEmbedComic comic;
 }
