@@ -1,5 +1,6 @@
 package com.norm.timemall.app.base.controller;
 
+import com.norm.timemall.app.base.config.env.EnvBean;
 import com.norm.timemall.app.base.service.FileStoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -21,33 +22,31 @@ public class OssController {
 
     @Autowired
     private FileStoreService fileStoreService;
+    @Autowired
+    private EnvBean envBean;
 
     @RequestMapping(value = "/api/file/{fileName:.+}/**", method = {RequestMethod.GET, RequestMethod.HEAD})
     public ResponseEntity<Resource>  downloadFile(HttpServletRequest request,
                                     @PathVariable("fileName") String fileName,
                                     @RequestParam("etag") String tag){
         String referer = request.getHeader("Referer");
-        String remoteAddr = request.getRemoteAddr();
         String userAgent = request.getHeader("User-Agent");
 
-        // 1. 本地/内网允许 (开发调试)
-        boolean isLocal = remoteAddr.equals("127.0.0.1") ||
-                remoteAddr.equals("0:0:0:0:0:0:0:1") ||
-                remoteAddr.startsWith("192.168.");
+        boolean isPrdEnv=envBean.getWebsite().contains("bluvarri.com");
 
-        // 2. Web 端域名校验
+        //  Web 端域名校验
         boolean isFromAuthorizedWeb = referer != null && (
                 referer.startsWith("https://bluvarri.com") ||
                         referer.startsWith("https://www.bluvarri.com")
         );
 
-        // 3. App 端特征校验 (如果是 App 请求，Referer 可能为空，但 UA 通常包含特定字符)
+        //  App 端特征校验 (如果是 App 请求，Referer 可能为空，但 UA 通常包含特定字符)
         // 假设你的 App User-Agent 包含 "BluvApp"
         boolean isFromApp = userAgent != null && userAgent.contains("BlvApp");
 
         // --- 最终判定逻辑 ---
-        // 如果既不是本地，也不是来自授权网页，也不是来自 App，则拦截
-        if (!isLocal && !isFromAuthorizedWeb && !isFromApp) {
+        // 如果既不是本地与测试，也不是来自授权网页，也不是来自 App，则拦截
+        if (isPrdEnv  && !isFromAuthorizedWeb && !isFromApp) {
             // 这里顺便处理了 Referer 为空的情况
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
