@@ -54,7 +54,7 @@ public class TeamAppViberController {
 
 
     @PostMapping("/api/v1/app/viber/feed/post/create")
-    public SuccessVO createPost(@Validated @RequestBody TeamAppViberCreatePostDTO dto) {
+    public TeamAppViberFetchOnePostVO createPost(@Validated @RequestBody TeamAppViberCreatePostDTO dto) {
 
         // if author mute，can't create post
         FetchOneOasisChannelGeneralInfoRO channelInfo = teamOasisChannelService.findOasisOneChannelGeneralInfo(dto.getChannel());
@@ -67,8 +67,7 @@ public class TeamAppViberController {
         if(!enableRW){
             throw new ErrorCodeException(CodeEnum.USER_ROLE_NOT_CORRECT);
         }
-        teamAppViberService.createPost(dto, channelInfo.getOasisId());
-        return new SuccessVO(CodeEnum.SUCCESS);
+       return teamAppViberService.createPost(dto, channelInfo.getOasisId());
     }
 
     @GetMapping("/api/v1/app/viber/feed/comment/getList")

@@ -296,7 +296,7 @@ public class TeamAppViberServiceImpl implements TeamAppViberService {
     }
 
     @Override
-    public void createPost(TeamAppViberCreatePostDTO dto,String oasisId) {
+    public TeamAppViberFetchOnePostVO createPost(TeamAppViberCreatePostDTO dto,String oasisId) {
         // rule check
         createPostRuleCheck(dto);
         // insert new record
@@ -319,6 +319,8 @@ public class TeamAppViberServiceImpl implements TeamAppViberService {
         teamAppViberPostMapper.insert(post);
 
         markFileAsInService(dto);
+
+        return fetchOnePost(post.getId());
     }
 
     private void markFileAsInService(TeamAppViberCreatePostDTO dto){
