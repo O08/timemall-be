@@ -62,15 +62,16 @@ public class OssController {
             fileName = fileName + '/' + arguments;
         }
 
+        String objectName="api/file/"+fileName;
         if (RequestMethod.HEAD.name().equalsIgnoreCase(request.getMethod())) {
-            if (fileStoreService.objectNameExists(fileName)) {
+            if (fileStoreService.objectNameExists(objectName)) {
                 return ResponseEntity.ok().build();
             } else {
                 return ResponseEntity.notFound().build();
             }
         }
 
-        Resource resource = fileStoreService.downloadAsResource("api/file/"+fileName,tag);
+        Resource resource = fileStoreService.downloadAsResource(objectName,tag);
         if (resource == null) {
             return ResponseEntity.notFound().build();
         }
