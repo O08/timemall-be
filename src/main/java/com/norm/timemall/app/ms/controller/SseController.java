@@ -3,9 +3,7 @@ package com.norm.timemall.app.ms.controller;
 import com.norm.timemall.app.base.entity.ResultVO;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.ms.helper.SseHelper;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -16,7 +14,6 @@ public class SseController {
     /**
      * 用于创建连接
      */
-    @CrossOrigin
     @GetMapping("/api/v1/ms/sse/connect")
     public SseEmitter connect() {
         String userId = SecurityUserHelper.getCurrentPrincipal().getUserId();

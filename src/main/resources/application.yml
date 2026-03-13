@@ -1,5 +1,6 @@
 server:
   port: ${port}
+  forward-headers-strategy: native
 spring:
   application:
     name: timemall
@@ -10,8 +11,8 @@ spring:
       enabled: true
   servlet:
     multipart:
-      max-file-size: 50MB
-      max-request-size: 50MB
+      max-file-size: 150MB
+      max-request-size: 150MB
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher

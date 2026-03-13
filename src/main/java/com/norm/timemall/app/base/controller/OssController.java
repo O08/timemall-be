@@ -9,16 +9,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.AntPathMatcher;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.HandlerMapping;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
-import java.io.IOException;
+
 
 @Controller
 public class OssController {
@@ -26,10 +22,10 @@ public class OssController {
     @Autowired
     private FileStoreService fileStoreService;
 
-    @GetMapping("/api/file/{fileName:.+}/**")
-    public ResponseEntity<Resource>  downloadFile(HttpServletRequest request, HttpServletResponse response,
+    @RequestMapping(value = "/api/file/{fileName:.+}/**", method = {RequestMethod.GET, RequestMethod.HEAD})
+    public ResponseEntity<Resource>  downloadFile(HttpServletRequest request,
                                     @PathVariable("fileName") String fileName,
-                                    @RequestParam("etag") String tag) throws IOException {
+                                    @RequestParam("etag") String tag){
         String referer = request.getHeader("Referer");
         String remoteAddr = request.getRemoteAddr();
         String userAgent = request.getHeader("User-Agent");
