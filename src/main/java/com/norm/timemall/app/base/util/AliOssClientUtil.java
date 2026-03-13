@@ -2,18 +2,18 @@ package com.norm.timemall.app.base.util;
 
 import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSS;
-import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.OSSException;
 import com.aliyun.oss.model.*;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.pojo.AliOssConfigureBean;
+import com.norm.timemall.app.base.pojo.OssResource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.*;
 
 
@@ -28,6 +28,10 @@ public class AliOssClientUtil {
 
     @Autowired
     private AliOssConfigureBean aliOssConfigure;
+
+    @Autowired
+    private OSS ossClient; // 自动复用全局唯一的连接池
+
     // 可公共读文件存储
     public  String fileUploadForPublic(MultipartFile file,String objectName){
         return doFileUpload(file,objectName,true);
@@ -50,29 +54,20 @@ public class AliOssClientUtil {
         return doImageProcessAsAvif(objectName,true);
     }
     public String doImageProcessAsAvif(String objectName, boolean publicAccess){
-        // 创建OSSClient实例。
-        OSS ossClient = new OSSClientBuilder().build(aliOssConfigure.getEndpoint(), aliOssConfigure.getAccessKeyId(),
-                aliOssConfigure.getAccessKeySecret());
+
         String bucket = publicAccess ? aliOssConfigure.getPublicBucket() : aliOssConfigure.getLimitedBucket();
         String url ="";
-        try {
-            OSSObject avifObj = toAvif(ossClient, bucket, objectName);
+        try (OSSObject avifObj = toAvif(ossClient, bucket, objectName)) {
 
             String targetName=objectName+"."+avifSuffix;
-//            Map<String, String> headers = new HashMap<>();
-//            headers.put("Content-type","image/avif");
             ObjectMetadata meta = new ObjectMetadata();
             meta.setContentType("image/avif");
 
             url=  uploadFileToOss(avifObj.getObjectContent(),targetName,publicAccess,meta);
-        }catch (OSSException oe) {
+        }catch (OSSException | IOException oe) {
             log.error("oss upload exception:",oe);
         } catch (ClientException  ce) {
             log.error("oss upload ClientException:",ce);
-        } finally {
-            if (ossClient != null) {
-                ossClient.shutdown();
-            }
         }
         return  url;
     }
@@ -96,9 +91,7 @@ public class AliOssClientUtil {
         return url;
     }
     private String uploadFileToOss(InputStream file, String objectName, boolean publicAccess, ObjectMetadata meta){
-        // 创建OSSClient实例。
-        OSS ossClient = new OSSClientBuilder().build(aliOssConfigure.getEndpoint(), aliOssConfigure.getAccessKeyId(),
-                aliOssConfigure.getAccessKeySecret());
+
         String bucket = publicAccess ? aliOssConfigure.getPublicBucket() : aliOssConfigure.getLimitedBucket();
 
         String url = "";
@@ -119,55 +112,10 @@ public class AliOssClientUtil {
             log.error("oss upload exception:",oe);
         } catch (ClientException  ce) {
             log.error("oss upload ClientException:",ce);
-        } finally {
-            if (ossClient != null) {
-                ossClient.shutdown();
-            }
         }
         return url;
     }
-    public void downloadToFile(String objectName,String c,HttpServletResponse response){
-        OSS ossClient = new OSSClientBuilder().build(aliOssConfigure.getEndpoint(), aliOssConfigure.getAccessKeyId(),
-                aliOssConfigure.getAccessKeySecret());
-        try {
-            OSSObject ossObject = ossClient.getObject(aliOssConfigure.getLimitedBucket(), objectName);
-            ObjectMetadata meta = ossObject.getObjectMetadata();
-            if(!meta.getETag().equals(c)){
-                throw new ErrorCodeException(CodeEnum.INVALID_TOKEN);
-            }
-            BufferedInputStream reader=new BufferedInputStream(ossObject.getObjectContent());
-            BufferedOutputStream out=new BufferedOutputStream(response.getOutputStream());
-            response.setContentType(meta.getContentType());
-            byte[] buffer=new byte[1024];
-            int L=0;
-            while((L=reader.read(buffer))!=-1){
-                out.write(buffer, 0,L);
-            }
 
-            if(out!=null){
-                out.flush();
-                out.close();
-            }
-            // 数据读取完成后，获取的流必须关闭，否则会造成连接泄漏，导致请求无连接可用，程序无法正常工作。
-            if(reader!=null){
-                reader.close();
-            }
-            // ossObject对象使用完毕后必须关闭，否则会造成连接泄漏，导致请求无连接可用，程序无法正常工作。
-            ossObject.close();
-        } catch (OSSException oe) {
-            log.error("oss download exception:",oe);
-        }catch (ErrorCodeException ec) {
-            throw new ErrorCodeException(CodeEnum.INVALID_TOKEN);
-        } catch (Throwable ce) {
-            log.error("oss download ClientException:",ce);
-        } finally {
-            if (ossClient != null) {
-                ossClient.shutdown();
-            }
-        }
-
-
-    }
     public void deletePublicBucketFile(String objectName){
         deleteBucketFile(aliOssConfigure.getPublicBucket(),objectName);
     }
@@ -177,9 +125,6 @@ public class AliOssClientUtil {
 
     public void deleteBucketFile(String bucketName, String objectName){
         log.info("deleting oss file:"+objectName);
-        // 创建OSSClient实例。
-        OSS ossClient = new OSSClientBuilder().build(aliOssConfigure.getEndpoint(), aliOssConfigure.getAccessKeyId(),
-                aliOssConfigure.getAccessKeySecret());
         try {
             // 删除文件或目录。如果要删除目录，目录必须为空。
             ossClient.deleteObject(bucketName, objectName);
@@ -187,12 +132,39 @@ public class AliOssClientUtil {
             log.error("oss delete exception:",oe);
         } catch (ClientException ce) {
             log.error("oss delete ClientException:",ce);
-        } finally {
-            if (ossClient != null) {
-                ossClient.shutdown();
-            }
+        }
+    }
+    public boolean objectNameExists(String objectName){
+
+        try {
+            return ossClient.doesObjectExist(aliOssConfigure.getLimitedBucket(), objectName);
+        } catch (Exception e) {
+            log.error("Error checking OSS file existence: {}", objectName, e);
+            return false;
         }
     }
 
 
+    public Resource downloadToResource(String objectName, String tag) {
+        OSSObject ossObject = null;
+        try {
+            ossObject = ossClient.getObject(aliOssConfigure.getLimitedBucket(), objectName);
+            ObjectMetadata meta = ossObject.getObjectMetadata();
+            if(!meta.getETag().equals(tag)){
+                throw new ErrorCodeException(CodeEnum.INVALID_TOKEN);
+            }
+            return new OssResource(ossObject, objectName);
+        } catch (Exception e) {
+            // 如果出错，必须手动关闭 ossObject，否则连接池会被占满
+            if (ossObject != null) {
+                try {
+                    ossObject.close();
+                } catch (IOException ex) {
+                    log.error("Error closing OSS object", ex);
+                }
+            }
+            log.error("Failed to load OSS file: {}", objectName, e);
+            return null;
+        }
+    }
 }

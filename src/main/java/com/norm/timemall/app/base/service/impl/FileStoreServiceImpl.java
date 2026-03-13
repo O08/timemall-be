@@ -10,10 +10,10 @@ import com.norm.timemall.app.base.enums.FileStoreDir;
 import com.norm.timemall.app.base.service.FileStoreService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.servlet.http.HttpServletResponse;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -43,10 +43,7 @@ public class FileStoreServiceImpl implements FileStoreService {
         return aliOssClientUtil.doImageUploadForPublic(file,destinationFile.toString());
     }
 
-    @Override
-    public void download(String filename,String c, HttpServletResponse response) {
-        aliOssClientUtil.downloadToFile(filename,c,response);
-    }
+
 
     private String storeFile(MultipartFile file, FileStoreDir dir,boolean isPublic){
         Path destinationFile = generateDestinationFilePath(file,dir,isPublic);
@@ -114,5 +111,15 @@ public class FileStoreServiceImpl implements FileStoreService {
         String imageUrl= uri.substring(0,uri.length()-5);// remove .avif suffix from url
         return deleteFile(imageUrl); // delete image file
 
+    }
+
+    @Override
+    public boolean objectNameExists(String fileName) {
+        return aliOssClientUtil.objectNameExists(fileName);
+    }
+
+    @Override
+    public Resource downloadAsResource(String fileName, String tag) {
+       return aliOssClientUtil.downloadToResource(fileName,tag);
     }
 }

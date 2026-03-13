@@ -2,10 +2,10 @@ package com.norm.timemall.app.base.service;
 
 
 import com.norm.timemall.app.base.enums.FileStoreDir;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.servlet.http.HttpServletResponse;
 
 @Service
 public interface FileStoreService {
@@ -26,9 +26,6 @@ public interface FileStoreService {
 
     String storeImageAndProcessAsAvifWithUnlimitedAccess(MultipartFile file, FileStoreDir dir);
 
-    void download(String fileName, String c,HttpServletResponse response);
-
-
     /**
      *
      * @param url
@@ -37,4 +34,7 @@ public interface FileStoreService {
     boolean deleteFile(String url);
     boolean deleteImageAndAvifFile(String url);
 
+    boolean objectNameExists(String fileName);
+
+    Resource downloadAsResource(String fileName, String tag);
 }
