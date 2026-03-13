@@ -1,6 +1,8 @@
 package com.norm.timemall.app.base.controller;
 
 import com.norm.timemall.app.base.config.env.EnvBean;
+import com.norm.timemall.app.base.entity.ErrorVO;
+import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.service.FileStoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -26,7 +28,7 @@ public class OssController {
     private EnvBean envBean;
 
     @RequestMapping(value = "/api/file/{fileName:.+}/**", method = {RequestMethod.GET, RequestMethod.HEAD})
-    public ResponseEntity<Resource>  downloadFile(HttpServletRequest request,
+    public ResponseEntity<?>  downloadFile(HttpServletRequest request,
                                     @PathVariable("fileName") String fileName,
                                     @RequestParam("etag") String tag){
         String referer = request.getHeader("Referer");
@@ -71,14 +73,22 @@ public class OssController {
             }
         }
 
-        Resource resource = fileStoreService.downloadAsResource(objectName,tag);
-        if (resource == null) {
-            return ResponseEntity.notFound().build();
+        try {
+            Resource resource = fileStoreService.downloadAsResource(objectName, tag);
+            if (resource == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE)
+                    .header(HttpHeaders.CACHE_CONTROL, "max-age=3600")
+                    .body(resource);
+
+        } catch (ErrorCodeException e) {
+            // 捕获业务异常并返回 JSON
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(new ErrorVO(e.getCode()));
         }
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE)
-                .header(HttpHeaders.CACHE_CONTROL, "max-age=3600")
-                .body(resource);
 
  
     }
