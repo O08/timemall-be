@@ -31,7 +31,7 @@ public class ExceptionHandle {
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<ErrorVO> exceptionHandler(Exception e) {
         log.error("error:", e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new ErrorVO(CodeEnum.INTERNAL_SERVER_ERROR));
     }
@@ -42,7 +42,7 @@ public class ExceptionHandle {
         ErrorVO vo = new ErrorVO();
         vo.setCode(CodeEnum.INVALID_PARAMETERS.getCode());
         vo.setMessage(e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(vo);
     }
@@ -52,7 +52,7 @@ public class ExceptionHandle {
         ErrorVO vo = new ErrorVO();
         vo.setCode(CodeEnum.REQUEST_MESSAGE_NOT_READABLE.getCode());
         vo.setMessage(e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(vo);
     }
@@ -71,7 +71,7 @@ public class ExceptionHandle {
     @ExceptionHandler(value = MultipartException.class)
     public ResponseEntity<ErrorVO> multipartExceptionHandler(MultipartException e) {
         log.error("error:", e);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new ErrorVO(CodeEnum.FILE_IS_EMPTY));
     }
@@ -81,17 +81,17 @@ public class ExceptionHandle {
         ErrorVO vo = new ErrorVO();
         vo.setCode(CodeEnum.INVALID_PARAMETERS.getCode());
         vo.setMessage(e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(vo);
     }
     @ExceptionHandler(value = ConstraintViolationException.class)
-    public ResponseEntity<ErrorVO> constraintViolationExceptionHandler(Exception e) {
+    public ResponseEntity<ErrorVO> constraintViolationExceptionHandler(ConstraintViolationException e) {
         log.error("error:", e);
         ErrorVO vo = new ErrorVO();
         vo.setCode(CodeEnum.INVALID_PARAMETERS.getCode());
         vo.setMessage(e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(vo);
     }
@@ -101,7 +101,7 @@ public class ExceptionHandle {
         ErrorVO vo = new ErrorVO();
         vo.setCode(CodeEnum.INVALID_PARAMETERS.getCode());
         vo.setMessage(e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(vo);
     }
@@ -109,7 +109,7 @@ public class ExceptionHandle {
     @ExceptionHandler(ErrorCodeException.class)
     public ResponseEntity<ErrorVO> handleStreamException(ErrorCodeException e) {
         log.error("error:", e);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON) // This is the key!
                 .body(new ErrorVO(e.getCode()));
     }
