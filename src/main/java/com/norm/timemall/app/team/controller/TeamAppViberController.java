@@ -1,6 +1,6 @@
 package com.norm.timemall.app.team.controller;
 
-import cn.hutool.core.io.FileTypeUtil;
+import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.AppViberFileSceneEnum;
@@ -16,6 +16,7 @@ import com.norm.timemall.app.base.service.OrderFlowService;
 import com.norm.timemall.app.ms.constant.ChatSupportUploadImageFormat;
 import com.norm.timemall.app.ms.service.MsGroupMemberRelService;
 import com.norm.timemall.app.team.domain.dto.*;
+import com.norm.timemall.app.base.pojo.OssUploadSignature;
 import com.norm.timemall.app.team.domain.ro.FetchOneOasisChannelGeneralInfoRO;
 import com.norm.timemall.app.team.domain.ro.TeamAppViberFetchCommentPageRO;
 import com.norm.timemall.app.team.domain.ro.TeamAppViberFetchOnePostRO;
@@ -28,9 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.Set;
 
 @RestController
 public class TeamAppViberController {
@@ -189,7 +188,7 @@ public class TeamAppViberController {
     }
 
     @PostMapping("/api/v1/app/viber/feed/file/upload")
-    public TeamAppViberFileUploadVO uploadFile(@Validated TeamAppViberFileUploadDTO dto) throws IOException {
+    public TeamAppViberFileUploadVO uploadFile(@Validated TeamAppViberFileUploadDTO dto){
 
         if(dto.getFile()==null || dto.getFile().isEmpty()){
             throw new ErrorCodeException(CodeEnum.FILE_IS_EMPTY);
@@ -221,6 +220,30 @@ public class TeamAppViberController {
         }
 
         return teamAppViberService.uploadFile(dto,fileUri,dto.getFile());
+    }
+    @GetMapping("/api/v1/app/viber/feed/get_post_signature_for_oss_upload")
+    public TeamAppViberOssUploadSignatureVO getOssPostSignatureForUploadBigFile(@Validated TeamAppViberOssUploadSignatureDTO dto){
+
+
+        // only member can create post
+        boolean availablePublishFeed = teamDataPolicyService.alreadyOasisMember(dto.getChannel());
+        if(!availablePublishFeed){
+            throw new ErrorCodeException(CodeEnum.USER_ROLE_NOT_CORRECT);
+        }
+        // Remove any leading dot provided by the frontend
+        String ext = dto.getExtName().replace(".", "").toLowerCase();
+        String fileName = IdUtil.simpleUUID() + "." + ext;
+
+        String objectName = String.join("/", FileStoreDir.VIBER_FILE.getDir(),fileName);
+
+        OssUploadSignature signature = fileStoreService.findOssPostSignatureForLimited(objectName);
+
+        TeamAppViberOssUploadSignatureVO vo = new TeamAppViberOssUploadSignatureVO();
+        vo.setSignature(signature);
+        vo.setResponseCode(CodeEnum.SUCCESS);
+
+
+        return vo;
     }
 
     @PutMapping("/api/v1/app/viber/{channel}/user/{id}/mute")

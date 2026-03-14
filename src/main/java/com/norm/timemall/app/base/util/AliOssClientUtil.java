@@ -3,11 +3,13 @@ package com.norm.timemall.app.base.util;
 import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSException;
+import com.aliyun.oss.common.utils.BinaryUtil;
 import com.aliyun.oss.model.*;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.pojo.AliOssConfigureBean;
 import com.norm.timemall.app.base.pojo.OssResource;
+import com.norm.timemall.app.base.pojo.OssUploadSignature;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
 
 
 /***
@@ -43,10 +47,10 @@ public class AliOssClientUtil {
     public String getPublicFileEndpoint(){
         return "https://"+ aliOssConfigure.getPublicBucket()+"."+aliOssConfigure.getEndpoint().replace("https://","")+"/";
     }
-    public String doImageUploadForPublic(MultipartFile file,String objectName){
+    public String doImageUploadAndProcessAsAvifForPublic(MultipartFile file, String objectName){
 
         // process oss image as avif format if image not avif
-        if(file.getContentType().equals("image/avif")){
+        if("image/avif".equalsIgnoreCase(file.getContentType())){
             throw new ErrorCodeException(CodeEnum.FILE_IMAGE_AVIF_NOT_SUPPORT);
         }
         // upload file to oss
@@ -166,5 +170,33 @@ public class AliOssClientUtil {
             log.error("Failed to load OSS file: {}", objectName, e);
             return null;
         }
+    }
+
+    public OssUploadSignature generatePostPolicy(String objectName) {
+        long expireEndTime = System.currentTimeMillis() + 30 * 60 * 1000;
+        Date expiration = new Date(expireEndTime);
+
+        PolicyConditions policyConds = new PolicyConditions();
+        policyConds.addConditionItem(PolicyConditions.COND_CONTENT_LENGTH_RANGE, 0, 157286400); // 150MB limit
+        policyConds.addConditionItem(MatchMode.StartWith, PolicyConditions.COND_KEY, objectName);
+
+        String postPolicy = ossClient.generatePostPolicy(expiration, policyConds);
+        byte[] binaryData = postPolicy.getBytes(StandardCharsets.UTF_8);
+        String encodedPolicy = BinaryUtil.toBase64String(binaryData);
+        String postSignature = ossClient.calculatePostSignature(postPolicy);
+
+        String cleanEndpoint = aliOssConfigure.getEndpoint().replace("https://", "");
+        String host = "https://" + aliOssConfigure.getLimitedBucket() + "." + cleanEndpoint;
+
+
+        OssUploadSignature signature = new OssUploadSignature();
+        signature.setOssAccessKeyId(aliOssConfigure.getAccessKeyId());
+        signature.setEncodedPolicy(encodedPolicy);
+        signature.setPostSignature(postSignature);
+        signature.setDir("");
+        signature.setHost(host);
+        signature.setObjectName(objectName);
+
+        return signature;
     }
 }

@@ -8,6 +8,7 @@ import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.util.AliOssClientUtil;
 import com.norm.timemall.app.base.enums.FileStoreDir;
 import com.norm.timemall.app.base.service.FileStoreService;
+import com.norm.timemall.app.base.pojo.OssUploadSignature;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -21,8 +22,9 @@ import java.nio.file.Paths;
 @Slf4j
 public class FileStoreServiceImpl implements FileStoreService {
 
-    private final String limitedFileAccessPrefix="/api/file/";
+    private  final String limitedFileAccessPrefix="/api/file/";
 
+    private  final String standardLimitedFileAccessPrefix="api/file/";
     @Autowired
     private AliOssClientUtil aliOssClientUtil;
 
@@ -40,7 +42,7 @@ public class FileStoreServiceImpl implements FileStoreService {
     @Override
     public String storeImageAndProcessAsAvifWithUnlimitedAccess(MultipartFile file, FileStoreDir dir) {
         Path destinationFile = generateDestinationFilePath(file,dir,true);
-        return aliOssClientUtil.doImageUploadForPublic(file,destinationFile.toString());
+        return aliOssClientUtil.doImageUploadAndProcessAsAvifForPublic(file,destinationFile.toString());
     }
 
 
@@ -121,5 +123,10 @@ public class FileStoreServiceImpl implements FileStoreService {
     @Override
     public Resource downloadAsResource(String fileName, String tag) {
        return aliOssClientUtil.downloadToResource(fileName,tag);
+    }
+
+    @Override
+    public OssUploadSignature findOssPostSignatureForLimited(String fileName) {
+        return aliOssClientUtil.generatePostPolicy(standardLimitedFileAccessPrefix+fileName);
     }
 }
