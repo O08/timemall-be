@@ -201,14 +201,14 @@ public class TeamAppViberController {
         }
 
         // validate file type
-        String fileType= FileTypeUtil.getType(dto.getFile().getInputStream());
+        String contentType = dto.getFile().getContentType();
 
 
         // store file
         String fileUri="";
         if (AppViberFileSceneEnum.IMAGE.getMark().equals(dto.getScene())) {
 
-            boolean notInExtensions = Arrays.stream(ChatSupportUploadImageFormat.extensions).noneMatch(e->e.equals(fileType));
+            boolean notInExtensions = Arrays.stream(ChatSupportUploadImageFormat.contenteTypeExtensions).noneMatch(e->e.equalsIgnoreCase(contentType));
             if(notInExtensions){
                 throw new ErrorCodeException(CodeEnum.FILE_FORMAT_NOT_SUPPORT);
             }
