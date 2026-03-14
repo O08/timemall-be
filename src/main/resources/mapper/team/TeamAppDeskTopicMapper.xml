@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamAppDeskTopicMapper">
+    <sql id="tableName">
+        app_desk_topic
+    </sql>
+
+    <sql id="baseColumn">
+        id,oasis_channel_id,title,preface,od,create_at,modified_at
+    </sql>
+
+    <resultMap id="elementListResultMap" type="com.norm.timemall.app.team.domain.pojo.TeamAppDeskGetElement">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="preface" column="preface"/>
+        <result property="iconUrl" column="icon_url"/>
+        <result property="linkUrl" column="link_url"/>
+    </resultMap>
+
+    <resultMap id="getElementsResultMap" type="com.norm.timemall.app.team.domain.ro.TeamAppDeskGetElementsRO">
+        <result property="topicId" column="topicId"/>
+        <result property="topicPreface" column="topicPreface"/>
+        <result property="topicTitle" column="topicTitle"/>
+        <collection property="elements" ofType="com.norm.timemall.app.team.domain.pojo.TeamAppDeskGetElement" javaType="ArrayList" resultMap="elementListResultMap"/>
+    </resultMap>
+
+    <select id="selectElements" resultMap="getElementsResultMap">
+        select t.id topicId, t.title topicTitle,t.preface topicPreface,
+        e.id,e.icon_url,e.link_url,e.title,e.preface
+        from app_desk_topic t
+        left join app_desk_element e
+          on e.app_desk_topic_id=t.id
+        <where>
+            1=1 and  t.oasis_channel_id=#{dto.chn}
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, t.title)>0
+                or locate(#{dto.q}, e.link_url)>0
+                or  locate(#{dto.q}, e.title)>0 or  locate(#{dto.q}, e.preface)>0 )
+            </if>
+            order by t.od asc,e.views desc,e.modified_at asc
+
+        </where>
+
+    </select>
+
+</mapper>

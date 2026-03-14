@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamAppLinkShoppingMapper">
+    <sql id="tableName">
+        app_link_shopping
+    </sql>
+
+    <sql id="baseColumn">
+        id,oasis_channel_id,title,price,link_url,cover_url,views,create_at,modified_at
+    </sql>
+
+    <select id="selectPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamAppLinkShoppingFetchFeedPageRO">
+        select
+          s.id,
+          s.cover_url,
+          s.title,
+          s.price,
+          s.link_url,
+          s.views,
+          s.create_at
+        from app_link_shopping s
+        where 1 = 1
+          and s.oasis_channel_id = #{dto.channel}
+
+        <if test="dto.q != null and dto.q != ''">
+            AND locate(#{dto.q}, s.title)>0
+        </if>
+        <if test="dto.sort != null and dto.sort != ''">
+            <choose>
+                <when test='dto.sort == "1"'>
+                    order by  s.views desc
+                </when>
+                <when test='dto.sort == "2"'>
+                    order by s.create_at desc
+                </when>
+                <when test='dto.sort == "3"'>
+                    order by s.price desc
+                </when>
+                <when test='dto.sort == "4"'>
+                    order by s.modified_at desc
+                </when>
+            </choose>
+        </if>
+
+    </select>
+
+
+</mapper>

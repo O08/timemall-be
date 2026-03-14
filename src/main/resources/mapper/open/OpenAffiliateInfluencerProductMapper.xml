@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.open.mapper.OpenAffiliateInfluencerProductMapper">
+
+
+    <select id="selectPageByDTO" resultType="com.norm.timemall.app.open.domain.ro.OpenFetchChoiceProductRO">
+        select
+          pi.supplier_avatar brandAvatar, pi.supplier_brand_name brandName,pi.cell_cover thumbnail,
+          pi.product_name  productName,pi.plan_price productPrice,
+          concat(#{dto.website},'mall/cell-detail?cell_id=',pi.cell_id,'&amp;brand_id=',pi.supplier_brand_id,
+            '&amp;influencer=',#{dto.influencer},'&amp;chn=',#{dto.chn},'&amp;market=api') affiliateLink
+        from affiliate_influencer_product ip
+        inner join affiliate_product_ind pi
+          on ip.cell_id=pi.cell_id
+        where pi.cell_mark='2'
+          And brand_id=#{dto.influencer}
+        <if test="dto.sort != null and dto.sort != ''">
+            <choose>
+                <when test='dto.sort == "plan_price"'>
+                    Order by ip.plan_price desc
+                </when>
+                <when test='dto.sort == "revshare"'>
+                    Order by ip.revshare desc
+                </when>
+                <when test='dto.sort == "plan_sale_volume"'>
+                    Order by ip.plan_sale_volume desc
+                </when>
+                <when test='dto.sort == "sales"'>
+                    Order by ip.sales desc
+                </when>
+                <when test='dto.sort == "views"'>
+                    Order by ip.views desc
+                </when>
+                <when test='dto.sort == "add_time"'>
+                    Order by ip.create_at desc
+                </when>
+            </choose>
+        </if>
+    </select>
+
+</mapper>

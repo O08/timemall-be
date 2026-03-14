@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.pod.mapper.PodBillMapper">
+
+    <select id="selectBillPageByPayerBrandId" resultType="com.norm.timemall.app.pod.domain.ro.PodBillsRO">
+        select b.categories,b.promotion_deduction,b.stage,seller.brand_name brand,seller.avator brandAvatar,seller.customer_id brandUserId, b.remark service,b.amount,b.id billId,b.voucher,b.create_at added,seller.id brandId
+        from bill b
+        inner join brand seller on seller.id= b.payee_fid and b.payee_fid_type='1'
+        <where>
+            1=1
+            and b.payer_fid = #{payer_brand_id}
+            and b.payer_fid_type='1'
+            and b.mark = #{dto.code}
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, b.remark)>0 or locate(#{dto.q}, b.stage)>0  or locate(#{dto.q}, seller.brand_name)>0)
+            </if>
+            <if test="dto.categories != null and dto.categories != ''">
+               And b.categories=#{dto.categories}
+            </if>
+        </where>
+
+        order by b.create_at desc
+    </select>
+    <select id="selectBillDetailById" resultType="com.norm.timemall.app.pod.domain.ro.FetchBillDetailRO">
+        select b.stage item,b.amount,c.credit_point,o.early_bird_discount,o.repurchase_discount
+        from bill b
+        inner join order_details d
+          on b.order_id = d.id
+        left join credit_coupon  c
+          on c.supplier_brand_id=d.brand_id
+             and c.consumer_brand_id=#{consumerBrandId}
+        left join order_coupon  o
+           on o.order_id=d.id
+             and o.order_type='cell'
+        where b.id=#{id} and d.consumer_id=#{consumerUserId}
+    </select>
+
+</mapper>
