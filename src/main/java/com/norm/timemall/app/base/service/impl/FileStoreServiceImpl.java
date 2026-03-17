@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
@@ -68,7 +69,24 @@ public class FileStoreServiceImpl implements FileStoreService {
             throw new ErrorCodeException(CodeEnum.FILE_IS_EMPTY);
         }
         // 后缀
-        String extName = FileUtil.extName(file.getOriginalFilename());
+        String originalName = file.getOriginalFilename();
+        String extName = StringUtils.getFilenameExtension(originalName);
+
+        // 如果文件名里拿不到后缀（如截屏粘贴），从 Content-Type 里推断
+        if (!StringUtils.hasText(extName)) {
+            String contentType = file.getContentType(); // 例如 "image/png"
+            if (StringUtils.hasText(contentType) && contentType.contains("/")) {
+                extName = contentType.substring(contentType.lastIndexOf("/") + 1);
+            }
+        }
+
+        if (!StringUtils.hasText(extName)) {
+            extName = "unknown"; // 终极兜底
+        }
+
+        // 强制转小写，防止混淆
+        extName =extName.toLowerCase();
+
         // 重命名
         String fileName = IdUtil.simpleUUID() + "." + extName;
         // 存储 ，私有文件拼接前缀，私有文件访问入口 /api/file/
