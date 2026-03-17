@@ -16,7 +16,6 @@ import org.springframework.web.servlet.HandlerMapping;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -115,7 +114,7 @@ public class OssController {
                             .header(HttpHeaders.CONTENT_TYPE, contentType)
                             .header(HttpHeaders.ETAG, quotedTag) // 🌟 补上 ETag
                             .header(HttpHeaders.ACCEPT_RANGES, "bytes")
-                            .body(Collections.singletonList(region)); // 这里改用列表
+                            .body(List.of(region)); // 这里改用列表
 
                 }
             }
