@@ -8,7 +8,6 @@ import com.norm.timemall.app.base.pojo.OssFileMetadata;
 import com.norm.timemall.app.base.service.FileStoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.AntPathMatcher;
@@ -17,7 +16,6 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-import java.util.List;
 
 
 @Controller
@@ -95,50 +93,33 @@ public class OssController {
             Resource resource = fileStoreService.downloadAsResource(objectName, tag);
             if (resource == null || !resource.exists()) return ResponseEntity.notFound().build();
 
-            long totalLength = resource.contentLength();
+            // 1. 获取准确的 Content-Type (如 video/mp4)
             String contentType = MediaTypeFactory.getMediaType(resource)
                     .map(MediaType::toString)
                     .orElse(MediaType.APPLICATION_OCTET_STREAM_VALUE);
 
-            // 1. Prepare Common Headers
+            // 2. 构造响应头
             HttpHeaders headers = new HttpHeaders();
             headers.set(HttpHeaders.ETAG, quotedTag);
-            headers.set(HttpHeaders.ACCEPT_RANGES, "bytes");
+            headers.set(HttpHeaders.ACCEPT_RANGES, "bytes"); // 🌟 必须有这个，Safari 才会发 Range 请求
             headers.setCacheControl("max-age=3600");
             headers.set(HttpHeaders.CONTENT_TYPE, contentType);
 
-            // 2. Handle Range Request (Safari 206 Support) 🌟
-            String rangeHeader = request.getHeader(HttpHeaders.RANGE);
-            if (rangeHeader != null) {
-                List<HttpRange> ranges = HttpRange.parseRanges(rangeHeader);
-                if (!ranges.isEmpty()) {
-                    HttpRange range = ranges.get(0);
-                    long start = range.getRangeStart(totalLength);
-                    long end = range.getRangeEnd(totalLength);
-                    long rangeLength = end - start + 1;
-
-                    ResourceRegion region = new ResourceRegion(resource, start, rangeLength);
-
-                    // 🌟 Use ArrayList to avoid "No Converter" errors with Java 21 internal lists
-                    List<ResourceRegion> body = new java.util.ArrayList<>();
-                    body.add(region);
-
-                    return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
-                            .headers(headers)
-                            .body(body);
-                }
-            }
-
-            headers.setContentLength(totalLength);
             return ResponseEntity.ok()
                     .headers(headers)
+                    .contentLength(resource.contentLength())
                     .body(resource);
 
         } catch (ErrorCodeException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorVO(e.getCode()));
+            return ResponseEntity.status(HttpStatus.OK)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(new ErrorVO(e.getCode()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .build();
         }
+
 
 
     }
