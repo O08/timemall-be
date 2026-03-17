@@ -2,6 +2,7 @@ package com.norm.timemall.app.base.service;
 
 
 import com.norm.timemall.app.base.enums.FileStoreDir;
+import com.norm.timemall.app.base.pojo.OssFileMetadata;
 import com.norm.timemall.app.base.pojo.OssUploadSignature;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -40,4 +41,6 @@ public interface FileStoreService {
     Resource downloadAsResource(String fileName, String tag);
 
     OssUploadSignature findOssPostSignatureForLimited(String fileName);
+
+    OssFileMetadata getObjectSimpleMetadata(String objectName, String tag);
 }

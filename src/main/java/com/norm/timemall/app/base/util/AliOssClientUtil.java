@@ -8,6 +8,7 @@ import com.aliyun.oss.model.*;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.pojo.AliOssConfigureBean;
+import com.norm.timemall.app.base.pojo.OssFileMetadata;
 import com.norm.timemall.app.base.pojo.OssResource;
 import com.norm.timemall.app.base.pojo.OssUploadSignature;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +29,7 @@ import java.util.Date;
 @Slf4j
 @Component
 public class AliOssClientUtil {
-    private final String avifSuffix="avif";
+    private final String avifSuffix = "avif";
 
     @Autowired
     private AliOssConfigureBean aliOssConfigure;
@@ -37,64 +38,69 @@ public class AliOssClientUtil {
     private OSS ossClient; // 自动复用全局唯一的连接池
 
     // 可公共读文件存储
-    public  String fileUploadForPublic(MultipartFile file,String objectName){
-        return doFileUpload(file,objectName,true);
+    public String fileUploadForPublic(MultipartFile file, String objectName) {
+        return doFileUpload(file, objectName, true);
     }
+
     // 个人文件存储，不可公共读
-    public  String fileUploadForLimited(MultipartFile file,String objectName){
-        return doFileUpload(file,objectName,false);
+    public String fileUploadForLimited(MultipartFile file, String objectName) {
+        return doFileUpload(file, objectName, false);
     }
-    public String getPublicFileEndpoint(){
-        return "https://"+ aliOssConfigure.getPublicBucket()+"."+aliOssConfigure.getEndpoint().replace("https://","")+"/";
+
+    public String getPublicFileEndpoint() {
+        return "https://" + aliOssConfigure.getPublicBucket() + "." + aliOssConfigure.getEndpoint().replace("https://", "") + "/";
     }
-    public String doImageUploadAndProcessAsAvifForPublic(MultipartFile file, String objectName){
+
+    public String doImageUploadAndProcessAsAvifForPublic(MultipartFile file, String objectName) {
 
         // process oss image as avif format if image not avif
-        if("image/avif".equalsIgnoreCase(file.getContentType())){
+        if ("image/avif".equalsIgnoreCase(file.getContentType())) {
             throw new ErrorCodeException(CodeEnum.FILE_IMAGE_AVIF_NOT_SUPPORT);
         }
         // upload file to oss
-        fileUploadForPublic(file,objectName);
-        return doImageProcessAsAvif(objectName,true);
+        fileUploadForPublic(file, objectName);
+        return doImageProcessAsAvif(objectName, true);
     }
-    public String doImageProcessAsAvif(String objectName, boolean publicAccess){
+
+    public String doImageProcessAsAvif(String objectName, boolean publicAccess) {
 
         String bucket = publicAccess ? aliOssConfigure.getPublicBucket() : aliOssConfigure.getLimitedBucket();
-        String url ="";
+        String url = "";
         try (OSSObject avifObj = toAvif(ossClient, bucket, objectName)) {
 
-            String targetName=objectName+"."+avifSuffix;
+            String targetName = objectName + "." + avifSuffix;
             ObjectMetadata meta = new ObjectMetadata();
             meta.setContentType("image/avif");
 
-            url=  uploadFileToOss(avifObj.getObjectContent(),targetName,publicAccess,meta);
-        }catch (OSSException | IOException oe) {
-            log.error("oss upload exception:",oe);
-        } catch (ClientException  ce) {
-            log.error("oss upload ClientException:",ce);
-        }
-        return  url;
-    }
-
-    private OSSObject toAvif(OSS ossClient,String bucketName,String objectName){
-        String style = "image/format,avif";
-        GetObjectRequest request = new GetObjectRequest(bucketName, objectName);
-        request.setProcess(style);
-        OSSObject imgObj= ossClient.getObject(request);
-        return  imgObj;
-    }
-
-
-    private  String doFileUpload(MultipartFile file,String objectName, boolean publicAccess){
-        String url="";
-        try {
-            url=  uploadFileToOss(file.getInputStream(),objectName,publicAccess,new ObjectMetadata());
-        } catch (IOException e) {
-            log.error("oss upload IOException:",e);
+            url = uploadFileToOss(avifObj.getObjectContent(), targetName, publicAccess, meta);
+        } catch (OSSException | IOException oe) {
+            log.error("oss upload exception:", oe);
+        } catch (ClientException ce) {
+            log.error("oss upload ClientException:", ce);
         }
         return url;
     }
-    private String uploadFileToOss(InputStream file, String objectName, boolean publicAccess, ObjectMetadata meta){
+
+    private OSSObject toAvif(OSS ossClient, String bucketName, String objectName) {
+        String style = "image/format,avif";
+        GetObjectRequest request = new GetObjectRequest(bucketName, objectName);
+        request.setProcess(style);
+        OSSObject imgObj = ossClient.getObject(request);
+        return imgObj;
+    }
+
+
+    private String doFileUpload(MultipartFile file, String objectName, boolean publicAccess) {
+        String url = "";
+        try {
+            url = uploadFileToOss(file.getInputStream(), objectName, publicAccess, new ObjectMetadata());
+        } catch (IOException e) {
+            log.error("oss upload IOException:", e);
+        }
+        return url;
+    }
+
+    private String uploadFileToOss(InputStream file, String objectName, boolean publicAccess, ObjectMetadata meta) {
 
         String bucket = publicAccess ? aliOssConfigure.getPublicBucket() : aliOssConfigure.getLimitedBucket();
 
@@ -102,43 +108,45 @@ public class AliOssClientUtil {
         try {
             // 创建上传文件的元信息
 
-            meta.addUserMetadata("x-oss-meta-company","bluvarri.com");
+            meta.addUserMetadata("x-oss-meta-company", "bluvarri.com");
 
             // 创建PutObject请求。
             PutObjectResult putObjectResult = ossClient.putObject(bucket, objectName, file, meta);
-            if(publicAccess){
-                url = "https://"+ bucket+"."+aliOssConfigure.getEndpoint().replace("https://","")+"/"+objectName;
+            if (publicAccess) {
+                url = "https://" + bucket + "." + aliOssConfigure.getEndpoint().replace("https://", "") + "/" + objectName;
             }
-            if(!publicAccess){
-                url= "/" + objectName + "?etag=" + putObjectResult.getETag();
+            if (!publicAccess) {
+                url = "/" + objectName + "?etag=" + putObjectResult.getETag();
             }
         } catch (OSSException oe) {
-            log.error("oss upload exception:",oe);
-        } catch (ClientException  ce) {
-            log.error("oss upload ClientException:",ce);
+            log.error("oss upload exception:", oe);
+        } catch (ClientException ce) {
+            log.error("oss upload ClientException:", ce);
         }
         return url;
     }
 
-    public void deletePublicBucketFile(String objectName){
-        deleteBucketFile(aliOssConfigure.getPublicBucket(),objectName);
-    }
-    public void deleteLimitedBucketFile(String objectName){
-        deleteBucketFile(aliOssConfigure.getLimitedBucket(),objectName);
+    public void deletePublicBucketFile(String objectName) {
+        deleteBucketFile(aliOssConfigure.getPublicBucket(), objectName);
     }
 
-    public void deleteBucketFile(String bucketName, String objectName){
-        log.info("deleting oss file:"+objectName);
+    public void deleteLimitedBucketFile(String objectName) {
+        deleteBucketFile(aliOssConfigure.getLimitedBucket(), objectName);
+    }
+
+    public void deleteBucketFile(String bucketName, String objectName) {
+        log.info("deleting oss file:" + objectName);
         try {
             // 删除文件或目录。如果要删除目录，目录必须为空。
             ossClient.deleteObject(bucketName, objectName);
         } catch (OSSException oe) {
-            log.error("oss delete exception:",oe);
+            log.error("oss delete exception:", oe);
         } catch (ClientException ce) {
-            log.error("oss delete ClientException:",ce);
+            log.error("oss delete ClientException:", ce);
         }
     }
-    public boolean objectNameExists(String objectName){
+
+    public boolean objectNameExists(String objectName) {
 
         try {
             return ossClient.doesObjectExist(aliOssConfigure.getLimitedBucket(), objectName);
@@ -154,7 +162,7 @@ public class AliOssClientUtil {
         try {
             ossObject = ossClient.getObject(aliOssConfigure.getLimitedBucket(), objectName);
             ObjectMetadata meta = ossObject.getObjectMetadata();
-            if(!meta.getETag().equals(tag)){
+            if (!meta.getETag().equals(tag)) {
                 throw new ErrorCodeException(CodeEnum.INVALID_TOKEN);
             }
             return new OssResource(ossObject, objectName);
@@ -199,4 +207,36 @@ public class AliOssClientUtil {
 
         return signature;
     }
+
+    public OssFileMetadata findObjectSimpleMetaData(String objectName, String tag) {
+        OssFileMetadata meta = new OssFileMetadata();
+        try {
+            SimplifiedObjectMeta ossMeta = ossClient.getSimplifiedObjectMeta(
+                    aliOssConfigure.getLimitedBucket(),
+                    objectName
+            );
+
+            if (ossMeta != null) {
+                String ossEtag = ossMeta.getETag().replace("\"", "");
+
+                // 2. Validate against the tag from frontend
+                if (tag != null && !tag.equalsIgnoreCase(ossEtag)) {
+                    meta.setExists(false);
+                    return meta;
+                }
+
+                meta.setExists(true);
+                meta.setSize(ossMeta.getSize());
+                meta.setEtag(ossEtag);
+                // Note: SimplifiedMeta does NOT return Content-Type.
+                // Use headObject(bucket, key) if you MUST have Content-Type.
+            }
+        } catch (com.aliyun.oss.OSSException e) {
+            // If OSS returns 404, this catch block is triggered
+            meta.setExists(false);
+        }
+        return meta;
+    }
+
 }
+

@@ -2,58 +2,57 @@ package com.norm.timemall.app.base.pojo;
 
 import com.aliyun.oss.model.OSSObject;
 import org.springframework.core.io.AbstractResource;
+
 import java.io.IOException;
 import java.io.InputStream;
-
-/**
- * Custom Spring Resource wrapper for Aliyun OSS objects.
- * This allows Spring to handle Range requests (206 Partial Content) and
- * automatically close the stream, preventing "Broken Pipe" and memory leaks.
- */
 public class OssResource extends AbstractResource {
-
     private final OSSObject ossObject;
-    private final String filename;
+    private final String objectName;
 
-    public OssResource(OSSObject ossObject, String filename) {
+    public OssResource(OSSObject ossObject, String objectName) {
         this.ossObject = ossObject;
-        this.filename = filename;
-    }
-
-    @Override
-    public String getFilename() {
-        return this.filename;
+        this.objectName = objectName;
     }
 
     @Override
     public InputStream getInputStream() throws IOException {
-        // Return the binary stream from OSS
-        return ossObject.getObjectContent();
+        // 🌟 每次都获取新流，以支持 Spring 的 ResourceRegion 多次读取
+        InputStream rawStream = ossObject.getObjectContent();
+
+        return new java.io.FilterInputStream(rawStream) {
+            @Override
+            public void close() throws IOException {
+                try {
+                    super.close();
+                } finally {
+                    // 🌟 只有当 Spring 彻底关闭当前这个流时，才释放 OSSObject 的连接
+                    // 阿里云 SDK 内部会管理引用计数，通常直接调用 close 是安全的
+                    ossObject.close();
+                }
+            }
+        };
     }
 
+
     @Override
-    public long contentLength() throws IOException {
-        // Essential for audio/video players to show progress/duration
-        // Check for null to avoid NPE if the object failed to load
-        if (ossObject == null || ossObject.getObjectMetadata() == null) {
-            throw new IOException("OSS Object or Metadata is null");
-        }
+    public long contentLength() {
+        // No need to throw IOException here as metadata is already in memory
         return ossObject.getObjectMetadata().getContentLength();
     }
 
     @Override
-    public boolean exists() {
-       return ossObject != null && ossObject.getObjectContent() != null;
+    public String getFilename() {
+        return this.objectName;
     }
 
     @Override
-    public boolean isOpen() {
-        // Must be true for streaming media resources
+    public boolean exists() {
         return true;
     }
 
     @Override
     public String getDescription() {
-        return "OSS Object [" + filename + "]";
+        return "OSS Object: " + objectName;
     }
 }
+

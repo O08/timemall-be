@@ -5,6 +5,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
+import com.norm.timemall.app.base.pojo.OssFileMetadata;
 import com.norm.timemall.app.base.util.AliOssClientUtil;
 import com.norm.timemall.app.base.enums.FileStoreDir;
 import com.norm.timemall.app.base.service.FileStoreService;
@@ -128,5 +129,10 @@ public class FileStoreServiceImpl implements FileStoreService {
     @Override
     public OssUploadSignature findOssPostSignatureForLimited(String fileName) {
         return aliOssClientUtil.generatePostPolicy(standardLimitedFileAccessPrefix+fileName);
+    }
+
+    @Override
+    public OssFileMetadata getObjectSimpleMetadata(String objectName, String tag) {
+        return aliOssClientUtil.findObjectSimpleMetaData(objectName,tag);
     }
 }
