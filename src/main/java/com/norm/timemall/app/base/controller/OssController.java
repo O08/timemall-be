@@ -8,6 +8,7 @@ import com.norm.timemall.app.base.pojo.OssFileMetadata;
 import com.norm.timemall.app.base.service.FileStoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.AntPathMatcher;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.HandlerMapping;
 
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.util.List;
 
 
 @Controller
@@ -92,25 +95,48 @@ public class OssController {
             Resource resource = fileStoreService.downloadAsResource(objectName, tag);
             if (resource == null || !resource.exists()) return ResponseEntity.notFound().build();
 
+            long totalLength = resource.contentLength();
             String contentType = MediaTypeFactory.getMediaType(resource)
                     .map(MediaType::toString)
                     .orElse(MediaType.APPLICATION_OCTET_STREAM_VALUE);
 
+            // 1. Prepare Common Headers
             HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.ETAG, quotedTag);
-            headers.add(HttpHeaders.ACCEPT_RANGES, "bytes"); // 告诉浏览器支持拖拽
-            headers.add(HttpHeaders.CACHE_CONTROL, "max-age=3600");
-            headers.add(HttpHeaders.CONTENT_TYPE, contentType);
+            headers.set(HttpHeaders.ETAG, quotedTag);
+            headers.set(HttpHeaders.ACCEPT_RANGES, "bytes");
+            headers.setCacheControl("max-age=3600");
+            headers.set(HttpHeaders.CONTENT_TYPE, contentType);
 
-            return ResponseEntity.status(HttpStatus.OK)
+            // 2. Handle Range Request (Safari 206 Support) 🌟
+            String rangeHeader = request.getHeader(HttpHeaders.RANGE);
+            if (rangeHeader != null) {
+                List<HttpRange> ranges = HttpRange.parseRanges(rangeHeader);
+                if (!ranges.isEmpty()) {
+                    HttpRange range = ranges.get(0);
+                    long start = range.getRangeStart(totalLength);
+                    long end = range.getRangeEnd(totalLength);
+                    long rangeLength = end - start + 1;
+
+                    ResourceRegion region = new ResourceRegion(resource, start, rangeLength);
+
+                    // 🌟 Use ArrayList to avoid "No Converter" errors with Java 21 internal lists
+                    List<ResourceRegion> body = new java.util.ArrayList<>();
+                    body.add(region);
+
+                    return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+                            .headers(headers)
+                            .body(body);
+                }
+            }
+
+            headers.setContentLength(totalLength);
+            return ResponseEntity.ok()
                     .headers(headers)
                     .body(resource);
 
-        }catch (ErrorCodeException e) {
-            // 业务异常
+        } catch (ErrorCodeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorVO(e.getCode()));
         } catch (Exception e) {
-            // 捕获所有其他运行时异常（包括潜在的 IO 问题）
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
