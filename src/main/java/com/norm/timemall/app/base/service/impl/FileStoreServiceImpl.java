@@ -135,4 +135,9 @@ public class FileStoreServiceImpl implements FileStoreService {
     public OssFileMetadata getObjectSimpleMetadata(String objectName, String tag) {
         return aliOssClientUtil.findObjectSimpleMetaData(objectName,tag);
     }
+
+    @Override
+    public String generatePresignedUrl(String objectName, long seconds) {
+        return aliOssClientUtil.generatePresignedUrl(objectName, seconds);
+    }
 }

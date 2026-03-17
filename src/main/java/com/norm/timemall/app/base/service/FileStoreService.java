@@ -43,4 +43,6 @@ public interface FileStoreService {
     OssUploadSignature findOssPostSignatureForLimited(String fileName);
 
     OssFileMetadata getObjectSimpleMetadata(String objectName, String tag);
+
+    String generatePresignedUrl(String objectName, long seconds);
 }

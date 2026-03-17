@@ -16,6 +16,7 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.net.URI;
 
 
 @Controller
@@ -67,13 +68,6 @@ public class OssController {
         String quotedTag = tag.startsWith("\"") ? tag : "\"" + tag + "\""; // 自动补齐引号，防止重复
         
 
-        // If-None-Match (304 Not Modified) Optimization 🌟
-        // If the browser already has this version, save 100% of bandwidth
-        String ifNoneMatch = request.getHeader(HttpHeaders.IF_NONE_MATCH);
-        if (ifNoneMatch != null && (ifNoneMatch.equalsIgnoreCase(quotedTag) || ifNoneMatch.equalsIgnoreCase(tag))) {
-            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
-        }
-
         if (RequestMethod.HEAD.name().equalsIgnoreCase(request.getMethod())) {
             // Check metadata only (Don't open the stream!)
             OssFileMetadata meta = fileStoreService.getObjectSimpleMetadata(objectName, tag);
@@ -90,13 +84,40 @@ public class OssController {
 
 
         try {
+            OssFileMetadata meta = fileStoreService.getObjectSimpleMetadata(objectName, tag);
+            if (meta == null || !meta.isExists()) return ResponseEntity.notFound().build();
+
+            long fileSize = meta.getSize();
+            String contentType = MediaTypeFactory.getMediaType(objectName)
+                    .map(MediaType::toString)
+                    .orElse(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+
+            // 🌟 STRATEGY:
+            // Small files (< 10MB) -> Stay on Java Server
+            // Large files (> 10MB) -> Redirect to OSS Signed URL (Prevents Safari Timeout)
+            boolean isLargeFile = fileSize > 10 * 1024 * 1024; // 10MB
+
+            // The 302 Redirect for Large Files
+            if (isLargeFile) {
+                // Sign for 30-60 mins to ensure even slow connections finish the download
+                String signedUrl = fileStoreService.generatePresignedUrl(objectName, 1800);
+                return ResponseEntity.status(HttpStatus.FOUND) // 302
+                        .location(URI.create(signedUrl))
+                        .build();
+            }
+
+
+            // If-None-Match (304 Not Modified) Optimization 🌟
+            // If the browser already has this version, save 100% of bandwidth
+            String ifNoneMatch = request.getHeader(HttpHeaders.IF_NONE_MATCH);
+            if (ifNoneMatch != null && (ifNoneMatch.equalsIgnoreCase(quotedTag) || ifNoneMatch.equalsIgnoreCase(tag))) {
+                return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+            }
+
+
             Resource resource = fileStoreService.downloadAsResource(objectName, tag);
             if (resource == null || !resource.exists()) return ResponseEntity.notFound().build();
 
-            // 1. 获取准确的 Content-Type (如 video/mp4)
-            String contentType = MediaTypeFactory.getMediaType(resource)
-                    .map(MediaType::toString)
-                    .orElse(MediaType.APPLICATION_OCTET_STREAM_VALUE);
 
             // 2. 构造响应头
             HttpHeaders headers = new HttpHeaders();

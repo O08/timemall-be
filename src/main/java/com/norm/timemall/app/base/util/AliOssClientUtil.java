@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
@@ -238,5 +239,27 @@ public class AliOssClientUtil {
         return meta;
     }
 
+    public String generatePresignedUrl(String objectName, long expirationInSeconds) {
+        Date expiration = new Date(System.currentTimeMillis() + expirationInSeconds * 1000);
+
+        //  生成签名 URL
+        // 注意：即便 Bucket 是私有的，SDK 也会通过内部 AccessKey 算好签名拼在 URL 后
+        URL url = ossClient.generatePresignedUrl(
+                aliOssConfigure.getLimitedBucket(),
+                objectName,
+                expiration
+        );
+
+        //确保返回的是外网地址
+        // 如果 ossClient 初始化使用的是内网 endpoint (-internal)，生成的 URL 用户打不开
+        String signedUrl = url.toString();
+
+        // 如果在 ECS 上运行，且使用了内网域名，需要将结果替换为外网域名供用户下载
+        if (signedUrl.contains("-internal")) {
+            signedUrl = signedUrl.replace("-internal", "");
+        }
+
+        return signedUrl;
+    }
 }
 
