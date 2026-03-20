@@ -6,11 +6,13 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.norm.timemall.app.base.enums.CodeEnum;
+import com.norm.timemall.app.base.enums.ElectricityBusinessTypeEnum;
 import com.norm.timemall.app.base.enums.OasisChannelTagEnum;
 import com.norm.timemall.app.base.enums.OasisRoleCoreEnum;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.*;
+import com.norm.timemall.app.base.service.BaseElectricityService;
 import com.norm.timemall.app.team.domain.dto.GetAppDTO;
 import com.norm.timemall.app.team.domain.ro.FetchOasisAppListRO;
 import com.norm.timemall.app.team.mapper.*;
@@ -35,6 +37,9 @@ public class TeamMiniAppLibraryServiceImpl implements TeamMiniAppLibraryService 
     @Autowired
     private TeamOasisRoleChannelMapper teamOasisRoleChannelMapper;
 
+    @Autowired
+    private BaseElectricityService baseElectricityService;
+
     @Override
     public ArrayList<FetchOasisAppListRO> findAppList() {
         return teamMiniAppLibraryMapper.selectAppList();
@@ -52,6 +57,10 @@ public class TeamMiniAppLibraryServiceImpl implements TeamMiniAppLibraryService 
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
         String och=IdUtil.simpleUUID();
+
+        // deduct 1 points electricity per install
+        baseElectricityService.deduct(brandId,1,"部落安装应用扣除电力", ElectricityBusinessTypeEnum.DEDUCT.getMark(), och, "目标频道："+och);
+
         OasisChannel channel=new OasisChannel();
         channel.setId(och)
                 .setAppId(dto.getAppId())
