@@ -98,7 +98,7 @@ public class StudioElectricityServiceImpl implements StudioElectricityService {
 
 
             // top up electricity
-            baseElectricityService.topup(buyer.getBrandId(),DEFAULT_POINTS,"充值电力", ElectricityBusinessTypeEnum.TOP_UP.getMark(), proprietaryTradingOrder.getId(), "补给商城充值电力");
+            baseElectricityService.topup(buyer.getBrandId(),DEFAULT_POINTS,"源能充值", ElectricityBusinessTypeEnum.TOP_UP.getMark(), proprietaryTradingOrder.getId(), "补给商城充值源能");
 
         }catch (ErrorCodeException e){
             studioProprietaryTradingOrderService.updateTradingOrderStatusAsFail(proprietaryTradingOrder.getId());

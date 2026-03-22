@@ -115,7 +115,7 @@ public class StudioBlueSignServiceImpl implements StudioBlueSignService {
             enableBlueSign(proprietaryTradingOrder.getCustomerId());
 
             // top up electricity 200 points
-            baseElectricityService.topup(buyer.getBrandId(),DEFAULT_POINTS,"蓝标权益", ElectricityBusinessTypeEnum.TOP_UP.getMark(), proprietaryTradingOrder.getId(), "开通会员赠送电力");
+            baseElectricityService.topup(buyer.getBrandId(),DEFAULT_POINTS,"蓝标权益", ElectricityBusinessTypeEnum.TOP_UP.getMark(), proprietaryTradingOrder.getId(), "开通会员赠送源能");
 
         }catch (ErrorCodeException e){
             studioProprietaryTradingOrderService.updateTradingOrderStatusAsFail(proprietaryTradingOrder.getId());

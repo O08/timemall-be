@@ -59,7 +59,7 @@ public class TeamMiniAppLibraryServiceImpl implements TeamMiniAppLibraryService 
         String och=IdUtil.simpleUUID();
 
         // deduct 1 points electricity per install
-        baseElectricityService.deduct(brandId,1,"部落安装应用扣除电力", ElectricityBusinessTypeEnum.DEDUCT.getMark(), och, "目标频道："+och);
+        baseElectricityService.deduct(brandId,1,"部落安装应用扣除源能", ElectricityBusinessTypeEnum.DEDUCT.getMark(), och, "目标频道："+och);
 
         OasisChannel channel=new OasisChannel();
         channel.setId(och)

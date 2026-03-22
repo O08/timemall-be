@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 @Data
 public class StudioGetElectricityProductInfoRO {
     /**
-     * 电力值
+     * 源能
      */
     private String electricity;
     /**
