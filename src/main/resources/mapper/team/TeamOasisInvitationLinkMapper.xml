@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamOasisInvitationLinkMapper">
+    <sql id="tableName">
+        oasis_invitation_link
+    </sql>
+
+    <sql id="baseColumn">
+        id,inviter_brand_id,oasis_id,invitation_code,granted_oasis_role_id,granted_oasis_role_name,expire_time,max_uses,usage_count,create_at,modified_at
+    </sql>
+
+    <select id="selectPageByOasisId" resultType="com.norm.timemall.app.team.domain.ro.TeamQueryInvitationLinkPageRO">
+        SELECT 
+            id,
+            invitation_code as invitationCode,
+            expire_time as expireTime,
+            granted_oasis_role_name as grantedOasisRoleName,
+            max_uses maxUses,
+            usage_count as usageCount,
+            create_at as createAt
+        FROM 
+            oasis_invitation_link
+        WHERE 
+            oasis_id = #{oasisId}
+        ORDER BY 
+            create_at DESC
+    </select>
+
+    <select id="selectInvitationLinkInfo" resultType="com.norm.timemall.app.team.domain.ro.TeamQueryInvitationLinkInfoRO">
+        SELECT 
+            il.granted_oasis_role_name AS grantedRole,
+            il.expire_time as expireTime,
+            b.avator AS inviterAvatar,
+            b.brand_name AS inviterName,
+            il.id AS linkId,
+            o.id as oasisId,
+            o.title AS oasisName,
+            o.avatar as oasisLogo,
+            o.mark as oasisStatus,
+            o.subtitle AS oasisDescription,
+            o.create_at AS oasisCreateAt,
+            o.membership AS members
+        FROM 
+            oasis_invitation_link il
+        inner JOIN brand b ON il.inviter_brand_id = b.id
+        inner JOIN oasis o ON il.oasis_id = o.id
+        WHERE 
+            1=1
+            AND il.invitation_code = #{invitationCode}
+    </select>
+</mapper>

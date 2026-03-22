@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamMiniAppLibraryMapper">
+    <sql id="tableName">
+        mini_app_library
+    </sql>
+
+    <sql id="baseColumn">
+        id,app_name,app_desc,app_logo,app_cover,app_tag,app_view_url,app_admin_url,create_at,modified_at
+    </sql>
+
+</mapper>
