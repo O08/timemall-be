@@ -33,12 +33,10 @@ public class BrandController {
     /*
      * 供应商资料
      */
-    @ResponseBody
     @GetMapping(value = "/api/v1/web_mall/brand/{brand_id}/profile")
     public BrandProfileVO retrieveCellIntro(@PathVariable("brand_id") String brandId)
     {
-        BrandProfileVO result = brandService.findBrandProfile(brandId);
-        return result;
+        return brandService.findBrandProfile(brandId);
     }
 
     @PostMapping(value = "/api/v1/web_mall/brand/guide")

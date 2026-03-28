@@ -39,6 +39,7 @@ public class BrandProfileRO {
     private String businessScope;
     private String mentorHonor;
     private String enableMentorship;
+    private String enableFoodForWork;
     private String createAt;
 
 }

@@ -19,7 +19,6 @@ public class StudioBrandMoreSettingController {
      *
      *基础信息设置：occupation、activity、brand type
      */
-    @ResponseBody
     @PutMapping(value = "/api/v1/web_estudio/brand/basic_setting")
     public SuccessVO settingBasic(@Validated @RequestBody StudioBrandBasicSetting dto){
 

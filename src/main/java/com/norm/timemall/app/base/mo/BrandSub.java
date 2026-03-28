@@ -85,4 +85,9 @@ public class BrandSub extends Model<BrandSub> implements Serializable {
      */
     private String enableMentorship;
 
+    /**
+     * 提供 以工换食 的慈善活动：1 - 提供， 0-不提供
+     */
+    private String enableFoodForWork;
+
 }

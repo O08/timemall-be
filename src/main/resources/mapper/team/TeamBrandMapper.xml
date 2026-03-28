@@ -76,6 +76,13 @@
                 </when>
             </choose>
         </if>
+        <if test="dto.enableFoodForWork != null and dto.enableFoodForWork != ''">
+            <choose>
+                <when test='dto.enableFoodForWork == "1"'>
+                    AND s.enable_food_for_work='1'
+                </when>
+            </choose>
+        </if>
         <if test="dto.loginInWeek != null and dto.loginInWeek != ''">
             <choose>
                 <when test='dto.loginInWeek == "1"'>

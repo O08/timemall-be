@@ -15,4 +15,5 @@ public class TeamTalentPageDTO extends PageDTO {
     private String nearby;
     private String location;
     private String enableMentorship;
+    private String enableFoodForWork;
 }

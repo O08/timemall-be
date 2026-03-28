@@ -16,6 +16,6 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface BrandMapper extends BaseMapper<Brand> {
 
-    BrandProfileRO selectProileByBrandId(@Param("brandId") String brandId);
+    BrandProfileRO selectProfileByBrandId(@Param("brandId") String brandId);
 
 }

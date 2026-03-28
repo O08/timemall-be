@@ -33,4 +33,7 @@ public class StudioBrandBasicSetting {
     @NotBlank(message = "enableMentorship required")
     @EnumCheck(enumClass = SwitchCheckEnum.class,message = "field: enableMentorship, incorrect parameter value ,option: on-1; off-0;")
     private String enableMentorship;
+    @NotBlank(message = "enableFoodForWork required")
+    @EnumCheck(enumClass = SwitchCheckEnum.class,message = "field: enableFoodForWork, incorrect parameter value ,option: on-1; off-0;")
+    private String enableFoodForWork;
 }

@@ -16,7 +16,7 @@ public class BrandServiceImpl implements BrandService {
     private BrandMapper brandMapper;
     @Override
     public BrandProfileVO findBrandProfile(String brandId) {
-        BrandProfileRO profile = brandMapper.selectProileByBrandId(brandId);
+        BrandProfileRO profile = brandMapper.selectProfileByBrandId(brandId);
         BrandProfileVO result = new BrandProfileVO();
         result.setProfile(profile)
                 .setResponseCode(CodeEnum.SUCCESS)
