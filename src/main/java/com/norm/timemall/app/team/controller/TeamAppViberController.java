@@ -246,24 +246,6 @@ public class TeamAppViberController {
         return vo;
     }
 
-    @PutMapping("/api/v1/app/viber/{channel}/user/{id}/mute")
-    public SuccessVO muteUser(@PathVariable("channel") String channel, @PathVariable("id") String userId) {
 
-        boolean isAdmin = teamDataPolicyService.validateChannelAdminRoleUseChannelId(channel);
-        boolean beAdminUserId= SecurityUserHelper.getCurrentPrincipal().getUserId().equals(userId);
-
-        if(!isAdmin || beAdminUserId){
-            throw new ErrorCodeException(CodeEnum.USER_ROLE_NOT_CORRECT);
-        }
-
-        FetchOneOasisChannelGeneralInfoRO channelGeneralInfo = teamOasisChannelService.findOasisOneChannelGeneralInfo(channel);
-        if(channelGeneralInfo==null){
-            throw new ErrorCodeException(CodeEnum.NOT_FOUND_DATA);
-        }
-
-
-        msGroupMemberRelService.banOneUser(channelGeneralInfo.getOasisId(), userId);
-        return new SuccessVO(CodeEnum.SUCCESS);
-    }
 
 }

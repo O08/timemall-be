@@ -24,8 +24,6 @@ public class DelAccountServiceImpl implements DelAccountService {
     @Autowired
     private BasePrivateRelMapper basePrivateRelMapper;
     @Autowired
-    private BaseGroupMsgMapper baseGroupMsgMapper;
-    @Autowired
     private BaseGroupMemberRelMapper baseGroupMemberRelMapper;
     @Autowired
     private BaseOasisJoinMapper baseOasisJoinMapper;
@@ -83,12 +81,6 @@ public class DelAccountServiceImpl implements DelAccountService {
 
     }
 
-    @Override
-    public void delFanMsg() {
-        LambdaQueryWrapper<GroupMsg> delWrapper=Wrappers.lambdaQuery();
-        delWrapper.eq(GroupMsg::getAuthorId,SecurityUserHelper.getCurrentPrincipal().getUserId());
-        baseGroupMsgMapper.delete(delWrapper);
-    }
 
     @Override
     public void delGroupRel() {

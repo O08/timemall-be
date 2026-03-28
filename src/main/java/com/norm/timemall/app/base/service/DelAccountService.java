@@ -13,8 +13,6 @@ public interface DelAccountService {
 
     void delPrivateRel();
 
-    void delFanMsg();
-
     void delGroupRel();
 
     void delOasisJoin();

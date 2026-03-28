@@ -83,8 +83,6 @@ public class DelAccountHandler {
         delAccountService.delPrivateMsg();
         // del private friend rel
         delAccountService.delPrivateRel();
-        // del fan msg
-        delAccountService.delFanMsg();
         // del fan rel
         delAccountService.delGroupRel();
         delAccountService.delOasisJoin();
