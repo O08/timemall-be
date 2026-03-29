@@ -14,6 +14,7 @@
         select
           m.id ,
           b.brand_name author,
+          b.id as authorBrandId,
           b.avator authorIcon,
           m.author_id authorUserId,
           m.create_at,
@@ -22,6 +23,7 @@
           m.quote_msg_id quoteMsgId,
           q.msg quoteMsg,
           b1.brand_name quoteAuthor,
+          b1.id as quoteAuthorBrandId,
           q.msg_type quoteMsgType
         from app_group_chat_msg m
         left join brand b
