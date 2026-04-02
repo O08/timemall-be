@@ -98,8 +98,10 @@ public class TeamOasisServiceImpl implements TeamOasisService {
             throw new ErrorCodeException(CodeEnum.USER_ACCOUNT_NAME_EXIST);
         }
 
+        String oasisId=IdUtil.simpleUUID();
+        String oasisHandle=oasisId+"@blv.hub";
         Oasis oasis = new Oasis();
-        oasis.setId(IdUtil.simpleUUID())
+        oasis.setId(oasisId)
                 .setTitle(dto.getTitle())
                 .setSubtitle(dto.getSubTitle())
                 .setInitiatorId(brandId)
@@ -109,6 +111,7 @@ public class TeamOasisServiceImpl implements TeamOasisService {
                 .setCanAddMember(SwitchCheckEnum.ENABLE.getMark())
                 .setForPrivate(SwitchCheckEnum.CLOSE.getMark())
                 .setPrivateCode(RandomUtil.randomStringUpper(6))
+                .setHandle(oasisHandle)
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
         // insert to oasis
@@ -211,8 +214,8 @@ public class TeamOasisServiceImpl implements TeamOasisService {
     }
 
     @Override
-    public TeamOasisAnnounce findOasisAnnounce(String oasisId) {
-        TeamOasisAnnounce announce = teamOasisMapper.selectAnnounceById(oasisId);
+    public TeamOasisAnnounce findOasisAnnounce(TeamOasisAnnounceDTO dto) {
+        TeamOasisAnnounce announce = teamOasisMapper.selectOneAnnounce(dto);
         String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         // private code only provide to admin
         if(ObjectUtil.isNotNull(announce) && !brandId.equals(announce.getInitiator())){
@@ -281,8 +284,16 @@ public class TeamOasisServiceImpl implements TeamOasisService {
 
     @Override
     public void doSetting(TeamOasisSettingDTO dto) {
-
         String brandId=SecurityUserHelper.getCurrentPrincipal().getBrandId();
+
+        LambdaQueryWrapper<Oasis> queryWrapper=Wrappers.lambdaQuery();
+        queryWrapper.eq(Oasis::getHandle,dto.getHandle());
+        Oasis oasisHandle=teamOasisMapper.selectOne(queryWrapper);
+
+        if(ObjectUtil.isNotNull(oasisHandle) && (!dto.getId().equals(oasisHandle.getId()))  ){
+            throw new ErrorCodeException(CodeEnum.USER_ACCOUNT_HANDLE_EXIST);
+        }
+
         Oasis oasis = new Oasis();
         oasis.setId(dto.getId())
                 .setRisk(dto.getRisk())
@@ -290,6 +301,7 @@ public class TeamOasisServiceImpl implements TeamOasisService {
                 .setForPrivate(dto.getForPrivate())
                 .setPrivateCode(dto.getPrivateCode())
                 .setTitle(dto.getTitle())
+                .setHandle(dto.getHandle())
                 .setSubtitle(dto.getSubTitle());
 
         LambdaQueryWrapper<Oasis> wrapper=Wrappers.lambdaQuery();

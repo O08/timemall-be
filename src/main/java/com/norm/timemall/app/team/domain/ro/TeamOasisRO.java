@@ -8,4 +8,5 @@ public class TeamOasisRO {
    private String title;
    private String subTitle;
    private String id;
+   private String handle;
 }

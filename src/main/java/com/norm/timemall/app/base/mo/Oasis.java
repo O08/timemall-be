@@ -90,4 +90,6 @@ public class Oasis extends Model<Oasis> implements Serializable {
      */
     private String privateCode;
 
+    private String handle;
+
 }

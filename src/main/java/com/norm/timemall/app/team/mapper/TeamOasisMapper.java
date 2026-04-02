@@ -3,6 +3,7 @@ package com.norm.timemall.app.team.mapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.mo.Oasis;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.norm.timemall.app.team.domain.dto.TeamOasisAnnounceDTO;
 import com.norm.timemall.app.team.domain.dto.TeamOasisGeneralDTO;
 import com.norm.timemall.app.team.domain.pojo.TeamOasisAnnounce;
 import com.norm.timemall.app.team.domain.pojo.TeamOasisIndexEntry;
@@ -30,7 +31,7 @@ public interface TeamOasisMapper extends BaseMapper<Oasis> {
     @Update("update oasis set risk = #{risk} where id=#{id} and initiator_id=#{initiatorBrandId}")
     void updateRiskById(@Param("id") String oasisId,@Param("risk") String risk,@Param("initiatorBrandId") String initiatorBrandId);
 
-    TeamOasisAnnounce selectAnnounceById(@Param("id") String oasisId);
+    TeamOasisAnnounce selectOneAnnounce(@Param("dto") TeamOasisAnnounceDTO dto);
 @Select("select item,val from oasis_ind where oasis_id=#{oasis_id}")
     ArrayList<TeamOasisIndexEntry> selectOasisValByOasisId(@Param("oasis_id") String oasisId);
     @Update("update oasis set avatar = #{uri} where id=#{id} and initiator_id=#{initiatorBrandId}")

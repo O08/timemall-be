@@ -7,7 +7,7 @@
 
 
     <select id="selectPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamOasisRO">
-        select avatar, title,subtitle,id
+        select avatar, title,subtitle,id,handle
         from oasis
         where
          1 = 1
@@ -18,10 +18,22 @@
         </if>
 
     </select>
-    <select id="selectAnnounceById" resultType="com.norm.timemall.app.team.domain.pojo.TeamOasisAnnounce">
-        select initiator_id initiator,title,avatar,subTitle,announce announceUrl,risk,can_add_member,for_private,private_code,mark  from oasis
-        where
-          id=#{id}
+    <select id="selectOneAnnounce" resultType="com.norm.timemall.app.team.domain.pojo.TeamOasisAnnounce">
+        select id,handle, initiator_id initiator,title,avatar,subTitle,announce announceUrl,risk,can_add_member,for_private,private_code,mark
+        from oasis
+        <where>
+            <choose>
+                <when test='dto.solution == "1"'>
+                     id = #{dto.oasisId}
+                </when>
+                <when test='dto.solution == "2"'>
+                     handle = #{dto.oasisHandle}
+                </when>
+                <otherwise>
+                     id IS  NULL
+                </otherwise>
+            </choose>
+        </where>
     </select>
 
 

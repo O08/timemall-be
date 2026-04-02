@@ -14,4 +14,6 @@ public class TeamOasisAnnounce {
     private String forPrivate;
     private String privateCode;
     private String mark;
+    private String handle;
+    private String id;
 }

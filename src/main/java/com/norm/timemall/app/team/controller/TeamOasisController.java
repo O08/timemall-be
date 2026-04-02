@@ -1,5 +1,6 @@
 package com.norm.timemall.app.team.controller;
 
+import cn.hutool.core.text.CharSequenceUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
@@ -7,12 +8,8 @@ import com.norm.timemall.app.base.enums.FileStoreDir;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.mo.Oasis;
 import com.norm.timemall.app.base.service.FileStoreService;
-import com.norm.timemall.app.team.domain.dto.TeamNewOasisDTO;
-import com.norm.timemall.app.team.domain.dto.TeamOasisPageDTO;
-import com.norm.timemall.app.team.domain.dto.TeamOasisRiskDTO;
-import com.norm.timemall.app.team.domain.dto.TeamOasisSettingDTO;
+import com.norm.timemall.app.team.domain.dto.*;
 import com.norm.timemall.app.team.domain.pojo.*;
-import com.norm.timemall.app.team.domain.ro.TeamInviteRO;
 import com.norm.timemall.app.team.domain.ro.TeamJoinedRO;
 import com.norm.timemall.app.team.domain.ro.TeamOasisRO;
 import com.norm.timemall.app.team.domain.vo.*;
@@ -39,7 +36,6 @@ public class TeamOasisController {
     /**
      * 获取oasis列表
      */
-    @ResponseBody
     @GetMapping(value = "/api/v1/team/oasis")
     public TeamOasisPageVO retrieveOasis(@Validated TeamOasisPageDTO pageDTO){
         IPage<TeamOasisRO>  oasis = teamOasisService.findOasis(pageDTO);
@@ -52,10 +48,12 @@ public class TeamOasisController {
     /**
      * 获取oasis announce info
      */
-    @ResponseBody
-    @GetMapping(value = "/api/v1/team/oasis/announce/{oasis_id}")
-    public TeamOasisAnnounceVO retrieveOasisAnnounce(@PathVariable("oasis_id") String oasisId){
-        TeamOasisAnnounce announce = teamOasisService.findOasisAnnounce(oasisId);
+    @GetMapping(value = "/api/v1/team/oasis/announce")
+    public TeamOasisAnnounceVO retrieveOasisAnnounce(@Validated TeamOasisAnnounceDTO dto){
+        if(CharSequenceUtil.isBlank(dto.getSolution())){
+            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+        }
+        TeamOasisAnnounce announce = teamOasisService.findOasisAnnounce(dto);
         TeamOasisAnnounceVO vo = new TeamOasisAnnounceVO();
         vo.setAnnounce(announce);
         vo.setResponseCode(CodeEnum.SUCCESS);
@@ -65,7 +63,6 @@ public class TeamOasisController {
     /**
      * 获取 Finance Value Index for Oasis
      */
-    @ResponseBody
     @GetMapping(value = "/api/v1/team/oasis_value_index")
     public TeamOasisValIndexVO retrieveOasisValIndex(@RequestParam @NotBlank(message = "oasisId is required")String oasisId){
         TeamOasisIndex index = teamOasisService.findOasisValIndex(oasisId);
@@ -78,7 +75,6 @@ public class TeamOasisController {
     /**
      * 获取已加入的oasis列表
      */
-    @ResponseBody
     @GetMapping(value = "/api/v1/team/joinedOases")
     public TeamJoinedVO retrieveJoinedOasis(String brandId){
         ArrayList<TeamJoinedRO> joinedRO = teamOasisJoinService.findJoinedOasis(brandId);
@@ -93,7 +89,6 @@ public class TeamOasisController {
     /**
      * 获取可分享的oasis列表
      */
-    @ResponseBody
     @GetMapping(value = "/api/v1/team/shareOasis")
     public TeamJoinedVO retrieveShareOasis(String brandId){
         ArrayList<TeamJoinedRO> joinedRO = teamOasisJoinService.findShareOasis(brandId);
@@ -106,7 +101,6 @@ public class TeamOasisController {
     }
 
 
-    @ResponseBody
     @PutMapping(value = "/api/v1/team/oasis/{oasis_id}/announce")
     public SuccessVO uploadOasisAnnounce(@PathVariable(value = "oasis_id") String oasisId,@RequestParam("file") MultipartFile file){
        // find oasis
@@ -123,7 +117,6 @@ public class TeamOasisController {
 
         return new SuccessVO(CodeEnum.SUCCESS);
     }
-    @ResponseBody
     @PutMapping(value = "/api/v1/team/oasis/{oasis_id}/avatar")
     public SuccessVO uploadOasisAvatar(@PathVariable(value = "oasis_id") String oasisId,@RequestParam("file") MultipartFile file){
         // find oasis
@@ -140,13 +133,11 @@ public class TeamOasisController {
 
         return new SuccessVO(CodeEnum.SUCCESS);
     }
-    @ResponseBody
     @PutMapping(value = "/api/v1/team/risk")
     public SuccessVO modifyOasisRisk(@RequestBody TeamOasisRiskDTO dto){
         teamOasisService.modifyOasisRisk(dto);
         return new SuccessVO(CodeEnum.SUCCESS);
     }
-    @ResponseBody
     @PostMapping(value = "/api/v1/team/oasis/new")
     public TeamNewOasisVO newOasis(@Validated  @RequestBody TeamNewOasisDTO dto){
         String oasisId = teamOasisService.newOasis(dto);
@@ -155,7 +146,6 @@ public class TeamOasisController {
         vo.setResponseCode(CodeEnum.SUCCESS);
         return vo;
     }
-    @ResponseBody
     @PutMapping(value = "/api/v1/team/be_oasis_member")
     public SuccessVO followOasis(@RequestParam @NotBlank(message = "oasisId is required") String oasisId,
                                  @RequestParam String privateCode){
