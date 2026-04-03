@@ -33,7 +33,7 @@ public class TeamOasisSettingDTO {
     private String title;
 
     @NotBlank(message = "handle required")
-    @Pattern(regexp = "^[\\w.]+@blv\\.hub$", message = "handle字符不符合要求")
+    @Pattern(regexp = "^[a-zA-Z0-9.]+@blv\\.hub$", message = "handle字符不符合要求")
     @Length(message = "handle range in {min}-{max}",min = 1,max = 40)
     private String handle;
 

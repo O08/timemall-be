@@ -286,7 +286,7 @@ public class AccountServiceImpl implements AccountService {
                 .setMark(BrandMarkEnum.CREATED.getMark())
                 .setBrandName(brandName)
                 .setCustomerId(userId)
-                .setHandle("@"+brandId)
+                .setHandle(brandId+"@blv.bi")
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
         baseBrandMapper.insert(brand);
@@ -301,7 +301,7 @@ public class AccountServiceImpl implements AccountService {
                 .setMark(BrandMarkEnum.CREATED.getMark())
                 .setBrandName(wechatUserInfoBO.getNickname())
                 .setCustomerId(userId)
-                .setHandle("@"+brandId)
+                .setHandle(brandId+"@blv.bi")
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
         baseBrandMapper.insert(brand);
