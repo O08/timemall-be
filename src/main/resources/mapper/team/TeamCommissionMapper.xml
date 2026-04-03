@@ -52,8 +52,10 @@
     </select>
     <select id="selectCommissionDetailById" resultType="com.norm.timemall.app.team.domain.pojo.TeamFetchCommissionDetail">
 
-        select p.title,p.sow,p.bonus,b1.brand_name supplierName,b1.avator supplierAvatar, p.tag,p.id commissionId,p.oasis_id
+        select p.title,p.sow,p.bonus,b1.brand_name supplierName,b1.avator supplierAvatar, p.tag,p.id commissionId,p.oasis_id,o.handle as oasisHandle
         from commission p
+        inner join oasis o
+          on p.oasis_id=o.id
         left join brand b1
         on b1.id=p.worker
         where p.id=#{id}
