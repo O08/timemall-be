@@ -9,4 +9,6 @@ public interface SmsMessageService extends IService<SmsMessage> {
     Long countMessageIn24Hour(String topic,String phone, String ipAddress);
 
     SmsMessage getLastestOneByPhoneAndBodyAndTopic(String topic, String emailOrPhone, String qrcode);
+
+    Long getUsedQuotaInToday(String phone);
 }

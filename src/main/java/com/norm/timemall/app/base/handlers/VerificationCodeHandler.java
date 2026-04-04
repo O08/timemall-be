@@ -47,6 +47,7 @@ public class VerificationCodeHandler {
 
     @Autowired
     private EnvBean env;
+    private static final Long CODE_QUOTA=100L;
 
     /**
      * @param email , email of  recipient
@@ -139,6 +140,25 @@ public class VerificationCodeHandler {
 
 
 
+    }
+
+    // 止损：减少 分布式代理 IP 和海量的手机号/邮箱号 攻击产生的损失
+    public boolean verifyEmailOrPhoneCodeQuota(String emailOrPhone){
+        boolean isMobile = Validator.isMobile(emailOrPhone);
+        boolean isEmail = Validator.isEmail(emailOrPhone);
+        if(!(isEmail || isMobile)){
+            throw new ErrorCodeException(CodeEnum.USER_ACCOUNT_DISABLE);
+        }
+        if(isEmail){
+            return verifyEmailCodeQuota(emailOrPhone);
+        }
+        return verifyPhoneCodeQuota(emailOrPhone);
+    }
+    private boolean verifyEmailCodeQuota(String email){
+        return emailMessageService.getUsedQuotaInToday(email)<=CODE_QUOTA;
+    }
+    private boolean verifyPhoneCodeQuota(String phone){
+       return smsMessageService.getUsedQuotaInToday(phone)<=CODE_QUOTA;
     }
 
     public boolean uniVerify(String emailOrPhone, String qrcode) {

@@ -11,6 +11,8 @@ import com.norm.timemall.app.base.util.mate.MybatisMateEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Service
@@ -49,5 +51,14 @@ public class EmailMessageServiceImpl extends ServiceImpl<EmailMessageMapper, Ema
         Long cnt = this.baseMapper.selectCount(wrapper);
 
         return cnt;
+    }
+
+    @Override
+    public Long getUsedQuotaInToday(String email) {
+        LocalDateTime todayStart = LocalDate.now().atStartOfDay();
+        LambdaQueryWrapper<EmailMessage> wrapper = Wrappers.lambdaQuery();
+        wrapper.ge(EmailMessage::getCreateAt,todayStart);
+
+        return this.baseMapper.selectCount(wrapper);
     }
 }

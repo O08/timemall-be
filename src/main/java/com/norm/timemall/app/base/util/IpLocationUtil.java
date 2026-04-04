@@ -70,6 +70,12 @@ public class IpLocationUtil {
         if (CharSequenceUtil.isBlank(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
         }
+        // 处理多 IP 情况 ---
+        if (!CharSequenceUtil.isBlank(ip) && ip.contains(",")) {
+            // x-forwarded-for 格式通常是: client, proxy1, proxy2，取第一个
+            ip = ip.split(",")[0].trim();
+        }
+
 
         return "0:0:0:0:0:0:0:1".equals(ip) ? LOCAL_IP : ip;
     }
@@ -114,6 +120,25 @@ public class IpLocationUtil {
             }
         }
         return "未知";
+    }
+    public static Boolean isChinaIp(String ip){
+        //  基本校验
+        if (ip == null || ip.trim().isEmpty() || UNKNOWN.equalsIgnoreCase(ip)) {
+            return false;
+        }
+
+        //  特殊 IP 处理 (本地/内网 视业务逻辑决定是否算作“中国”)
+        if (LOCAL_IP.equals(ip) || "0:0:0:0:0:0:0:1".equals(ip) || ip.startsWith("192.168")) {
+            return true;
+        }
+        try {
+            // 搜索结果格式通常为：国家|区域|省份|城市|ISP
+            String region = searcher.search(ip);
+            // 只要国家字段是“中国”，则返回 true
+            return region != null && region.startsWith("中国");
+        } catch (Exception e) {
+            return false;
+        }
     }
     public static String getIpCity(HttpServletRequest request) {
         String ipAddress = getIpAddress(request);

@@ -11,4 +11,6 @@ public interface EmailMessageService extends IService<EmailMessage> {
     EmailMessage getLastestOneByRecipientAndBodyAndTopic(String email, String body,String topic);
 
     Long countMessageUsingRef(String topic, String email, String ref);
+
+    Long getUsedQuotaInToday(String email);
 }

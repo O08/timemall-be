@@ -3,6 +3,7 @@ package com.norm.timemall.app.base.controller;
 import cn.hutool.core.lang.Validator;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.norm.timemall.app.base.config.env.EnvBean;
 import com.norm.timemall.app.base.entity.Account;
 import com.norm.timemall.app.base.entity.PasswordResetDTO;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
@@ -18,6 +19,8 @@ import com.norm.timemall.app.base.util.IpLocationUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -46,6 +49,9 @@ public class AuthenticationController {
 
     @Resource
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private EnvBean envBean;
 
     /*
       *通过邮箱进行注册
@@ -80,10 +86,39 @@ public class AuthenticationController {
     @PostMapping(value = "/api/v1/web_mall/signup/qrcode")
     public  SuccessVO sendVerificationCodeOfSignup(@RequestParam String emailOrPhone, HttpServletRequest request) throws Exception {
 
+        String referer = request.getHeader("Referer");
+        String userAgent = request.getHeader("User-Agent");
+
+        boolean isPrdEnv=envBean.getWebsite().contains("bluvarri.com");
+
+        //  Web 端域名校验
+        boolean isFromAuthorizedWeb = referer != null && (
+                referer.startsWith("https://bluvarri.com") ||
+                        referer.startsWith("https://www.bluvarri.com")
+        );
+
+        //  App 端特征校验 (如果是 App 请求，Referer 可能为空，但 UA 通常包含特定字符)
+        // 假设你的 App User-Agent 包含 "BluvApp"
+        boolean isFromApp = userAgent != null && userAgent.contains("BlvApp");
+
+        // --- 最终判定逻辑 ---
+        // 如果既不是本地与测试，也不是来自授权网页，也不是来自 App，则拦截
+        if (isPrdEnv  && !isFromAuthorizedWeb && !isFromApp) {
+            // 这里顺便处理了 Referer 为空的情况
+            throw new ErrorCodeException(CodeEnum.USER_ROLE_NOT_CORRECT);
+        }
+
+
+
         boolean isMobile = Validator.isMobile(emailOrPhone);
         boolean isEmail = Validator.isEmail(emailOrPhone);
         if(!(isEmail || isMobile)){
             throw new ErrorCodeException(CodeEnum.USER_ACCOUNT_DISABLE);
+        }
+        // check quota
+        boolean hasQuota=verificationCodeHandler.verifyEmailOrPhoneCodeQuota(emailOrPhone);
+        if(!hasQuota){
+            throw new ErrorCodeException(CodeEnum.MAX_LIMIT);
         }
         // check emailOrPhone
         Account targetAccount = accountService.findAccountByUserName(emailOrPhone);
@@ -91,11 +126,11 @@ public class AuthenticationController {
             throw new ErrorCodeException(CodeEnum.USER_ACCOUNT_ALREADY_EXIST);
         }
         // send verification code
+        String ipAddress = IpLocationUtil.getIpAddress(request);
         if(isEmail){
             verificationCodeHandler.doSendEmailCode(emailOrPhone);
         }
-        if(isMobile){
-            String ipAddress = IpLocationUtil.getIpAddress(request);
+        if(isMobile && IpLocationUtil.isChinaIp(ipAddress)){
             verificationCodeHandler.doSendPhoneCode(emailOrPhone,ipAddress);
         }
 
@@ -108,24 +143,48 @@ public class AuthenticationController {
      */
     @PostMapping(value = "/api/v1/web_mall/password_reset/qrcode")
     public  SuccessVO sendPasswordResetCode(@RequestParam String emailOrPhone, HttpServletRequest request) throws Exception {
+        String referer = request.getHeader("Referer");
+        String userAgent = request.getHeader("User-Agent");
+
+        boolean isPrdEnv=envBean.getWebsite().contains("bluvarri.com");
+
+        //  Web 端域名校验
+        boolean isFromAuthorizedWeb = referer != null && (
+                referer.startsWith("https://bluvarri.com") ||
+                        referer.startsWith("https://www.bluvarri.com")
+        );
+
+        //  App 端特征校验 (如果是 App 请求，Referer 可能为空，但 UA 通常包含特定字符)
+        // 假设你的 App User-Agent 包含 "BluvApp"
+        boolean isFromApp = userAgent != null && userAgent.contains("BlvApp");
+
+        // --- 最终判定逻辑 ---
+        // 如果既不是本地与测试，也不是来自授权网页，也不是来自 App，则拦截
+        if (isPrdEnv  && !isFromAuthorizedWeb && !isFromApp) {
+            // 这里顺便处理了 Referer 为空的情况
+            throw new ErrorCodeException(CodeEnum.USER_ROLE_NOT_CORRECT);
+        }
         boolean isMobile = Validator.isMobile(emailOrPhone);
         boolean isEmail = Validator.isEmail(emailOrPhone);
         if(!(isEmail || isMobile)){
             throw new ErrorCodeException(CodeEnum.USER_ACCOUNT_DISABLE);
         }
-
+        // check quota
+        boolean hasQuota=verificationCodeHandler.verifyEmailOrPhoneCodeQuota(emailOrPhone);
+        if(!hasQuota){
+            throw new ErrorCodeException(CodeEnum.MAX_LIMIT);
+        }
         // check emailOrPhone
         Account targetAccount = accountService.findAccountByUserName(emailOrPhone);
         if(ObjectUtil.isNull(targetAccount)){
             throw new ErrorCodeException(CodeEnum.USER_ACCOUNT_NOT_EXIST);
         }
         // send verification code
-
+        String ipAddress = IpLocationUtil.getIpAddress(request);
         if(isEmail){
             passwordResetHandler.doSendEmailOfPasswordReset(emailOrPhone);
         }
-        if(isMobile){
-            String ipAddress = IpLocationUtil.getIpAddress(request);
+        if(isMobile && IpLocationUtil.isChinaIp(ipAddress)){
             passwordResetHandler.doSendPhoneCodeOfPasswordReset(emailOrPhone,ipAddress);
         }
         return new SuccessVO(CodeEnum.SUCCESS);

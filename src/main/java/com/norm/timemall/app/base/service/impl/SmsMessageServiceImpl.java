@@ -5,13 +5,14 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.norm.timemall.app.base.mapper.BaseSmsMessageMapper;
-import com.norm.timemall.app.base.mo.EmailMessage;
 import com.norm.timemall.app.base.mo.SmsMessage;
 import com.norm.timemall.app.base.service.SmsMessageService;
 import com.norm.timemall.app.base.util.mate.MybatisMateEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -27,7 +28,7 @@ public class SmsMessageServiceImpl extends ServiceImpl< BaseSmsMessageMapper,Sms
         wrapper.eq(SmsMessage::getTopic,topic)
                 .ge(SmsMessage::getCreateAt, DateUtil.beginOfDay(new Date()));
 
-        wrapper.and(w -> w.eq(SmsMessage::getIp,ipAddress)
+        wrapper.and(w -> w.eq(SmsMessage::getIp,mybatisMateEncryptor.defaultEncrypt(ipAddress))
                 .or()
                 .eq(SmsMessage::getPhone,mybatisMateEncryptor.defaultEncrypt(phone)));
 
@@ -46,5 +47,13 @@ public class SmsMessageServiceImpl extends ServiceImpl< BaseSmsMessageMapper,Sms
                 .last("limit 1");
         return this.baseMapper.selectOne(wrapper);
 
+    }
+
+    @Override
+    public Long getUsedQuotaInToday(String phone) {
+        LocalDateTime todayStart = LocalDate.now().atStartOfDay();
+        LambdaQueryWrapper<SmsMessage> wrapper = Wrappers.lambdaQuery();
+        wrapper.ge(SmsMessage::getCreateAt,todayStart);
+        return this.baseMapper.selectCount(wrapper);
     }
 }
