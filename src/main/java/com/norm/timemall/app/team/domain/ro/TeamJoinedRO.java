@@ -8,4 +8,5 @@ public class TeamJoinedRO {
     private String title;
     private String id;
     private String mark;
+    private String handle;
 }
