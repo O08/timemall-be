@@ -9,5 +9,6 @@ public class TeamFinDistriutionItem {
     private String rate;
     private String drawable;
     private String oasisId;
+    private String oasisHandle;
 
 }
