@@ -38,19 +38,19 @@ public class PayTransferHandler {
     @Autowired
     private PayTransferMapper payTransferMapper;
 
+    private static final Map<String, TransTypeEnum> TRANS_TYPE_MAP =
+            Stream.of(TransTypeEnum.values()).collect(Collectors.toMap(TransTypeEnum::getMark, e -> e));
 
-    @Transactional
+
+
+    @Transactional(rollbackFor = Exception.class)
     public String doTransfer(String param ){
         log.info("转账报文："+param);
 
         Gson gson = new Gson();
         TransferBO transferBO = gson.fromJson(param, TransferBO.class);
         // validate TransTypeEnum
-        Collector<TransTypeEnum, ?, Map<String, TransTypeEnum>> transTypeEnumMapCollector = Collectors.toMap(TransTypeEnum::getMark, Function.identity());
-        Map<String, TransTypeEnum> transTypeEnumMap  = Stream.of(TransTypeEnum.values())
-                .collect(transTypeEnumMapCollector);
-
-        TransTypeEnum transTypeEnum = transTypeEnumMap.get(transferBO.getTransType());
+        TransTypeEnum transTypeEnum = TRANS_TYPE_MAP.get(transferBO.getTransType());
 
         if(ObjectUtil.isEmpty(transTypeEnum)){
             throw  new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);

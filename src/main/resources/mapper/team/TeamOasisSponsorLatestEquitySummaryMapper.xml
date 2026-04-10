@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamOasisSponsorLatestEquitySummaryMapper">
+    <sql id="tableName">
+        oasis_sponsor_latest_equity_summary
+    </sql>
+
+    <sql id="baseColumn">
+        id,oasis_id,equity_period_id,sponsor_brand_id,holding_equity_value,holding_shares,create_at,modified_at
+    </sql>
+
+    <select id="selectSponsorshipInfoByOasisAndBrand" resultType="com.norm.timemall.app.team.domain.ro.TeamFetchEquitySponsorshipInfoRO">
+        SELECT
+            ep.id AS periodId,
+            ep.period AS period,
+            ep.shares AS shares,
+            ep.price AS price,
+            ep.earning_yield AS earningYield,
+            eps.sold AS sold,
+            eps.total_sponsor AS totalSponsor,
+            sles.holding_shares AS holdingShares,
+            sles.holding_equity_value AS holdingEquityValue
+        FROM oasis_latest_equity_period olep
+        INNER JOIN oasis_equity_period ep ON olep.equity_period_id = ep.id
+        LEFT JOIN oasis_equity_period_summary eps ON ep.id = eps.equity_period_id
+        LEFT JOIN oasis_sponsor_latest_equity_summary sles ON ep.id = sles.equity_period_id AND sles.sponsor_brand_id = #{brandId}
+        WHERE olep.oasis_id = #{oasisId}
+    </select>
+
+    <insert id="upsertSponsorSummary">
+        INSERT INTO oasis_sponsor_latest_equity_summary (
+            id,
+            oasis_id,
+            equity_period_id,
+            sponsor_brand_id,
+            holding_shares,
+            holding_equity_value,
+            create_at,
+            modified_at
+        ) VALUES (
+            #{o.id},
+            #{o.oasisId},
+            #{o.equityPeriodId},
+            #{o.sponsorBrandId},
+            #{o.holdingShares},
+            #{o.holdingEquityValue},
+            #{o.createAt},
+            #{o.modifiedAt}
+        )
+        ON DUPLICATE KEY UPDATE
+        /* 因为新期开启已清空，此处的 UPDATE 仅处理本期内的追加购买 */
+        holding_shares = holding_shares + VALUES(holding_shares),
+        holding_equity_value = holding_equity_value + VALUES(holding_equity_value),
+        modified_at = VALUES(modified_at)
+    </insert>
+
+
+
+</mapper>

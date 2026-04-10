@@ -6,8 +6,11 @@ import com.norm.timemall.app.team.domain.dto.*;
 import com.norm.timemall.app.team.domain.pojo.OasisCreatedByCurrentBrand;
 import com.norm.timemall.app.team.domain.pojo.TeamOasisAnnounce;
 import com.norm.timemall.app.team.domain.pojo.TeamOasisIndex;
+import com.norm.timemall.app.team.domain.ro.TeamFetchOasisBalanceTrendRO;
 import com.norm.timemall.app.team.domain.ro.TeamOasisRO;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public interface TeamOasisService {
@@ -39,4 +42,6 @@ public interface TeamOasisService {
     void blockedOasis(String oasisId);
 
     void changeOasisManager(TeamOasisChangeManagerDTO dto);
+
+    List<TeamFetchOasisBalanceTrendRO> findBalanceTrend(String oasisId);
 }

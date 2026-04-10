@@ -23,6 +23,7 @@ import com.norm.timemall.app.team.domain.pojo.TeamOasisAnnounce;
 import com.norm.timemall.app.team.domain.pojo.TeamOasisIndex;
 import com.norm.timemall.app.team.domain.pojo.TeamOasisIndexEntry;
 import com.norm.timemall.app.team.domain.ro.OasisCreatedByCurrentBrandRO;
+import com.norm.timemall.app.team.domain.ro.TeamFetchOasisBalanceTrendRO;
 import com.norm.timemall.app.team.domain.ro.TeamOasisRO;
 import com.norm.timemall.app.team.mapper.*;
 import com.norm.timemall.app.team.service.TeamOasisService;
@@ -32,6 +33,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class TeamOasisServiceImpl implements TeamOasisService {
@@ -58,6 +60,9 @@ public class TeamOasisServiceImpl implements TeamOasisService {
 
     @Autowired
     private TeamOasisMemberRoleMapper teamOasisMemberRoleMapper;
+
+    @Autowired
+    private TeamOasisBalanceSummaryMapper teamOasisBalanceSummaryMapper;
 
     @Override
     public IPage<TeamOasisRO> findOasis(TeamOasisPageDTO dto) {
@@ -382,5 +387,10 @@ public class TeamOasisServiceImpl implements TeamOasisService {
                 .setModifiedAt(new Date());
 
         teamOasisMemberRoleMapper.insert(mr);
+    }
+
+    @Override
+    public List<TeamFetchOasisBalanceTrendRO> findBalanceTrend(String oasisId) {
+        return teamOasisBalanceSummaryMapper.selectBalanceTrendByOasisId(oasisId);
     }
 }

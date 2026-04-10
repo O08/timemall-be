@@ -10,6 +10,7 @@ import com.norm.timemall.app.base.mo.Oasis;
 import com.norm.timemall.app.base.service.FileStoreService;
 import com.norm.timemall.app.team.domain.dto.*;
 import com.norm.timemall.app.team.domain.pojo.*;
+import com.norm.timemall.app.team.domain.ro.TeamFetchOasisBalanceTrendRO;
 import com.norm.timemall.app.team.domain.ro.TeamJoinedRO;
 import com.norm.timemall.app.team.domain.ro.TeamOasisRO;
 import com.norm.timemall.app.team.domain.vo.*;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.constraints.NotBlank;
 import java.util.ArrayList;
+import java.util.List;
 @Validated
 @RestController
 public class TeamOasisController {
@@ -169,6 +171,18 @@ public class TeamOasisController {
         teamOasisService.doSetting(dto);
         return new SuccessVO(CodeEnum.SUCCESS);
 
+    }
+
+    /**
+     * 获取oasis余额趋势
+     */
+    @GetMapping(value = "/api/v1/team/oasis/{id}/balance/trend")
+    public TeamFetchOasisBalanceTrendVO fetchOasisBalanceTrend(@PathVariable("id") String id){
+        List<TeamFetchOasisBalanceTrendRO> trendList = teamOasisService.findBalanceTrend(id);
+        TeamFetchOasisBalanceTrendVO vo = new TeamFetchOasisBalanceTrendVO();
+        vo.setChart(trendList);
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        return vo;
     }
 
 

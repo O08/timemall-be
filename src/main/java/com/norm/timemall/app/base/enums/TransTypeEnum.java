@@ -28,7 +28,12 @@ public enum TransTypeEnum {
     PAY_OASIS_MEMBERSHIP("24","订阅部落会员"),
     OASIS_MEMBERSHIP_REFUND("25","部落会员退款"),
 
-    PAY_OASIS_EMPLOYEE("26", "支付薪资、福利");
+    PAY_OASIS_EMPLOYEE("26", "支付薪资、福利"),
+    OASIS_BUY_EQUITY("27", "购买权益"),
+
+    OASIS_WRITE_OFF_EQUITY("28", "核销权益"),
+    OASIS_REDEEM_EQUITY("29", "回收权益"),
+    ;
     private String mark;
     private String desc;
 
