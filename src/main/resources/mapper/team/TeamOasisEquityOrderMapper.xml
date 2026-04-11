@@ -44,6 +44,7 @@
            eo.redemption_amount AS redemptionAmount,
            eo.shares AS shares,
            ep.earning_yield AS earningYield,
+           ep.period,
            eo.create_at AS createAt
         FROM oasis_equity_order eo
         INNER JOIN oasis_equity_period ep ON eo.equity_period_id = ep.id

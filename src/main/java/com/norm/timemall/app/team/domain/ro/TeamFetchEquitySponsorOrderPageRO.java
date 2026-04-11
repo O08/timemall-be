@@ -10,4 +10,5 @@ public class TeamFetchEquitySponsorOrderPageRO {
     private String shares;
     private String earningYield;
     private String createAt;
+    private String period;
 }
