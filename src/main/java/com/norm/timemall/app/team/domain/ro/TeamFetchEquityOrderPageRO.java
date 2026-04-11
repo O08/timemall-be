@@ -14,4 +14,5 @@ public class TeamFetchEquityOrderPageRO {
     private String status;
     private String redemptionAmount;
     private String createAt;
+    private String sponsorAvatar;
 }

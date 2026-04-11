@@ -20,7 +20,8 @@
             eo.create_at AS createAt,
             ep.period,
             ep.earning_yield AS earningYield,
-            b.brand_name AS sponsorName
+            b.brand_name AS sponsorName,
+            b.avator as sponsorAvatar
         FROM oasis_equity_order eo
         INNER JOIN oasis_equity_period ep ON eo.equity_period_id = ep.id
         INNER JOIN brand b ON eo.sponsor_brand_id = b.id
