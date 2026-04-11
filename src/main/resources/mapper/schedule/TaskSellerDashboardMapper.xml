@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.scheduled.mapper.TaskSellerDashboardMapper">
+    <update id="refreshSellerDashboard"  statementType="CALLABLE">
+        { call cal_seller_dashboard_proc_0013() }
+    </update>
+    <update id="refreshSellerDashboardOnlineTimeInfo"  statementType="CALLABLE">
+        { call cal_seller_dashboard_online_time_proc_0021() }
+    </update>
+</mapper>
