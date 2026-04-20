@@ -10,13 +10,22 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 
 
 @Configuration
@@ -48,6 +57,15 @@ public class WebSecurityConfig {
     @Resource
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private AiSecurityProperties aiSecurityProperties;
+
+    @Autowired
+    private JwtToCustomizeUserConverter jwtToCustomizeUserConverter;
+
+    @Autowired
+    private CustomizeAccessDeniedHandler accessDeniedHandler;
+
 
 
 
@@ -56,7 +74,9 @@ public class WebSecurityConfig {
 
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
+                .addFilterBefore(new AiApiKeyFilter(aiSecurityProperties), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorizeHttpRequests -> {
+
                     authorizeHttpRequests.requestMatchers("/api/v1/web_mall/**",
                                     "/api/v1/app/feed_channel/*/guide",
                                     "api/v1/app/feed/list",
@@ -65,21 +85,51 @@ public class WebSecurityConfig {
                                     "/api/file/{fileName:.+}/**",
                                     "/api/payment/alipay",
                                     "/api/v1/marketing/puzzle","/api/v1/marketing/puzzle/dreams",
-                                    "/api/v1/data_layer/cell/indices").permitAll() // 不需要认证和授权
-                            .anyRequest().authenticated(); // 其他请求都需要授权后才能使用
+                                    "/api/v1/data_layer/cell/indices").permitAll(); // 不需要认证和授权
+
+                    //  AI 授权路径白名单：只有这几个地方允许 AI_BOT 或 USER 进
+                    if (aiSecurityProperties.getAuthPaths() != null) {
+                        for (String path : aiSecurityProperties.getAuthPaths()) {
+                            authorizeHttpRequests.requestMatchers(path).hasAnyRole("AI_BOT", "USER");
+                        }
+                    }
+
+                    // 除上述路径外，所有其他请求都必须拥有 ROLE_USER
+                    // 只有 ROLE_AI_BOT 的 Token 在这里会被直接拦截（403）
+                    authorizeHttpRequests.anyRequest().hasRole("USER");
 
                     })
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtToCustomizeUserConverter))
+                        .accessDeniedHandler(accessDeniedHandler) // 必须在这里也加一遍
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                )
                 .logout(logout-> logout.logoutUrl("/api/v1/web_mall/logout").permitAll()
                         .logoutSuccessHandler(logoutSuccessHandler) //登出成功处理逻辑
                         .deleteCookies("JSESSIONID") )
                 .exceptionHandling((exceptions) -> exceptions.authenticationEntryPoint(authenticationEntryPoint))
-                .sessionManagement(sessionManagement -> sessionManagement.maximumSessions(1).sessionRegistry(sessionRegistry()).expiredSessionStrategy(sessionInformationExpiredStrategy));
+                .sessionManagement(sessionManagement ->
+                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).maximumSessions(1)
+                        .sessionRegistry(sessionRegistry()).expiredSessionStrategy(sessionInformationExpiredStrategy));
 
         return http.build();
 
     }
 
 
+    @Bean
+    public JwtDecoder jwtDecoder() {
+
+        SecretKey secretKey = new SecretKeySpec(
+                aiSecurityProperties.getJwtSecret().getBytes(StandardCharsets.UTF_8),
+                "HmacSHA256"
+        );
+
+        // 显式指定算法，防止算法预测攻击（Security Best Practice）
+        return NimbusJwtDecoder.withSecretKey(secretKey)
+                .macAlgorithm(MacAlgorithm.HS256)
+                .build();
+    }
 
     @Bean
     public WechatQrAuthenticationProvider wechatQrAuthenticationProvider() {

@@ -7,8 +7,10 @@ import com.norm.timemall.app.base.config.env.EnvBean;
 import com.norm.timemall.app.base.entity.Account;
 import com.norm.timemall.app.base.entity.PasswordResetDTO;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
+import com.norm.timemall.app.base.exception.QuickMessageException;
 import com.norm.timemall.app.base.handlers.DelAccountHandler;
 import com.norm.timemall.app.base.handlers.PasswordResetHandler;
+import com.norm.timemall.app.base.handlers.TokenAuthenticationHandler;
 import com.norm.timemall.app.base.handlers.VerificationCodeHandler;
 import com.norm.timemall.app.base.entity.JoinDTO;
 import com.norm.timemall.app.base.entity.SuccessVO;
@@ -19,13 +21,12 @@ import com.norm.timemall.app.base.util.IpLocationUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 
 
 /**
@@ -52,6 +53,9 @@ public class AuthenticationController {
 
     @Autowired
     private EnvBean envBean;
+
+    @Autowired
+    private TokenAuthenticationHandler tokenAuthenticationHandler;
 
     /*
       *通过邮箱进行注册
@@ -224,6 +228,26 @@ public class AuthenticationController {
         accountService.blockedAccount(userId);
         return new SuccessVO(CodeEnum.SUCCESS);
 
+    }
+    @PostMapping("/api/v1/web_mall/oauth/token")
+    public Map<String, Object> exchangeToken(@RequestParam String code) {
+        // 1. 从数据库找人
+        String userId  = tokenAuthenticationHandler.findUserIdByJwtCode(code);
+        if (userId == null) {
+            throw new QuickMessageException("code invalid or expired");
+        }
+
+        // 2. 阅后即焚
+        tokenAuthenticationHandler.removeJwtCode(code);
+
+        // 3. 签发 JWT (给 AI 平台)
+        String accessToken = tokenAuthenticationHandler.createOauthToken(userId);
+
+        return Map.of(
+                "access_token", accessToken,
+                "token_type", "Bearer",
+                "expires_in", 86400
+        );
     }
 
 

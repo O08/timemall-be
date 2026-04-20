@@ -26,6 +26,8 @@ public class SuccessVO {
      */
     private String message;
 
+    private Object data;
+
     /**
      * 只带响应code和desc
      *
@@ -34,5 +36,9 @@ public class SuccessVO {
     public SuccessVO(Code code) {
         this.code = code.getCode();
         this.message = code.getDesc();
+    }
+    public SuccessVO(Code code, Object data) {
+        this(code);
+        this.data = data;
     }
 }
