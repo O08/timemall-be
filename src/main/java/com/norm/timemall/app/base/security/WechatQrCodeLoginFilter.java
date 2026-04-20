@@ -40,8 +40,8 @@ public class WechatQrCodeLoginFilter extends AbstractAuthenticationProcessingFil
             throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
         }
 
-        String code = request.getParameter("code");
-        String state = request.getParameter("state");
+        String code = request.getParameter("wx_code");
+        String state = request.getParameter("wx_state");
 
         if(StrUtil.isBlank(code) || StrUtil.isBlank(state)){
             throw new AuthenticationServiceException("INVALID PARAMETERS");
