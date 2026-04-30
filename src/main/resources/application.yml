@@ -87,6 +87,11 @@ aliyun:
     access-key-secret: ${oss_accessKeySecret}
     public-bucket: ${oss_public_bucket}
     limited-bucket: ${oss_limited_bucket}
+  sms:
+    access-key-id: ${aliyun_sms_keyId}
+    access-key-secret: ${aliyun_sms_keySecret}
+    sign-name: ${aliyun_sms_signName}
+    endpoint: ${aliyun_sms_endpoint}
 
 wechat:
   webapp-id: ${wx_appId}

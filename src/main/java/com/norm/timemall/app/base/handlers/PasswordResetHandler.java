@@ -5,10 +5,8 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSONObject;
+import com.aliyun.dysmsapi20170525.models.SendSmsResponse;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.norm.timemall.app.base.config.env.EnvBean;
 import com.norm.timemall.app.base.entity.PasswordResetDTO;
 import com.norm.timemall.app.base.enums.CodeEnum;
@@ -22,16 +20,15 @@ import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.base.service.EmailMessageService;
 import com.norm.timemall.app.base.service.RichTextConfigService;
 import com.norm.timemall.app.base.service.SmsMessageService;
-import com.norm.timemall.app.base.util.SecureCheckUtil;
-import com.norm.timemall.app.base.util.shlianlu.LianluApi;
+import com.norm.timemall.app.base.util.alisms.AliyunSmsApi;
 import com.norm.timemall.app.base.util.zoho.ZohoEmailApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+
 
 /**
  * 密码重置
@@ -52,12 +49,14 @@ public class PasswordResetHandler {
     private SmsMessageService smsMessageService;
 
     @Autowired
-    private LianluApi lianluApi;
+    private AliyunSmsApi aliyunSmsApi;
 
 
 
     @Autowired
     private EnvBean env;
+
+    private final  Gson gson=new Gson();
 
 
     /**
@@ -148,10 +147,10 @@ public class PasswordResetHandler {
 
         // 生成验证码
         String qrcode = RandomUtil.randomNumbers(6);
-
+        String templateParam =gson.toJson(Collections.singletonMap("code", qrcode));
         // 生成短信内容
 
-        JSONObject resultJson = lianluApi.smsTemplateSendOne(phone, templateConfig.getContent(), new String[]{qrcode});
+        SendSmsResponse smsResponse = aliyunSmsApi.smsTemplateSendOne(phone, templateConfig.getContent(), templateParam);
 
         SmsMessage smsMessage = new SmsMessage();
         smsMessage.setPhone(phone)
@@ -159,7 +158,7 @@ public class PasswordResetHandler {
                 .setIp(ipAddress)
                 .setId(IdUtil.simpleUUID())
                 .setBody(qrcode)
-                .setSendResponse(resultJson.toJSONString())
+                .setSendResponse(gson.toJson(smsResponse))
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
 
