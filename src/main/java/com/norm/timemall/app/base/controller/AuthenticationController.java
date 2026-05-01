@@ -20,6 +20,7 @@ import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.base.util.IpLocationUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -33,7 +34,7 @@ import java.util.Map;
  * user related action
  */
 @RestController
-
+@Slf4j
 public class AuthenticationController {
 
     @Autowired
@@ -84,7 +85,16 @@ public class AuthenticationController {
         return new SuccessVO(CodeEnum.SUCCESS);
     }
 
-    /*
+    @PostMapping(value = "/api/v1/web_mall/signup/qrcode")
+    public  SuccessVO sendVerificationCodeOfSignupFake(@RequestParam String emailOrPhone, HttpServletRequest request) throws Exception {
+        String referer = request.getHeader("Referer");
+        String userAgent = request.getHeader("User-Agent");
+        log.info("bad req: Referer--> {} userAgent--> {}",referer,userAgent);
+        return new SuccessVO(CodeEnum.SUCCESS);
+    }
+
+
+        /*
      *发送注册验证码
      */
     @PostMapping(value = "/api/v1/web_mall/signup/send_qrcode")
