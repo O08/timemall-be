@@ -5,7 +5,10 @@ public enum RtmChatEvent {
     CONNECTED("CONNECTED"),
     JOIN_GROUP("JOIN_GROUP"),
     NOTIFY_PULL("NOTIFY_PULL"),
-    NEW_MSG_NOTIFY("FETCH_NEW_DATA"), // 推信号
+    NEW_MSG_NOTIFY("NEW_MSG_NOTIFY"), // 推信号
+
+    NOTIFY_PULL_STATELESS("NOTIFY_PULL_STATELESS"),
+    NEW_MSG_NOTIFY_STATELESS("NEW_MSG_NOTIFY_STATELESS"),
     FORCE_OFFLINE("FORCE_OFFLINE");  // 强制下线信号
     private final String value;
     RtmChatEvent(String value) { this.value = value; }

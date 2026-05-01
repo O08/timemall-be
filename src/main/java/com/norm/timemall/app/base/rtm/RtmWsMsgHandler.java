@@ -2,10 +2,7 @@ package com.norm.timemall.app.base.rtm;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import lombok.extern.slf4j.Slf4j;
 import org.tio.core.ChannelContext;
 import org.tio.core.Tio;
@@ -18,8 +15,7 @@ import org.tio.websocket.common.WsResponse;
 import org.tio.websocket.server.handler.IWsMsgHandler;
 
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -35,6 +31,10 @@ public class RtmWsMsgHandler implements IWsMsgHandler {
             .maximumSize(10000) // 保护内存，最多存 1 万个
             .build();
 
+    private static final Cache<String, Long> userReceiveLimitMap = Caffeine.newBuilder()
+            .expireAfterWrite(1, TimeUnit.SECONDS) // 1秒后自动清理
+            .maximumSize(50000) // 考虑到10万用户，设大一点
+            .build();
 
     // Constructor injection
     public RtmWsMsgHandler(RtmJwtUtil rtmJwtUtil) {
@@ -77,10 +77,13 @@ public class RtmWsMsgHandler implements IWsMsgHandler {
         String groupId = json.has("groupId") ? json.get("groupId").getAsString() : null;
 
         boolean groupIdExist= groupId != null && !groupId.isEmpty();
-        if (RtmChatEvent.JOIN_GROUP.getValue().equals(action) && groupIdExist) {
+        if(!groupIdExist) return null;
+        if (RtmChatEvent.JOIN_GROUP.getValue().equals(action)) {
             return  helpUserJoinGroup(groupId,channelContext);
-        } else if (RtmChatEvent.NOTIFY_PULL.getValue().equals(action) && groupIdExist) {
-            return notifyUserPull(groupId,channelContext);
+        } else if (RtmChatEvent.NOTIFY_PULL.getValue().equals(action)) {
+            return notifyUserPullData(groupId,channelContext);
+        }else if (RtmChatEvent.NOTIFY_PULL_STATELESS.getValue().equals(action)) {
+            return handleStatelessPush(json, channelContext);
         }
         return null;
     }
@@ -110,7 +113,7 @@ public class RtmWsMsgHandler implements IWsMsgHandler {
      * @param channelContext  用户
      * @return 返回 null： T-io 不会给发信人任何回复，处理结束
      */
-    private Object notifyUserPull(String groupId, ChannelContext channelContext){
+    private Object notifyUserPullData(String groupId, ChannelContext channelContext){
         if (!Tio.isInGroup(groupId, channelContext)) {
             log.warn("用户{}尝试向未加入的群组{}发送信号", channelContext.userid, groupId);
             return null;
@@ -149,6 +152,68 @@ public class RtmWsMsgHandler implements IWsMsgHandler {
 
         return null;
     }
+
+
+
+    private Object handleStatelessPush(JsonObject json, ChannelContext channelContext) {
+
+        long now = System.currentTimeMillis();
+        Long lastPush = (Long) channelContext.getAttribute("LAST_STATELESS_PUSH");
+        if (lastPush != null && (now - lastPush < 500)) {
+            log.warn("用户{}无状态消息发送频率过快", channelContext.userid);
+            return null; // 500ms 间隔
+        }
+        channelContext.setAttribute("LAST_STATELESS_PUSH", now);
+
+        // 提取路由标识 (必填，用于前端分拣)
+        String groupId =json.get("groupId").getAsString();
+
+        // 提取目标名单
+        JsonArray uids = json.getAsJsonArray("uids");
+        if (uids == null || uids.isEmpty() || uids.size() > 200) return null;
+
+        // 极致去重：使用 HashSet 保证 10 万用户级别下 O(1) 的去重性能
+        Set<String> uniqueIds = new HashSet<>();
+        for (JsonElement idElement : uids) {
+            String uid = idElement.getAsString();
+            if (uid != null) uniqueIds.add(uid);
+        }
+
+        // 提取业务透传数据 (Payload)
+        JsonObject payload = json.has("payload") ? json.getAsJsonObject("payload") : new JsonObject();
+
+        // 构建下行信号对象
+        JsonObject signal = new JsonObject();
+        signal.addProperty("event", RtmChatEvent.NEW_MSG_NOTIFY_STATELESS.getValue());
+        signal.addProperty("groupId", groupId);
+        signal.add("payload", payload); // 透传数据
+        signal.addProperty("timestamp", System.currentTimeMillis());
+
+        // 预序列化。10 万人接收也只做一次 JSON 转换
+        WsResponse response = WsResponse.fromText(signal.toString(), StandardCharsets.UTF_8.name());
+
+        // 异步分发：利用 T-io 内部线程池，不阻塞主 IO 线程
+        channelContext.tioConfig.tioExecutor.execute(() -> {
+            for (String uid : uniqueIds) {
+                Long lastRxTime = userReceiveLimitMap.getIfPresent(uid);
+                if (lastRxTime != null && (now - lastRxTime < 1000)) {
+                    // 该用户接收太频繁，为了保护他不被骚扰，丢弃本次投递
+                    log.info("该用户{}无状态消息接收太频繁，已拦截本次转发", uid);
+                    continue;
+                }
+
+                // 更新该用户的接收时间
+                userReceiveLimitMap.put(uid, now);
+                // 定向投递。只要用户 bindUser 过，就能收到
+                Tio.sendToUser(channelContext.tioConfig, uid, response);
+            }
+        });
+
+        return null;
+    }
+
+
+
 
     @Override
     public void onAfterHandshaked(HttpRequest httpRequest, HttpResponse httpResponse, ChannelContext channelContext) {
