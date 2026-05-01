@@ -87,7 +87,7 @@ public class AuthenticationController {
     /*
      *发送注册验证码
      */
-    @PostMapping(value = "/api/v1/web_mall/signup/qrcode")
+    @PostMapping(value = "/api/v1/web_mall/signup/send_qrcode")
     public  SuccessVO sendVerificationCodeOfSignup(@RequestParam String emailOrPhone, HttpServletRequest request) throws Exception {
 
         String referer = request.getHeader("Referer");
