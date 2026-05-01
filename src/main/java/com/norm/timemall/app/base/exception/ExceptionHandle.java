@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartException;
 
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.io.IOException;
 
@@ -118,6 +119,12 @@ public class ExceptionHandle {
     public void handleClientAbortException(Exception e) {
         // 直接忽略，不需要返回 ErrorVO 给客户端，因为连接已经断了
         log.debug("Detected ClientAbortException: Peer closed connection.");
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public void handleClientAbortException(NoResourceFoundException e) {
+        String message = e.getMessage();
+        log.debug("Detected NoResourceFoundException: {}",message);
     }
 
     @ExceptionHandler(value = {java.io.IOException.class})
