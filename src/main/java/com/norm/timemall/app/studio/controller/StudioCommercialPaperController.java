@@ -13,11 +13,10 @@ import com.norm.timemall.app.studio.domain.dto.*;
 import com.norm.timemall.app.studio.domain.pojo.StudioFetchMpsPaper;
 import com.norm.timemall.app.studio.domain.pojo.StudioFetchMpsPaperDetail;
 import com.norm.timemall.app.studio.domain.ro.StudioDiscoverMpsPaperPageRO;
+import com.norm.timemall.app.studio.domain.ro.StudioFetchMpsDrawerDashboardRO;
+import com.norm.timemall.app.studio.domain.ro.StudioFetchMpsPaperDrawerPageRO;
 import com.norm.timemall.app.studio.domain.ro.StudioFetchMpsPaperRO;
-import com.norm.timemall.app.studio.domain.vo.StudioDiscoverMpsPaperPageVO;
-import com.norm.timemall.app.studio.domain.vo.StudioFetchMpsPaperDetailVO;
-import com.norm.timemall.app.studio.domain.vo.StudioFetchMpsPaperPageVO;
-import com.norm.timemall.app.studio.domain.vo.StudioFetchMpsPaperVO;
+import com.norm.timemall.app.studio.domain.vo.*;
 import com.norm.timemall.app.studio.service.StudioApiAccessControlService;
 import com.norm.timemall.app.studio.service.StudioCommercialPaperService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,5 +134,22 @@ public class StudioCommercialPaperController {
         return new SuccessVO(CodeEnum.SUCCESS);
 
     }
+    @GetMapping("/api/v1/web_estudio/mps/drawer/dashboard")
+    public StudioFetchMpsDrawerDashboardVO fetchMpsDrawerDashboard(@RequestParam("mpsId") String mpsId){
+        StudioFetchMpsDrawerDashboardRO dashboard = studioCommercialPaperService.fetchMpsDrawerDashboard(mpsId);
+        StudioFetchMpsDrawerDashboardVO vo = new StudioFetchMpsDrawerDashboardVO();
+        vo.setDashboard(dashboard);
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        return vo;
+    }
+    @GetMapping("/api/v1/web_estudio/mps/paper/query")
+    public StudioFetchMpsPaperDrawerPageVO fetchMpsPaperDrawerPage(@Validated StudioFetchMpsPaperDrawerPageDTO dto){
+        IPage<StudioFetchMpsPaperDrawerPageRO> paper=studioCommercialPaperService.findMpsPaperDrawer(dto);
+        StudioFetchMpsPaperDrawerPageVO vo =new StudioFetchMpsPaperDrawerPageVO();
+        vo.setPaper(paper);
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        return vo;
+    }
+
 
 }

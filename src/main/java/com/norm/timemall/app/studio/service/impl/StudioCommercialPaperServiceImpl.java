@@ -23,10 +23,9 @@ import com.norm.timemall.app.base.service.BaseElectricityService;
 import com.norm.timemall.app.studio.domain.dto.*;
 import com.norm.timemall.app.studio.domain.pojo.StudioFetchMpsPaper;
 import com.norm.timemall.app.studio.domain.pojo.StudioFetchMpsPaperDetail;
-import com.norm.timemall.app.studio.domain.ro.StudioDiscoverMpsPaperPageRO;
-import com.norm.timemall.app.studio.domain.ro.StudioFetchMpsPaperListRO;
-import com.norm.timemall.app.studio.domain.ro.StudioFetchMpsPaperRO;
+import com.norm.timemall.app.studio.domain.ro.*;
 import com.norm.timemall.app.studio.mapper.StudioCommercialPaperMapper;
+import com.norm.timemall.app.studio.mapper.StudioCommercialPaperSummaryMapper;
 import com.norm.timemall.app.studio.mapper.StudioMpsMapper;
 import com.norm.timemall.app.studio.mapper.StudioMpsTemplateMapper;
 import com.norm.timemall.app.studio.service.StudioCommercialPaperService;
@@ -51,6 +50,9 @@ public class StudioCommercialPaperServiceImpl implements StudioCommercialPaperSe
 
     @Autowired
     private BaseElectricityService baseElectricityService;
+
+    @Autowired
+    private StudioCommercialPaperSummaryMapper studioCommercialPaperSummaryMapper;
 
     @Override
     public void generateMpsPaper(String chainId,String brandId,String mpsId) {
@@ -187,6 +189,22 @@ public class StudioCommercialPaperServiceImpl implements StudioCommercialPaperSe
     @Override
     public void emptySupplier(String id) {
         studioCommercialPaperMapper.updateSupplierAndTagAndBidAtById(id,CommercialPaperTagEnum.PUBLISH.getMark());
+    }
+
+    @Override
+    public StudioFetchMpsDrawerDashboardRO fetchMpsDrawerDashboard(String mpsId) {
+        String founderBrandId=SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        StudioFetchMpsDrawerDashboardRO dashboard = studioCommercialPaperSummaryMapper.selectDashboardByMpsIdAndFounder(mpsId,founderBrandId);
+        return dashboard;
+    }
+
+    @Override
+    public IPage<StudioFetchMpsPaperDrawerPageRO> findMpsPaperDrawer(StudioFetchMpsPaperDrawerPageDTO dto) {
+        IPage<StudioFetchMpsPaperDrawerPageRO>  page=new Page<>();
+        page.setSize(dto.getSize());
+        page.setCurrent(dto.getCurrent());
+        String purchaserBrandId=SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        return studioCommercialPaperMapper.selectMpsPaperDrawerByMpsId(page,purchaserBrandId, dto);
     }
 
     private List<CommercialPaper> getPaperList(String chainId,String brandId,String mpsId){

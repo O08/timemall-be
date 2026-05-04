@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class OasisBalanceSummaryETL {
+public class MpsDrawerSummaryETL {
     @Autowired
     private TaskSimpleProcedureService taskSimpleProcedureService;
     @Scheduled( cron = "0 0 1 * * ?",zone = "Asia/Shanghai")
-    public void refreshOasisBalanceSummaryInfo(){
-        log.info("refreshOasisBalanceSummaryInfo etl task start.....");
-        taskSimpleProcedureService.doRefreshOasisBalanceSummaryInfo();
-        log.info("refreshOasisBalanceSummaryInfo etl task end.....");
+    public void refreshMpsDrawerSummaryInfo(){
+        log.info("refreshMpsDrawerSummaryInfo etl task start.....");
+        taskSimpleProcedureService.doRefreshMpsDrawerSummaryInfo();
+        log.info("refreshMpsDrawerSummaryInfo etl task end.....");
     }
 }

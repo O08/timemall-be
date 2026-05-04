@@ -13,7 +13,10 @@ import org.apache.ibatis.annotations.Mapper;
  * @description 由 Mybatisplus Code Generator 创建
 */
 @Mapper
-public interface TaskOasisBalanceSummaryMapper extends BaseMapper<OasisBalanceSummary> {
+public interface TaskSimpleProcedureMapper extends BaseMapper<OasisBalanceSummary> {
 
-    void doExecuteProcedure();
+    void doExecuteCalOasisBalanceSummaryInfoProcedure();
+
+    void doExecuteCalMpsDrawerSummaryProcedure();
+
 }

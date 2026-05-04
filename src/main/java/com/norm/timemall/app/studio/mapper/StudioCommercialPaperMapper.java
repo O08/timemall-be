@@ -3,14 +3,12 @@ package com.norm.timemall.app.studio.mapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.mo.CommercialPaper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.norm.timemall.app.studio.domain.dto.StudioFetchMpsPaperDrawerPageDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioFetchMpsPaperPageDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioPutMpsPaperDTO;
 import com.norm.timemall.app.studio.domain.dto.StudioPutMpsPaperTagDTO;
 import com.norm.timemall.app.studio.domain.pojo.StudioFetchMpsPaperDetail;
-import com.norm.timemall.app.studio.domain.ro.StudioDiscoverMpsPaperPageRO;
-import com.norm.timemall.app.studio.domain.ro.StudioFetchFirstSupplierRO;
-import com.norm.timemall.app.studio.domain.ro.StudioFetchMpsPaperListRO;
-import com.norm.timemall.app.studio.domain.ro.StudioFetchMpsPaperRO;
+import com.norm.timemall.app.studio.domain.ro.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -54,5 +52,7 @@ public interface StudioCommercialPaperMapper extends BaseMapper<CommercialPaper>
     void updateTagByPurchaserAndId(@Param("paperId") String paperId, @Param("tag") String mark, @Param("purchaser") String brandId);
     @Update("update commercial_paper set tag=#{tag},duration=null,modified_at=now(),bid_at=null,supplier='' where id=#{paperId}")
     void updateSupplierAndTagAndBidAtById(@Param("paperId") String paperId,@Param("tag") String tag);
+
+    IPage<StudioFetchMpsPaperDrawerPageRO> selectMpsPaperDrawerByMpsId(IPage<StudioFetchMpsPaperDrawerPageRO> page,@Param("purchaser") String brandId,@Param("dto")  StudioFetchMpsPaperDrawerPageDTO dto);
 
 }

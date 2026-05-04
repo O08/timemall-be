@@ -5,6 +5,8 @@ import com.norm.timemall.app.studio.domain.dto.*;
 import com.norm.timemall.app.studio.domain.pojo.StudioFetchMpsPaper;
 import com.norm.timemall.app.studio.domain.pojo.StudioFetchMpsPaperDetail;
 import com.norm.timemall.app.studio.domain.ro.StudioDiscoverMpsPaperPageRO;
+import com.norm.timemall.app.studio.domain.ro.StudioFetchMpsDrawerDashboardRO;
+import com.norm.timemall.app.studio.domain.ro.StudioFetchMpsPaperDrawerPageRO;
 import com.norm.timemall.app.studio.domain.ro.StudioFetchMpsPaperRO;
 import org.springframework.stereotype.Service;
 
@@ -34,5 +36,7 @@ public interface StudioCommercialPaperService {
 
     void emptySupplier(String id);
 
+    StudioFetchMpsDrawerDashboardRO fetchMpsDrawerDashboard(String mpsId);
 
+    IPage<StudioFetchMpsPaperDrawerPageRO> findMpsPaperDrawer(StudioFetchMpsPaperDrawerPageDTO dto);
 }

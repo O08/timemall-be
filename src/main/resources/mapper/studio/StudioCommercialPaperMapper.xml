@@ -117,4 +117,28 @@
             and d.tag=#{tag}
         </where>
     </select>
+
+    <select id="selectMpsPaperDrawerByMpsId" resultType="com.norm.timemall.app.studio.domain.ro.StudioFetchMpsPaperDrawerPageRO">
+
+        select p.id,p.title,p.tag,b1.brand_name supplier,b1.avator supplierAvatar,b1.customer_id supplierUserId, p.piece,p.bonus,p.difficulty, p.create_at,p.bid_at
+        from commercial_paper p
+        left join brand b1
+        on b1.id=p.supplier
+        <where>
+            1=1
+            and p.purchaser = #{purchaser}
+            and p.mps_id=#{dto.mpsId}
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, p.title)>0 or locate(#{dto.q}, p.sow)>0 or locate(#{dto.q}, p.id)>0  or locate(#{dto.q}, b1.brand_name)>0)
+            </if>
+            <if test="dto.tag != null and dto.tag != ''">
+                AND p.tag = #{dto.tag}
+            </if>
+            <if test="dto.difficulty != null and dto.difficulty != ''">
+                AND p.difficulty = #{dto.difficulty}
+            </if>
+
+            order by p.modified_at desc
+        </where>
+    </select>
 </mapper>
