@@ -2,6 +2,7 @@ package com.norm.timemall.app.ms.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import com.google.gson.Gson;
+import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.CellPlanMsg;
 import com.norm.timemall.app.ms.controller.MsStoreMpsTextMessageDTO;
 import com.norm.timemall.app.ms.domain.pojo.MsDefaultEvent;
@@ -27,10 +28,12 @@ public class MsCellPlanOrderMessageServiceImpl implements MsCellPlanOrderMessage
         DefaultTextMessage textMessage = new DefaultTextMessage();
         textMessage.setContent(dto.getMsg());
         Gson gson = new Gson();
+        String authorId= SecurityUserHelper.getCurrentPrincipal().getBrandId();
+
         CellPlanMsg msg = new CellPlanMsg();
         msg.setMsgId(IdUtil.simpleUUID())
                 .setPlanOrderId(room)
-                .setAuthorId(dto.getAuthorId())
+                .setAuthorId(authorId)
                 .setMsgType(dto.getMsgType())
                 .setMsg(gson.toJson(textMessage))
                 .setCreateAt(new Date())

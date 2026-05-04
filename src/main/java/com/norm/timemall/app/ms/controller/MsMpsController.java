@@ -6,6 +6,7 @@ import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.FileStoreDir;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
+import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.service.FileStoreService;
 import com.norm.timemall.app.ms.domain.pojo.MsDefaultEvent;
 import com.norm.timemall.app.base.pojo.DefaultFileMessage;
@@ -45,13 +46,13 @@ public class MsMpsController {
     @PutMapping(value = "/api/v1/ms/mps/{room}/storeImage")
     public SuccessVO storeMpsImageMessage(@PathVariable("room") String room,
                                                 @RequestParam("file") MultipartFile file,
-                                                @RequestParam("authorId") String authorId,
                                                 @RequestParam("msgType") String msgType
     ){
         // validate
-        if(file.isEmpty() || StrUtil.isBlank(authorId)|| StrUtil.isBlank(msgType)){
+        if(file.isEmpty() || StrUtil.isBlank(msgType)){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
+        String authorId= SecurityUserHelper.getCurrentPrincipal().getBrandId();
         // store file
         String uri = fileStoreService.storeWithUnlimitedAccess(file, FileStoreDir.MPS_IMAGE_MESSAGE);
         DefaultFileMessage msg = new DefaultFileMessage();
@@ -65,13 +66,13 @@ public class MsMpsController {
     @PutMapping(value = "/api/v1/ms/mps/{room}/storeAttachment")
     public SuccessVO storeMpsAttachmentMessage(@PathVariable("room") String room,
                                                      @RequestParam(value = "file")  MultipartFile file,
-                                                    @RequestParam(value = "authorId") String authorId,
                                                     @RequestParam(value = "msgType") String msgType
     ){
         // validate
-        if(file.isEmpty() || StrUtil.isBlank(authorId)|| StrUtil.isBlank(msgType)){
+        if(file.isEmpty() || StrUtil.isBlank(msgType)){
           throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
+        String authorId= SecurityUserHelper.getCurrentPrincipal().getBrandId();
         // store file
         String uri = fileStoreService.storeWithUnlimitedAccess(file, FileStoreDir.MPS_ATTACHMENT_MESSAGE);
         DefaultFileMessage msg = new DefaultFileMessage();
