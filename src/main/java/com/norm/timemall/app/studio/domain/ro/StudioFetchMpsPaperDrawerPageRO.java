@@ -14,4 +14,6 @@ public class StudioFetchMpsPaperDrawerPageRO {
     private String supplierAvatar;
     private String tag;
     private String title;
+    private String modifiedAt;
+    private String contractValidityPeriod;
 }

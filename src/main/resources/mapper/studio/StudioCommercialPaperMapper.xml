@@ -120,7 +120,7 @@
 
     <select id="selectMpsPaperDrawerByMpsId" resultType="com.norm.timemall.app.studio.domain.ro.StudioFetchMpsPaperDrawerPageRO">
 
-        select p.id,p.title,p.tag,b1.brand_name supplier,b1.avator supplierAvatar,b1.customer_id supplierUserId, p.piece,p.bonus,p.difficulty, p.create_at,p.bid_at
+        select p.id,p.title,p.tag,b1.brand_name supplier,b1.avator supplierAvatar,b1.customer_id supplierUserId, p.piece,p.bonus,p.difficulty, p.create_at,p.bid_at,p.modified_at,p.contract_validity_period
         from commercial_paper p
         left join brand b1
         on b1.id=p.supplier
