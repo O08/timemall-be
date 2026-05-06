@@ -8,5 +8,6 @@ public class MsStudioMessageNotice {
     private String down;
     private String eventCode;
     private String upDesc;
+    private String biz;
 
 }

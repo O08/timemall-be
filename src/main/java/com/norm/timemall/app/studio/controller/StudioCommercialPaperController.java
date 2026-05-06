@@ -58,6 +58,7 @@ public class StudioCommercialPaperController {
         vo.setResponseCode(CodeEnum.SUCCESS);
         return vo;
     }
+    @Deprecated
     @GetMapping("/api/v1/web_estudio/mps/paper")
     public StudioFetchMpsPaperVO fetchMpsPaperList( @Validated StudioFetchmpsPaperListDTO dto){
 

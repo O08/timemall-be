@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class MsMpsMsgHelperController {
     @Autowired
     private MsMpsMsgHelperService msMpsMsgHelperService;
+
+    @Deprecated
     @PutMapping("/api/v1/ms/mps_msg/read")
     public SuccessVO readMpsMsg(@RequestBody @Validated MsReadMpsMsgDTO dto){
 
@@ -24,6 +26,8 @@ public class MsMpsMsgHelperController {
         return new SuccessVO(CodeEnum.SUCCESS);
 
     }
+
+    @Deprecated
     @GetMapping("/api/v1/ms/mps_msg/has_new_msg")
     public MsHaveNewMpsMsgVO haveNewMpsMsg(String rooms){
 

@@ -55,13 +55,17 @@ public class MsEventFeedHelper {
     }
     private void assertMsPodMessageNotice(MsPodMessageNotice msPodMessageNotice){
        if(StrUtil.isEmpty(msPodMessageNotice.getWorkFlowId())
-         || StrUtil.isEmpty(msPodMessageNotice.getDown())){
+         || StrUtil.isEmpty(msPodMessageNotice.getDown())
+               ||  StrUtil.isEmpty(msPodMessageNotice.getBiz())
+       ){
            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
        }
     }
     private void assertMsStudioMessageNotice(MsStudioMessageNotice msStudioMessageNotice){
         if(StrUtil.isEmpty(msStudioMessageNotice.getWorkFlowId())
-                || StrUtil.isEmpty(msStudioMessageNotice.getDown())){
+                || StrUtil.isEmpty(msStudioMessageNotice.getDown())
+                ||  StrUtil.isEmpty(msStudioMessageNotice.getBiz())
+        ){
             throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
         }
     }
