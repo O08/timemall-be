@@ -34,7 +34,7 @@ public enum FileStoreDir {
     FEED_ATTACHMENTS("app/feed/attachment", "app feed attachment store"),
     PAYROLL_EMPLOYEE_MATERIAL("payroll/employee/material","payroll employee material store" ),
     PAYROLL_EMPLOYEE_PHOTO("payroll/employee/photo","payroll employee photo store" ),
-    VIBER_FILE("app/viber/oss", "app viber file dir");
+    VIBER_FILE("app/viber/oss", "app viber file dir"), SUPPLIER_NDA_MATERIAL("brand/supplier/nda", "supplier nda file");
     private final String dir;
 
     private final String desc;
