@@ -53,7 +53,7 @@
         <where>
             b.mark in ('1','3','4')
             <if test="q != null and q != ''">
-               and  (locate(#{q}, b.brand_name)>0 or b.id=#{q})
+               and  (locate(#{q}, b.brand_name)>0 or b.id=#{q} or b.handle=#{q})
             </if>
         </where>
         limit 20

@@ -23,4 +23,6 @@ public interface DataPolicyService {
 
     boolean proposalBillCanMarkAsPendingForBrand(String billId);
 
+    boolean brandApiQuotaCheck(String endpoint);
+
 }

@@ -31,10 +31,10 @@ public class PodBrandController {
     public PodBrandContactVO getBrandContact(@PathVariable("brand_id")String brandId)
     {
         // 资源权限校验 rule： 具有交易关系的双方能查看
-        boolean checked = dataPolicyService.brandContactOrPaywayAccessCheck(brandId);
+        boolean checked = dataPolicyService.brandApiQuotaCheck("A1034");
         if(!checked)
         {
-            throw new ErrorCodeException(CodeEnum.INVALID_PARAMETERS);
+            throw new ErrorCodeException(CodeEnum.MAX_LIMIT);
         }
         PodBrandContact contact = podBrandService.findContactById(brandId);
         PodBrandContactVO vo = new PodBrandContactVO();

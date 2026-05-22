@@ -29,6 +29,13 @@ spring:
     username: ${mysql_username}
     password: ${mysql_password}
     type: com.zaxxer.hikari.HikariDataSource
+  data:
+    redis:
+      host: ${redis_url}
+      port: 6379
+      password: ${redis_password}
+      timeout: 2000ms
+
 
 
 

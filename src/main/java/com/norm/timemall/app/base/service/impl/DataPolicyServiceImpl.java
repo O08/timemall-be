@@ -15,6 +15,10 @@ public class DataPolicyServiceImpl implements DataPolicyService {
     @Autowired
     private DataPolicyMapper dataPolicyMapper;
 
+    @Autowired
+    private ApiQuotaService apiQuotaService;
+
+
     @Override
     public boolean cellOwnerCheck(String cellId) {
         String  userId = SecurityUserHelper.getCurrentPrincipal().getUserId();
@@ -86,5 +90,10 @@ public class DataPolicyServiceImpl implements DataPolicyService {
         String  currentBrandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         Integer cnt = dataPolicyMapper.selectProposalCountBillIdForBrandByIdAndCustomerId(billId,currentBrandId, BillMarkEnum.CREATED.getMark());
         return cnt>0;
+    }
+
+    @Override
+    public boolean brandApiQuotaCheck(String endpoint) {
+        return apiQuotaService.brandApiQuotaCheck(endpoint);
     }
 }
