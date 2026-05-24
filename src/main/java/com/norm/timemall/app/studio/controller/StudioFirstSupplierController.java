@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class StudioFirstSupplierController {
     @Autowired
     private StudioFirstSupplierService studioFirstSupplierService;
+    @Deprecated
     @GetMapping(value = "/api/v1/web_estudio/mps_chain/supplier")
     public StudioFetchFirstSupplierVO fetchFirstSupplier(String q){
 

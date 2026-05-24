@@ -34,7 +34,7 @@
                 AND s.supplier_status = #{dto.status}
             </if>
             <if test="dto.q != null and dto.q != ''">
-                AND (locate(#{dto.q}, s.biz)>0 or locate(#{dto.q}, b.brand_name)>0)
+                AND (locate(#{dto.q}, s.biz)>0 or locate(#{dto.q}, b.brand_name)>0 or b.id=#{dto.q} or locate(#{dto.q}, b.handle)>0)
             </if>
         </where>
         order by s.create_at desc
@@ -53,7 +53,7 @@
         <where>
             b.mark in ('1','3','4')
             <if test="q != null and q != ''">
-               and  (locate(#{q}, b.brand_name)>0 or b.id=#{q} or b.handle=#{q})
+               and  (locate(#{q}, b.brand_name)>0 or b.id=#{q} or locate(#{q}, b.handle)>0)
             </if>
         </where>
         limit 20
