@@ -155,7 +155,7 @@ public class FileStoreServiceImpl implements FileStoreService {
     }
 
     @Override
-    public String generatePresignedUrl(String objectName, long seconds) {
-        return aliOssClientUtil.generatePresignedUrl(objectName, seconds);
+    public String generatePresignedUrl(String objectName, long seconds, String encodedFileName) {
+        return aliOssClientUtil.generatePresignedUrl(objectName, seconds, encodedFileName);
     }
 }

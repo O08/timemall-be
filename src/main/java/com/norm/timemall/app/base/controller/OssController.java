@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.HandlerMapping;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.util.UriUtils;
 
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 
 
 @Controller
@@ -30,7 +32,9 @@ public class OssController {
     @RequestMapping(value = "/api/file/{fileName:.+}/**", method = {RequestMethod.GET, RequestMethod.HEAD})
     public ResponseEntity<?>  downloadFile(HttpServletRequest request,
                                     @PathVariable("fileName") String fileName,
-                                    @RequestParam("etag") String tag){
+                                    @RequestParam("etag") String tag,
+                                    @RequestParam(value = "download", defaultValue = "false") boolean isDownload,
+                                    @RequestParam(value = "downloadName", required = false) String downloadName){
         String referer = request.getHeader("Referer");
         String userAgent = request.getHeader("User-Agent");
 
@@ -88,9 +92,18 @@ public class OssController {
             if (meta == null || !meta.isExists()) return ResponseEntity.notFound().build();
 
             long fileSize = meta.getSize();
-            String contentType = MediaTypeFactory.getMediaType(objectName)
+            String pureFileName = objectName.substring(objectName.lastIndexOf("/") + 1);
+            String contentType = MediaTypeFactory.getMediaType(pureFileName)
                     .map(MediaType::toString)
                     .orElse(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+
+            String finalDownloadName = (downloadName != null && !downloadName.isEmpty()) ? downloadName : pureFileName;
+            if (downloadName != null && !downloadName.isEmpty() && !downloadName.contains(".")) {
+                String suffix = pureFileName.substring(pureFileName.lastIndexOf("."));
+                finalDownloadName = downloadName + suffix;
+            }
+
+            String encodedFileName = UriUtils.encode(finalDownloadName, StandardCharsets.UTF_8);
 
             // 🌟 STRATEGY:
             // Small files (< 10MB) -> Stay on Java Server
@@ -100,7 +113,8 @@ public class OssController {
             // The 302 Redirect for Large Files
             if (isLargeFile) {
                 // Sign for 30-60 mins to ensure even slow connections finish the download
-                String signedUrl = fileStoreService.generatePresignedUrl(objectName, 1800);
+                String targetFileName = isDownload ? encodedFileName : null;
+                String signedUrl = fileStoreService.generatePresignedUrl(objectName, 1800, targetFileName);
                 return ResponseEntity.status(HttpStatus.FOUND) // 302
                         .location(URI.create(signedUrl))
                         .build();
@@ -125,6 +139,10 @@ public class OssController {
             headers.set(HttpHeaders.ACCEPT_RANGES, "bytes"); // 🌟 必须有这个，Safari 才会发 Range 请求
             headers.setCacheControl("max-age=3600");
             headers.set(HttpHeaders.CONTENT_TYPE, contentType);
+
+            if(isDownload){
+                headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedFileName + "\"");
+            }
 
             return ResponseEntity.ok()
                     .headers(headers)

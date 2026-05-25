@@ -239,16 +239,25 @@ public class AliOssClientUtil {
         return meta;
     }
 
-    public String generatePresignedUrl(String objectName, long expirationInSeconds) {
+    public String generatePresignedUrl(String objectName, long expirationInSeconds,String encodedFileName) {
         Date expiration = new Date(System.currentTimeMillis() + expirationInSeconds * 1000);
 
-        //  生成签名 URL
-        // 注意：即便 Bucket 是私有的，SDK 也会通过内部 AccessKey 算好签名拼在 URL 后
-        URL url = ossClient.generatePresignedUrl(
+        // 🌟 创建签名请求对象
+        GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(
                 aliOssConfigure.getLimitedBucket(),
-                objectName,
-                expiration
+                objectName
         );
+        request.setExpiration(expiration);
+
+        // 🌟 如果传入了自定义文件名，则强制控制 OSS 下载时的 Content-Disposition 头
+        if (encodedFileName != null && !encodedFileName.isEmpty()) {
+            ResponseHeaderOverrides responseHeaders = new ResponseHeaderOverrides();
+            responseHeaders.setContentDisposition("attachment; filename=\"" + encodedFileName + "\"");
+            request.setResponseHeaders(responseHeaders);
+        }
+
+        // 生成带自定义响应头签名的 URL
+        URL url = ossClient.generatePresignedUrl(request);
 
         //确保返回的是外网地址
         // 如果 ossClient 初始化使用的是内网 endpoint (-internal)，生成的 URL 用户打不开

@@ -44,5 +44,5 @@ public interface FileStoreService {
 
     OssFileMetadata getObjectSimpleMetadata(String objectName, String tag);
 
-    String generatePresignedUrl(String objectName, long seconds);
+    String generatePresignedUrl(String objectName, long seconds,String encodedFileName);
 }
