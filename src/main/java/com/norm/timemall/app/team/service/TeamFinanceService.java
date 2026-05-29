@@ -1,6 +1,8 @@
 package com.norm.timemall.app.team.service;
 
-import com.norm.timemall.app.team.domain.pojo.TeamFinDistriution;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.norm.timemall.app.team.domain.dto.TeamFinDistributionDTO;
+import com.norm.timemall.app.team.domain.pojo.TeamFinDistriutionItem;
 import com.norm.timemall.app.team.domain.ro.TeamFinBoardRO;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +14,7 @@ public interface TeamFinanceService {
 
     TeamFinBoardRO kanban();
 
-    TeamFinDistriution findFinDistribution();
+    IPage<TeamFinDistriutionItem> findFinDistribution(TeamFinDistributionDTO dto);
 
 
     TeamFinBoardRO oasisKanban(String oasisId);

@@ -1,11 +1,13 @@
 package com.norm.timemall.app.team.service.impl;
 
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.norm.timemall.app.base.enums.FidTypeEnum;
 import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.FinAccount;
 import com.norm.timemall.app.base.mo.FinDistribute;
-import com.norm.timemall.app.team.domain.pojo.TeamFinDistriution;
+import com.norm.timemall.app.team.domain.dto.TeamFinDistributionDTO;
 import com.norm.timemall.app.team.domain.pojo.TeamFinDistriutionItem;
 import com.norm.timemall.app.team.domain.ro.TeamFinBoardRO;
 import com.norm.timemall.app.team.mapper.*;
@@ -14,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 
 @Service
 public class TeamFinanceServiceImpl implements TeamFinanceService {
@@ -39,13 +40,14 @@ public class TeamFinanceServiceImpl implements TeamFinanceService {
     }
 
     @Override
-    public TeamFinDistriution findFinDistribution() {
+    public IPage<TeamFinDistriutionItem> findFinDistribution(TeamFinDistributionDTO dto) {
+        Page<TeamFinDistriutionItem> page = new Page<>();
+        page.setCurrent(dto.getCurrent());
+        page.setSize(dto.getSize());
         String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
-        ArrayList<TeamFinDistriutionItem> items = teamFinDistributeMapper.selectDistributeByBrandId(brandId,
+        return teamFinDistributeMapper.selectDistributeByBrandId(page,dto,brandId,
                 FidTypeEnum.BRAND.getMark(),FidTypeEnum.OASIS.getMark());
-        TeamFinDistriution ro = new TeamFinDistriution();
-        ro.setRecords(items);
-        return ro;
+
     }
 
     @Override

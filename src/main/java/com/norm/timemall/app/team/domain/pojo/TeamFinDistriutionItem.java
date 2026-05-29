@@ -10,5 +10,6 @@ public class TeamFinDistriutionItem {
     private String drawable;
     private String oasisId;
     private String oasisHandle;
+    private String oasisAvatar;
 
 }

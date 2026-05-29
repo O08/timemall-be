@@ -1,11 +1,13 @@
 package com.norm.timemall.app.team.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.service.OrderFlowService;
-import com.norm.timemall.app.team.domain.pojo.TeamFinDistriution;
+import com.norm.timemall.app.team.domain.dto.TeamFinDistributionDTO;
+import com.norm.timemall.app.team.domain.pojo.TeamFinDistriutionItem;
 import com.norm.timemall.app.team.domain.ro.TeamFinBoardRO;
 import com.norm.timemall.app.team.domain.vo.TeamFinBoardVO;
-import com.norm.timemall.app.team.domain.vo.TeamFinDistributionVO;
+import com.norm.timemall.app.team.domain.vo.TeamFinDistributionPageVO;
 import com.norm.timemall.app.team.domain.vo.TeamOasisPointVO;
 import com.norm.timemall.app.team.service.TeamFinanceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,9 +43,9 @@ public class TeamFinanceController {
      */
     @ResponseBody
     @GetMapping(value = "/api/v1/team/finance_distribute")
-    public TeamFinDistributionVO retrieveFinDistribution(){
-        TeamFinDistriution ro = teamFinanceService.findFinDistribution();
-        TeamFinDistributionVO vo = new TeamFinDistributionVO();
+    public TeamFinDistributionPageVO retrieveFinDistribution(@Validated TeamFinDistributionDTO dto){
+        IPage<TeamFinDistriutionItem> ro = teamFinanceService.findFinDistribution(dto);
+        TeamFinDistributionPageVO vo = new TeamFinDistributionPageVO();
         vo.setDistribution(ro);
         vo.setResponseCode(CodeEnum.SUCCESS);
         return  vo;
