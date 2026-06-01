@@ -110,6 +110,8 @@ public class TeamAppLinkShoppingServiceImpl implements TeamAppLinkShoppingServic
 
         OasisChannel channel = new OasisChannel();
         channel.setId(dto.getChannelId())
+                .setChannelName(dto.getChannelName())
+                .setChannelDesc(dto.getChannelDesc())
                 .setGuide(new Gson().toJson(guide));
         teamOasisChannelMapper.update(channel, channelWrapper);
     }
