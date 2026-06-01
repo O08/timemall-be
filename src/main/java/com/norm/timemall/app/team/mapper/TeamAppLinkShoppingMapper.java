@@ -20,7 +20,7 @@ import org.apache.ibatis.annotations.Update;
 public interface TeamAppLinkShoppingMapper extends BaseMapper<AppLinkShopping> {
 
     IPage<TeamAppLinkShoppingFetchFeedPageRO> selectPageByQ(IPage<TeamAppLinkShoppingFetchFeedPageRO> page,@Param("dto") TeamAppLinkShoppingFetchFeedPageDTO dto);
-    @Update("update app_link_shopping set views = views + 1 where id = #{id}")
+    @Update("update app_link_shopping set views = views + 1, modified_at = now() where id = #{id}")
     void autoIncrementViewsById(@Param("id") String id);
 
 }

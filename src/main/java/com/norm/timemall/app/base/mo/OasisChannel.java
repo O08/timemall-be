@@ -49,6 +49,10 @@ public class OasisChannel extends Model<OasisChannel> implements Serializable {
      */
     private String channelTag;
     /**
+     * 频道配置 json 串
+     */
+    private String guide;
+    /**
      * 创建时间
      */
     private Date createAt;

@@ -11,4 +11,7 @@ public class TeamAppLinkShoppingFetchFeedPageRO {
     private String title;
     private String id; // product id
     private String views;
+    private String sellerName;
+    private String sellerBrandId;
+    private String sellerAvatar;
 }

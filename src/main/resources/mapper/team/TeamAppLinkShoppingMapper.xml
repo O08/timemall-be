@@ -12,6 +12,9 @@
     <select id="selectPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamAppLinkShoppingFetchFeedPageRO">
         select
           s.id,
+          seller.id as sellerBrandId,
+          seller.brand_name as sellerName,
+          seller.avator as sellerAvatar,
           s.cover_url,
           s.title,
           s.price,
@@ -19,11 +22,12 @@
           s.views,
           s.create_at
         from app_link_shopping s
+        inner join brand seller on s.seller_brand_id = seller.id
         where 1 = 1
           and s.oasis_channel_id = #{dto.channel}
 
         <if test="dto.q != null and dto.q != ''">
-            AND locate(#{dto.q}, s.title)>0
+            AND (locate(#{dto.q}, s.title)>0 OR locate(#{dto.q}, seller.brand_name)>0)
         </if>
         <if test="dto.sort != null and dto.sort != ''">
             <choose>

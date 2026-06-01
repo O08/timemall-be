@@ -2,6 +2,7 @@ package com.norm.timemall.app.team.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.mo.AppLinkShopping;
+import com.norm.timemall.app.team.domain.dto.TeamAppLinkShoppingChannelSettingDTO;
 import com.norm.timemall.app.team.domain.dto.TeamAppLinkShoppingCreateProductDTO;
 import com.norm.timemall.app.team.domain.dto.TeamAppLinkShoppingEditProductDTO;
 import com.norm.timemall.app.team.domain.dto.TeamAppLinkShoppingFetchFeedPageDTO;
@@ -23,4 +24,6 @@ public interface TeamAppLinkShoppingService {
     void storeProductStatisticsData(String id);
 
     void removeChannelData(String id);
+
+    void doChannelSetting(TeamAppLinkShoppingChannelSettingDTO dto);
 }

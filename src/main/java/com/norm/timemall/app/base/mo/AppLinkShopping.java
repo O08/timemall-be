@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -29,6 +29,10 @@ public class AppLinkShopping extends Model<AppLinkShopping> implements Serializa
      */
     @TableId
 	private String id;
+    /**
+     * 卖方品牌id
+     */
+    private String sellerBrandId;
     /**
      * 频道
      */
@@ -56,10 +60,10 @@ public class AppLinkShopping extends Model<AppLinkShopping> implements Serializa
     /**
      * createAt
      */
-    private Date createAt;
+    private LocalDateTime createAt;
     /**
      * modifiedAt
      */
-    private Date modifiedAt;
+    private LocalDateTime modifiedAt;
 
 }

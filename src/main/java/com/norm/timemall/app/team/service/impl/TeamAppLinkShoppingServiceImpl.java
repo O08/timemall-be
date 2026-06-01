@@ -5,22 +5,31 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.gson.Gson;
+import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.AppLinkShopping;
+import com.norm.timemall.app.base.mo.OasisChannel;
+import com.norm.timemall.app.team.domain.dto.TeamAppLinkShoppingChannelSettingDTO;
 import com.norm.timemall.app.team.domain.dto.TeamAppLinkShoppingCreateProductDTO;
 import com.norm.timemall.app.team.domain.dto.TeamAppLinkShoppingEditProductDTO;
 import com.norm.timemall.app.team.domain.dto.TeamAppLinkShoppingFetchFeedPageDTO;
+import com.norm.timemall.app.team.domain.pojo.AppLinkShoppingChannelGuide;
 import com.norm.timemall.app.team.domain.ro.TeamAppLinkShoppingFetchFeedPageRO;
 import com.norm.timemall.app.team.mapper.TeamAppLinkShoppingMapper;
+import com.norm.timemall.app.team.mapper.TeamOasisChannelMapper;
 import com.norm.timemall.app.team.service.TeamAppLinkShoppingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Service
 public class TeamAppLinkShoppingServiceImpl implements TeamAppLinkShoppingService {
     @Autowired
     private TeamAppLinkShoppingMapper teamAppLinkShoppingMapper;
+
+    @Autowired
+    private TeamOasisChannelMapper teamOasisChannelMapper;
 
     @Override
     public IPage<TeamAppLinkShoppingFetchFeedPageRO> findFeeds(TeamAppLinkShoppingFetchFeedPageDTO dto) {
@@ -36,15 +45,17 @@ public class TeamAppLinkShoppingServiceImpl implements TeamAppLinkShoppingServic
     public void newFeed(TeamAppLinkShoppingCreateProductDTO dto, String coverUrl) {
 
         AppLinkShopping product = new AppLinkShopping();
+        LocalDateTime now = LocalDateTime.now();
         product.setId(IdUtil.simpleUUID())
+                .setSellerBrandId(SecurityUserHelper.getCurrentPrincipal().getBrandId())
                 .setTitle(dto.getTitle())
                 .setLinkUrl(dto.getLinkUrl())
                 .setPrice(dto.getPrice())
                 .setCoverUrl(coverUrl)
                 .setViews(0)
                 .setOasisChannelId(dto.getChannel())
-                .setCreateAt(new Date())
-                .setModifiedAt(new Date());
+                .setCreateAt(now)
+                .setModifiedAt(now);
         teamAppLinkShoppingMapper.insert(product);
 
     }
@@ -56,7 +67,7 @@ public class TeamAppLinkShoppingServiceImpl implements TeamAppLinkShoppingServic
         product.setId(dto.getId())
                 .setTitle(dto.getTitle())
                 .setPrice(dto.getPrice())
-                .setModifiedAt(new Date());
+                .setModifiedAt(LocalDateTime.now());
 
         LambdaQueryWrapper<AppLinkShopping> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(AppLinkShopping::getId,dto.getId());
@@ -87,5 +98,19 @@ public class TeamAppLinkShoppingServiceImpl implements TeamAppLinkShoppingServic
         productWrapper.eq(AppLinkShopping::getOasisChannelId,channel);
         teamAppLinkShoppingMapper.delete(productWrapper);
 
+    }
+
+    @Override
+    public void doChannelSetting(TeamAppLinkShoppingChannelSettingDTO dto) {
+        AppLinkShoppingChannelGuide guide = new AppLinkShoppingChannelGuide();
+        guide.setEnableMemberPost(dto.getEnableMemberPost());
+
+        LambdaQueryWrapper<OasisChannel> channelWrapper = Wrappers.lambdaQuery();
+        channelWrapper.eq(OasisChannel::getId,dto.getChannelId());
+
+        OasisChannel channel = new OasisChannel();
+        channel.setId(dto.getChannelId())
+                .setGuide(new Gson().toJson(guide));
+        teamOasisChannelMapper.update(channel, channelWrapper);
     }
 }
