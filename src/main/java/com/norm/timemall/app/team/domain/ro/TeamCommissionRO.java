@@ -14,4 +14,6 @@ public class TeamCommissionRO {
     private String founderName;
     private String workerName;
     private String sow;
+    private String deliveryCycle;
+    private String signAt;
 }

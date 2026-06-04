@@ -10,7 +10,7 @@
     </sql>
     <select id="selectPageByFilter" resultType="com.norm.timemall.app.team.domain.ro.TeamCommissionRO">
         select
-          c.id,c.title,c.create_at addDate,c.founder,c.tag,c.worker,c.bonus,b.brand_name founder_name,b1.brand_name worker_name,c.sow
+          c.sign_at, c.delivery_cycle ,c.id,c.title,c.create_at addDate,c.founder,c.tag,c.worker,c.bonus,b.brand_name founder_name,b1.brand_name worker_name,c.sow
         from commission c
         left join brand b
           on c.founder=b.id
@@ -52,13 +52,59 @@
     </select>
     <select id="selectCommissionDetailById" resultType="com.norm.timemall.app.team.domain.pojo.TeamFetchCommissionDetail">
 
-        select p.title,p.sow,p.bonus,b1.brand_name supplierName,b1.avator supplierAvatar, p.tag,p.id commissionId,p.oasis_id,o.handle as oasisHandle
+        select p.sign_at, p.delivery_cycle , p.title,p.sow,p.bonus,b1.brand_name supplierName,b1.avator supplierAvatar, p.tag,p.id commissionId,p.oasis_id,o.handle as oasisHandle
         from commission p
         inner join oasis o
           on p.oasis_id=o.id
         left join brand b1
         on b1.id=p.worker
         where p.id=#{id}
+    </select>
+
+    <select id="selectDiscoveryCommissionPage" resultType="com.norm.timemall.app.team.domain.ro.TeamDiscoveryCommissionPageRO">
+        select
+          c.id,
+          o.avatar as oasisAvatar,
+          fd.drawable as oasisBalance,
+          o.membership as oasisMembers,
+          o.title as oasisName,
+          c.sow,
+          c.title,
+          c.bonus,
+          c.create_at as createAt,
+          c.delivery_cycle as deliveryCycle
+        from commission c
+        inner join oasis o on c.oasis_id = o.id
+        inner join fin_account fd on o.id = fd.fid and fd.fid_type = '2'
+        where c.tag in ('6', '7')
+        <if test="dto.q != null and dto.q != ''">
+            and (locate(#{dto.q}, c.title) > 0 or locate(#{dto.q}, o.title) > 0)
+        </if>
+        order by c.modified_at desc
+    </select>
+
+    <select id="selectWorkerCommissionPage" resultType="com.norm.timemall.app.team.domain.ro.TeamFetchWorkerCommissionPageRO">
+        select
+          c.id,
+          c.title,
+          c.bonus,
+          o.avatar as oasisAvatar,
+          o.handle as oasisHandle,
+          o.title as oasisName,
+          c.tag,
+          c.create_at as createAt,
+          c.sign_at as signAt,
+          c.delivery_cycle as deliveryCycle
+        from commission c
+        inner join oasis o on c.oasis_id = o.id
+        where c.worker = #{brandId}
+        <if test="dto.q != null and dto.q != ''">
+            and (locate(#{dto.q}, c.title) > 0 or locate(#{dto.q}, o.title) > 0)
+        </if>
+        <if test="dto.tag != null and dto.tag != ''">
+            and c.tag = #{dto.tag}
+        </if>
+        order by c.modified_at desc
     </select>
 
 </mapper>

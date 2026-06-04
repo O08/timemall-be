@@ -13,6 +13,8 @@ import com.norm.timemall.app.base.service.BaseOasisPointsService;
 import com.norm.timemall.app.team.domain.dto.*;
 import com.norm.timemall.app.team.domain.pojo.TeamFetchCommissionDetail;
 import com.norm.timemall.app.team.domain.ro.TeamCommissionRO;
+import com.norm.timemall.app.team.domain.ro.TeamDiscoveryCommissionPageRO;
+import com.norm.timemall.app.team.domain.ro.TeamFetchWorkerCommissionPageRO;
 import com.norm.timemall.app.team.helper.TeamCommissionHelper;
 import com.norm.timemall.app.team.mapper.*;
 import com.norm.timemall.app.team.service.TeamCommissionService;
@@ -65,6 +67,7 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
                 .setSow(dto.getSow())
                 .setFounder(brandId)
                 .setTag(OasisCommissionTagEnum.CREATED.getMark())
+                .setDeliveryCycle(dto.getDeliveryCycle())
                 .setCreateAt(new Date())
                 .setModifiedAt(new Date());
 
@@ -191,5 +194,22 @@ public class TeamCommissionServiceImpl implements TeamCommissionService {
     private void updateOasisJoinModifiedAt(String oasisId,String brandId){
         teamOasisJoinMapper.updateModifiedAtByBrandIdAndOasisId(oasisId,brandId);
 
+    }
+
+    @Override
+    public IPage<TeamDiscoveryCommissionPageRO> findDiscoveryCommission(TeamDiscoveryCommissionPageDTO dto) {
+        IPage<TeamDiscoveryCommissionPageRO> page = new Page<>();
+        page.setSize(dto.getSize());
+        page.setCurrent(dto.getCurrent());
+        return teamCommissionMapper.selectDiscoveryCommissionPage(page, dto);
+    }
+
+    @Override
+    public IPage<TeamFetchWorkerCommissionPageRO> findWorkerCommission(TeamFetchWorkerCommissionPageDTO dto) {
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        IPage<TeamFetchWorkerCommissionPageRO> page = new Page<>();
+        page.setSize(dto.getSize());
+        page.setCurrent(dto.getCurrent());
+        return teamCommissionMapper.selectWorkerCommissionPage(page, dto, brandId);
     }
 }

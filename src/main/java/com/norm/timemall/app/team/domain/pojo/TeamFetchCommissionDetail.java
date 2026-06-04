@@ -13,4 +13,6 @@ public class TeamFetchCommissionDetail {
     private String commissionId;
     private String oasisId;
     private String oasisHandle;
+    private String deliveryCycle;
+    private String signAt;
 }

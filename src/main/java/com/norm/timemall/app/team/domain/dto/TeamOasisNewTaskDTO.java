@@ -21,4 +21,8 @@ public class TeamOasisNewTaskDTO {
     @NotBlank(message = "sow required")
     @Length(message = "sow length must in range {min}-{max}",min = 1,max = 4500)
     private String sow;
+
+    @NotNull(message = "deliveryCycle required")
+    @Positive(message = "deliveryCycle must be positive")
+    private Integer deliveryCycle;
 }

@@ -50,13 +50,22 @@ public class Commission extends Model<Commission> implements Serializable {
      */
     private String founder;
     /**
-     * 执行任务id
+     * 执行人id
      */
     private String worker;
     /**
      * 奖金
      */
     private BigDecimal bonus;
+    /**
+     * 交付周期
+     */
+    private Integer deliveryCycle;
+
+    /**
+     * 签约时间
+     */
+    private Date signAt;
     /**
      * createAt
      */

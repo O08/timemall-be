@@ -10,8 +10,12 @@ import com.norm.timemall.app.base.service.OrderFlowService;
 import com.norm.timemall.app.team.domain.dto.*;
 import com.norm.timemall.app.team.domain.pojo.TeamFetchCommissionDetail;
 import com.norm.timemall.app.team.domain.ro.TeamCommissionRO;
+import com.norm.timemall.app.team.domain.ro.TeamDiscoveryCommissionPageRO;
+import com.norm.timemall.app.team.domain.ro.TeamFetchWorkerCommissionPageRO;
 import com.norm.timemall.app.team.domain.vo.TeamCommissionPageVO;
+import com.norm.timemall.app.team.domain.vo.TeamDiscoveryCommissionPageVO;
 import com.norm.timemall.app.team.domain.vo.TeamFetchCommissionDetailVO;
+import com.norm.timemall.app.team.domain.vo.TeamFetchWorkerCommissionPageVO;
 import com.norm.timemall.app.team.service.TeamApiAccessControlService;
 import com.norm.timemall.app.team.service.TeamCommissionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,6 +144,23 @@ public class TeamCommissionController {
         return new SuccessVO(CodeEnum.SUCCESS);
 
     }
+    @GetMapping("/api/v1/team/discovery/commission")
+    public TeamDiscoveryCommissionPageVO discoveryCommission(@Validated TeamDiscoveryCommissionPageDTO dto){
+        IPage<TeamDiscoveryCommissionPageRO> commission = teamCommissionService.findDiscoveryCommission(dto);
+        TeamDiscoveryCommissionPageVO vo = new TeamDiscoveryCommissionPageVO();
+        vo.setCommission(commission);
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        return vo;
+    }
+    @GetMapping("/api/v1/team/worker/commission")
+    public TeamFetchWorkerCommissionPageVO queryWorkerCommission(@Validated TeamFetchWorkerCommissionPageDTO dto){
+        IPage<TeamFetchWorkerCommissionPageRO> commission = teamCommissionService.findWorkerCommission(dto);
+        TeamFetchWorkerCommissionPageVO vo = new TeamFetchWorkerCommissionPageVO();
+        vo.setCommission(commission);
+        vo.setResponseCode(CodeEnum.SUCCESS);
+        return vo;
+    }
+
 
 
 }

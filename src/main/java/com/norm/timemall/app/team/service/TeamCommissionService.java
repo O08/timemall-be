@@ -5,6 +5,8 @@ import com.norm.timemall.app.base.mo.Commission;
 import com.norm.timemall.app.team.domain.dto.*;
 import com.norm.timemall.app.team.domain.pojo.TeamFetchCommissionDetail;
 import com.norm.timemall.app.team.domain.ro.TeamCommissionRO;
+import com.norm.timemall.app.team.domain.ro.TeamDiscoveryCommissionPageRO;
+import com.norm.timemall.app.team.domain.ro.TeamFetchWorkerCommissionPageRO;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,4 +28,8 @@ public interface TeamCommissionService {
     void delOneCommission(String id);
 
     void modifyCommission(TeamOasisChangeTaskDTO dto);
+
+    IPage<TeamDiscoveryCommissionPageRO> findDiscoveryCommission(TeamDiscoveryCommissionPageDTO dto);
+
+    IPage<TeamFetchWorkerCommissionPageRO> findWorkerCommission(TeamFetchWorkerCommissionPageDTO dto);
 }
