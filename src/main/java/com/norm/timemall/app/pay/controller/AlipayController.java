@@ -126,6 +126,15 @@ public class AlipayController {
         String paramsJson = JSON.toJSONString(params);
         log.info("支付宝回调，{}", paramsJson);
 
+       // 处理转账接口异步通知
+        String msgMethod = params.get("msg_method");
+        String outBizNo = params.get("out_biz_no");
+        if ("alipay.fund.trans.order.changed".equals(msgMethod) && outBizNo != null) {
+            log.warn("检测转账变更通知接口，直接忽略并响应 success。转账单号: {}", outBizNo);
+            return "success";
+        }
+
+
 
         boolean signVerified = AlipaySignature.rsaCertCheckV1(params,
                 AliPayUtil.getAliPayPublicCertPath( aliPayResource,envBean),
@@ -135,13 +144,13 @@ public class AlipayController {
 
         if(signVerified) {//验证成功
             // 商户订单号
-            String out_trade_no = new String(request.getParameter("out_trade_no").getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+            String out_trade_no = request.getParameter("out_trade_no");
             // 支付宝交易号
-            String trade_no = new String(request.getParameter("trade_no").getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+            String trade_no = request.getParameter("trade_no");
             // 交易状态
-            String trade_status = new String(request.getParameter("trade_status").getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+            String trade_status = request.getParameter("trade_status");
             // 付款金额
-            String total_amount = new String(request.getParameter("total_amount").getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+            String total_amount = request.getParameter("total_amount");
 
             if (trade_status.equals("TRADE_SUCCESS")){
                 ProprietaryTradingPayment proprietaryTradingPayment = payHelper.generatePaymentWhenSuccessForAliPay(out_trade_no, trade_no, trade_status, total_amount, paramsJson);
