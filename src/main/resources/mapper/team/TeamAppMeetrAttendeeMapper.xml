@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamAppMeetrAttendeeMapper">
+    <sql id="tableName">
+        app_meetr_attendee
+    </sql>
+
+    <sql id="baseColumn">
+        id,event_id,member_brand_id,create_at,modified_at
+    </sql>
+
+    <select id="selectEventAttendeesPage" resultType="com.norm.timemall.app.team.domain.ro.TeamAppMeetrFetchEventAttendeesPageRO">
+        select
+            a.member_brand_id as memberBrandId,
+            b.brand_name as memberBrandName,
+            b.avator as memberBrandAvatar,
+            b.mark as memberBrandMark,
+            a.create_at
+        from app_meetr_attendee a
+        inner join brand b on a.member_brand_id = b.id
+        <where>
+            a.event_id = #{dto.eventId}
+            <if test="dto.q != null and dto.q != ''">
+                AND locate(#{dto.q}, b.brand_name) > 0
+            </if>
+        </where>
+        order by a.create_at desc
+    </select>
+
+    <select id="selectMemberAttendancesPage" resultType="com.norm.timemall.app.team.domain.ro.TeamAppMeetrFetchMemberAttendancesPageRO">
+        select
+            a.id as attendanceId,
+            e.id as eventId,
+            e.title,
+            e.activity_start_at,
+            e.attendees,
+            e.budget,
+            e.event_status,
+            e.event_type,
+            e.location,
+            b.id as hostedBrandId,
+            b.brand_name as hostedBrandName,
+            b.avator as hostedBrandAvatar,
+            b.customer_id as hostedBrandUserId
+        from app_meetr_attendee a
+        inner join app_meetr_event e on a.event_id = e.id
+        inner join brand b on e.hosted_brand_id = b.id
+        <where>
+            a.member_brand_id = #{currentBrandId}
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, e.title) > 0 or locate(#{dto.q}, b.brand_name) > 0)
+            </if>
+            <if test="dto.eventStatus != null and dto.eventStatus != ''">
+                AND e.event_status = #{dto.eventStatus}
+            </if>
+        </where>
+        order by a.create_at desc
+    </select>
+
+</mapper>
