@@ -63,7 +63,7 @@ public class TeamAppMeetrEditEventsDTO {
 
 
     @NotNull(message = "maxSeats required")
-    @Min(value = 1, message = "maxSeats must be at least 1")
+    @Min(value = 0, message = "maxSeats must be at least 0")
     @Max(value = 999999, message = "maxSeats is too large")
     private Integer maxSeats;
 
