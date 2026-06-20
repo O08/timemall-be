@@ -6,6 +6,8 @@ import java.util.List;
 
 @Data
 public class TeamAppMeetrFetchOneEventInfoRO {
+    private String id;
+    private String activityStartAt;
     private String allowGuests;
     private String attendees;
     private String budget;

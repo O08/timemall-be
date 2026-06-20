@@ -76,6 +76,8 @@
         <result property="reserved" column="reserved"/>
         <result property="thumbnail" column="thumbnail"/>
         <result property="title" column="title"/>
+        <result property="id" column="id"/>
+        <result property="activityStartAt" column="activity_start_at"/>
         <result property="topics"
                 typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
                 column="topics"/>
@@ -83,6 +85,7 @@
 
     <select id="selectOneEventById" resultMap="selectOneEventResultMap">
         select
+            e.id,
             e.allow_guests,
             e.attendees,
             e.budget,
@@ -101,6 +104,7 @@
             (case when a.id is not null then 1 else 0 end) as reserved,
             e.thumbnail,
             e.title,
+            e.activity_start_at,
             e.topics
         from app_meetr_event e
         inner join brand b on e.hosted_brand_id = b.id
