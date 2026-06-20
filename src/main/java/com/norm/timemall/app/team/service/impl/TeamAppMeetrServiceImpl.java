@@ -129,7 +129,7 @@ public class TeamAppMeetrServiceImpl implements TeamAppMeetrService {
                 .setActivityStartAt(dto.getActivityStartAt())
                 .setTopics(dto.getTopics())
                 .setDuration(dto.getDuration())
-                .setDurationType(dto.getDurationType().name())
+                .setDurationType(dto.getDurationType().getValue())
                 .setMaxSeats(dto.getMaxSeats())
                 .setBudget(dto.getBudget())
                 .setEventType(dto.getEventType().getValue())
