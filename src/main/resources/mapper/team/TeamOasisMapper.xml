@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamOasisMapper">
+    <sql id="tableName">
+        oasis
+    </sql>
+
+
+    <select id="selectPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamOasisRO">
+        select avatar, title,subtitle,id,handle
+        from oasis
+        where
+         1 = 1
+        and mark='2'
+        and for_private='0'
+        <if test="q != null and q != ''">
+            AND (locate(#{q}, title)>0 or locate(#{q}, subtitle)>0)
+        </if>
+
+    </select>
+    <select id="selectOneAnnounce" resultType="com.norm.timemall.app.team.domain.pojo.TeamOasisAnnounce">
+        select id,handle, initiator_id initiator,title,avatar,subTitle,announce announceUrl,risk,can_add_member,for_private,private_code,mark
+        from oasis
+        <where>
+            <choose>
+                <when test='dto.solution == "1"'>
+                     id = #{dto.oasisId}
+                </when>
+                <when test='dto.solution == "2"'>
+                     handle = #{dto.oasisHandle}
+                </when>
+                <otherwise>
+                     id IS  NULL
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+
+</mapper>

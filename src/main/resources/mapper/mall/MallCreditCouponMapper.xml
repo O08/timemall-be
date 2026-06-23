@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.mall.mapper.MallCreditCouponMapper">
+    <sql id="tableName">
+        credit_coupon
+    </sql>
+
+    <sql id="baseColumn">
+        id,supplier_brand_id,consumer_brand_id,credit_point,create_at,modified_at
+    </sql>
+
+</mapper>

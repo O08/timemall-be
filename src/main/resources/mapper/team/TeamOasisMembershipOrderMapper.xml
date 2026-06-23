@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamOasisMembershipOrderMapper">
+    <sql id="tableName">
+        oasis_membership_order
+    </sql>
+
+    <sql id="baseColumn">
+        id,order_no,buyer_brand_id,tier_id,total,pay_type,create_at,modified_at
+    </sql>
+
+
+    <select id="selectOpenOrderPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamMembershipFetchOpenTierOrderPageRO">
+        select
+             o.id orderId,
+             buyer.brand_name buyerName,
+             buyer.avator buyerAvatar,
+             t.tier_name,
+             o.total,
+             o.card_type,
+             o.status
+        from oasis_membership_order o
+        inner join oasis_membership_tier t
+          on o.tier_id=t.id
+        inner join brand buyer
+          on o.buyer_brand_id=buyer.id
+        where 1 = 1
+           and t.oasis_id = #{dto.oasisId}
+        <if test="dto.q != null and dto.q != ''">
+            AND (locate(#{dto.q}, t.tier_name)>0 or  locate(#{dto.q}, buyer.brand_name)>0  or  locate(#{dto.q}, o.order_no)>0)
+        </if>
+
+        order by o.create_at desc
+    </select>
+
+
+    <select id="selectOneOpenOrderById" resultType="com.norm.timemall.app.team.domain.ro.TeamMembershipFetchOpenTierOrderDetailRO">
+        select
+            o.id orderId,
+            o.order_no,
+            o.status,
+            o.create_at,
+            seller.brand_name sellerName,
+            seller.avator sellerAvatar,
+            seller.customer_id sellerUserId,
+            t.tier_name,
+            t.thumbnail tierThumbnail,
+            o.total,
+            o.card_type,
+            t.tier_description
+        from oasis_membership_order o
+        inner join oasis_membership_tier t
+          on o.tier_id=t.id
+        inner join brand seller
+          on o.seller_brand_id=seller.id
+        where 1 = 1
+         and o.id=#{id}
+    </select>
+
+    <select id="selectBuyRecordPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamMembershipFetchBuyRecordPageRO">
+        select
+            o.id orderId,
+            o.order_no,
+            t.tier_name,
+            o.total,
+            o.card_type,
+            o.status,
+            o.create_at,
+            t.oasis_id,
+            seller.brand_name sellerName,
+            seller.avator sellerAvatar,
+            seller.customer_id sellerUserId
+        from oasis_membership_order o
+        inner join oasis_membership_tier t
+          on o.tier_id=t.id
+        inner join brand seller
+          on o.seller_brand_id=seller.id
+        where 1 = 1
+          and o.buyer_brand_id=#{buyerBrandId}
+        <if test="dto.q != null and dto.q != ''">
+            AND (locate(#{dto.q}, t.tier_name)>0 or  locate(#{dto.q}, seller.brand_name)>0  or  locate(#{dto.q}, o.order_no)>0)
+        </if>
+        <if test="dto.status != null and dto.status != ''">
+            AND o.status=#{dto.status}
+        </if>
+        order by o.create_at desc
+    </select>
+
+</mapper>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamOfficeEmployeeKvMapper">
+    <sql id="tableName">
+        office_employee_kv
+    </sql>
+
+    <sql id="baseColumn">
+        id,employee_id,title,content,create_at,modified_at
+    </sql>
+
+
+    <select id="selectPageByEmployeeId" resultType="com.norm.timemall.app.team.domain.ro.TeamOfficeFetchEmployeeKvPageRO">
+
+        select
+           k.id,k.title,k.content,k.create_at
+        from office_employee_kv k
+        where
+        1 = 1
+        and k.employee_id=#{dto.id}
+        order by k.create_at desc
+
+
+    </select>
+
+</mapper>

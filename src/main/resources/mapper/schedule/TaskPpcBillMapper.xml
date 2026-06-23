@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.scheduled.mapper.TaskPpcBillMapper">
+
+    <update id="callGeneratePpcBillProc"  statementType="CALLABLE">
+        { call cal_affiliate_ppc_bill_proc_0011(#{batch, mode=IN}) }
+    </update>
+
+    <update id="updateBillAndVisitInfo"  statementType="CALLABLE">
+        { call cal_affiliate_ppc_bill_post_proc_0012(#{batch, mode=IN},#{supplierBrandId, mode=IN}) }
+    </update>
+
+</mapper>

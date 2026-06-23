@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamOasisEquityOrderMapper">
+    <sql id="tableName">
+        oasis_equity_order
+    </sql>
+
+    <sql id="baseColumn">
+        id,equity_period_id,sponsor_brand_id,donation_amount,redemption_amount,shares,status,settlement_date,create_at,modified_at
+    </sql>
+
+    <select id="selectPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamFetchEquityOrderPageRO">
+        SELECT
+            eo.id AS orderId,
+            eo.donation_amount AS donationAmount,
+            eo.redemption_amount AS redemptionAmount,
+            eo.shares AS shares,
+            eo.status,
+            eo.settlement_date AS settlementDate,
+            eo.create_at AS createAt,
+            ep.period,
+            ep.earning_yield AS earningYield,
+            b.brand_name AS sponsorName,
+            b.avator as sponsorAvatar
+        FROM oasis_equity_order eo
+        INNER JOIN oasis_equity_period ep ON eo.equity_period_id = ep.id
+        INNER JOIN brand b ON eo.sponsor_brand_id = b.id
+        WHERE ep.oasis_id = #{dto.oasisId}
+        <if test="dto.status != null and dto.status != ''">
+            AND eo.status = #{dto.status}
+        </if>
+        <if test="dto.q != null and dto.q != ''">
+            And locate(#{dto.q}, b.brand_name)>0
+        </if>
+        <if test="dto.period != null">
+            And  ep.period = #{dto.period}
+        </if>
+        ORDER BY eo.create_at DESC
+    </select>
+
+    <select id="selectSponsorPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamFetchEquitySponsorOrderPageRO">
+        SELECT
+           eo.id AS orderId,
+           eo.donation_amount AS donationAmount,
+           eo.redemption_amount AS redemptionAmount,
+           eo.shares AS shares,
+           ep.earning_yield AS earningYield,
+           ep.period,
+           eo.create_at AS createAt
+        FROM oasis_equity_order eo
+        INNER JOIN oasis_equity_period ep ON eo.equity_period_id = ep.id
+        WHERE eo.sponsor_brand_id = #{dto.brandId}
+          AND eo.status = '1'
+          AND ep.oasis_id = #{dto.oasisId}
+        ORDER BY eo.create_at DESC
+    </select>
+
+</mapper>

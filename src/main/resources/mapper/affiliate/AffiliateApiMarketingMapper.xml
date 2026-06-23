@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.affiliate.mapper.AffiliateApiMarketingMapper">
+
+    <select id="selectPageByDTO" resultType="com.norm.timemall.app.affiliate.domain.ro.FetchApiMarketingPageRO">
+        select chn.channel_name,am.supplier_brand_id,am.cell_id,bs.product_name,ip.revshare,am.cell_sale_volume,am.plan_sale_volume,am.sales,am.views,
+          am.refund_orders,am.settled_payment,am.unsettled_payment
+        from affiliate_api_marketing am
+        inner join affiliate_outreach_channel chn
+          on am.outreach_channel_id=chn.id
+        inner join affiliate_product_ind bs
+          on bs.cell_id=am.cell_id
+        inner join affiliate_influencer_product ip
+          on am.cell_id=ip.cell_id
+            and am.brand_id=ip.brand_id
+        and ip.brand_id=#{brandId}
+
+
+        <where>
+            1=1
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, bs.supplier_brand_name)>0  or  locate(#{dto.q}, bs.product_name)>0  or  locate(#{dto.q}, chn.channel_name)>0)
+            </if>
+            <if test="dto.supplierAccountAgeLeft > 0">
+                AND TIMESTAMPDIFF(MONTH,bs.supplier_create_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S')) &gt;= #{dto.supplierAccountAgeLeft}
+            </if>
+            <if test="dto.supplierAccountAgeRight > 0">
+                AND TIMESTAMPDIFF(MONTH,bs.supplier_create_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S')) &lt;= #{dto.supplierAccountAgeRight}
+            </if>
+            <if test="dto.heartbeat != null and dto.heartbeat != ''">
+                <choose>
+                    <when test='dto.heartbeat == "1"'>
+                        AND TIMESTAMPDIFF(WEEK,bs.supplier_modified_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S'))  &lt;= 0
+                    </when>
+                    <when test='dto.heartbeat == "2"'>
+                        AND TIMESTAMPDIFF(MONTH,bs.supplier_modified_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S'))  &lt;= 0
+                    </when>
+                    <when test='dto.heartbeat == "3"'>
+                        AND TIMESTAMPDIFF(MONTH,bs.supplier_modified_at,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S'))  &lt;= 2
+                    </when>
+                </choose>
+            </if>
+            <if test="dto.blue != null and dto.blue != ''">
+                <choose>
+                    <when test='dto.blue == "1"'>
+                        AND bs.supplier_blue_end_at > now()
+                    </when>
+                </choose>
+            </if>
+            <if test="dto.planPriceLeft > 0">
+                AND ip.plan_price  &gt;= #{dto.planPriceLeft}
+            </if>
+            <if test="dto.planPriceRight > 0">
+                AND  ip.plan_price  &lt;= #{dto.planPriceRight}
+            </if>
+            <if test="dto.revshareLeft > 0">
+                AND ip.revshare  &gt;= #{dto.revshareLeft}
+            </if>
+            <if test="dto.revshareRight > 0">
+                AND  ip.revshare  &lt;= #{dto.revshareRight}
+            </if>
+            <if test="dto.viewsLeft > 0">
+                AND am.views  &gt;= #{dto.viewsLeft} * 1000
+            </if>
+            <if test="dto.viewsRight > 0">
+                AND  am.views  &lt;= #{dto.viewsRight} * 1000
+            </if>
+            <if test="dto.salesLeft > 0">
+                AND am.sales  &gt;= #{dto.salesLeft}
+            </if>
+            <if test="dto.salesRight > 0">
+                AND  am.sales  &lt;= #{dto.salesRight}
+            </if>
+            <if test="dto.saleVolumeLeft > 0">
+                AND  am.plan_sale_volume  &gt;= #{dto.saleVolumeLeft}
+            </if>
+            <if test="dto.saleVolumeRight > 0">
+                AND  am.plan_sale_volume  &lt;= #{dto.saleVolumeRight}
+            </if>
+            <if test="dto.offline != null and dto.offline != ''">
+                AND bs.cell_mark = #{dto.offline}
+            </if>
+            <if test="dto.sort == null or dto.sort == ''">
+                Order by am.create_at desc
+            </if>
+            <if test="dto.sort != null and dto.sort != ''">
+                <choose>
+                    <when test='dto.sort == "1"'>
+                        Order by am.plan_sale_volume desc
+                    </when>
+                    <when test='dto.sort == "2"'>
+                        Order by am.sales desc
+                    </when>
+                    <when test='dto.sort == "3"'>
+                        Order by am.views desc
+                    </when>
+                    <when test='dto.sort == "4"'>
+                        Order by chn.channel_name desc
+                    </when>
+                    <when test='dto.sort == "5"'>
+                        Order by bs.product_name desc
+                    </when>
+                </choose>
+            </if>
+
+        </where>
+    </select>
+
+</mapper>
