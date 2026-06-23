@@ -8,4 +8,5 @@ public class FetchOneOasisChannelGeneralInfoRO {
     private String channelDesc;
     private String oasisId;
     private String guide;
+    private String oasisAdminBrandId;
 }
