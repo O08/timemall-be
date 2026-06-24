@@ -17,4 +17,5 @@ public class TeamAppMeetrFetchMemberAttendancesPageRO {
     private String location;
     private String attendanceId;
     private String title;
+    private String thumbnail;
 }

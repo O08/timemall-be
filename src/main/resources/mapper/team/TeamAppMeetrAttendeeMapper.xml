@@ -31,6 +31,7 @@
         select
             a.id as attendanceId,
             e.id as eventId,
+            e.thumbnail,
             e.title,
             e.activity_start_at,
             e.attendees,
