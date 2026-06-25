@@ -205,9 +205,11 @@ public class TeamAppMeetrServiceImpl implements TeamAppMeetrService {
         teamAppMeetrAttendeeMapper.insert(attendee);
 
         // 7. increment attendees count
-        event.setAttendees(event.getAttendees() + 1)
-                .setModifiedAt(new Date());
-        teamAppMeetrEventMapper.updateById(event);
+        teamAppMeetrEventMapper.update(null, Wrappers.<AppMeetrEvent>lambdaUpdate()
+                .eq(AppMeetrEvent::getId, attendee.getEventId())
+                .setSql("attendees = attendees + 1")
+                .set(AppMeetrEvent::getModifiedAt, new Date())
+        );
     }
 
     @Override
@@ -236,11 +238,14 @@ public class TeamAppMeetrServiceImpl implements TeamAppMeetrService {
             throw new QuickMessageException("活动信息不存在");
         }
 
-        //  decrement attendees count (minimum 0)
-        int newCount = Math.max(0, event.getAttendees() - 1);
-        event.setAttendees(newCount)
-                .setModifiedAt(new Date());
-        teamAppMeetrEventMapper.updateById(event);
+        teamAppMeetrEventMapper.update(null, Wrappers.<AppMeetrEvent>lambdaUpdate()
+                .eq(AppMeetrEvent::getId, attendee.getEventId())
+                // 保证在数据库层面 attendees 大于 0 时才扣减，防止并发时扣成负数
+                .gt(AppMeetrEvent::getAttendees, 0)
+                .setSql("attendees = attendees - 1")
+                .set(AppMeetrEvent::getModifiedAt, new Date())
+        );
+
     }
 
     @Override
