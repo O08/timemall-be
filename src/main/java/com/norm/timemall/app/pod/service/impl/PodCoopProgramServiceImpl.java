@@ -76,6 +76,10 @@ public class PodCoopProgramServiceImpl implements PodCoopProgramService {
             throw new QuickMessageException("未找到相关合作项目，操作失败");
         }
 
+        if (CoopProgramStatusEnum.FREEZE.getValue().equals(program.getStatus())){
+            throw new QuickMessageException("项目已冻结");
+        }
+
 
         if (CoopProgramStatusEnum.INVALId.getValue().equals(program.getStatus())) {
             throw new QuickMessageException("该项目已是无效状态，无需重复操作");
@@ -119,6 +123,9 @@ public class PodCoopProgramServiceImpl implements PodCoopProgramService {
         CoopPrograms program = podCoopProgramsMapper.selectById(dto.getProgramId());
         if (program == null) {
             throw new QuickMessageException("未找到相关合作项目");
+        }
+        if (CoopProgramStatusEnum.FREEZE.getValue().equals(program.getStatus())){
+            throw new QuickMessageException("项目已冻结");
         }
 
         String currentBrandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
@@ -272,7 +279,7 @@ public class PodCoopProgramServiceImpl implements PodCoopProgramService {
 
     @Override
     public void auditApplication(PodAuditCoopProgramApplicationDTO dto) {
-        if(CoopApplicationStatusEnum.PENDING==dto.getStatus()){
+        if(CoopApplicationStatusEnum.PENDING==dto.getStatus() ){
             throw new QuickMessageException("审批状态不正确");
         }
         CoopApplications application = podCoopApplicationsMapper.selectById(dto.getApplicationId());

@@ -6,6 +6,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
+import com.norm.timemall.app.base.enums.CoopProgramStatusEnum;
 import com.norm.timemall.app.base.enums.FileStoreDir;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
 import com.norm.timemall.app.base.exception.QuickMessageException;
@@ -157,6 +158,9 @@ public class PodCoopProgramController {
         if (program == null) {
             throw new ErrorCodeException(CodeEnum.NOT_FOUND_DATA);
         }
+        if (CoopProgramStatusEnum.FREEZE.getValue().equals(program.getStatus())){
+            throw new QuickMessageException("项目已冻结");
+        }
         String currentBrandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         if (!currentBrandId.equals(program.getAuthorBrandId())) {
             throw new ErrorCodeException(CodeEnum.USER_ROLE_NOT_CORRECT);
@@ -182,6 +186,9 @@ public class PodCoopProgramController {
         CoopPrograms program = podCoopProgramService.findProgramById(programId);
         if (program == null) {
             throw new ErrorCodeException(CodeEnum.NOT_FOUND_DATA);
+        }
+        if (CoopProgramStatusEnum.FREEZE.getValue().equals(program.getStatus())){
+            throw new QuickMessageException("项目已冻结");
         }
         String currentBrandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
         if (!currentBrandId.equals(program.getAuthorBrandId())) {

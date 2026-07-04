@@ -10,7 +10,8 @@ public enum CoopProgramStatusEnum {
 
     CLOSED("closed"),
 
-    INVALId("invalid")
+    INVALId("invalid"),
+    FREEZE("freeze")
     ;
 
     private final String value;

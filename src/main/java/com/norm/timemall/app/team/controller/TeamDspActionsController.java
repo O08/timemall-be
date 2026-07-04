@@ -20,4 +20,13 @@ public class TeamDspActionsController {
         return new SuccessVO(CodeEnum.SUCCESS);
 
     }
+
+    @PutMapping("/api/v1/team/dsp_case/action/coop/program/{id}/freeze")
+    public SuccessVO freezeCoopProgram(@PathVariable("id") String id){
+
+        teamDspActionsService.doFreezeCoopProgram(id);
+        return new SuccessVO(CodeEnum.SUCCESS);
+
+    }
+
 }

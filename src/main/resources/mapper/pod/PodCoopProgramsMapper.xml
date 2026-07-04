@@ -44,6 +44,7 @@
            on p.id = a.program_id
              and a.applicant_brand_id = #{currentBrandId}
         <where>
+            p.status != 'freeze'
             <if test="dto.q != null and dto.q != ''">
                 and (locate(#{dto.q}, p.title) > 0 or locate(#{dto.q}, b.brand_name) > 0
                     or json_contains(p.topics, concat('"', #{dto.q}, '"')))
