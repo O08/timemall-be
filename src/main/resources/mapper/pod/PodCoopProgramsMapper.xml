@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.pod.mapper.PodCoopProgramsMapper">
+    <sql id="tableName">
+        coop_programs
+    </sql>
+
+    <sql id="baseColumn">
+        id,author_brand_id,title,thumbnail,description,online_link,work_mode,topics,buzz,applys,attendees,status,created_at,modified_at
+    </sql>
+
+    <resultMap id="DiscoveryProgramsPageResultMap" type="com.norm.timemall.app.pod.domain.ro.PodDiscoveryProgramsPageRO">
+        <result column="topics" property="topics"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+    </resultMap>
+
+    <select id="selectDiscoveryProgramsPage" resultMap="DiscoveryProgramsPageResultMap">
+        select
+            p.id programId,
+            p.author_brand_id authorBrandId,
+            p.title,
+            p.thumbnail,
+            p.description,
+            p.online_link onlineLink,
+            p.work_mode workMode,
+            p.topics,
+            p.buzz,
+            p.applys,
+            p.attendees,
+            p.status,
+            p.created_at createdAt,
+            b.brand_name authorName,
+            b.avator authorAvatar,
+            b.location authorIpLocation,
+            b.customer_id authorUserId,
+            CASE
+              WHEN a.id IS NOT NULL THEN '1'
+              ELSE '0'
+            END AS applied
+        from coop_programs p
+        inner join brand b
+            on p.author_brand_id = b.id
+        left join coop_applications a
+           on p.id = a.program_id
+             and a.applicant_brand_id = #{currentBrandId}
+        <where>
+            <if test="dto.q != null and dto.q != ''">
+                and (locate(#{dto.q}, p.title) > 0 or locate(#{dto.q}, b.brand_name) > 0
+                    or json_contains(p.topics, concat('"', #{dto.q}, '"')))
+            </if>
+            <if test="dto.workMode != null and dto.workMode != ''">
+                and p.work_mode = #{dto.workMode}
+            </if>
+        </where>
+        <choose>
+            <when test='dto.sort == "2"'>
+                order by p.applys desc
+            </when>
+            <when test='dto.sort == "3"'>
+                order by p.buzz desc
+            </when>
+            <otherwise>
+                order by p.created_at desc
+            </otherwise>
+        </choose>
+    </select>
+
+    <resultMap id="PostedProgramsPageResultMap" type="com.norm.timemall.app.pod.domain.ro.PodPostedProgramsPageRO">
+        <result column="topics" property="topics"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+    </resultMap>
+
+    <select id="selectPostedProgramsPage" resultMap="PostedProgramsPageResultMap">
+        select
+            p.id programId,
+            p.title,
+            p.thumbnail,
+            p.description,
+            p.online_link onlineLink,
+            p.work_mode workMode,
+            p.topics,
+            p.applys,
+            p.attendees,
+            p.status,
+            p.created_at createdAt
+        from coop_programs p
+        where p.author_brand_id = #{currentBrandId}
+        <if test="dto.q != null and dto.q != ''">
+            and locate(#{dto.q}, p.title) > 0
+        </if>
+        order by p.created_at desc
+    </select>
+
+    <select id="selectProgramApplicationsPage" resultType="com.norm.timemall.app.pod.domain.ro.PodCoopProgramApplicationRO">
+        select
+            a.id applicationId,
+            a.applicant_brand_id applicantBrandId,
+            a.message,
+            a.status,
+            a.created_at createdAt,
+            b.brand_name applicantName,
+            b.avator applicantAvatar,
+            b.customer_id applicantUserId
+        from coop_applications a
+        inner join brand b
+            on a.applicant_brand_id = b.id
+        where a.program_id = #{dto.programId}
+        <if test="dto.q != null and dto.q != ''">
+            and locate(#{dto.q}, b.brand_name) > 0
+        </if>
+        <if test="dto.status != null and dto.status != ''">
+            and a.status = #{dto.status}
+        </if>
+        order by a.created_at desc
+    </select>
+
+    <resultMap id="ProgramInfoResultMap" type="com.norm.timemall.app.pod.domain.ro.PodProgramInfoRO">
+        <result column="topics" property="topics"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+    </resultMap>
+
+    <select id="selectProgramInfo" resultMap="ProgramInfoResultMap">
+        select
+            p.id programId,
+            p.author_brand_id authorBrandId,
+            p.title,
+            p.thumbnail,
+            p.description,
+            p.online_link onlineLink,
+            p.work_mode workMode,
+            p.topics,
+            p.buzz,
+            p.applys,
+            p.attendees,
+            p.status,
+            p.created_at createdAt,
+            b.brand_name authorName,
+            b.avator authorAvatar,
+            b.location authorIpLocation,
+            b.customer_id authorUserId,
+            CASE
+              WHEN a.id IS NOT NULL THEN '1'
+              ELSE '0'
+            END AS applied
+        from coop_programs p
+        inner join brand b
+            on p.author_brand_id = b.id
+        left join coop_applications a
+           on p.id = a.program_id
+             and a.applicant_brand_id = #{currentBrandId}
+        where p.id = #{programId}
+    </select>
+
+    <select id="selectBrandApplicationsPage" resultType="com.norm.timemall.app.pod.domain.ro.PodFetchCoopBrandApplicationsPageRO">
+        select
+            a.id applicationId,
+            a.status,
+            a.created_at createdAt,
+            p.id programId,
+            p.title,
+            p.thumbnail,
+            p.applys,
+            p.attendees,
+            p.author_brand_id authorBrandId,
+            b.brand_name authorName,
+            b.avator authorAvatar,
+            b.customer_id authorUserId
+        from coop_applications a
+        inner join coop_programs p
+            on a.program_id = p.id
+        inner join brand b
+            on p.author_brand_id = b.id
+        where a.applicant_brand_id = #{currentBrandId}
+        <if test="dto.q != null and dto.q != ''">
+            and (locate(#{dto.q}, p.title) > 0 or locate(#{dto.q}, b.brand_name) > 0)
+        </if>
+        order by a.created_at desc
+    </select>
+
+</mapper>

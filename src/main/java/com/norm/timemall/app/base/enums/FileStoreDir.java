@@ -35,7 +35,8 @@ public enum FileStoreDir {
     PAYROLL_EMPLOYEE_MATERIAL("payroll/employee/material","payroll employee material store" ),
     PAYROLL_EMPLOYEE_PHOTO("payroll/employee/photo","payroll employee photo store" ),
     VIBER_FILE("app/viber/oss", "app viber file dir"), SUPPLIER_NDA_MATERIAL("brand/supplier/nda", "supplier nda file"),
-    MEETR_EVENT_THUMBNAIL("app/meetr/event/thumbnail", "meetr event thumbnail");
+    MEETR_EVENT_THUMBNAIL("app/meetr/event/thumbnail", "meetr event thumbnail"),
+    COOP_PROGRAM_THUMBNAIL("coop/program/thumbnail", "cooperation program thumbnail");
     private final String dir;
 
     private final String desc;

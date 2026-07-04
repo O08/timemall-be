@@ -372,6 +372,10 @@ public class TeamDspServiceImpl implements TeamDspService {
                 defendantBrandId=teamDspHelper.getViberPostOasisAdminBrandId(sceneUrl);
                 break;
 
+            case "自由合作":
+                defendantBrandId=teamDspHelper.getCoopProgramAuthorBrandId(sceneUrl);
+                break;
+
             default:
                 break;
         }
