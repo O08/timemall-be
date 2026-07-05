@@ -156,6 +156,8 @@
         select
             a.id applicationId,
             a.status,
+            p.status programStatus,
+            p.created_at programCreatedAt,
             a.created_at createdAt,
             p.id programId,
             p.title,

@@ -14,6 +14,8 @@ public class PodFetchCoopBrandApplicationsPageRO {
     private String createdAt;
     private String programId;
     private String status;
+    private String programStatus;
+    private String programCreatedAt;
     private String thumbnail;
     private String title;
 }
