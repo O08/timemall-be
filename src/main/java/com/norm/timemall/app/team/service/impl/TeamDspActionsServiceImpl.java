@@ -50,6 +50,10 @@ public class TeamDspActionsServiceImpl implements TeamDspActionsService {
     @Override
     public void doFreezeCoopProgram(String programId) {
         validatedRoleAsPeacemaker();
+        CoopPrograms coopPrograms = teamCoopProgramMapper.selectById(programId);
+        if(coopPrograms==null){
+            throw new QuickMessageException("未找到相关合作项目");
+        }
         LambdaUpdateWrapper<CoopPrograms> updateWrapper = Wrappers.lambdaUpdate();
         updateWrapper.eq(CoopPrograms::getId, programId)
                 .set(CoopPrograms::getStatus, CoopProgramStatusEnum.FREEZE.getValue())
