@@ -125,7 +125,7 @@ public class PodCoopProgramController {
             throw new ErrorCodeException(CodeEnum.FILE_FORMAT_NOT_SUPPORT);
         }
 
-        String thumbnailUrl = fileStoreService.storeWithUnlimitedAccess(dto.getThumbnail(), FileStoreDir.COOP_PROGRAM_THUMBNAIL);
+        String thumbnailUrl = fileStoreService.storeImageAndProcessAsAvifWithUnlimitedAccess(dto.getThumbnail(), FileStoreDir.COOP_PROGRAM_THUMBNAIL);
 
         podCoopProgramService.createProgram(dto,thumbnailUrl);
 
@@ -168,14 +168,14 @@ public class PodCoopProgramController {
         String oldThumbnail = program.getThumbnail();
 
         // store new thumbnail
-        String thumbnailUrl = fileStoreService.storeWithUnlimitedAccess(thumbnail, FileStoreDir.COOP_PROGRAM_THUMBNAIL);
+        String thumbnailUrl = fileStoreService.storeImageAndProcessAsAvifWithUnlimitedAccess(thumbnail, FileStoreDir.COOP_PROGRAM_THUMBNAIL);
 
         // update program thumbnail
         podCoopProgramService.changeProgramThumbnail(dto.getProgramId(), thumbnailUrl);
 
         // delete old thumbnail file
         if (oldThumbnail != null && !oldThumbnail.isBlank()) {
-            fileStoreService.deleteFile(oldThumbnail);
+            fileStoreService.deleteImageAndAvifFile(oldThumbnail);
         }
 
         return new SuccessVO(CodeEnum.SUCCESS);
@@ -200,7 +200,7 @@ public class PodCoopProgramController {
 
         // delete thumbnail file
         if (thumbnail != null && !thumbnail.isBlank()) {
-            fileStoreService.deleteFile(thumbnail);
+            fileStoreService.deleteImageAndAvifFile(thumbnail);
         }
 
         return new SuccessVO(CodeEnum.SUCCESS);
