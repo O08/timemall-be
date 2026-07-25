@@ -16,4 +16,5 @@ public class TeamOasisAnnounce {
     private String mark;
     private String handle;
     private String id;
+    private String membership;
 }

@@ -19,7 +19,7 @@
 
     </select>
     <select id="selectOneAnnounce" resultType="com.norm.timemall.app.team.domain.pojo.TeamOasisAnnounce">
-        select id,handle, initiator_id initiator,title,avatar,subTitle,announce announceUrl,risk,can_add_member,for_private,private_code,mark
+        select membership,id,handle, initiator_id initiator,title,avatar,subTitle,announce announceUrl,risk,can_add_member,for_private,private_code,mark
         from oasis
         <where>
             <choose>
