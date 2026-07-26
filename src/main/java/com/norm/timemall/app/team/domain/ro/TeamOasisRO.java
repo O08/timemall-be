@@ -9,4 +9,6 @@ public class TeamOasisRO {
    private String subTitle;
    private String id;
    private String handle;
+   private String membership;
+   private String mark;
 }

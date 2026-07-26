@@ -7,7 +7,7 @@
 
 
     <select id="selectPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamOasisRO">
-        select avatar, title,subtitle,id,handle
+        select membership,avatar, title,subtitle,id,handle,mark
         from oasis
         where
          1 = 1
