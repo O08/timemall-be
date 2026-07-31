@@ -376,6 +376,10 @@ public class TeamDspServiceImpl implements TeamDspService {
                 defendantBrandId=teamDspHelper.getCoopProgramAuthorBrandId(sceneUrl);
                 break;
 
+            case "数字传单":
+                defendantBrandId=teamDspHelper.getDigitalFlierAuthorBrandId(sceneUrl);
+                break;
+
             default:
                 break;
         }
