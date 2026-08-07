@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.mall.mapper.CellPlanMapper">
+
+    <select id="selectCellPlanByCellId" resultType="com.norm.timemall.app.mall.domain.ro.FetchCellPlanRO">
+        select p.id planId,p.title,p.content,p.feature,p.price,p.plan_type
+        from cell_plan p
+        where
+        p.cell_id=#{cellId}
+    </select>
+
+    <select id="selectCellPlanPage" resultType="com.norm.timemall.app.mall.domain.ro.RetrievePlanRO">
+        select b.id brandId,b.brand_name brand,b.avator,c.cover preview,c.title,p.price,c.id,ifnull(b.blue_end_at > now(),0) enableBlue,b.mark brandMark
+        from cell c
+        inner join brand b on c.brand_id = b.id
+        inner join cell_plan p on c.id = p.cell_id
+        <where>
+            1=1
+            AND c.mark = '2'
+            AND p.plan_type = 'bird'
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, b.brand_name)>0  or  locate(#{dto.q}, c.title)>0 or locate(#{dto.q}, c.tags)>0)
+            </if>
+            <if test="dto.budgetMin > 0">
+                AND p.price  &gt;= #{dto.budgetMin}
+            </if>
+            <if test="dto.budgetMax > 0">
+                AND p.price  &lt;= #{dto.budgetMax}
+            </if>
+            <if test="dto.location != null and dto.location != ''">
+                AND locate(#{dto.location}, b.location)>0
+            </if>
+            <if test="dto.online">
+                AND b.mark='3'
+            </if>
+        </where>
+        <if test="dto.sort != null and dto.sort != ''">
+            <choose>
+                <when test='dto.sort == "1"'>
+                    Order by c.create_At desc
+                </when>
+                <when test='dto.sort == "2"'>
+                    Order by p.price desc
+                </when>
+                <when test='dto.sort == "3"'>
+                    Order by p.price asc
+                </when>
+            </choose>
+        </if>
+    </select>
+
+
+</mapper>
