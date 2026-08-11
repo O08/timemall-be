@@ -52,7 +52,7 @@ public class MsCellPlanOrderMessageController {
         }
         String authorId= SecurityUserHelper.getCurrentPrincipal().getBrandId();
         // store file
-        String uri = fileStoreService.storeWithUnlimitedAccess(file, FileStoreDir.DEFAULT_IMAGE_MESSAGE);
+        String uri = fileStoreService.storeImageAndProcessAsAvifWithUnlimitedAccess(file, FileStoreDir.DEFAULT_IMAGE_MESSAGE);
         DefaultFileMessage msg = new DefaultFileMessage();
         msg.setUri(uri);
         msg.setFileName(file.getOriginalFilename());

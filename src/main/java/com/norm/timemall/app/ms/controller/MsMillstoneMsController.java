@@ -47,7 +47,7 @@ public class MsMillstoneMsController {
                                                 @RequestParam("msgType") String msgType
                                                 ){
         // store file
-        String uri = fileStoreService.storeWithUnlimitedAccess(file, FileStoreDir.MILLSTONE_IMAGE_MESSAGE);
+        String uri = fileStoreService.storeImageAndProcessAsAvifWithUnlimitedAccess(file, FileStoreDir.MILLSTONE_IMAGE_MESSAGE);
         MsMillstoneFileMessage msg = new MsMillstoneFileMessage();
         msg.setUri(uri);
         msg.setFileName(file.getOriginalFilename());
