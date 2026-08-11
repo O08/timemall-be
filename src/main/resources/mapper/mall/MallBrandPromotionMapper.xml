@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.mall.mapper.MallBrandPromotionMapper">
+
+
+    <select id="selectCouponCreditPointBenefit" resultType="com.norm.timemall.app.mall.domain.ro.CouponCreditPointBenefitRO">
+      select
+        case
+          when cc.credit_point is not null then cc.credit_point
+          when cc.credit_point is null And p.credit_point_tag='1' then p.credit_point
+          else 0
+        end as creditPoint,
+        case
+           when  cc.credit_point is null then '0'
+           else '1'
+        end as alreadyGetCreditPoint
+        from brand_promotion p
+        left join credit_coupon cc
+          on p.brand_id=cc.supplier_brand_id
+            and cc.consumer_brand_id=#{consumerBrandId}
+        where p.brand_id=#{supplierBrandId}
+    </select>
+
+
+
+</mapper>

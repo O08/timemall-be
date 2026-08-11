@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.marketing.mapper.MktMarketPuzzleEventMapper">
+    <sql id="tableName">
+        market_puzzle_event
+    </sql>
+
+    <sql id="baseColumn">
+        id,title,event_rule,event_ref,winner,od,tag,key_where,key_print,begain_at,end_at
+    </sql>
+
+</mapper>

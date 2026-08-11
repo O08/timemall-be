@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamAppMeetrEventMapper">
+    <sql id="tableName">
+        app_meetr_event
+    </sql>
+
+    <sql id="baseColumn">
+        id,title,category,thumbnail,hosted_brand_id,oasis_id,oasis_channel_id,description,location,activity_start_at,topics,attendees,duration,duration_type,max_seats,allow_guests,budget,event_type,online_link,event_status,create_at,modified_at
+    </sql>
+
+    <select id="selectPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamAppMeetrDiscoveryEventsPageRO">
+        select
+            e.id,
+            e.title,
+            e.activity_start_at,
+            e.attendees,
+            e.budget,
+            b.avator hostedBrandAvatar,
+            b.id hostedBrandId,
+            b.brand_name hostedBrandName,
+            e.location,
+            e.max_seats,
+            (case when a.id is not null then 1 else 0 end) as reserved,
+            e.thumbnail
+        from app_meetr_event e
+        inner join brand b on e.hosted_brand_id = b.id
+        left join app_meetr_attendee a on e.id = a.event_id and a.member_brand_id = #{currentBrandId}
+        <where>
+            1=1
+            and e.oasis_channel_id = #{dto.channelId}
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, e.title)>0 or locate(#{dto.q}, b.brand_name)>0)
+            </if>
+            <if test="dto.category != null and dto.category != ''">
+                AND e.category = #{dto.category}
+            </if>
+        </where>
+        <if test="dto.sort != null and dto.sort != ''">
+            <choose>
+                <when test='dto.sort == "1"'>
+                    order by e.create_at desc
+                </when>
+                <when test='dto.sort == "2"'>
+                    order by e.attendees desc
+                </when>
+                <when test='dto.sort == "3"'>
+                    order by e.budget desc
+                </when>
+                <otherwise>
+                    order by e.create_at desc
+                </otherwise>
+            </choose>
+        </if>
+        <if test="dto.sort == null or dto.sort == ''">
+            order by e.create_at desc
+        </if>
+    </select>
+
+    <resultMap id="selectOneEventResultMap" type="com.norm.timemall.app.team.domain.ro.TeamAppMeetrFetchOneEventInfoRO">
+        <result property="allowGuests" column="allow_guests"/>
+        <result property="attendees" column="attendees"/>
+        <result property="budget" column="budget"/>
+        <result property="category" column="category"/>
+        <result property="description" column="description"/>
+        <result property="duration" column="duration"/>
+        <result property="durationType" column="duration_type"/>
+        <result property="eventStatus" column="event_status"/>
+        <result property="eventType" column="event_type"/>
+        <result property="hostedBrandAvatar" column="hostedBrandAvatar"/>
+        <result property="hostedBrandId" column="hostedBrandId"/>
+        <result property="hostedBrandName" column="hostedBrandName"/>
+        <result property="location" column="location"/>
+        <result property="maxSeats" column="max_seats"/>
+        <result property="onlineLink" column="online_link"/>
+        <result property="reserved" column="reserved"/>
+        <result property="thumbnail" column="thumbnail"/>
+        <result property="title" column="title"/>
+        <result property="id" column="id"/>
+        <result property="activityStartAt" column="activity_start_at"/>
+        <result property="topics"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
+                column="topics"/>
+    </resultMap>
+
+    <select id="selectOneEventById" resultMap="selectOneEventResultMap">
+        select
+            e.id,
+            e.allow_guests,
+            e.attendees,
+            e.budget,
+            e.category,
+            e.description,
+            e.duration,
+            e.duration_type,
+            e.event_status,
+            e.event_type,
+            b.avator hostedBrandAvatar,
+            b.id hostedBrandId,
+            b.brand_name hostedBrandName,
+            e.location,
+            e.max_seats,
+            e.online_link,
+            (case when a.id is not null then 1 else 0 end) as reserved,
+            e.thumbnail,
+            e.title,
+            e.activity_start_at,
+            e.topics
+        from app_meetr_event e
+        inner join brand b on e.hosted_brand_id = b.id
+        left join app_meetr_attendee a on e.id = a.event_id and a.member_brand_id = #{currentBrandId}
+        where e.id = #{eventId}
+    </select>
+
+</mapper>

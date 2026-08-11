@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.mall.mapper.MallVirtualProductMapper">
+    <sql id="tableName">
+        virtual_product
+    </sql>
+
+    <sql id="baseColumn">
+        id,product_name,product_price,product_desc,thumbnail_url,inventory,provide_invoice,deliver_note,deliver_attachment,product_status,seller_brand_id,sales_volume,clicks,views,tags,create_at,modified_at
+    </sql>
+
+    <select id="selectPageByQ" resultType="com.norm.timemall.app.mall.domain.ro.MallRetrieveProductListPageRO">
+        select b.id brandId, b.brand_name brand,b.avator avatar,p.product_name,p.product_price,p.id productId,p.thumbnail_url,ifnull(b.blue_end_at > now(),0) enableBlue,b.mark brandMark,p.views,p.sales_volume
+        from virtual_product p
+        inner join brand b on p.seller_brand_id = b.id
+        <where>
+            1=1
+            AND p.product_status = '2'
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, p.product_desc)>0  or locate(#{dto.q}, b.brand_name)>0  or  locate(#{dto.q}, p.product_name)>0 or locate(#{dto.q}, p.tags)>0)
+            </if>
+            <if test="dto.budgetMin > 0">
+                AND p.product_price  &gt;= #{dto.budgetMin}
+            </if>
+            <if test="dto.budgetMax > 0">
+                AND p.product_price  &lt;= #{dto.budgetMax}
+            </if>
+            <if test="dto.location != null and dto.location != ''">
+                AND locate(#{dto.location}, b.location)>0
+            </if>
+            <if test="dto.online">
+                AND b.mark='3'
+            </if>
+        </where>
+        <if test="dto.sort != null and dto.sort != ''">
+            <choose>
+                <when test='dto.sort == "1"'>
+                    Order by p.create_At desc
+                </when>
+                <when test='dto.sort == "2"'>
+                    Order by p.product_price desc
+                </when>
+                <when test='dto.sort == "3"'>
+                    Order by p.product_price asc
+                </when>
+            </choose>
+        </if>
+    </select>
+    <select id="selectPageByBrandAndQ" resultType="com.norm.timemall.app.mall.domain.ro.MallRetrieveBrandProductListPageRO">
+        select b.id sellerBrandId, b.brand_name sellerName,b.avator sellerAvatar,p.product_name,p.product_price,p.id productId,p.thumbnail_url,p.clicks,p.views,p.sales_volume,p.inventory,p.create_at
+        from virtual_product p
+        inner join brand b on p.seller_brand_id = b.id
+        <where>
+            1=1
+            AND p.seller_brand_id=#{dto.brandId}
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, b.brand_name)>0  or  locate(#{dto.q}, p.product_name)>0 or locate(#{dto.q}, p.tags)>0)
+            </if>
+            <if test="dto.status != null and dto.status != ''">
+                AND p.product_status = #{dto.status}
+            </if>
+        </where>
+        order by p.create_at desc
+    </select>
+
+    <resultMap id="productProfileResultMap" type="com.norm.timemall.app.mall.domain.ro.MallFetchVirtualProductProfileRO">
+        <result property="productName" column="product_name"/>
+        <result property="productPrice" column="product_price"/>
+        <result property="provideInvoice" column="provide_invoice"/>
+        <result property="inventory" column="inventory"/>
+        <result property="productDesc" column="product_desc"/>
+        <result property="thumbnailUrl" column="thumbnail_url"/>
+        <result property="productStatus" column="product_status"/>
+        <result property="shippingMethod" column="shipping_method"/>
+
+        <result property="tags"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
+                column="tags"/>
+
+        <collection property="showcase" ofType="java.lang.String" javaType="ArrayList">
+            <result property="showcaseUrl" column="showcase_url"/>
+        </collection>
+
+    </resultMap>
+
+    <select id="selectProfileInfo" resultMap="productProfileResultMap">
+        select p.shipping_method, p.product_name,p.product_price,p.inventory,p.product_desc,p.thumbnail_url,p.tags,p.provide_invoice,p.product_status,sh.showcase_url
+        from virtual_product p
+        inner join brand b on p.seller_brand_id = b.id
+        left join virtual_product_showcase sh on p.id=sh.product_id
+        where p.id = #{productId}
+        order by sh.showcase_od asc
+    </select>
+
+    <resultMap id="vrResultMap" type="com.norm.timemall.app.mall.domain.ro.MallHomeVirtualProductRO">
+        <id property="productId" column="productId"/>
+        <result property="sellerBrandId" column="seller_brand_id"/>
+        <result property="productName" column="product_name"/>
+        <result property="productPrice" column="product_price"/>
+        <result property="thumbnailUrl" column="thumbnail_url"/>
+        <result property="clicks" column="clicks"/>
+        <result property="salesVolume" column="sales_volume"/>
+        <result property="views" column="views"/>
+        <result property="inventory" column="inventory"/>
+        <result property="createAt" column="create_at"/>
+
+    </resultMap>
+    <resultMap id="homeInfoResultMap" type="com.norm.timemall.app.mall.domain.pojo.MallHomeInfo">
+        <result property="brand" column="brand"/>
+        <result property="browseBrandId" column="brandId"/>
+        <result property="brandTitle" column="brandTitle"/>
+        <result property="pdOasisId" column="pdOasisId"/>
+        <result property="avator" column="avator"/>
+        <result property="cover" column="cover"/>
+        <result property="enableBlue" column="enableBlue"/>
+        <result property="sellerHandle" column="sellerHandle"/>
+
+        <collection property="vr" ofType="com.norm.timemall.app.mall.domain.ro.MallHomeVirtualProductRO" javaType="ArrayList" resultMap="vrResultMap"/>
+    </resultMap>
+    <select id="selectHomeInfoByBrandIdOrHandle" resultMap="homeInfoResultMap">
+        select
+          b.handle sellerHandle ,b.pd_oasis_id pdOasisId,b.brand_name brand,b.title brandTitle,b.avator,b.cover, b.id brandId,ifnull(b.blue_end_at > now(),0) enableBlue,
+          p.id productId,p.seller_brand_id,p.product_name , p.product_price,p.thumbnail_url,p.clicks,p.sales_volume,p.views,p.inventory,p.create_at
+        from brand b
+        left join virtual_product p on p.seller_brand_id = b.id  and p.product_status = '2'
+        <where>
+            1=1
+            <choose>
+                <when test='dto.accessWay == "1"'>
+                    and b.id = #{dto.param}
+                </when>
+                <when test='dto.accessWay == "2"'>
+                    and b.id = #{dto.param}
+                </when>
+                <when test='dto.accessWay == "3"'>
+                    and b.handle = #{dto.param}
+                </when>
+                <otherwise>
+                    and b.id = #{dto.param}
+                </otherwise>
+            </choose>
+            order by p.modified_at desc limit 96
+        </where>
+
+    </select>
+
+
+
+</mapper>
