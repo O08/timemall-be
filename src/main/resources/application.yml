@@ -1,6 +1,9 @@
 server:
   port: ${port}
   forward-headers-strategy: native
+  tomcat:
+    connection-timeout: 5m     # 允许客户端连接保持 5 分钟
+    max-swallow-size: -1
 spring:
   application:
     name: timemall
@@ -72,8 +75,8 @@ mybatis-plus:
 restTemplate:
   threadSize: 20
   waitingTime: 500
-  connectTimeOut: 10000
-  readTimeOut: 10000
+  connectTimeOut: 60000
+  readTimeOut: 120000
 
 pod-constants:
   upload-file-dir: ${file_dir}
