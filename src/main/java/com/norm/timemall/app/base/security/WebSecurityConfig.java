@@ -1,9 +1,11 @@
 package com.norm.timemall.app.base.security;
 
+import com.norm.timemall.app.base.mapper.BaseUserPersonalTokenMapper;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -18,6 +20,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
+import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
@@ -66,15 +70,26 @@ public class WebSecurityConfig {
     @Autowired
     private CustomizeAccessDeniedHandler accessDeniedHandler;
 
+    @Autowired
+    private BaseUserPersonalTokenMapper userPersonalTokenMapper;
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+
+
+
 
 
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
+        BearerTokenResolver defaultResolver = new DefaultBearerTokenResolver();
+
+
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .addFilterBefore(new AiApiKeyFilter(aiSecurityProperties), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new PatAuthenticationFilter(patAuthenticationProvider()), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorizeHttpRequests -> {
 
                     authorizeHttpRequests.requestMatchers("/api/v1/web_mall/**",
@@ -100,6 +115,18 @@ public class WebSecurityConfig {
 
                     })
                 .oauth2ResourceServer(oauth2 -> oauth2
+                        // 如果发现是 PAT Token，直接沉默
+                        .bearerTokenResolver(request -> {
+                            String header = request.getHeader("Authorization");
+
+                            // 如果是 PAT 访问，直接返回 null，沉默，防止走Oauth2
+                            if (header != null && header.startsWith("Bearer BV_PAT_")) {
+                                return null;
+                            }
+
+                            //  其余所有情况（包括标准的 JWT），直接交给 Spring Security 原生的解析器去处理，不破坏原有的 OAuth2 功能！
+                            return defaultResolver.resolve(request);
+                        })
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtToCustomizeUserConverter))
                         .accessDeniedHandler(accessDeniedHandler) // 必须在这里也加一遍
                         .authenticationEntryPoint(authenticationEntryPoint)
@@ -140,6 +167,11 @@ public class WebSecurityConfig {
     public PhoneOrEmailAuthenticationProvider phoneOrEmailAuthenticationProvider() {
         return new PhoneOrEmailAuthenticationProvider();
     }
+    @Bean
+    public PatAuthenticationProvider patAuthenticationProvider() {
+        return new PatAuthenticationProvider(userPersonalTokenMapper, redisTemplate);
+    }
+
 
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
