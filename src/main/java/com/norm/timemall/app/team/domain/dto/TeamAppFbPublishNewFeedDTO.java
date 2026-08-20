@@ -10,7 +10,7 @@ public class TeamAppFbPublishNewFeedDTO {
     private MultipartFile coverFile;
 
 
-    @Length(message = "preface length must in range {min}-{max}",min = 0,max = 38)
+    @Length(message = "preface length must in range {min}-{max}",min = 0,max = 132)
     private String preface;
 
     @NotBlank(message = "richMediaContent required")
