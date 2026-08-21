@@ -18,7 +18,7 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface BaseElectricityHistoryMapper extends BaseMapper<ElectricityHistory> {
 
-    @Select("select id, item, direction, DATE_FORMAT(create_at, '%Y-%m-%d %H:%i:%s') as createAt " +
+    @Select("select id, item, direction, amount, DATE_FORMAT(create_at, '%Y-%m-%d %H:%i:%s') as createAt " +
             "from electricity_history " +
             "where user_brand_id = #{userBrandId} " +
             "order by create_at desc")

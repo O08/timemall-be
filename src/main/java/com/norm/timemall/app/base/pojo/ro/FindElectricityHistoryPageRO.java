@@ -8,4 +8,6 @@ public class FindElectricityHistoryPageRO {
     private String direction;
     private String id;
     private String item;
+    private String amount;
+
 }
