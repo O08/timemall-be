@@ -35,6 +35,9 @@ public class TeamAppChannelDelHelper {
     @Autowired
     private TeamAppRedeemService teamAppRedeemService;
 
+    @Autowired
+    private TeamAppEmbedAppService teamAppEmbedAppService;
+
     public void doRemoveOasisChannelData(OasisChannel oasisChannel){
         switch (oasisChannel.getAppId()){
             case "1":
@@ -57,6 +60,9 @@ public class TeamAppChannelDelHelper {
                 break;
             case "6":
                 teamAppDeskService.removeChannelData(oasisChannel.getId());
+                break;
+            case "11":
+                teamAppEmbedAppService.removeChannelData(oasisChannel.getId());
                 break;
             default:
                 break;

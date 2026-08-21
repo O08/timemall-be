@@ -221,6 +221,8 @@ public class StudioFlierServiceImpl implements StudioFlierService {
                 record.setModifiedAt(new Date());
                 studioFlierCopyMapper.updateById(record);
             });
+            baseElectricityService.topup(brandId, 1, "阅读传单奖励",ElectricityBusinessTypeEnum.READ_FLIER_BONUS.getMark(),
+                    flierId, "目标传单："+flierId);
         } else {
             refreshFlierCtaClicks(flierId, ()->{
                 record.setHasClickCta(SwitchCheckEnum.ENABLE.getMark());
@@ -357,9 +359,8 @@ public class StudioFlierServiceImpl implements StudioFlierService {
             throw new QuickMessageException("源能不足，无法分发传单");
         }
 
-        // 扣除源能 1 点
-        baseElectricityService.deduct(brandId, 1, "分发传单扣除源能",
-                ElectricityBusinessTypeEnum.DEDUCT.getMark(),
+        // 扣除源能 2 点
+        baseElectricityService.deduct(brandId, 2, "分发传单",ElectricityBusinessTypeEnum.DEDUCT_ELECTRICITY_FOR_HANDOUT_FLIER.getMark(),
                 dto.getFlierId(), "目标传单："+dto.getFlierId());
 
         // 创建 flier_copy 记录

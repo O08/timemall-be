@@ -126,7 +126,7 @@ public class StudioCommercialPaperServiceImpl implements StudioCommercialPaperSe
             throw new ErrorCodeException(CodeEnum.FALSE_SHOPPING);
         }
         // deduct electricity
-        baseElectricityService.deduct(brandId,commercialPaper.getBidElectricity(),"接取商单扣除源能", ElectricityBusinessTypeEnum.DEDUCT.getMark(),  commercialPaper.getId(), "目标商单："+commercialPaper.getId());
+        baseElectricityService.deduct(brandId,commercialPaper.getBidElectricity(),"接取商单", ElectricityBusinessTypeEnum.DEDUCT_ELECTRICITY_FOR_BID_MPS.getMark(),  commercialPaper.getId(), "目标商单："+commercialPaper.getId());
 
         studioCommercialPaperMapper.updateTagAndSupplierById(dto.getPaperId(),CommercialPaperTagEnum.DELIVERING.getMark(),brandId);
     }

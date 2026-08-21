@@ -153,7 +153,7 @@ public class PodCoopProgramServiceImpl implements PodCoopProgramService {
         String id=IdUtil.simpleUUID();
 
         // deduct electricity
-        baseElectricityService.deduct(currentBrandId,COOP_PROGRAM_CREATE_COST,"发布合作信息扣除源能", ElectricityBusinessTypeEnum.DEDUCT.getMark(), id, "项目："+id);
+        baseElectricityService.deduct(currentBrandId,COOP_PROGRAM_CREATE_COST,"发布合作信息", ElectricityBusinessTypeEnum.DEDUCT_ELECTRICITY_FOR_POST_PROGRAM.getMark(), id, "项目："+id);
 
 
         CoopPrograms program = new CoopPrograms();

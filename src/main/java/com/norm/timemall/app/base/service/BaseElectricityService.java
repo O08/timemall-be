@@ -1,5 +1,8 @@
 package com.norm.timemall.app.base.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.norm.timemall.app.base.entity.PageDTO;
+import com.norm.timemall.app.base.pojo.ro.FindElectricityHistoryPageRO;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -8,5 +11,7 @@ public interface BaseElectricityService {
 
     void topup(String buyerBrandId, int points,String item,String businessType,String outNo,String clue);
     void deduct(String buyerBrandId, int points,String item,String businessType,String outNo,String clue);
+
+    IPage<FindElectricityHistoryPageRO> findElectricityHistory(PageDTO dto);
 
 }

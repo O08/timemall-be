@@ -3,11 +3,16 @@ package com.norm.timemall.app.base.service.impl;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.norm.timemall.app.base.entity.PageDTO;
 import com.norm.timemall.app.base.enums.ElectricityBusinessTypeEnum;
 import com.norm.timemall.app.base.enums.TransDirectionEnum;
+import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mapper.BaseElectricityHistoryMapper;
 import com.norm.timemall.app.base.mo.ElectricityHistory;
+import com.norm.timemall.app.base.pojo.ro.FindElectricityHistoryPageRO;
 import com.norm.timemall.app.base.service.AccountService;
 import com.norm.timemall.app.base.service.BaseElectricityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,5 +78,14 @@ public class BaseElectricityServiceImpl implements BaseElectricityService {
                 .setModifiedAt(new Date());
         baseElectricityHistoryMapper.insert(history);
 
+    }
+
+    @Override
+    public IPage<FindElectricityHistoryPageRO> findElectricityHistory(PageDTO dto) {
+        String userBrandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        IPage<FindElectricityHistoryPageRO> page = new Page<>();
+        page.setSize(dto.getSize());
+        page.setCurrent(dto.getCurrent());
+        return baseElectricityHistoryMapper.selectHistoryPage(page, userBrandId);
     }
 }

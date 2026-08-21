@@ -9,4 +9,6 @@ public interface TeamAppEmbedAppService {
     TeamAppFetchEmbedWebChannelInfoRO fetchEmbedWebChannelInfo(String channelId);
 
     void modifyEmbedWebSetting(TeamAppEmbedWebSettingDTO dto);
+
+    void removeChannelData(String channelId);
 }

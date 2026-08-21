@@ -55,4 +55,11 @@ public class TeamAppEmbedAppServiceImpl implements TeamAppEmbedAppService {
             teamAppEmbedWebMapper.update(update, wrapper);
         }
     }
+
+    @Override
+    public void removeChannelData(String channelId) {
+        LambdaQueryWrapper<AppEmbedWeb> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(AppEmbedWeb::getOasisChannelId, channelId);
+        teamAppEmbedWebMapper.delete(wrapper);
+    }
 }
