@@ -4,6 +4,7 @@ public enum ElectricityBusinessTypeEnum {
     TOP_UP("top_up","top up"),
 
     VIP_GIFT("vip_gift","vip gift"),
+    REDEEM_GIFT("redeem_gift","redeem gift"),
     READ_FLIER_BONUS("flier_bonus","read flier bonus"),
 
     DEDUCT_ELECTRICITY_FOR_BID_MPS("mps_bid_deduct","deduct"),
