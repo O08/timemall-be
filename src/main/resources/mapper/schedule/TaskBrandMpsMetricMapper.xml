@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.scheduled.mapper.TaskBrandMpsMetricMapper">
+
+
+    <sql id="baseColumn">
+        id,user_brand_id,funds,suppliers,total_spent,tasks_posted,tasks_finished,tasks_biding,create_at,modified_at
+    </sql>
+
+    <update id="doExecuteProcedure"  statementType="CALLABLE">
+        {
+           CALL cal_brand_mps_metrics_proc_0016()
+        }
+    </update>
+
+</mapper>

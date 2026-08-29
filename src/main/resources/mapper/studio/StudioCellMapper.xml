@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.studio.mapper.StudioCellMapper">
+    <sql id="tableName">
+        cell
+    </sql>
+
+    <sql id="baseColumn">
+        id,title,cover,intro_cover,content,brand_id,mark,create_at,modified_at
+    </sql>
+
+    <select id="selectCellPage" resultType="com.norm.timemall.app.base.pojo.ro.CellInfoRO">
+        select b.brand_name brand,b.avator,c.title,p.price,c.id,c.mark, p.sbu
+        from cell c
+        inner join brand b on c.brand_id = b.id
+        inner join pricing p on c.id = p.cell_id
+        where c.brand_id = #{brand_id}
+        and p.sbu = 'day'
+    </select>
+    <update id="updateTitleInvoiceTagById">
+        update cell c set c.title = #{dto.title},c.provide_invoice=#{dto.canProvideInvoice},c.tags=#{dto.tags},c.revshare=#{dto.revshare} where c.id = #{id}
+        and  exists(
+            select 1
+            from brand d
+            where d.customer_id = #{user_id} and c.brand_id = d.id
+        )
+    </update>
+
+    <resultMap id="cellIntroResultMap" type="com.norm.timemall.app.base.pojo.ro.CellIntroRO">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="provideInvoice" column="provide_invoice"/>
+        <result property="cover" column="cover"/>
+        <result property="introCover" column="intro_cover"/>
+        <result property="brandId" column="brandId"/>
+        <result property="brand" column="brand"/>
+        <result property="avator" column="avator"/>
+        <result property="revshare" column="revshare"/>
+        <result property="productDesc" column="product_desc"/>
+
+
+        <result property="tags"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
+                column="tags"/>
+
+        <collection property="fee" ofType="com.norm.timemall.app.mall.domain.pojo.Fee" javaType="ArrayList">
+            <result property="price" column="price"/>
+            <result property="sbu" column="sbu"/>
+        </collection>
+
+    </resultMap>
+
+    <select id="selectCellProfileInfo" resultMap="cellIntroResultMap">
+        select c.product_desc, c.revshare,c.title, c.id, c.provide_invoice, c.cover, c.intro_cover,c.tags,b.id brandId,b.brand_name brand,b.avator,c.content,p.price,p.sbu
+        from cell c
+        inner join brand b on c.brand_id = b.id
+        left join pricing p on c.id = p.cell_id
+        where c.id = #{id}
+    </select>
+
+
+</mapper>
