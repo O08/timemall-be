@@ -60,6 +60,7 @@
         b.create_at,
         b.mentor_honor,
         s.enable_food_for_work,
+        b.resume_url,
         s.enable_mentorship,s.industry_code,s.industry,s.support_free_cooperation,s.cooperation_scope, s.brand_type_code, s.available_for_work,s.hiring,s.type_of_business, b.experience,b.title,b.location,b.skills,b.links,ifnull(b.blue_end_at > now(),0) enableBlue
         from brand b
         left join brand_sub s

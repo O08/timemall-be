@@ -52,6 +52,7 @@ public enum CodeEnum implements Code{
     FILE_STORE_FAIL(3002,"存储文件失败"),
     FILE_IMAGE_AVIF_NOT_SUPPORT(3003,"Avif format not support" ),
     FILE_FORMAT_NOT_SUPPORT(3004,"文件格式不支持" ),
+    FILE_SIZE_EXCEED_LIMIT(3005,"文件大小超过限制，最大支持10M" ),
 
     // business 4....
     BILL_NOT_EXIST(40001,"账单不存在" ),

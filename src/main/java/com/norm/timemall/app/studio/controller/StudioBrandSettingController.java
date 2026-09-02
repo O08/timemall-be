@@ -1,9 +1,12 @@
 package com.norm.timemall.app.studio.controller;
 
+import cn.hutool.core.io.FileTypeUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import com.norm.timemall.app.base.entity.SuccessVO;
 import com.norm.timemall.app.base.enums.CodeEnum;
 import com.norm.timemall.app.base.enums.FileStoreDir;
 import com.norm.timemall.app.base.exception.ErrorCodeException;
+import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.mo.Brand;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.base.service.FileStoreService;
@@ -15,6 +18,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 /**
  * 商家设置
@@ -190,5 +195,47 @@ public class StudioBrandSettingController {
         fileStoreService.deleteFile(brand.getWechat());
         return new SuccessVO(CodeEnum.SUCCESS);
 
+    }
+
+    @PutMapping(value = "/api/v1/web_estudio/brand/setting/resume")
+    public SuccessVO settingBrandResume(@RequestParam("material") MultipartFile resumeMaterial) throws IOException {
+        // 空文件校验
+        if (resumeMaterial==null || resumeMaterial.isEmpty()){
+            throw new ErrorCodeException(CodeEnum.FILE_IS_EMPTY);
+        }
+        // 大小限制校验: 最大 10M
+        if (resumeMaterial.getSize() > 10 * 1024 * 1024){
+            throw new ErrorCodeException(CodeEnum.FILE_SIZE_EXCEED_LIMIT);
+        }
+        // 格式校验: 通过文件头识别真实类型，仅支持 pdf
+        String fileType = FileTypeUtil.getType(resumeMaterial.getInputStream());
+        if (!"pdf".equals(fileType)){
+            throw new ErrorCodeException(CodeEnum.FILE_FORMAT_NOT_SUPPORT);
+        }
+        // 当前登录用户简历信息
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        Brand brand = brandService.findbyId(brandId);
+
+        // 存储简历文件
+        String uri = fileStoreService.storeWithLimitedAccess(resumeMaterial, FileStoreDir.BRAND_RESUME);
+        // 更新
+        brandService.modifyBrandResume(brandId,uri);
+        // 删除已上传的过时简历文件
+        fileStoreService.deleteFile(brand.getResumeUrl());
+        return new SuccessVO(CodeEnum.SUCCESS);
+    }
+    @DeleteMapping("/api/v1/web_estudio/brand/setting/remove_resume")
+    public SuccessVO removeBrandResume(){
+        // 当前登录商家信息
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        Brand brand = brandService.findbyId(brandId);
+        if(CharSequenceUtil.isBlank(brand.getResumeUrl())){
+            throw new ErrorCodeException(CodeEnum.NOT_FOUND_DATA);
+        }
+        // 删除已上传的简历文件
+        fileStoreService.deleteFile(brand.getResumeUrl());
+        // 清空简历信息
+        brandService.clearBrandResume(brandId);
+        return new SuccessVO(CodeEnum.SUCCESS);
     }
 }

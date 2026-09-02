@@ -41,5 +41,7 @@ public class BrandProfileRO {
     private String enableMentorship;
     private String enableFoodForWork;
     private String createAt;
+    private String resumeUrl;
+
 
 }

@@ -93,6 +93,16 @@ public class StudioBrandServiceImpl implements StudioBrandService {
     }
 
     @Override
+    public void modifyBrandResume(String brandId, String uri) {
+        studioBrandMapper.updateBrandResume(brandId,uri);
+    }
+
+    @Override
+    public void clearBrandResume(String brandId) {
+        studioBrandMapper.clearBrandResume(brandId);
+    }
+
+    @Override
     public BrandInfo findBrandInfoByUserId(String userId) {
         LambdaQueryWrapper<Brand> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(Brand::getCustomerId,userId);

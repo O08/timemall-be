@@ -48,5 +48,9 @@ public interface StudioBrandMapper extends BaseMapper<Brand> {
     void updateBlueSignByUserId(@Param("user_id") String userId);
     @Update(value="update brand set links = #{links} where id = #{brand_id}")
     void updateBrandLinks(@Param("brand_id") String brandId, @Param("links") String json);
+    @Update(value="update brand set resume_url = #{uri} where id = #{id}")
+    void updateBrandResume(@Param("id") String brandId, @Param("uri") String uri);
+    @Update(value="update brand set resume_url = null where id = #{id}")
+    void clearBrandResume(@Param("id") String brandId);
 
 }

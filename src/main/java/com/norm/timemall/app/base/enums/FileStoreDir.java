@@ -37,7 +37,8 @@ public enum FileStoreDir {
     VIBER_FILE("app/viber/oss", "app viber file dir"), SUPPLIER_NDA_MATERIAL("brand/supplier/nda", "supplier nda file"),
     MEETR_EVENT_THUMBNAIL("app/meetr/event/thumbnail", "meetr event thumbnail"),
     COOP_PROGRAM_THUMBNAIL("coop/program/thumbnail", "cooperation program thumbnail"),
-    FLIER_MATERIAL("flier/material", "flier material file");
+    FLIER_MATERIAL("flier/material", "flier material file"),
+    BRAND_RESUME("brand/resume", "brand resume file");
     private final String dir;
 
     private final String desc;

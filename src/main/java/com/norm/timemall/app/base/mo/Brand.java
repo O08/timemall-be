@@ -144,4 +144,9 @@ public class Brand extends Model<Brand> implements Serializable {
      */
     private Date modifiedAt;
 
+    /**
+     * 简历地址
+     */
+    private String resumeUrl;
+
 }

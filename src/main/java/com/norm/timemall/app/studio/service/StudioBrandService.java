@@ -23,6 +23,10 @@ public interface StudioBrandService {
 
     void modifyBrandAvatar(String brandId, String uri);
 
+    void modifyBrandResume(String brandId, String uri);
+
+    void clearBrandResume(String brandId);
+
     BrandInfo findBrandInfoByUserId(String userId);
 
     void modifyBrandWechatQr(String brandId, String uri);
