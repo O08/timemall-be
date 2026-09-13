@@ -7,6 +7,8 @@ public enum ElectricityBusinessTypeEnum {
     REDEEM_GIFT("redeem_gift","redeem gift"),
     READ_FLIER_BONUS("flier_bonus","read flier bonus"),
 
+    CHECK_IN_BONUS("check_in_bonus","daily check in bonus"),
+
     DEDUCT_ELECTRICITY_FOR_BID_MPS("mps_bid_deduct","deduct"),
     DEDUCT_ELECTRICITY_FOR_POST_PROGRAM("post_pgm_deduct","post cooperation program deduct"),
 
