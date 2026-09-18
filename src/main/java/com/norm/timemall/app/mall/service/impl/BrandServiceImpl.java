@@ -21,7 +21,7 @@ public class BrandServiceImpl implements BrandService {
     public BrandProfileVO findBrandProfile(String brandId) {
         BrandProfileRO profile = brandMapper.selectProfileByBrandId(brandId);
         Authentication authentication = SecurityUserHelper.getCurrentUserAuthentication();
-        if(authentication instanceof AnonymousAuthenticationToken){
+        if(authentication instanceof AnonymousAuthenticationToken && profile!=null){
             profile.setResumeUrl("");
         }
         BrandProfileVO result = new BrandProfileVO();
@@ -34,5 +34,19 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public Brand findBrand(String brandId) {
         return brandMapper.selectById(brandId);
+    }
+
+    @Override
+    public BrandProfileVO findBrandBio(String handle) {
+        BrandProfileRO profile = brandMapper.selectProfileByBrandHandle(handle);
+        Authentication authentication = SecurityUserHelper.getCurrentUserAuthentication();
+        if(authentication instanceof AnonymousAuthenticationToken && profile!=null){
+            profile.setResumeUrl("");
+        }
+        BrandProfileVO result = new BrandProfileVO();
+        result.setProfile(profile)
+                .setResponseCode(CodeEnum.SUCCESS)
+        ;
+        return result;
     }
 }

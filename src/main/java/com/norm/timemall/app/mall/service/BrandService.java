@@ -9,4 +9,6 @@ public interface BrandService {
     BrandProfileVO findBrandProfile(String brandId);
 
     Brand findBrand(String brandId);
+
+    BrandProfileVO findBrandBio(String handle);
 }

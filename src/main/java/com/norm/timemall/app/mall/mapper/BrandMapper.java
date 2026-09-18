@@ -18,4 +18,5 @@ public interface BrandMapper extends BaseMapper<Brand> {
 
     BrandProfileRO selectProfileByBrandId(@Param("brandId") String brandId);
 
+    BrandProfileRO selectProfileByBrandHandle(@Param("handle") String handle);
 }

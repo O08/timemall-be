@@ -31,12 +31,20 @@ public class BrandController {
     @Autowired
     private MallVirtualProductService mallVirtualProductService;
     /*
-     * 供应商资料
+     * 供应商资料，通过id查询
      */
     @GetMapping(value = "/api/v1/web_mall/brand/{brand_id}/profile")
     public BrandProfileVO retrieveCellIntro(@PathVariable("brand_id") String brandId)
     {
         return brandService.findBrandProfile(brandId);
+    }
+    /*
+     * 供应商资料,通过handle查询
+     */
+    @GetMapping(value = "/api/v1/web_mall/brand/{handle}/bio")
+    public BrandProfileVO retrieveBrandBio(@PathVariable("handle") String handle)
+    {
+        return brandService.findBrandBio(handle);
     }
 
     @PostMapping(value = "/api/v1/web_mall/brand/guide")
