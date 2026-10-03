@@ -25,4 +25,5 @@ public class PodProgramInfoRO {
     private String title;
     private List<String> topics;
     private String workMode;
+    private String enableBlue;
 }
