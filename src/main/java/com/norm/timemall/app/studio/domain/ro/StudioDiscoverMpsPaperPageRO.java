@@ -11,5 +11,6 @@ public class StudioDiscoverMpsPaperPageRO {
     private String avatar;
     private String brandName;
     private String deliveryCycle;
+    private String enableBlue;
 
 }

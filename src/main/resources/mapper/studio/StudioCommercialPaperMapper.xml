@@ -34,7 +34,10 @@
         </where>
     </select>
     <select id="selectPaperPageForPublic" resultType="com.norm.timemall.app.studio.domain.ro.StudioDiscoverMpsPaperPageRO">
-        select p.id,p.title,p.piece,p.bonus,b.avator avatar,b.brand_name,p.delivery_cycle
+        select
+           p.id,p.title,p.piece,p.bonus,b.avator avatar,b.brand_name,p.delivery_cycle,
+           ifnull(b.blue_end_at > now(),0) enableBlue
+
         from commercial_paper p
         left join brand b
           on p.purchaser = b.id

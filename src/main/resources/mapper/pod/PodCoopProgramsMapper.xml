@@ -33,6 +33,7 @@
             b.avator authorAvatar,
             b.location authorIpLocation,
             b.customer_id authorUserId,
+            ifnull(b.blue_end_at > now(),0) enableBlue,
             CASE
               WHEN a.id IS NOT NULL THEN '1'
               ELSE '0'

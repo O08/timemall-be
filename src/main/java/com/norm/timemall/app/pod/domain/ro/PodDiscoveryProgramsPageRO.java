@@ -25,4 +25,5 @@ public class PodDiscoveryProgramsPageRO {
     private String title;
     private List<String> topics;
     private String workMode;
+    private String enableBlue;
 }
