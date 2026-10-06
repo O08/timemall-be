@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.affiliate.mapper.AffiliateDashboardMapper">
+    <sql id="tableName">
+        affiliate_dashboard
+    </sql>
+
+    <select id="selectDashboardByBrandId" resultType="com.norm.timemall.app.affiliate.domain.ro.DashboardRO">
+        select settled_payment,unsettled_payment,sales,cell_sale_volume,plan_sale_volume,refund_orders,views,timespan
+        from affiliate_dashboard
+        where
+          brand_id=#{brandId}
+          and timespan=#{timespan}
+    </select>
+
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamOrderDetailsMapper">
+
+    <insert id="insertNewOrder">
+        insert order_details(id,consumer_id,consumer_name,cell_id,cell_title,brand_id,brand_name,total,quantity,sbu,order_type,create_at,modified_at)
+        select
+        #{pt.id} id,
+        #{pt.userId} consumer_id,
+        #{pt.username} consumer_name,
+        c.id cell_id,
+        c.title cell_title,
+        b.id brand_id,
+        b.brand_name,
+        p.price * #{pt.quantity} total,
+        #{pt.quantity} quantity,
+        p.sbu,
+        #{pt.orderType} order_type,
+        now() create_at,
+        now() modified_at
+        from cell c
+        inner join brand b on b.id = c.brand_id
+        inner join pricing p on p.cell_id = c.id
+        where p.sbu = #{pt.sbu}
+        and c.id = #{pt.cellId}
+    </insert>
+
+</mapper>

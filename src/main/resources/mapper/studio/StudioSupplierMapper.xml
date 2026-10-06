@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.studio.mapper.StudioSupplierMapper">
+    <sql id="tableName">
+        supplier
+    </sql>
+
+    <sql id="baseColumn">
+        id,supplier_brand_id,purchaser_brand_id,biz,nda_file_uri,supplier_level,supplier_status,ux,compliance,can_provide_invoice,create_at,modified_at
+    </sql>
+
+    <select id="selectSupplierPageForPurchaser" resultType="com.norm.timemall.app.studio.domain.ro.StudioFetchSupplierPageRO">
+        select 
+            s.id,
+            s.biz,
+            s.can_provide_invoice,
+            s.compliance,
+            s.create_at,
+            s.nda_file_uri,
+            b.avator as supplierAvatar,
+            b.id as supplierBrandId,
+            b.mark as supplierBrandMark,
+            b.brand_name as supplierName,
+            b.customer_id as supplierUserId,
+            s.supplier_level,
+            s.supplier_status,
+            s.ux,
+            b.modified_at as supplierLoginAt
+        from supplier s
+        inner join brand b on b.id = s.supplier_brand_id
+        <where>
+            s.purchaser_brand_id = #{purchaserBrandId}
+            <if test="dto.status != null and dto.status != ''">
+                AND s.supplier_status = #{dto.status}
+            </if>
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, s.biz)>0 or locate(#{dto.q}, b.brand_name)>0 or b.id=#{dto.q} or locate(#{dto.q}, b.handle)>0)
+            </if>
+        </where>
+        order by s.create_at desc
+    </select>
+
+    <select id="selectCandidateSuppliers" resultType="com.norm.timemall.app.studio.domain.ro.StudioFetchCandidateSupplierRO">
+        select 
+            b.avator as avatar,
+            b.id as brandId,
+            b.brand_name as brandName,
+            case when s.id is not null then '1' else '0' end as added
+        from brand b
+        left join supplier s
+           on s.supplier_brand_id = b.id
+              and s.purchaser_brand_id = #{purchaserBrandId}
+        <where>
+            b.mark in ('1','3','4')
+            <if test="q != null and q != ''">
+               and  (locate(#{q}, b.brand_name)>0 or b.id=#{q} or locate(#{q}, b.handle)>0)
+            </if>
+        </where>
+        limit 20
+    </select>
+
+</mapper>

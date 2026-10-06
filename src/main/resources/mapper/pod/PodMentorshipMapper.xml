@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.pod.mapper.PodMentorshipMapper">
+    <sql id="tableName">
+        mentorship
+    </sql>
+
+    <sql id="baseColumn">
+        id,mentor_brand_id,mentee_brand_id,guidance_period_earning,guidance_period_influencers,guidance_period_messages,past_year_messages,status,create_at,modified_at
+    </sql>
+
+    <select id="selectMentorPage" resultType="com.norm.timemall.app.pod.domain.ro.PodFetchMentorPageRO">
+        SELECT 
+            m.id,
+            b.brand_name as mentorName,
+            m.mentor_user_id as mentorUserId,
+            b.avator as mentorAvatar,
+            m.past_year_messages as pastYearMessages,
+            m.guidance_period_earning as guidancePeriodEarning,
+            m.guidance_period_influencers as guidancePeriodInfluencers,
+            m.guidance_period_messages as guidancePeriodMessages,
+            m.status,
+            m.create_at as createAt
+        FROM mentorship m 
+        INNER JOIN brand b ON m.mentor_brand_id = b.id 
+        WHERE m.mentee_brand_id = #{menteeBrandId}
+        <if test="dto.q != null and dto.q != ''">
+            AND locate(#{dto.q}, b.brand_name)>0
+        </if>
+        <if test="dto.status != null and dto.status != ''">
+            AND m.status = #{dto.status}
+        </if>
+        ORDER BY m.create_at DESC
+    </select>
+</mapper>

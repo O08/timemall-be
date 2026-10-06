@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.ms.mapper.MsPrivateMsgMapper">
+
+    <select id="selectEventPage" resultType="com.norm.timemall.app.ms.domain.pojo.MsDefaultEventCard">
+        select m.msg_id as id,b.brand_name author,b.avator authorIcon,m.from_id author_id,m.create_at,m.msg_type,m.msg
+        from private_msg m
+        left join brand b
+        on b.customer_id = m.from_id
+        where
+        m.owner_user_id=#{current_user_id}
+        and ((m.from_id = #{friend}
+        and m.to_id= #{current_user_id})
+        or (m.from_id = #{current_user_id}
+        and m.to_id= #{friend}))
+        order by m.create_at desc
+    </select>
+
+</mapper>

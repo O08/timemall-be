@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamOasisIndMapper">
+    <sql id="tableName">
+        oasis_ind
+    </sql>
+
+    <update id="calOasisIndexById" parameterType="string" statementType="CALLABLE">
+        {call calOasisIndexById(#{oasis_id, mode=IN})}
+    </update>
+
+</mapper>

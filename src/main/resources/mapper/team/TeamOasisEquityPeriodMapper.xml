@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamOasisEquityPeriodMapper">
+    <sql id="tableName">
+        oasis_equity_period
+    </sql>
+
+    <sql id="baseColumn">
+        id,oasis_id,period,shares,price,earning_yield,status,create_at,modified_at
+    </sql>
+
+    <select id="selectPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamFetchEquityPeriodPageRO">
+        SELECT
+            ep.id,
+            ep.oasis_id AS oasisId,
+            ep.period,
+            ep.shares,
+            ep.price,
+            ep.earning_yield AS earningYield,
+            ep.status,
+            ep.create_at AS createAt,
+            eps.credit,
+            eps.sold,
+            eps.write_off AS writeOff,
+            eps.redemption
+        FROM oasis_equity_period ep
+        INNER JOIN oasis_equity_period_summary eps ON ep.id = eps.equity_period_id
+        WHERE ep.oasis_id = #{dto.oasisId}
+        ORDER BY ep.period DESC
+    </select>
+
+
+
+
+</mapper>

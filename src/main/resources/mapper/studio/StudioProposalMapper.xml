@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.studio.mapper.StudioProposalMapper">
+    <sql id="tableName">
+        proposal
+    </sql>
+
+    <sql id="baseColumn">
+        id,seller_brand_id,buyer_brand_id,project_no,project_name,project_starts,project_ends,services,service_progress,extra_content,total,create_at,modified_at,project_status
+    </sql>
+
+    <select id="selectPageByQ" resultType="com.norm.timemall.app.studio.domain.ro.StudioFetchProposalPageRO">
+        select p.id,p.create_at,p.project_no,p.project_name,p.project_starts,p.project_ends,p.total,p.project_status, buyer.customer_id buyerUserId,buyer.brand_name buyerName,buyer.avator buyerAvatar
+        from proposal p
+        left join brand buyer
+          on buyer.id=p.buyer_brand_id
+        <where>
+            1=1
+            and p.seller_brand_id=#{seller_brand_id}
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, buyer.brand_name)>0 or locate(#{dto.q}, p.project_no)>0  or  locate(#{dto.q}, p.project_name)>0 or locate(#{dto.q}, p.services)>0)
+            </if>
+            <if test="dto.tag != null and dto.tag != ''">
+                AND p.project_status=#{dto.tag}
+            </if>
+        </where>
+        order by p.create_at desc
+
+    </select>
+    <resultMap id="selectProposalResultMap" type="com.norm.timemall.app.studio.domain.ro.StudioFetchOneProposalRO">
+        <id property="id" column="id"/>
+        <result property="services"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
+                column="services"/>
+        <result property="projectName" column="project_name"/>
+        <result property="projectStarts" column="project_starts"/>
+        <result property="projectEnds" column="project_ends"/>
+        <result property="projectStatus" column="project_status"/>
+        <result property="extraContent" column="extra_content"/>
+        <result property="total" column="total"/>
+        <result property="serviceProgress" column="service_progress"/>
+        <result property="sellerBrandId" column="seller_brand_id"/>
+        <result property="buyerBrandId" column="buyer_brand_id"/>
+
+    </resultMap>
+    <select id="selectProposalByNo" resultMap="selectProposalResultMap">
+        select p.project_status,p.id,p.project_name,p.seller_brand_id,p.buyer_brand_id,p.project_starts,p.project_ends,p.services,p.service_progress,p.extra_content,p.total
+        from proposal p
+        where p.project_no=#{project_no}
+    </select>
+
+</mapper>

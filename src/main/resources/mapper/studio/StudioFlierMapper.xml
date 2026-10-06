@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.studio.mapper.StudioFlierMapper">
+    <sql id="tableName">
+        flier
+    </sql>
+
+    <sql id="baseColumn">
+        id,author_brand_id,title,description,cta_link,content_link,likes,copies,cta_clicks,status,created_at,modified_at
+    </sql>
+
+    <select id="selectBrandCreatedFlierPage" resultType="com.norm.timemall.app.studio.domain.ro.StudioFetchBrandCreatedFlierPageRO">
+        SELECT
+            f.id as flierId,
+            f.title,
+            f.description,
+            f.cta_link as ctaLink,
+            f.content_link as contentLink,
+            f.likes,
+            f.copies,
+            f.cta_clicks as ctaClicks,
+            f.status,
+            f.created_at as createdAt,
+            f.modified_at as modifiedAt
+        FROM flier f
+        WHERE f.author_brand_id = #{authorBrandId}
+        <if test="dto.q != null and dto.q != ''">
+            AND (locate(#{dto.q}, f.title)>0)
+        </if>
+        <if test="dto.status != null and dto.status != ''">
+            AND f.status = #{dto.status}
+        </if>
+        ORDER BY f.created_at DESC
+    </select>
+
+    <select id="selectReceiverFlierPage" resultType="com.norm.timemall.app.studio.domain.ro.StudioFetchReceiverFlierPageRO">
+        SELECT
+            fc.id as flierCopyId,
+            f.id as flierId,
+            f.title,
+            f.description,
+            f.cta_link as ctaLink,
+            f.content_link as contentLink,
+            f.likes,
+            f.copies,
+            f.cta_clicks as ctaClicks,
+            fc.has_like as hasLike,
+            fc.has_click_cta as hasClickCta,
+            b.id as authorBrandId,
+            b.avator as authorAvatar,
+            b.brand_name as authorName,
+            b.customer_id as authorUserId
+        FROM flier_copy fc
+        INNER JOIN flier f ON fc.flier_id = f.id
+        INNER JOIN brand b ON f.author_brand_id = b.id
+        WHERE fc.receiver_brand_id = #{receiverBrandId}
+        <if test="dto.q != null and dto.q != ''">
+            AND (locate(#{dto.q}, f.title)>0)
+        </if>
+        ORDER BY fc.created_at DESC
+    </select>
+
+    <select id="selectVisitorFlierInfo" resultType="com.norm.timemall.app.studio.domain.ro.StudioFlierVisitorInfoRO">
+        SELECT
+            f.id as flierId,
+            f.title,
+            f.description,
+            f.cta_link as ctaLink,
+            f.content_link as contentLink,
+            f.likes,
+            f.copies,
+            f.cta_clicks as ctaClicks,
+            b.id as authorBrandId,
+            b.avator as authorAvatar,
+            b.brand_name as authorName,
+            b.customer_id as authorUserId
+            <if test="visitorBrandId != null and visitorBrandId != ''">
+            , fv.has_like as hasLike,
+            fv.has_click_cta as hasClickCta
+            </if>
+        FROM flier f
+        INNER JOIN brand b ON f.author_brand_id = b.id
+        <if test="visitorBrandId != null and visitorBrandId != ''">
+        LEFT JOIN flier_visitor fv ON fv.flier_id = f.id AND fv.visitor_brand_id = #{visitorBrandId}
+        </if>
+        WHERE f.id = #{flierId} and f.status = 'normal'
+    </select>
+
+</mapper>

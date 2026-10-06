@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.studio.mapper.StudioSubsProductMapper">
+    <sql id="tableName">
+        subs_product
+    </sql>
+
+    <sql id="baseColumn">
+        id,seller_brand_id,product_code,product_desc,create_at,modified_at
+    </sql>
+
+    <select id="selectPageByQ" resultType="com.norm.timemall.app.studio.domain.ro.StudioGetSubsProductPageRO">
+        select p.id,p.product_name,p.product_code,p.product_desc,p.create_at
+        from subs_product p
+        <where>
+            1=1
+            and p.seller_brand_id=#{seller_brand_id}
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, p.product_code)>0 or locate(#{dto.q}, p.product_name)>0  or  locate(#{dto.q}, p.product_desc)>0 )
+            </if>
+        </where>
+        order by p.create_at desc
+
+    </select>
+
+</mapper>

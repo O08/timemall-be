@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.affiliate.mapper.AffiliateHotOutreachMapper">
+    <sql id="tableName">
+        affiliate_hot_outreach
+    </sql>
+
+    <select id="selectOutReachByBrandIdAndTimeSpan" resultType="com.norm.timemall.app.affiliate.domain.ro.HotOutreachRO">
+        select chn.channel_name,o.cell_sale_volume,o.plan_sale_volume,o.sales,o.views,o.refund_orders,o.settled_payment,o.unsettled_payment,o.timespan
+        from affiliate_hot_outreach o
+        inner join affiliate_outreach_channel chn
+          on chn.id = o.outreach_channel_id
+        where
+        o.brand_id=#{brandId}
+        and o.timespan=#{timespan}
+        order by o.sales desc
+    </select>
+
+</mapper>

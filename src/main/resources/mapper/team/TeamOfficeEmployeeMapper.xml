@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamOfficeEmployeeMapper">
+    <sql id="tableName">
+        office_employee
+    </sql>
+
+    <sql id="baseColumn">
+        id,uid,oasis_id,employee_brand_id,employee_number,employee_name,gender,birthdate,education,major,phone,email,department_id,role,level,salary,office_location,hire_date,net_worth,status,genre,remark,create_at,modified_at
+    </sql>
+
+    <select id="selectPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamOfficeQueryEmployeePageRO">
+        select e.photo, e.id,e.employee_name,e.role,d.title department ,e.office_location,e.hire_date,e.status,e.genre,e.salary,e.level
+        from office_employee e
+        inner join office_department d
+          on e.department_id=d.id
+        where
+        1 = 1
+        and e.oasis_id=#{dto.oasisId}
+        <if test="dto.q != null and dto.q != ''">
+            AND (locate(#{dto.encryptedQ}, e.employee_name)>0 or locate(#{dto.q}, e.role)>0 or locate(#{dto.q}, d.title)>0 or locate(#{dto.q}, e.office_location)>0)
+        </if>
+        <if test="dto.status != null and dto.status != ''">
+            AND e.status=#{dto.status}
+        </if>
+        <if test="dto.genre != null and dto.genre != ''">
+            AND e.genre=#{dto.genre}
+        </if>
+        order by e.create_at desc
+
+    </select>
+
+
+
+    <resultMap id="compensationListResultMap" type="com.norm.timemall.app.team.domain.ro.OfficeEmployeeCompensationRO">
+        <result property="title" column="title"/>
+        <result property="amount" column="amount"/>
+        <result property="direction" column="direction"/>
+
+    </resultMap>
+
+    <resultMap id="selectEmployeeAndCompensationByOasisIdAndStatusResultMap" type="com.norm.timemall.app.team.domain.ro.OfficeEmployeeAndCompensationRO">
+        <result property="id" column="id"/>
+        <result property="employeeName" column="employee_name"/>
+        <result property="salary" column="salary"/>
+        <result property="role" column="role"/>
+        <result property="status" column="status"/>
+        <result property="genre" column="genre"/>
+
+
+        <collection property="compensation" ofType="com.norm.timemall.app.team.domain.ro.OfficeEmployeeCompensationRO" javaType="ArrayList" resultMap="compensationListResultMap"/>
+    </resultMap>
+
+
+    <select id="selectEmployeeAndCompensationByOasisIdAndStatus" resultMap="selectEmployeeAndCompensationByOasisIdAndStatusResultMap">
+
+        select
+           e.id,e.employee_name,e.role,e.status,e.genre,c.title,c.amount,c.direction,e.salary
+        from office_employee e
+        left join office_employee_compensation ec
+          on ec.employee_id=e.id
+        left join office_compensation c
+          on ec.compensation_id=c.id and c.status='1'
+        where e.oasis_id=#{oasisId} and e.status=#{employeeStatus}
+
+    </select>
+
+    <select id="selectBasicInfoById" resultType="com.norm.timemall.app.team.domain.ro.TeamOfficeFetchEmployeeBasicInfoRO">
+        select e.photo, e.department_id, e.employee_number,e.id as employeeId,e.employee_name,e.uid as employeeUid,e.employee_brand_id,e.gender,
+           e.birthdate,e.education,e.major,e.phone,e.email,d.title department,e.role,e.level,e.office_location,e.hire_date,
+           e.net_worth,e.status,e.genre,e.salary,e.remark,e.oasis_id
+        from office_employee e
+        inner join office_department d
+        on e.department_id=d.id
+        where
+        1 = 1
+        and e.id=#{id}
+
+
+    </select>
+
+</mapper>
