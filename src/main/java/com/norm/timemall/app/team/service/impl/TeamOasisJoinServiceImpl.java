@@ -163,8 +163,9 @@ public class TeamOasisJoinServiceImpl implements TeamOasisJoinService {
     }
 
     @Override
-    public ArrayList<TeamJoinedRO> findJoinedOasis(String brandId) {
-        return teamOasisJoinMapper.selectJoinedOasesByUser(brandId);
+    public ArrayList<TeamJoinedRO> findJoinedOasis(String q) {
+        String brandId = SecurityUserHelper.getCurrentPrincipal().getBrandId();
+        return teamOasisJoinMapper.selectJoinedOasesByUser(brandId,q);
     }
 
     @Override

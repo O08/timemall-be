@@ -23,4 +23,19 @@
         limit 500
     </select>
 
+    <select id="selectJoinedOasesByUser" resultType="com.norm.timemall.app.team.domain.ro.TeamJoinedRO">
+        select
+          o.handle,o.mark,o.avatar,o.title,o.id,o.membership,o.subtitle
+        from oasis_join j
+        inner join  oasis  o
+          on j.oasis_id = o.id
+        where j.brand_id=#{brand_id}
+          and j.tag='2'
+          and o.mark in( '2','4')
+        <if test="q != null and q != ''">
+            AND locate(#{q}, o.title)>0
+        </if>
+        order by j.modified_at desc
+    </select>
+
 </mapper>

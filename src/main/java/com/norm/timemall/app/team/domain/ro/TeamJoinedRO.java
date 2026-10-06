@@ -9,4 +9,6 @@ public class TeamJoinedRO {
     private String id;
     private String mark;
     private String handle;
+    private String subtitle;
+    private String membership;
 }

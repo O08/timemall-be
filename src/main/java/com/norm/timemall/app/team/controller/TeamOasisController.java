@@ -78,8 +78,8 @@ public class TeamOasisController {
      * 获取已加入的oasis列表
      */
     @GetMapping(value = "/api/v1/team/joinedOases")
-    public TeamJoinedVO retrieveJoinedOasis(String brandId){
-        ArrayList<TeamJoinedRO> joinedRO = teamOasisJoinService.findJoinedOasis(brandId);
+    public TeamJoinedVO retrieveJoinedOasis(String q){
+        ArrayList<TeamJoinedRO> joinedRO = teamOasisJoinService.findJoinedOasis(q);
         TeamJoinedOasis joinedOases = new TeamJoinedOasis();
         joinedOases.setRecords(joinedRO);
         TeamJoinedVO vo = new TeamJoinedVO();

@@ -17,7 +17,7 @@ public interface TeamOasisJoinService {
 
     void inviteBrand(TeamInviteToOasisDTO dto);
 
-    ArrayList<TeamJoinedRO> findJoinedOasis(String brandId);
+    ArrayList<TeamJoinedRO> findJoinedOasis(String q);
 
     void followOasis(String oasisId,String privateCode);
 
