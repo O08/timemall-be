@@ -12,6 +12,7 @@
 
     <select id="selectSponsorshipPage" resultType="com.norm.timemall.app.pod.domain.ro.PodFetchSponsorshipPageRO">
         select
+            b.handle sponsorHandle,
             r.sponsor_brand_id sponsorBrandId,
             r.sponsor_message   sponsorMessage,
             b.brand_name        sponsorName,

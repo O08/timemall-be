@@ -9,6 +9,7 @@ public class PodFetchSponsorshipPageRO {
     private String sponsorName;
     private String sponsorUserId;
     private String sponsorAvatar;
+    private String sponsorHandle;
     private String amount;
     private String createdAt;
 }
