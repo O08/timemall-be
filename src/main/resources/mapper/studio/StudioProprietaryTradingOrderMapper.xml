@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.studio.mapper.StudioProprietaryTradingOrderMapper">
+    <sql id="tableName">
+        proprietary_trading_order
+    </sql>
+
+    <sql id="baseColumn">
+        id,customer_id,trading_id,brand_id,total,quantity,sbu,status,status_desc,cancelled,cancelled_reason,cancelled_at,refunded,create_at,modified_at
+    </sql>
+
+</mapper>

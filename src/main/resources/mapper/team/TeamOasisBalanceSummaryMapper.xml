@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamOasisBalanceSummaryMapper">
+    <sql id="tableName">
+        oasis_balance_summary
+    </sql>
+
+    <sql id="baseColumn">
+        id,oasis_id,report_month,balance,create_at,modified_at
+    </sql>
+
+    <select id="selectBalanceTrendByOasisId" resultType="com.norm.timemall.app.team.domain.ro.TeamFetchOasisBalanceTrendRO">
+        SELECT
+            report_month AS reportMonth,
+            balance
+        FROM oasis_balance_summary
+        WHERE oasis_id = #{oasisId}
+        ORDER BY report_date ASC
+    </select>
+
+</mapper>

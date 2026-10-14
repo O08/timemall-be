@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamBrandAlipayMapper">
+    <sql id="tableName">
+        brand_alipay
+    </sql>
+
+    <sql id="baseColumn">
+        id,brand_id,payee_type,payee_account,payee_real_name,create_at,modified_at
+    </sql>
+
+</mapper>

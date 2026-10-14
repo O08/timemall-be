@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.scheduled.mapper.TaskAffiliateScheduleMapper">
+
+    <update id="loadAffiliateProduct"  statementType="CALLABLE">
+        { call load_affiliate_product_ind_proc_0001() }
+    </update>
+    <update id="refreshInfluencerProduct"  statementType="CALLABLE">
+        { call cal_affiliate_influencer_product_proc_0006() }
+    </update>
+    <update id="refreshOutreachChannel"  statementType="CALLABLE">
+        { call cal_affiliate_outreach_channel_proc_0008() }
+    </update>
+    <update id="refreshLinkMarketing"  statementType="CALLABLE">
+        { call cal_affiliate_link_marketing_proc_0007() }
+    </update>
+    <update id="refreshApiMarketing"  statementType="CALLABLE">
+        { call cal_affiliate_api_marketing_proc_0002() }
+    </update>
+
+    <update id="refreshHotOutreach" parameterType="string" statementType="CALLABLE">
+        { call cal_affiliate_hot_outreach_proc_0004(#{timespan, mode=IN}) }
+    </update>
+    <update id="refreshHotProduct" parameterType="string" statementType="CALLABLE">
+        { call cal_affiliate_hot_product_proc_0005(#{timespan, mode=IN}) }
+    </update>
+    <update id="refreshDashboard" parameterType="string" statementType="CALLABLE">
+        { call cal_affiliate_dashboard_proc_0003(#{timespan, mode=IN}) }
+    </update>
+
+</mapper>

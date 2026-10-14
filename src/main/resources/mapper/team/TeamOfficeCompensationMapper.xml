@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamOfficeCompensationMapper">
+    <sql id="tableName">
+        office_compensation
+    </sql>
+
+    <sql id="baseColumn">
+        id,title,amount,description,oasis_id,direction,status,create_at,modified_at
+    </sql>
+    <select id="selectPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamOfficeQueryCompensationPageRO">
+       select
+        c.id,c.title,c.amount,c.description,c.direction,c.status,c.create_at
+        from office_compensation c
+        where
+        1 = 1
+        and c.oasis_id=#{dto.oasisId}
+        <if test="dto.q != null and dto.q != ''">
+            AND (locate(#{dto.q}, c.title)>0 or locate(#{dto.q}, c.description)>0)
+        </if>
+        <if test="dto.status != null and dto.status != ''">
+            AND c.status=#{dto.status}
+        </if>
+        <if test="dto.direction != null and dto.direction != ''">
+            AND c.direction=#{dto.direction}
+        </if>
+        order by c.create_at desc
+
+    </select>
+
+
+</mapper>

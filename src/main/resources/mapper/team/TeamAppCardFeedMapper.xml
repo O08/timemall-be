@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamAppCardFeedMapper">
+    <sql id="tableName">
+        app_card_feed
+    </sql>
+
+    <select id="selectPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamAppCardFetchFeedPageRO">
+        select
+            f.id,
+            f.title,
+            f.subtitle,
+            f.link_url,
+            f.cover_url,
+            f.available,
+            f.create_at,
+            f.views,
+            b.id authorBrandId,
+            b.brand_name authorName,
+            b.avator authorAvatar
+        from app_card_feed f
+        inner join brand b on f.author_brand_id= b.id
+        where
+          1 = 1
+        and f.oasis_channel_id = #{dto.channel}
+        <if test="dto.q != null and dto.q != ''">
+            AND ( locate(#{dto.q}, b.brand_name)>0
+            or locate(#{dto.q}, f.title)>0
+            or locate(#{dto.q}, f.subtitle)>0
+            )
+        </if>
+        <if test="dto.filter != null and dto.filter != ''">
+            <choose>
+                <when test='dto.filter == "1"'>
+                    and f.available='1'
+                </when>
+                <when test='dto.filter == "0"'>
+                    and f.available='0'
+                </when>
+            </choose>
+        </if>
+        <if test="dto.sort != null and dto.sort != ''">
+            <choose>
+                <when test='dto.sort == "1"'>
+                    order by  f.views desc
+                </when>
+                <when test='dto.sort == "2"'>
+                    order by f.create_at desc
+                </when>
+            </choose>
+        </if>
+
+    </select>
+
+</mapper>

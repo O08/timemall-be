@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.studio.mapper.StudioDataScienceSemiMapper">
+
+    <select id="selectSemiDataPage" resultType="com.norm.timemall.app.studio.domain.ro.FetchSemiDataRO">
+       select snippet,details,from_where,create_at
+        from data_science_semi d
+        <where>
+            1=1
+            <if test="dto.q != null and dto.q != ''">
+                AND locate(#{dto.q}, d.snippet)>0
+            </if>
+            <if test="dto.fromWhere != null and dto.fromWhere != ''">
+                AND d.from_where = #{dto.fromWhere}
+            </if>
+        </where>
+        <if test="dto.sort != null and dto.sort != ''">
+            <choose>
+                <when test='dto.sort == "1"'>
+                    Order by d.create_At desc
+                </when>
+                <when test='dto.sort == "2"'>
+                    Order by d.create_At asc
+                </when>
+            </choose>
+        </if>
+    </select>
+
+</mapper>

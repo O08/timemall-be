@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.mall.mapper.MallHeroMarqueeItemMapper">
+
+    <resultMap id="tagsResultMap" type="com.norm.timemall.app.mall.domain.pojo.MallFetchMarqueeItemTag">
+        <result property="tag" column="tag"/>
+    </resultMap>
+
+    <resultMap id="marqueeItemResultMap" type="com.norm.timemall.app.mall.domain.ro.MallFetchMarqueeItemRO">
+        <result property="displayName" column="displayName"/>
+        <result property="displayTitle" column="displayTitle"/>
+        <result property="photo" column="photo"/>
+        <collection property="tags" ofType="com.norm.timemall.app.mall.domain.pojo.MallFetchMarqueeItemTag" javaType="ArrayList" resultMap="tagsResultMap"/>
+    </resultMap>
+    <select id="selectMarqueeItem" resultMap="marqueeItemResultMap">
+        select it.item_name displayName,it.item_title displayTitle,it.photo,tg.tag_title tag
+        from hero_marquee_item it
+        inner join  hero_marquee_item_tag rel
+          on it.id= rel.item_id
+        inner join  hero_marquee_tag tg
+        on rel.tag_id= tg.id
+
+    </select>
+
+</mapper>

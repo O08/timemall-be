@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.indicator.mapper.IndCellIndicesMapper">
+    <sql id="tableName">
+        cell_indices
+    </sql>
+
+    <sql id="baseColumn">
+        id,cell_id,impressions,clicks,orders
+    </sql>
+    <select id="selectCellIndicesPageByUserId" resultType="com.norm.timemall.app.indicator.domain.ro.IndCellIndicesRO">
+        select c.id,c.title,c.mark,IFNULL(i.impressions,0) impressions,IFNULL(i.clicks,0) clicks,IFNULL(i.orders,0) orders,IFNULL(i.bird_purchases,0) birdPurchases,IFNULL(i.eagle_purchases,0) eaglePurchases,IFNULL(i.albatross_purchases,0) albatrossPurchases
+        from cell  c
+        inner join brand b on b.id = c.brand_id
+        left join cell_indices i on c.id = i.cell_id
+        <where>
+            b.customer_id = #{customer_id}
+            and c.mark = #{dto.code}
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, c.title)>0  or locate(#{dto.q}, c.tags)>0)
+            </if>
+        </where>
+        order by c.create_at desc
+    </select>
+
+    <update id="updateImpressions" parameterType="com.norm.timemall.app.indicator.domain.dto.IndDataLayerCellIndicesDTO">
+        insert into cell_indices (id,cell_id,impressions) VALUES
+        <foreach collection="dto.cell.impressions" item="impression" separator=",">
+            (#{impression.cellId}, #{impression.cellId}, 1)
+        </foreach>
+        on duplicate key update impressions=IFNULL(impressions,0)+1
+    </update>
+
+    <update id="updateClicks" parameterType="com.norm.timemall.app.indicator.domain.dto.IndDataLayerCellIndicesDTO">
+        insert into cell_indices (id,cell_id,clicks) VALUES
+        <foreach collection="dto.cell.clicks" item="click" separator=",">
+            (#{click.cellId}, #{click.cellId}, 1)
+        </foreach>
+        on duplicate key update clicks=IFNULL(clicks,0)+1
+    </update>
+
+    <update id="updateAppointments" parameterType="com.norm.timemall.app.indicator.domain.dto.IndDataLayerCellIndicesDTO">
+        insert into cell_indices (id,cell_id,orders) VALUES
+        <foreach collection="dto.cell.appointments" item="appointment" separator=",">
+            (#{appointment.cellId}, #{appointment.cellId}, 1)
+        </foreach>
+        on duplicate key update orders=IFNULL(orders,0)+1
+    </update>
+
+    <update id="updatePurchase" parameterType="com.norm.timemall.app.indicator.domain.dto.IndDataLayerCellIndicesDTO">
+        <choose>
+            <when test='dto.cell.purchases.planType == "bird"'>
+                insert into cell_indices (id,cell_id,bird_purchases) VALUES
+                (#{dto.cell.purchases.cellId}, #{dto.cell.purchases.cellId}, 1)
+                on duplicate key update bird_purchases=IFNULL(bird_purchases,0)+1
+            </when>
+            <when test='dto.cell.purchases.planType == "eagle"'>
+                insert into cell_indices (id,cell_id,eagle_purchases) VALUES
+                (#{dto.cell.purchases.cellId}, #{dto.cell.purchases.cellId}, 1)
+                on duplicate key update eagle_purchases=IFNULL(eagle_purchases,0)+1
+            </when>
+            <when test='dto.cell.purchases.planType == "albatross"'>
+                insert into cell_indices (id,cell_id,albatross_purchases) VALUES
+                (#{dto.cell.purchases.cellId}, #{dto.cell.purchases.cellId}, 1)
+                on duplicate key update albatross_purchases=IFNULL(albatross_purchases,0) +1
+            </when>
+        </choose>
+    </update>
+
+</mapper>
