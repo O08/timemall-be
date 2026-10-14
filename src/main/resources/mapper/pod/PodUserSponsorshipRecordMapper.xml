@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.pod.mapper.PodUserSponsorshipRecordMapper">
+
+    <sql id="tableName">
+        user_sponsorship_record
+    </sql>
+
+    <sql id="baseColumn">
+        id,sponsor_brand_id,sponsoree_brand_id,amount,currency,sponsor_message,created_at,modified_at
+    </sql>
+
+    <select id="selectSponsorshipPage" resultType="com.norm.timemall.app.pod.domain.ro.PodFetchSponsorshipPageRO">
+        select
+            r.sponsor_brand_id sponsorBrandId,
+            r.sponsor_message   sponsorMessage,
+            b.brand_name        sponsorName,
+            b.customer_id       sponsorUserId,
+            b.avator            sponsorAvatar,
+            r.amount            amount,
+            r.created_at        createdAt
+        from user_sponsorship_record r
+        inner join brand b
+            on r.sponsor_brand_id = b.id
+        where r.sponsoree_brand_id = #{currentBrandId}
+        <if test="dto.q != null and dto.q != ''">
+            and locate(#{dto.q}, b.brand_name) > 0
+        </if>
+        order by r.created_at desc
+    </select>
+
+</mapper>

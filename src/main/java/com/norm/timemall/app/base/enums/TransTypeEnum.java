@@ -33,6 +33,8 @@ public enum TransTypeEnum {
 
     OASIS_WRITE_OFF_EQUITY("28", "核销权益"),
     OASIS_REDEEM_EQUITY("29", "回收权益"),
+
+    SPONSOR_BRAND("30", "赞助打赏"),
     ;
     private String mark;
     private String desc;

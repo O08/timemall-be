@@ -42,7 +42,6 @@ public class PodCoopProgramServiceImpl implements PodCoopProgramService {
 
     @Autowired
     private PodCoopApplicationsMapper podCoopApplicationsMapper;
-
     @Autowired
     private BaseElectricityService baseElectricityService;
 

@@ -7,6 +7,7 @@ import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.service.OrderFlowService;
 import com.norm.timemall.app.team.domain.dto.TeamOasisAdminWithdrawDTO;
 import com.norm.timemall.app.team.domain.dto.TeamOasisCollectAccountDTO;
+import com.norm.timemall.app.team.domain.dto.TeamSponsorBrandDTO;
 import com.norm.timemall.app.team.domain.dto.TeamTopUpOasisDTO;
 import com.norm.timemall.app.team.service.TeamOasisCollectAccountService;
 import com.norm.timemall.app.team.service.TeamOasisPayService;
@@ -33,6 +34,19 @@ public class TeamOasisPayController {
             teamOasisPayService.topUptoOasis(dto);
         }finally {
             orderFlowService.deleteOrderFlow(SecurityUserHelper.getCurrentPrincipal().getUserId(), TransTypeEnum.TOPUP_OASIS.getMark());
+        }
+        return new SuccessVO(CodeEnum.SUCCESS);
+    }
+    /**
+     * sponsor brand
+     */
+    @PostMapping("/api/v1/team/sponsor/brand")
+    public SuccessVO sponsorBrand(@Validated @RequestBody TeamSponsorBrandDTO dto){
+        try {
+            orderFlowService.insertOrderFlow(SecurityUserHelper.getCurrentPrincipal().getUserId(), TransTypeEnum.SPONSOR_BRAND.getMark());
+            teamOasisPayService.sponsorBrand(dto);
+        }finally {
+            orderFlowService.deleteOrderFlow(SecurityUserHelper.getCurrentPrincipal().getUserId(), TransTypeEnum.SPONSOR_BRAND.getMark());
         }
         return new SuccessVO(CodeEnum.SUCCESS);
     }
