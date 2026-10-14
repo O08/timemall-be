@@ -10,6 +10,7 @@ import java.util.ArrayList;
 @Data
 public class BrandProfileRO {
     private String brand;
+    private String brandId;
     private String brandUserId;
     private String avator;
     private String cover;
