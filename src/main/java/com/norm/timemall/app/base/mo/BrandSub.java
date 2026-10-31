@@ -1,6 +1,8 @@
 package com.norm.timemall.app.base.mo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
@@ -89,5 +91,9 @@ public class BrandSub extends Model<BrandSub> implements Serializable {
      * 提供 以工换食 的慈善活动：1 - 提供， 0-不提供
      */
     private String enableFoodForWork;
+
+    private BigDecimal minDeliveryAmount;
+
+    private String deliveryArea;
 
 }

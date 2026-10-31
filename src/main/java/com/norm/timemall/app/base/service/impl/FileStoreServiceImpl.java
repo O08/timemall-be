@@ -27,6 +27,7 @@ public class FileStoreServiceImpl implements FileStoreService {
     private  final String limitedFileAccessPrefix="/api/file/";
 
     private  final String standardLimitedFileAccessPrefix="api/file/";
+    private final String avifSuffix = "avif";
     @Autowired
     private AliOssClientUtil aliOssClientUtil;
 
@@ -45,6 +46,23 @@ public class FileStoreServiceImpl implements FileStoreService {
     public String storeImageAndProcessAsAvifWithUnlimitedAccess(MultipartFile file, FileStoreDir dir) {
         Path destinationFile = generateDestinationFilePath(file,dir,true);
         return aliOssClientUtil.doImageUploadAndProcessAsAvifForPublic(file,destinationFile.toString());
+    }
+
+    @Override
+    public void replaceImageAndProcessAsAvifWithUnlimitedAccess(MultipartFile file, String uri) {
+         String objectName = restoreObjectName(uri.replace(aliOssClientUtil.getPublicFileEndpoint(),""));
+         aliOssClientUtil.doImageUploadAndProcessAsAvifForPublic(file,objectName);
+    }
+    private String restoreObjectName(String objectNameWithSuffix) {
+        if (objectNameWithSuffix == null) {
+            return null;
+        }
+        String suffixWithDot = "." + avifSuffix;
+
+        if (objectNameWithSuffix.endsWith(suffixWithDot)) {
+            return objectNameWithSuffix.substring(0, objectNameWithSuffix.length() - suffixWithDot.length());
+        }
+        return objectNameWithSuffix;
     }
 
 

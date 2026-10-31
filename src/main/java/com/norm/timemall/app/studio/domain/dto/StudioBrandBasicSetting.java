@@ -3,7 +3,11 @@ package com.norm.timemall.app.studio.domain.dto;
 import com.norm.timemall.app.base.enums.SwitchCheckEnum;
 import com.norm.timemall.app.base.validator.EnumCheck;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
+
+import java.math.BigDecimal;
 
 @Data
 public class StudioBrandBasicSetting {
@@ -36,4 +40,10 @@ public class StudioBrandBasicSetting {
     @NotBlank(message = "enableFoodForWork required")
     @EnumCheck(enumClass = SwitchCheckEnum.class,message = "field: enableFoodForWork, incorrect parameter value ,option: on-1; off-0;")
     private String enableFoodForWork;
+
+    @Positive(message = "minDeliveryAmount value should be positive.")
+    private BigDecimal minDeliveryAmount;
+
+    @Length(message = "deliveryArea range in {min}-{max}",min = 0,max = 100)
+    private String deliveryArea;
 }

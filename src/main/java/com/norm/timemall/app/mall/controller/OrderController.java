@@ -7,12 +7,14 @@ import com.norm.timemall.app.base.helper.SecurityUserHelper;
 import com.norm.timemall.app.base.security.CustomizeUser;
 import com.norm.timemall.app.base.service.OrderFlowService;
 import com.norm.timemall.app.mall.domain.dto.AffiliateDTO;
+import com.norm.timemall.app.mall.domain.dto.MallOrderPhysicalProductDTO;
 import com.norm.timemall.app.mall.domain.dto.OrderDTO;
 import com.norm.timemall.app.mall.domain.dto.OrderVirtualProductDTO;
 import com.norm.timemall.app.mall.domain.vo.OrderCellPlanVO;
 import com.norm.timemall.app.mall.domain.vo.OrderCellVO;
 import com.norm.timemall.app.mall.domain.vo.OrderVirtualProductVO;
 import com.norm.timemall.app.mall.service.CellPlanOrderService;
+import com.norm.timemall.app.mall.service.MallPhysicalOrderService;
 import com.norm.timemall.app.mall.service.OrderDetailService;
 import com.norm.timemall.app.mall.service.MallVirtualProductOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,9 @@ public class OrderController {
     private MallVirtualProductOrderService mallVirtualProductOrderService;
     @Autowired
     private OrderFlowService orderFlowService;
+
+    @Autowired
+    private MallPhysicalOrderService mallPhysicalOrderService;
 
     /*
      * 下单
@@ -117,6 +122,32 @@ public class OrderController {
         }
         return  new SuccessVO(CodeEnum.SUCCESS);
 
+    }
+
+    @PostMapping("/api/v1/mall/physical_product/new_order")
+    public SuccessVO orderPhysicalProduct(@Validated @RequestBody MallOrderPhysicalProductDTO dto){
+        String userId = SecurityUserHelper.getCurrentPrincipal().getUserId();
+        try {
+            orderFlowService.insertOrderFlow(userId, TransTypeEnum.PHYSICAL_ORDER_PAY.getMark());
+
+            String orderId = mallPhysicalOrderService.newOrder(dto);
+            mallPhysicalOrderService.executePayment(orderId);
+
+            return new SuccessVO(CodeEnum.SUCCESS);
+        } finally {
+            orderFlowService.deleteOrderFlow(userId, TransTypeEnum.PHYSICAL_ORDER_PAY.getMark());
+        }
+    }
+    @PostMapping("/api/v1/mall/physical_order/{order_id}/repay")
+    public SuccessVO repayPhysicalOrder(@PathVariable("order_id") String orderId){
+        String userId = SecurityUserHelper.getCurrentPrincipal().getUserId();
+        try {
+            orderFlowService.insertOrderFlow(userId, TransTypeEnum.PHYSICAL_ORDER_PAY.getMark());
+            mallPhysicalOrderService.executePayment(orderId);
+        }finally {
+            orderFlowService.deleteOrderFlow(userId, TransTypeEnum.PHYSICAL_ORDER_PAY.getMark());
+        }
+        return  new SuccessVO(CodeEnum.SUCCESS);
     }
 
 }

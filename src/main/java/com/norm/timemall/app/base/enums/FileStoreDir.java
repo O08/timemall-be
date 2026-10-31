@@ -27,6 +27,7 @@ public enum FileStoreDir {
     VIRTUAL_PRODUCT_THUMBNAIL("virtual/thumbnail", "virtual product thumbnail file"),
     VIRTUAL_PRODUCT_SHOWCASE("virtual/showcase","virtual product show case file" ),
     VIRTUAL_PRODUCT_DELIVER("virtual/deliver", "virtual product deliver file"),
+    PHYSICAL_PRODUCT_THUMBNAIL("physical/thumbnail", "physical product thumbnail file"),
     APP_DESK_ELEMENT_ICON("app/desk/icon", "app desk element icon dir"),
     PROPOSAL_MATERIAL("proposal/material", "proposal material dir"),
     APP_REDEEM_THUMBNAIL("app/redeem/thumbnail", "app redeem thumbnail data"),

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.pod.mapper.PodPhysicalOrderMapper">
+    <sql id="tableName">
+        physical_order
+    </sql>
+
+    <sql id="baseColumn">
+        id,buyer_brand_id,seller_brand_id,total_amount,promotion_amount,pay_amount,recipient,recipient_phone,shipping_address,shipping_method,shipping_number,shipping_note,shipping_status,payment_status,courier_phone,order_status,create_at,modified_at
+    </sql>
+
+    <resultMap id="orderPageResultMap" type="com.norm.timemall.app.pod.domain.ro.PodFetchPhysicalOrderPageRO">
+        <id column="orderId" property="orderId"/>
+        <result column="orderStatus" property="orderStatus"/>
+        <result column="payAmount" property="payAmount"/>
+        <result column="createAt" property="createAt"/>
+        <result column="sellerBrandId" property="sellerBrandId"/>
+        <result column="sellerUserId" property="sellerUserId"/>
+        <result column="sellerName" property="sellerName"/>
+        <result column="sellerAvatar" property="sellerAvatar"/>
+        <result column="sellerHandle" property="sellerHandle"/>
+        <collection property="items" ofType="com.norm.timemall.app.base.pojo.DefaultPhysicalOrderItem"
+                    columnPrefix="item_">
+            <id column="orderItemId" property="orderItemId"/>
+            <result column="orderId" property="orderId"/>
+            <result column="productId" property="productId"/>
+            <result column="productName" property="productName"/>
+            <result column="productThumbnail" property="productThumbnail"/>
+            <result column="productPrice" property="productPrice"/>
+            <result column="quantity" property="quantity"/>
+            <result column="refundReason" property="refundReason"/>
+            <result column="splitPayAmount" property="splitPayAmount"/>
+            <result column="splitPromotionAmount" property="splitPromotionAmount"/>
+            <result column="status" property="status"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectOrderPage" resultMap="orderPageResultMap">
+        select o.id orderId,
+               o.order_status orderStatus,
+               CAST(o.pay_amount AS CHAR) payAmount,
+               CAST(o.create_at AS CHAR) createAt,
+               b.id sellerBrandId,
+               b.customer_id sellerUserId,
+               b.brand_name sellerName,
+               b.avator sellerAvatar,
+               b.handle sellerHandle,
+               i.id item_orderItemId,
+               i.order_id item_orderId,
+               i.product_id item_productId,
+               i.product_name item_productName,
+               i.product_thumbnail item_productThumbnail,
+               CAST(i.product_price AS CHAR) item_productPrice,
+               CAST(i.quantity AS CHAR) item_quantity,
+               i.refund_reason item_refundReason,
+               CAST(i.split_pay_amount AS CHAR) item_splitPayAmount,
+               CAST(i.split_promotion_amount AS CHAR) item_splitPromotionAmount,
+               i.status item_status
+        from physical_order o
+        inner join brand b on o.seller_brand_id = b.id
+        inner join physical_order_item i on o.id = i.order_id
+        <where>
+            1=1
+            and o.buyer_brand_id = #{buyerBrandId}
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, o.id) &gt; 0 or locate(#{dto.q}, b.brand_name) &gt; 0 or locate(#{dto.q}, i.product_name) &gt; 0)
+            </if>
+            <if test="dto.status != null and dto.status != ''">
+                AND o.order_status = #{dto.status}
+            </if>
+        </where>
+        order by o.create_at desc, i.create_at asc
+    </select>
+
+    <resultMap id="orderDetailResultMap" type="com.norm.timemall.app.pod.domain.ro.PodFetchPhysicalOrderDetailRO">
+        <id column="orderId" property="orderId"/>
+        <result column="orderStatus" property="orderStatus"/>
+        <result column="payAmount" property="payAmount"/>
+        <result column="paymentStatus" property="paymentStatus"/>
+        <result column="createAt" property="createAt"/>
+        <result column="sellerBrandId" property="sellerBrandId"/>
+        <result column="sellerUserId" property="sellerUserId"/>
+        <result column="sellerName" property="sellerName"/>
+        <result column="sellerAvatar" property="sellerAvatar"/>
+        <result column="sellerHandle" property="sellerHandle"/>
+        <result column="recipient" property="recipient"/>
+        <result column="recipientPhone" property="recipientPhone"/>
+        <result column="shippingAddress" property="shippingAddress"/>
+        <result column="shippingMethod" property="shippingMethod"/>
+        <result column="shippingNote" property="shippingNote"/>
+        <result column="shippingNumber" property="shippingNumber"/>
+        <result column="shippingStatus" property="shippingStatus"/>
+        <result column="courierPhone" property="courierPhone"/>
+        <collection property="items" ofType="com.norm.timemall.app.base.pojo.DefaultPhysicalOrderItem"
+                    columnPrefix="item_">
+            <id column="orderItemId" property="orderItemId"/>
+            <result column="orderId" property="orderId"/>
+            <result column="productId" property="productId"/>
+            <result column="productName" property="productName"/>
+            <result column="productThumbnail" property="productThumbnail"/>
+            <result column="productPrice" property="productPrice"/>
+            <result column="quantity" property="quantity"/>
+            <result column="refundReason" property="refundReason"/>
+            <result column="splitPayAmount" property="splitPayAmount"/>
+            <result column="splitPromotionAmount" property="splitPromotionAmount"/>
+            <result column="status" property="status"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectDetailByBrandAndId" resultMap="orderDetailResultMap">
+        select o.id orderId,
+               o.order_status orderStatus,
+               CAST(o.pay_amount AS CHAR) payAmount,
+               o.payment_status paymentStatus,
+               CAST(o.create_at AS CHAR) createAt,
+               b.id sellerBrandId,
+               b.customer_id sellerUserId,
+               b.brand_name sellerName,
+               b.avator sellerAvatar,
+               b.handle sellerHandle,
+               o.recipient,
+               o.recipient_phone recipientPhone,
+               o.shipping_address shippingAddress,
+               o.shipping_method shippingMethod,
+               o.shipping_note shippingNote,
+               o.shipping_number shippingNumber,
+               o.shipping_status shippingStatus,
+               o.courier_phone courierPhone,
+               i.id item_orderItemId,
+               i.order_id item_orderId,
+               i.product_id item_productId,
+               i.product_name item_productName,
+               i.product_thumbnail item_productThumbnail,
+               CAST(i.product_price AS CHAR) item_productPrice,
+               CAST(i.quantity AS CHAR) item_quantity,
+               i.refund_reason item_refundReason,
+               CAST(i.split_pay_amount AS CHAR) item_splitPayAmount,
+               CAST(i.split_promotion_amount AS CHAR) item_splitPromotionAmount,
+               i.status item_status
+        from physical_order o
+        inner join brand b on o.seller_brand_id = b.id
+        inner join physical_order_item i on o.id = i.order_id
+        where o.id = #{orderId}
+          AND o.buyer_brand_id = #{buyerBrandId}
+        order by i.create_at asc
+    </select>
+
+</mapper>

@@ -379,6 +379,12 @@ public class TeamDspServiceImpl implements TeamDspService {
             case "数字传单":
                 defendantBrandId=teamDspHelper.getDigitalFlierAuthorBrandId(sceneUrl);
                 break;
+            case "实物商品":
+                defendantBrandId=teamDspHelper.getDefendantBrandIdFromPhysicalProductUrl(sceneUrl);
+                break;
+            case "实物商品订单":
+                defendantBrandId=teamDspHelper.getDefendantBrandIdFromPhysicalOrder(sceneUrl);
+                break;
 
             default:
                 break;

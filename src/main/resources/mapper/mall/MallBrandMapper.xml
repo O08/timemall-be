@@ -31,6 +31,8 @@
         <result property="createAt" column="create_at"/>
         <result property="enableMentorship" column="enable_mentorship"/>
         <result property="enableFoodForWork" column="enable_food_for_work"/>
+        <result property="minDeliveryAmount" column="minDeliveryAmount"/>
+        <result property="deliveryArea" column="deliveryArea"/>
 
 
         <result property="experience"
@@ -50,7 +52,9 @@
     </resultMap>
 
     <select id="selectProfileByBrandId" resultMap="brandProfileResultMap">
-        select b.id brandId,b.handle,b.brand_name brand,b.customer_id ,b.avator,b.cover,s.occupation_code,b.mark brandMark,
+        select
+        s.min_delivery_Amount minDeliveryAmount,s.delivery_area deliveryArea,
+        b.id brandId,b.handle,b.brand_name brand,b.customer_id ,b.avator,b.cover,s.occupation_code,b.mark brandMark,
         CASE s.occupation_code
           when '0' then s.self_defined_occupation
           else c.item
@@ -73,7 +77,9 @@
     </select>
 
     <select id="selectProfileByBrandHandle" resultMap="brandProfileResultMap">
-        select b.id brandId,b.handle,b.brand_name brand,b.customer_id ,b.avator,b.cover,s.occupation_code,b.mark brandMark,
+        select
+        s.min_delivery_Amount minDeliveryAmount,s.delivery_area deliveryArea,
+        b.id brandId,b.handle,b.brand_name brand,b.customer_id ,b.avator,b.cover,s.occupation_code,b.mark brandMark,
         CASE s.occupation_code
         when '0' then s.self_defined_occupation
         else c.item

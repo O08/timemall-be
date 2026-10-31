@@ -51,6 +51,8 @@ public class StudioBrandSubServiceImpl implements StudioBrandSubService {
                 .setIndustry(dto.getIndustry())
                 .setBusinessScope(dto.getBusinessScope())
                 .setEnableMentorship(dto.getEnableMentorship())
+                .setMinDeliveryAmount(dto.getMinDeliveryAmount())
+                .setDeliveryArea(dto.getDeliveryArea())
                 .setEnableFoodForWork(dto.getEnableFoodForWork())
                 .setFreeNightCounsellor(dto.getFreeNightCounsellor());
 

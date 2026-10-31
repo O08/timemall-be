@@ -28,6 +28,8 @@ public interface FileStoreService {
 
     String storeImageAndProcessAsAvifWithUnlimitedAccess(MultipartFile file, FileStoreDir dir);
 
+    void replaceImageAndProcessAsAvifWithUnlimitedAccess(MultipartFile file, String uri);
+
     /**
      *
      * @param url

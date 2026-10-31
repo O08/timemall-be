@@ -43,6 +43,8 @@ public class BrandProfileRO {
     private String enableFoodForWork;
     private String createAt;
     private String resumeUrl;
+    private String minDeliveryAmount;
+    private String deliveryArea;
 
 
 }

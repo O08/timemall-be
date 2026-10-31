@@ -35,6 +35,11 @@ public enum TransTypeEnum {
     OASIS_REDEEM_EQUITY("29", "回收权益"),
 
     SPONSOR_BRAND("30", "赞助打赏"),
+    PHYSICAL_REMITTANCE_TO_SELLER("31","实物商品平台汇款到卖家"),
+
+    PHYSICAL_ORDER_PAY("32","实物商品付款"),
+
+    PHYSICAL_ORDER_ITEM_REFUND("33","实物商品退款"),
     ;
     private String mark;
     private String desc;
