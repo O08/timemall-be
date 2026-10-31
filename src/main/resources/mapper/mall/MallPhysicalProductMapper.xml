@@ -35,8 +35,15 @@
                p.product_name productName,
                p.thumbnail,
                p.warm_reminder warmReminder,
-               p.inventory
+               p.inventory,
+               p.status,
+               b.id sellerBrandId,
+               b.brand_name sellerName,
+               b.customer_id sellerUserId,
+               b.avator sellerAvatar,
+               b.handle sellerHandle
         from physical_product p
+        inner join brand b on p.seller_brand_id = b.id
         where p.id = #{productId}
     </select>
 
