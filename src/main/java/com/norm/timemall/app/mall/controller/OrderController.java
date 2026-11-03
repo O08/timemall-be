@@ -13,6 +13,7 @@ import com.norm.timemall.app.mall.domain.dto.OrderVirtualProductDTO;
 import com.norm.timemall.app.mall.domain.vo.OrderCellPlanVO;
 import com.norm.timemall.app.mall.domain.vo.OrderCellVO;
 import com.norm.timemall.app.mall.domain.vo.OrderVirtualProductVO;
+import com.norm.timemall.app.mall.handler.SendPhysicalOrderReceivingEmailNoticeHandler;
 import com.norm.timemall.app.mall.service.CellPlanOrderService;
 import com.norm.timemall.app.mall.service.MallPhysicalOrderService;
 import com.norm.timemall.app.mall.service.OrderDetailService;
@@ -37,6 +38,9 @@ public class OrderController {
 
     @Autowired
     private MallPhysicalOrderService mallPhysicalOrderService;
+
+    @Autowired
+    private SendPhysicalOrderReceivingEmailNoticeHandler sendPhysicalOrderReceivingEmailNoticeHandler;
 
     /*
      * 下单
@@ -133,6 +137,9 @@ public class OrderController {
             String orderId = mallPhysicalOrderService.newOrder(dto);
             mallPhysicalOrderService.executePayment(orderId);
 
+            sendPhysicalOrderReceivingEmailNoticeHandler.sendNewOrderNotificationAsync(orderId);
+
+
             return new SuccessVO(CodeEnum.SUCCESS);
         } finally {
             orderFlowService.deleteOrderFlow(userId, TransTypeEnum.PHYSICAL_ORDER_PAY.getMark());
@@ -144,6 +151,7 @@ public class OrderController {
         try {
             orderFlowService.insertOrderFlow(userId, TransTypeEnum.PHYSICAL_ORDER_PAY.getMark());
             mallPhysicalOrderService.executePayment(orderId);
+            sendPhysicalOrderReceivingEmailNoticeHandler.sendNewOrderNotificationAsync(orderId);
         }finally {
             orderFlowService.deleteOrderFlow(userId, TransTypeEnum.PHYSICAL_ORDER_PAY.getMark());
         }

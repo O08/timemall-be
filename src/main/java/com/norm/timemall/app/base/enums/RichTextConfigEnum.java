@@ -1,7 +1,5 @@
 package com.norm.timemall.app.base.enums;
 
-import lombok.Setter;
-
 
 public enum RichTextConfigEnum {
     // 邮箱验证码模板
@@ -15,6 +13,7 @@ public enum RichTextConfigEnum {
     EMAIL_RISK_AUDIT("emailHtml", "risk_audit"),
 
     EMAIL_CELL_PLAN_ORDER_RECEIVING("emailHtml", "cell_plan_order_receiving_notice"),
+    EMAIL_PHYSICAL_ORDER_RECEIVING("emailHtml", "physical_order_receiving_notice"),
     PHONE_VERIFICATION_CODE("phoneSms","phone_signup_verification_code" ),
     PHONE_PASSWORD_RESET_VERIFICATION_CODE("phoneSms","phone_password_reset_verification_code" );
     // template type : email or html or sms

@@ -17,6 +17,7 @@ import com.norm.timemall.app.base.mo.*;
 import com.norm.timemall.app.base.pojo.TransferBO;
 import com.norm.timemall.app.mall.domain.dto.MallOrderPhysicalProductDTO;
 import com.norm.timemall.app.mall.domain.pojo.MallOrderPhysicalProductItem;
+import com.norm.timemall.app.mall.domain.ro.MallPhysicalOrderDetailRO;
 import com.norm.timemall.app.mall.mapper.CommonOrderPaymentMapper;
 import com.norm.timemall.app.mall.mapper.MallPhysicalOrderItemMapper;
 import com.norm.timemall.app.mall.mapper.MallPhysicalProductMapper;
@@ -325,6 +326,24 @@ public class MallPhysicalOrderServiceImpl implements MallPhysicalOrderService {
         return defaultPayService.transfer(new Gson().toJson(bo));
     }
 
+
+    @Override
+    public MallPhysicalOrderDetailRO findOrderDetail(String orderId) {
+        if (StrUtil.isEmpty(orderId)) {
+            return null;
+        }
+        PhysicalOrder order = podPhysicalOrderMapper.selectById(orderId);
+        if (order == null) {
+            return null;
+        }
+        List<PhysicalOrderItem> items = physicalOrderItemMapper.selectList(
+                Wrappers.<PhysicalOrderItem>lambdaQuery().eq(PhysicalOrderItem::getOrderId, orderId)
+        );
+        MallPhysicalOrderDetailRO ro = new MallPhysicalOrderDetailRO();
+        ro.setOrder(order);
+        ro.setItems(items);
+        return ro;
+    }
 
     private void newOrderPayment(String orderId, String tradeNo, BigDecimal total) {
         Date now = new Date();

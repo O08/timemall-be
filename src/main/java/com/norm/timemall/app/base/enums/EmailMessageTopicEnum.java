@@ -5,6 +5,7 @@ public enum EmailMessageTopicEnum {
     EMAIL_PASSWORD_RESET("email_password_reset","密码重置" ),
     EMAIL_CELL_ORDER_RECEIVING("email_cell_order_receiving_notice","服务预约邮件通知"),
     EMAIL_CELL_PLAN_ORDER_RECEIVING("email_cell_plan_order_receiving_notice","服务单品订单邮件通知"),
+    EMAIL_PHYSICAL_ORDER_RECEIVING("email_physical_order_receiving_notice","实物商品订单邮件通知"),
 
     ;
     private String topic;
