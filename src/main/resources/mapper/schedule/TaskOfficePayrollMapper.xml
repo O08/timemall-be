@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.scheduled.mapper.TaskOfficePayrollMapper">
+
+
+
+    <update id="calOasisPayrollStatsInfoProcedure"  statementType="CALLABLE">
+        { call cal_oasis_paytoll_stats_proc_0020() }
+    </update>
+
+</mapper>

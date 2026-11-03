@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamOasisRoleMapper">
+    <sql id="tableName">
+        oasis_role
+    </sql>
+
+    <sql id="baseColumn">
+        id,oasis_id,role_code,role_name,role_desc,create_at,modified_at
+    </sql>
+
+    <select id="selectRoleByOasisId" resultType="com.norm.timemall.app.team.domain.ro.TeamFetchOasisRolesRO">
+        select
+         r.id,r.role_code,r.role_name,r.role_desc
+        from oasis_role r
+        where r.oasis_id=#{dto.oasisId}
+        <if test="dto.q != null and dto.q != ''">
+            AND (locate(#{dto.q}, r.role_name)>0 or locate(#{dto.q}, r.role_code)>0  or locate(#{dto.q}, r.role_desc)>0)
+        </if>
+        order by r.create_at desc
+        limit 100
+
+    </select>
+    <select id="selectRoleChannel" resultType="com.norm.timemall.app.team.domain.ro.TeamFetchRoleChannelRO">
+
+        select
+          chn.id channelId,chn.channel_name,chn.channel_desc,if(rc.id is null,'0','1') assigned
+        from oasis_channel chn
+        left join oasis_role_channel rc
+         on rc.oasis_channel_id=chn.id
+            and rc.oasis_role_id=#{dto.roleId}
+
+        where chn.oasis_id=#{dto.oasisId}
+
+        <if test="dto.q != null and dto.q != ''">
+            AND (locate(#{dto.q}, chn.channel_name)>0 or locate(#{dto.q}, chn.channel_desc)>0)
+        </if>
+        order by chn.create_at desc
+        limit 100
+
+    </select>
+
+    <select id="selectMemberRoleConfiguration" resultType="com.norm.timemall.app.team.domain.ro.TeamFetchOasisMemberRoleConfigurationRO">
+        select
+           r.id roleId,r.role_name,if(mr.id is null,'0','1') assigned
+        from oasis_role r
+        left join oasis_member_role mr
+          on mr.oasis_role_id=r.id
+            and mr.member_brand_id=#{dto.memberBrandId}
+        where r.oasis_id=#{dto.oasisId}
+        <if test="dto.q != null and dto.q != ''">
+            AND (locate(#{dto.q}, r.role_name)>0 or locate(#{dto.q}, r.role_code)>0 or locate(#{dto.q}, r.role_desc)>0)
+        </if>
+        order by r.create_at desc
+        limit 100
+
+    </select>
+
+</mapper>

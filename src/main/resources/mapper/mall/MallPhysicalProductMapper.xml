@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.mall.mapper.MallPhysicalProductMapper">
+    <sql id="tableName">
+        physical_product
+    </sql>
+
+    <sql id="baseColumn">
+        id,seller_brand_id,thumbnail,product_code,product_name,product_desc,price,inventory,sold_orders,warm_reminder,status,create_at,modified_at
+    </sql>
+
+    <select id="selectPageByBrandAndQ" resultType="com.norm.timemall.app.mall.domain.ro.MallFetchPhysicalProductPageRO">
+        select p.id productId,
+               p.product_name productName,
+               p.thumbnail,
+               p.inventory,
+               p.price
+        from physical_product p
+        <where>
+            1=1
+            AND p.seller_brand_id = #{dto.brandId}
+            AND p.status = '2'
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, p.product_name) &gt; 0 or locate(#{dto.q}, p.product_desc) &gt; 0)
+            </if>
+        </where>
+        order by p.create_at desc
+    </select>
+
+    <select id="selectProfileInfo" resultType="com.norm.timemall.app.mall.domain.ro.MallFetchPhysicalProductInfoRO">
+        select
+               p.id productId,
+               p.product_desc productDesc,
+               p.price,
+               p.product_name productName,
+               p.thumbnail,
+               p.warm_reminder warmReminder,
+               p.inventory,
+               p.status,
+               b.id sellerBrandId,
+               b.brand_name sellerName,
+               b.customer_id sellerUserId,
+               b.avator sellerAvatar,
+               b.handle sellerHandle
+        from physical_product p
+        inner join brand b on p.seller_brand_id = b.id
+        where p.id = #{productId}
+    </select>
+
+</mapper>

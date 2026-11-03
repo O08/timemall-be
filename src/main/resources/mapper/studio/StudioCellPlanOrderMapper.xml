@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.studio.mapper.StudioCellPlanOrderMapper">
+
+    <select id="selectCellPlanOrderPage" resultType="com.norm.timemall.app.studio.domain.ro.StudioCellPlanOrderPageRO">
+        select o.consumer_id buyerUserId,b.brand_name buyerName,b.avator buyerAvatar, o.promotion_deduction,o.revenue, o.commission,o.net_income,o.id orderId,c.title cellTitle,o.plan_type_desc,o.plan_price price,o.tag,o.create_at,o.plan_type
+        from cell_plan_order o
+        inner join cell c
+           on c.id=o.cell_id
+        inner join brand b
+           on o.consumer_id=b.customer_id
+        where 1=1
+            and c.brand_id=#{brandId}
+        <if test="dto.q != null and dto.q != ''">
+            AND (locate(#{dto.q}, c.title)>0 or locate(#{dto.q}, b.brand_name)>0)
+        </if>
+        <if test="dto.planType != null and dto.planType != ''">
+            AND o.plan_type=#{dto.planType}
+        </if>
+        <if test="dto.tag != null and dto.tag != ''">
+            AND o.tag=#{dto.tag}
+        </if>
+        order by o.create_at desc
+    </select>
+
+    <select id="selectCellPlanOrderById" resultType="com.norm.timemall.app.studio.domain.ro.StudioFetchCellPlanOrderRO">
+        select b.mark supplierBrandMark, b.customer_id supplierUserId , c.id cellId,c.brand_id supplierBrandId,c.title cellTitle,b.avator supplierAvatar,b.brand_name supplierName,
+               o.plan_type_desc, o.plan_title planTitle,o.plan_content,o.plan_feature feature, o.tag, o.plan_price price,o.plan_type,o.consumer_id consumerUserId
+        from cell_plan_order o
+        inner join cell c
+          on c.id=o.cell_id
+        inner join brand b
+          on c.brand_id=b.id
+        where 1=1
+          and o.id=#{id}
+
+    </select>
+
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.ms.mapper.MsGroupMemberRelMapper">
+    <sql id="tableName">
+        group_member_rel
+    </sql>
+
+    <sql id="baseColumn">
+        id,channel_id,channel_type,member_id,policy_rel,create_at,modified_at
+    </sql>
+
+    <select id="selectUserCtaInfo" resultType="com.norm.timemall.app.team.domain.ro.TeamOasisFetchUserCtaInfoRO">
+        select
+          rl.policy_rel,
+          CASE
+             WHEN o.id is null THEN
+               '0'
+             ELSE
+              '1'
+          END AS hasAdminPermission
+        from group_member_rel rl
+        left join oasis o
+          on o.id=rl.channel_id
+            and o.initiator_id=#{current_user_brand_id}
+        where rl.channel_id= #{channel_id}
+           and rl.channel_type= 'default'
+           and rl.member_id= #{member_id}
+    </select>
+
+</mapper>

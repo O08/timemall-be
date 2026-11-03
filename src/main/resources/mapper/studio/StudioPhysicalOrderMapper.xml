@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.studio.mapper.StudioPhysicalOrderMapper">
+    <sql id="tableName">
+        physical_order
+    </sql>
+
+    <sql id="baseColumn">
+        id,buyer_brand_id,seller_brand_id,total_amount,promotion_amount,pay_amount,recipient,recipient_phone,shipping_address,shipping_method,shipping_number,shipping_note,shipping_status,payment_status,courier_phone,order_status,create_at,modified_at
+    </sql>
+
+    <select id="selectPageByBrandAndQ" resultType="com.norm.timemall.app.studio.domain.ro.StudioFetchPhysicalOrderPageRO">
+        select o.id orderId,
+               o.buyer_brand_id buyerBrandId,
+               b.customer_id buyerUserId,
+               b.brand_name buyerName,
+               b.avator buyerAvatar,
+               o.create_at createAt,
+               o.order_status orderStatus,
+               o.payment_status paymentStatus,
+               o.pay_amount payAmount
+        from physical_order o
+        inner join brand b on o.buyer_brand_id = b.id
+        <where>
+            1=1
+            AND o.seller_brand_id = #{brandId}
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, o.id) &gt; 0 or locate(#{dto.q}, b.brand_name) &gt; 0)
+            </if>
+            <if test="dto.status != null and dto.status != ''">
+                AND o.order_status = #{dto.status}
+            </if>
+        </where>
+        order by o.create_at desc
+    </select>
+
+    <resultMap id="orderDetailResultMap" type="com.norm.timemall.app.studio.domain.ro.StudioFetchPhysicalOrderDetailRO">
+        <id property="orderId" column="orderId"/>
+        <result property="buyerBrandId" column="buyerBrandId"/>
+        <result property="buyerUserId" column="buyerUserId"/>
+        <result property="buyerName" column="buyerName"/>
+        <result property="buyerAvatar" column="buyerAvatar"/>
+        <result property="createAt" column="createAt"/>
+        <result property="orderStatus" column="orderStatus"/>
+        <result property="paymentStatus" column="paymentStatus"/>
+        <result property="payAmount" column="payAmount"/>
+        <result property="recipient" column="recipient"/>
+        <result property="recipientPhone" column="recipientPhone"/>
+        <result property="shippingAddress" column="shippingAddress"/>
+        <result property="shippingMethod" column="shippingMethod"/>
+        <result property="shippingNote" column="shippingNote"/>
+        <result property="shippingNumber" column="shippingNumber"/>
+        <result property="shippingStatus" column="shippingStatus"/>
+        <result property="courierPhone" column="courierPhone"/>
+        <collection property="items"
+                    ofType="com.norm.timemall.app.base.pojo.DefaultPhysicalOrderItem"
+                    columnPrefix="item_">
+            <id property="orderItemId" column="orderItemId"/>
+            <result property="orderId" column="orderId"/>
+            <result property="productId" column="productId"/>
+            <result property="productName" column="productName"/>
+            <result property="productPrice" column="productPrice"/>
+            <result property="productThumbnail" column="productThumbnail"/>
+            <result property="quantity" column="quantity"/>
+            <result property="refundReason" column="refundReason"/>
+            <result property="splitPayAmount" column="splitPayAmount"/>
+            <result property="splitPromotionAmount" column="splitPromotionAmount"/>
+            <result property="status" column="status"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectDetailByBrandAndId" resultMap="orderDetailResultMap">
+        select o.id orderId,
+               o.buyer_brand_id buyerBrandId,
+               b.customer_id buyerUserId,
+               b.brand_name buyerName,
+               b.avator buyerAvatar,
+               o.create_at createAt,
+               o.order_status orderStatus,
+               o.payment_status paymentStatus,
+               o.pay_amount payAmount,
+               o.recipient,
+               o.recipient_phone recipientPhone,
+               o.shipping_address shippingAddress,
+               o.shipping_method shippingMethod,
+               o.shipping_note shippingNote,
+               o.shipping_number shippingNumber,
+               o.shipping_status shippingStatus,
+               o.courier_phone courierPhone,
+               i.id item_orderItemId,
+               i.order_id item_orderId,
+               i.product_id item_productId,
+               i.product_name item_productName,
+               CAST(i.product_price AS CHAR) item_productPrice,
+               i.product_thumbnail item_productThumbnail,
+               CAST(i.quantity AS CHAR) item_quantity,
+               i.refund_reason item_refundReason,
+               CAST(i.split_pay_amount AS CHAR) item_splitPayAmount,
+               CAST(i.split_promotion_amount AS CHAR) item_splitPromotionAmount,
+               i.status item_status
+        from physical_order o
+        inner join brand b on o.buyer_brand_id = b.id
+        inner join physical_order_item i on o.id = i.order_id
+        where o.id = #{orderId}
+          AND o.seller_brand_id = #{brandId}
+        order by i.create_at asc
+    </select>
+
+    <select id="selectDeliveryInfoByBrandAndId" resultType="com.norm.timemall.app.studio.domain.ro.StudioFetchPhysicalOrderDeliveryInfoRO">
+        select id orderId,
+               courier_phone courierPhone,
+               recipient,
+               recipient_phone recipientPhone,
+               shipping_address shippingAddress,
+               shipping_method shippingMethod,
+               shipping_note shippingNote,
+               shipping_number shippingNumber,
+               shipping_status shippingStatus
+        from physical_order
+        where id = #{orderId}
+          AND (seller_brand_id = #{brandId} OR buyer_brand_id = #{brandId})
+    </select>
+
+</mapper>

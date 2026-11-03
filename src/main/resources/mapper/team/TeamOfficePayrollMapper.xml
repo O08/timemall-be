@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamOfficePayrollMapper">
+    <sql id="tableName">
+        office_payroll
+    </sql>
+
+    <sql id="baseColumn">
+        id,oasis_id,employee_id,employee_company,employee_department,employee_status,employee_genre,title,gross_pay,deductions,withhold_and_remit_tax,net_pay,benefits,compensations,payment_date,status,create_at,modified_at
+    </sql>
+
+    <select id="selectPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamOfficeQueryAdminPayrollPageRO">
+        select
+          p.id,p.title,e.employee_name,p.employee_department as department,p.employee_role as role,p.employee_status,p.employee_genre,p.gross_pay,p.deductions,p.withhold_and_remit_tax,p.net_pay,p.payment_date,p.status as payrollStatus
+        from office_payroll p
+        inner join office_employee e
+          on e.id=p.employee_id
+        where
+        1 = 1
+        and p.oasis_id=#{dto.oasisId}
+        <if test="dto.q != null and dto.q != ''">
+            AND (locate(#{dto.encryptedQ}, e.employee_name)>0 or locate(#{dto.q}, p.title)>0 or locate(#{dto.q}, p.employee_department)>0)
+        </if>
+        <if test="dto.status != null and dto.status != ''">
+            AND p.status=#{dto.status}
+        </if>
+        order by p.create_at desc
+
+    </select>
+
+
+    <resultMap id="selectOnePayrollResultMap" type="com.norm.timemall.app.team.domain.ro.TeamOfficeFetchPayrollInfoRO">
+        <result property="employeeNumber" column="employee_number"/>
+        <result property="employeeId" column="employee_id"/>
+        <result property="employeeName" column="employee_name"/>
+        <result property="employeePhoto" column="employeePhoto"/>
+        <result property="employeeUid" column="employeeUid"/>
+        <result property="employeeBrandId" column="employee_brand_id"/>
+        <result property="gender" column="gender"/>
+        <result property="birthdate" column="birthdate"/>
+        <result property="education" column="education"/>
+        <result property="major" column="major"/>
+        <result property="phone" column="phone"/>
+        <result property="email" column="email"/>
+        <result property="department" column="employee_department"/>
+        <result property="role" column="employee_role"/>
+        <result property="level" column="level"/>
+        <result property="officeLocation" column="office_location"/>
+        <result property="hireDate" column="hire_date"/>
+        <result property="employeeStatus" column="employeeStatus"/>
+        <result property="genre" column="genre"/>
+        <result property="salary" column="salary"/>
+        <result property="payrollCategory" column="payrollCategory"/>
+        <result property="payrollStatus" column="payrollStatus"/>
+        <result property="grossPay" column="gross_pay"/>
+        <result property="deductions" column="deductions"/>
+        <result property="withholdAndRemitTax" column="withhold_and_remit_tax"/>
+        <result property="netPay" column="net_pay"/>
+        <result property="oasisId" column="oasis_id"/>
+
+
+
+        <result property="benefit"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
+                column="benefits"/>
+
+
+        <result property="compensation"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
+                column="compensations"/>
+
+
+    </resultMap>
+
+    <select id="selectOnePayrollById"  resultMap="selectOnePayrollResultMap">
+
+        select
+          e.oasis_id, e.photo as employeePhoto, p.title,e.employee_number,p.employee_id,e.employee_name,e.uid as employeeUid,e.employee_brand_id,e.gender,e.birthdate,e.education,e.major,e.phone,
+          e.email,p.employee_department,p.employee_role,e.level,e.office_location,e.hire_date,p.employee_status as employeeStatus,p.employee_genre as genre,e.salary,
+          p.status as payrollStatus,p.category as payrollCategory,p.gross_pay,p.deductions,p.withhold_and_remit_tax,p.net_pay,p.benefits,p.compensations
+        from office_payroll p
+        inner join office_employee e
+          on p.employee_id=e.id
+        where p.id=#{id}
+
+    </select>
+
+
+
+    <select id="selectEmployeePayrollPageByQ" resultType="com.norm.timemall.app.team.domain.ro.TeamOfficeQueryEmployeePayrollPageRO">
+        select
+        p.id,p.title,p.employee_company as company,p.employee_department as department,p.employee_role as role,p.gross_pay,p.deductions,p.withhold_and_remit_tax,p.net_pay,p.payment_date
+        from office_payroll p
+        inner join office_employee e
+        on e.id=p.employee_id
+        where
+        1 = 1
+        and e.employee_brand_id=#{employeeBrandId}
+        and p.status='2'
+        <if test="dto.q != null and dto.q != ''">
+            AND (locate(#{dto.q}, p.title)>0 or locate(#{dto.q}, p.employee_department)>0)
+        </if>
+        order by p.create_at desc
+    </select>
+
+    <update id="updateBenefitUsingEmployeeBenefit" parameterType="com.norm.timemall.app.team.domain.dto.TeamOfficePayEmployeesSalaryDTO">
+
+        update office_payroll inner join office_employee_benefit on office_payroll.employee_id=office_employee_benefit.employee_id
+        set benefits=JSON_OBJECT('pensionInsuranceBase',office_employee_benefit.pension_insurance_base,'pensionInsuranceCompanyRate',office_employee_benefit.pension_insurance_company_rate,'pensionInsuranceEmployeeRate',office_employee_benefit.pension_insurance_employee_rate,
+                                 'medicalInsuranceBase',office_employee_benefit.medical_insurance_base,'medicalInsuranceCompanyRate',office_employee_benefit.medical_insurance_company_rate,'medicalInsuranceEmployeeRate',office_employee_benefit.medical_insurance_employee_rate,
+                                 'unemploymentInsuranceBase',office_employee_benefit.unemployment_insurance_base,'unemploymentInsuranceCompanyRate',office_employee_benefit.unemployment_insurance_company_rate,'unemploymentInsuranceEmployeeRate',office_employee_benefit.unemployment_insurance_employee_rate,
+                                 'occupationalInjuryInsuranceBase',office_employee_benefit.occupational_injury_insurance_base,'occupationalInjuryInsuranceCompanyRate',office_employee_benefit.occupational_injury_insurance_company_rate,'occupationalInjuryInsuranceEmployeeRate',office_employee_benefit.occupational_injury_insurance_employee_rate,
+                                 'birthInsuranceBase',office_employee_benefit.birth_insurance_base,'birthInsuranceCompanyRate',office_employee_benefit.birth_insurance_company_rate,'birthInsuranceEmployeeRate',office_employee_benefit.birth_insurance_employee_rate,
+                                 'housingProvidentFundsBase',office_employee_benefit.housing_provident_funds_base,'housingProvidentFundsCompanyRate',office_employee_benefit.housing_provident_funds_company_rate,'housingProvidentFundsEmployeeRate',office_employee_benefit.housing_provident_funds_employee_rate),
+        withhold_and_remit_tax=(office_employee_benefit.pension_insurance_base * office_employee_benefit.pension_insurance_employee_rate / 100)
+                                  + (office_employee_benefit.medical_insurance_base * office_employee_benefit.medical_insurance_employee_rate / 100)
+                                  + (office_employee_benefit.unemployment_insurance_base * office_employee_benefit.unemployment_insurance_employee_rate / 100)
+                                  + (office_employee_benefit.occupational_injury_insurance_base * office_employee_benefit.occupational_injury_insurance_employee_rate / 100)
+                                  + (office_employee_benefit.birth_insurance_base * office_employee_benefit.birth_insurance_employee_rate / 100)
+                                  + (office_employee_benefit.housing_provident_funds_base * office_employee_benefit.housing_provident_funds_employee_rate / 100)
+        where office_payroll.oasis_id=#{dto.oasisId} and office_payroll.category='2' and office_payroll.benefits is null
+    </update>
+
+
+</mapper>

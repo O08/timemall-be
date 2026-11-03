@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.studio.mapper.StudioVirtualProductMapper">
+    <sql id="tableName">
+        virtual_product
+    </sql>
+
+    <sql id="baseColumn">
+        id,product_name,product_price,product_desc,thumbnail_url,inventory,provide_invoice,deliver_note,deliver_attachment,product_status,seller_brand_id,sales_volume,clicks,views,tags,create_at,modified_at
+    </sql>
+
+    <resultMap id="selectProductMetaResultMap" type="com.norm.timemall.app.studio.domain.ro.FetchVirtualProductMetaInfoRO">
+        <result property="productName" column="product_name"/>
+        <result property="productPrice" column="product_price"/>
+        <result property="productDesc" column="product_desc"/>
+        <result property="inventory" column="inventory"/>
+        <result property="provideInvoice" column="provide_invoice"/>
+        <result property="deliverNote" column="deliver_note"/>
+        <result property="deliverAttachment" column="deliver_attachment"/>
+        <result property="thumbnailUrl" column="thumbnail_url"/>
+        <result property="productStatus" column="product_status"/>
+        <result property="pack" column="pack"/>
+        <result property="shippingMethod" column="shipping_method"/>
+
+        <result property="tags"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
+                column="tags"/>
+
+        <collection property="showcase" ofType="com.norm.timemall.app.studio.domain.pojo.FetchVirtualProductMetaInfoShowCase" javaType="ArrayList">
+            <result property="showcaseId" column="showcase_id"/>
+            <result property="showcaseOd" column="showcase_od"/>
+            <result property="showcaseUrl" column="showcase_url"/>
+        </collection>
+
+    </resultMap>
+
+    <select id="selectProductMetaById" resultMap="selectProductMetaResultMap">
+        select
+          p.pack,p.shipping_method,p.product_name,p.product_price,p.inventory,p.product_desc,p.thumbnail_url,p.tags,p.provide_invoice,p.product_status,p.deliver_note,p.deliver_attachment, sh.showcase_url,sh.id showcase_id,sh.showcase_od
+        from virtual_product p
+        inner join brand b on p.seller_brand_id = b.id
+        left join virtual_product_showcase sh on p.id=sh.product_id
+        where p.id = #{productId} and p.seller_brand_id=#{sellerBrandId}
+        order by sh.showcase_od asc
+    </select>
+
+
+</mapper>

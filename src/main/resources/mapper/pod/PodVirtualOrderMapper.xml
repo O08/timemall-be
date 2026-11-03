@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.pod.mapper.PodVirtualOrderMapper">
+    <sql id="tableName">
+        virtual_order
+    </sql>
+
+    <sql id="baseColumn">
+        id,order_no,product_id,seller_brand_id,buyer_brand_id,product_price,quantity,total_fee,tag,refund_reason,create_at,modified_at
+    </sql>
+
+    <select id="selectPageByQ" resultType="com.norm.timemall.app.pod.domain.ro.PodFetchVirtualOrderPageRO">
+        select o.id orderId,o.order_no orderNO,p.id productId,p.product_price,p.product_name,o.quantity,o.total_fee,o.tag,o.create_at,o.refund_reason,o.already_refund,
+          b.id sellerBrandId,b.customer_id sellerUserId,b.brand_name sellerBrandName,b.avator sellerAvatar,o.already_remittance,o.already_pay
+        from virtual_order o
+        inner join virtual_product p on o.product_id = p.id
+        inner join brand b on p.seller_brand_id = b.id
+        <where>
+            1=1
+            and o.buyer_brand_id=#{buyer_brand_id}
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, b.brand_name)>0 or locate(#{dto.q}, o.order_no)>0  or  locate(#{dto.q}, p.product_name)>0 or locate(#{dto.q}, p.tags)>0)
+            </if>
+            <if test="dto.tag != null and dto.tag != ''">
+                AND o.tag=#{dto.tag}
+            </if>
+        </where>
+        order by o.create_at desc
+
+    </select>
+
+</mapper>

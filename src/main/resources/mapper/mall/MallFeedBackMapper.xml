@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.mall.mapper.FeedBackMapper">
+    <sql id="tableName">
+        feed_back
+    </sql>
+
+    <sql id="baseColumn">
+        id,issue,contact_info,attachment,create_at,modified_at
+    </sql>
+
+</mapper>
