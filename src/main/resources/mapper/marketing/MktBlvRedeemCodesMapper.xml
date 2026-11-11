@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.marketing.mapper.MktBlvRedeemCodesMapper">
+    <sql id="tableName">
+        blv_redeem_codes
+    </sql>
+
+    <sql id="baseColumn">
+        id,gift_code,reward_type,vip_days,point_amount,max_uses,used_count,status,start_time,end_time,remark,kol_message,created_at,modified_at
+    </sql>
+
+    <!-- 乐观占用一次兑换次数：仅当未达到最大次数时自增，返回影响行数用于判断是否超发 -->
+    <update id="increaseUsedCount">
+        update blv_redeem_codes
+        set used_count = used_count + 1,
+            modified_at = now()
+        where id = #{id}
+          and used_count &lt; max_uses
+    </update>
+
+    <!-- 发放会员天数：
+         已有有效会员(blue_end_at >= now())则在原到期时间上顺延；
+         无有效会员则从当前时间开始重新开通 -->
+    <update id="grantVipDays">
+        update brand
+        set blue_begain_at = if(blue_end_at >= now(), blue_begain_at, now()),
+            blue_end_at = if(blue_end_at >= now(), DATE_ADD(blue_end_at, INTERVAL #{days} DAY), DATE_ADD(now(), INTERVAL #{days} DAY)),
+            modified_at = now()
+        where customer_id = #{userId}
+    </update>
+
+</mapper>

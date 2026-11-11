@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.studio.mapper.StudioCommercialPaperDeliverMapper">
+    <sql id="tableName">
+        commercial_paper_deliver
+    </sql>
+
+    <select id="selectPaperDeliverByPaperIdAndBrandId" resultType="com.norm.timemall.app.studio.domain.ro.StudioFetchMpsPaperDeliverRO">
+        select d.id deliverId, d.preview,d.preview_name,d.deliver,d.deliver_name,d.msg,d.tag,d.paper_id,d.create_at
+        from commercial_paper_deliver d
+        left join commercial_paper p
+          on d.paper_id=p.id
+        where d.paper_id=#{paperId}
+        and p.supplier=#{brandId}
+        order  by d.create_at desc
+    </select>
+
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.marketing.mapper.MktBlvRedeemLogsMapper">
+    <sql id="tableName">
+        blv_redeem_logs
+    </sql>
+
+    <sql id="baseColumn">
+        id,brand_id,code_id,claim_at
+    </sql>
+
+    <select id="selectRedeemHistoryPage" resultType="com.norm.timemall.app.marketing.domain.ro.MktFetchRedeemHistoryPageRO">
+        select
+          DATE_FORMAT(l.claim_at, '%Y-%m-%d %H:%i:%s') as claimAt,
+          c.gift_code as giftCode,
+          c.kol_message as kolMessage,
+          c.point_amount as pointAmount,
+          c.reward_type as rewardType,
+          c.vip_days as vipDays
+        from blv_redeem_logs l
+        inner join blv_redeem_codes c
+          on l.code_id = c.id
+        where l.brand_id = #{brandId}
+        order by l.claim_at desc
+    </select>
+
+</mapper>

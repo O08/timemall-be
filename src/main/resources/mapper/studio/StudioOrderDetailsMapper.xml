@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.studio.mapper.StudioOrderDetailsMapper">
+
+    <select id="selectWorkflowPageByBrandId" resultType="com.norm.timemall.app.studio.domain.ro.StudioTransRO">
+
+        select
+            o.sbu,o.quantity, o.cell_title service, buyer.brand_name customer,buyer.avator customerAvatar, o.consumer_id customerUserId, o.total fee,o.create_at added,o.id
+        from order_details o
+         inner join brand buyer
+           on  buyer.customer_id = o.consumer_id
+         inner join millstone m
+           on o.id = m.order_id
+
+        <where>
+            1=1
+            and o.brand_id = #{brand_id} and m.mark= #{dto.code}
+            <if test="dto.q != null and dto.q != ''">
+                AND (locate(#{dto.q}, o.cell_title)>0 or locate(#{dto.q}, o.id)>0  or locate(#{dto.q}, buyer.brand_name)>0)
+            </if>
+        </where>
+
+        order by o.create_at desc
+
+    </select>
+
+</mapper>

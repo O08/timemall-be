@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.team.mapper.TeamOasisEquityPeriodSummaryMapper">
+    <sql id="tableName">
+        oasis_equity_period_summary
+    </sql>
+
+    <sql id="baseColumn">
+        id,equity_period_id,credit,shares,sold,write_off,redemption,sponsorship_fee,write_off_fee,redemption_fee,total_sponsor,create_at,modified_at
+    </sql>
+
+    <select id="selectLatestPeriodSummaryByOasisId" resultType="com.norm.timemall.app.team.domain.ro.TeamFetchLatestPeriodEquitySummaryRO">
+        SELECT
+            ep.id as periodId,
+            ep.period AS period,
+            ep.shares AS shares,
+            ep.earning_yield AS earningYield,
+            eps.sold AS sold,
+            eps.write_off AS writeOff,
+            eps.redemption AS redemption,
+            eps.sponsorship_fee AS sponsorshipFee,
+            eps.write_off_fee AS writeOffFee,
+            eps.redemption_fee AS redemptionFee,
+            eps.total_sponsor AS totalSponsor,
+            ep.status AS status
+        FROM oasis_latest_equity_period olep
+        INNER JOIN oasis_equity_period ep ON olep.equity_period_id = ep.id
+        INNER JOIN oasis_equity_period_summary eps ON ep.id = eps.equity_period_id
+        WHERE olep.oasis_id = #{oasisId}
+    </select>
+
+</mapper>

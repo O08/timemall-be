@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.norm.timemall.app.mall.mapper.MallAffiliateOrderMapper">
+    <sql id="tableName">
+        affiliate_order
+    </sql>
+
+    <sql id="baseColumn">
+        id,order_type,order_id,influencer,outreach_channel_id,revshare,price,market,create_at,modified_at
+    </sql>
+
+</mapper>
